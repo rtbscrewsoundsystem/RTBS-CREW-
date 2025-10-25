@@ -46,6 +46,23 @@
     from { transform: scaleY(0.3); } 
     to { transform: scaleY(1); } 
 }
+    .logo-titulo {
+  width: 100px; /* tamaño del logo */
+  height: auto;
+  vertical-align: middle;
+  margin-right: 15px;
+  border: 2px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+.titulo-con-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 
 @keyframes glitch {
     0% { transform: translate(0); }
@@ -727,7 +744,6 @@ footer {
 <div class="main">
   <h1 class="titulo-con-logo">
   <img src="Proyecto_29.png" alt="Logo RTBS CREW" class="logo-titulo">
-  <div id="logo-placeholder"></div>
   <span>R</span><span>T</span><span>B</span><span>S</span> CREW
 </h1>
 

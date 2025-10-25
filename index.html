@@ -746,6 +746,18 @@ footer {
     </div>
     
     <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
+  
+  <!-- SECCIÓN REPRODUCTOR DJ -->
+<div id="dj" class="seccion" style="display:none;">
+  <h2>🎚️ REPRODUCTOR DJ 🎚️</h2>
+  <iframe 
+    src="rtbs_dj_with_recorder.html"
+    width="100%"
+    height="900"
+    frameborder="0"
+    allow="autoplay; encrypted-media; midi; microphone; fullscreen">
+  </iframe>
+</div>
 
   <!-- SECCIÓN NUESTRA MÚSICA -->
   <div id="musica" style="display:none;">
@@ -1222,17 +1234,16 @@ function addTextGlitches() {
 // Iniciar efectos cuando la página cargue
 window.addEventListener('load', addTextGlitches);
 </script>
-    <!-- SECCIÓN REPRODUCTOR DJ -->
-<div id="dj" class="seccion" style="display:none;">
-  <h2>🎚️ REPRODUCTOR DJ 🎚️</h2>
-  <iframe 
-    src="rtbs_dj_with_recorder.html"
-    width="100%"
-    height="900"
-    frameborder="0"
-    allow="autoplay; encrypted-media; midi; microphone; fullscreen">
-  </iframe>
-</div>
+
+<script>
+function showTabWithTransition(tabId) {
+  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
+    .forEach(section => section.style.display = 'none');
+
+  const section = document.getElementById(tabId);
+  if (section) section.style.display = 'block';
+}
+</script>
 
 </body>
 </html>

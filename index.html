@@ -730,6 +730,152 @@ footer {
   box-shadow: 0 0 15px #00FF00;
 }
 
+/* --- NUEVOS ESTILOS PARA DJs --- */
+.dj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.dj-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 25px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+}
+
+.dj-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.dj-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+.dj-item.active {
+    background: linear-gradient(to bottom, #002200, #004400);
+    border-color: #FFFF00;
+    box-shadow: 0 0 20px #FFFF00;
+}
+
+/* Icono de tabla de mezclas */
+.mixer-icon {
+    width: 80px;
+    height: 40px;
+    background: linear-gradient(135deg, #333, #000);
+    border: 3px solid #00FF00;
+    border-radius: 8px;
+    margin: 0 auto 15px;
+    position: relative;
+    box-shadow: 0 0 10px #00FF00;
+}
+
+.mixer-icon:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    right: 10px;
+    height: 10px;
+    background: #00FF00;
+    border-radius: 3px;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.mixer-icon:after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 15px;
+    right: 15px;
+    height: 6px;
+    background: #FFFF00;
+    border-radius: 2px;
+    box-shadow: 0 0 3px #FFFF00;
+}
+
+.dj-title {
+    font-size: 20px;
+    color: #FFFF00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #FFFF00;
+}
+
+.dj-description {
+    font-size: 14px;
+    color: #CCFFCC;
+    margin-bottom: 15px;
+}
+
+.dj-status {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.dj-status.available {
+    background: #004400;
+    color: #00FF00;
+    border: 1px solid #00FF00;
+}
+
+.dj-status.coming {
+    background: #444400;
+    color: #FFFF00;
+    border: 1px solid #FFFF00;
+}
+
+/* Contenedor de lanzamientos */
+.lanzamientos-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 30, 0, 0.8);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    display: none;
+}
+
+.lanzamientos-container.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toggle-btn {
+    background: #00AA00;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #00FF00;
+}
 
 </style>
 </head>
@@ -793,7 +939,10 @@ footer {
     <!-- SECCIÓN REPRODUCTOR DJ -->
 <div id="dj" class="seccion" style="display:none;">
   <h2>🎚️ REPRODUCTOR DJ 🎚️</h2>
-  <iframe 
+  <div style="text-align:right; margin-bottom:10px;">
+    <button onclick="toggleFullScreenDJ()" style="padding:8px 12px; background:#00AA00; color:#000; border:1px solid #00FF00; border-radius:5px; font-weight:bold; cursor:pointer;">🖥️ Pantalla completa</button>
+  </div>
+  <iframe id="djPlayer"
     src="rtbs_dj_with_recorder.html"
     width="100%"
     height="900"
@@ -839,203 +988,228 @@ footer {
 
   <!-- SECCIÓN NUESTRA MÚSICA -->
   <div id="musica" style="display:none;">
-    <h2>🎵 NUESTROS LANZAMIENTOS 🎵</h2>
+    <h2>🎧 DJs DEL COLECTIVO RTBS CREW 🎧</h2>
     
-    <div class="vinyl-grid">
-      <!-- 1: MENSAJE MALDITO A1 -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - MENSAJE MALDITO A1</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/mensaje-maldito-a1" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35221057-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-MENSAJE-MALDITO-A1" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=okzUius2ICg&list=OLAK5uy_kDWRzzYThPzgi9gEXbbqzWBE3nBzBF0tM" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
+    <div class="dj-grid">
+      <!-- DJ FLUGEL RTBS CREW -->
+      <div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
+        <div class="mixer-icon"></div>
+        <div class="dj-title">DJ FLUGEL RTBS CREW</div>
+        <div class="dj-description">Haz clic para ver sus lanzamientos</div>
+        <div class="dj-status available">CONTENIDO DISPONIBLE</div>
       </div>
       
-      <!-- 2: DJ URA A2 -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - DJ URA A2</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-dj-ura-a2" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35223049-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-JD-URA-A2" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=dw-8HADziKw&list=OLAK5uy_kvUUjHABSiR40T3yrTIoYJ05IAdfYFVP0" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 3: GAU B1 -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - GAU B1</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-gau-b1" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35223085-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-GUAU-B1" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=HWjLFcsbhtg&list=OLAK5uy_n8m_DjFUYs-JyoGtTc1cmoVz0_P8EiMWg" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 4: TEK HARD B -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - TEK HARD B</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-tek-hard-b" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35223109-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-TEK-HARD-B2" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=3PKeJXP7JUA&list=OLAK5uy_kpcJwSmLmcr2kXXcOnOZnIpf_R2zUPQcI" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 5: UNTILED PHONE (VINYL 002) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - UNTILED PHONE (VINYL 002)</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-untiled-phone-vinyl-002" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235271-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-UNTILED-PHONE-VINYL-002" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=Ah9s078j3wc&list=OLAK5uy_m3WfPVhIG5wZhfDsU14NB9rqzMwELVb1M" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 6: VINYL 002 PESADILLA -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - VINYL 002 PESADILLA</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-vinyl-002-pesadilla" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235343-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-VINYL-002-PESADILLA" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=dUAzkOL5hWg&list=OLAK5uy_kjfDfFL_bBuEk41pVVGChLxFQpYqSmlIg" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 7: OLD SCHOOL HARDTECHNO SCHRANZ (FACE A) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - OLD SCHOOL HARDTECHNO SCHRANZ (FACE A)</div>
-          <div class="vinyl-description">A1 PSYCHOBLAST & A2 TOXIC OVERLOAD</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/album/dj-flugel-rtbs-crew-old-school-hardtechno-schranz-face-a" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235382-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-OLD-SCHOOL-HARDTECHNO-SCHRANZ-FACE-A" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=pxqp6rTGibg&list=OLAK5uy_kTy8oGAF0BljToklnwrF1_RwlCk2Nt7JM" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 8: NUKLEAR VOID -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - NUKLEAR VOID</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-nuklear-void" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235463-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-NUKLEAR-VOID" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=eyXcEBJvKK8&list=OLAK5uy_mrA2oYjTI4xqMhc4eWeQByXhVFlH_ZVqY" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 9: OLD SCHOOL HARDTECHNO SCHRANZ (FACE B) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - OLD SCHOOL HARDTECHNO SCHRANZ (FACE B)</div>
-          <div class="vinyl-description">B1 DELIRIUMCODE & B2 NEURO SCREAM</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/album/dj-flugel-rtbs-crew-old-school-hardtechno-schranz-face-b" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35296312-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-OLD-SCHOOL-HARDTECHNO-SCHRANZ-FACE-B" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=7p2CmsvanaY&list=OLAK5uy_kPjfYSC8qOPLFVQ-lJVuzmrExYBUyLdCQ" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 10: GHOST LOOP MIX -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - GHOST LOOP MIX</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/ghost-loop-mix" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35429950-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-GHOST-LOOP-MIX" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=p-4SdiX75pw&list=OLAK5uy_k0-Nx2MpbZakJx0jAG8UTdyo_IzMW_Cag" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
+      <!-- TOUXMAN DJ -->
+      <div class="dj-item" onclick="toggleDJ('touxman')" id="dj-touxman">
+        <div class="mixer-icon"></div>
+        <div class="dj-title">TOUXMAN DJ</div>
+        <div class="dj-description">Próximamente contenido</div>
+        <div class="dj-status coming">PRÓXIMAMENTE</div>
       </div>
     </div>
-    
-    <a href="https://rtbscrew.bandcamp.com" target="_blank" class="bandcamp-link">🎵 VER TODOS NUESTROS LANZAMIENTOS EN BANDCAMP 🎵</a>
+
+    <!-- LANZAMIENTOS DJ FLUGEL -->
+    <div id="lanzamientos-flugel" class="lanzamientos-container">
+      <h3 style="color: #FFFF00; text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px #FFFF00;">
+        🎵 LANZAMIENTOS DE DJ FLUGEL RTBS CREW 🎵
+      </h3>
+      
+      <div class="vinyl-grid">
+        <!-- 1: MENSAJE MALDITO A1 -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - MENSAJE MALDITO A1</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/mensaje-maldito-a1" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35221057-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-MENSAJE-MALDITO-A1" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=okzUius2ICg&list=OLAK5uy_kDWRzzYThPzgi9gEXbbqzWBE3nBzBF0tM" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 2: DJ URA A2 -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - DJ URA A2</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-dj-ura-a2" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35223049-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-JD-URA-A2" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=dw-8HADziKw&list=OLAK5uy_kvUUjHABSiR40T3yrTIoYJ05IAdfYFVP0" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 3: GAU B1 -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - GAU B1</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-gau-b1" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35223085-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-GUAU-B1" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=HWjLFcsbhtg&list=OLAK5uy_n8m_DjFUYs-JyoGtTc1cmoVz0_P8EiMWg" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 4: TEK HARD B -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - TEK HARD B</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-tek-hard-b" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35223109-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-TEK-HARD-B2" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=3PKeJXP7JUA&list=OLAK5uy_kpcJwSmLmcr2kXXcOnOZnIpf_R2zUPQcI" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 5: UNTILED PHONE (VINYL 002) -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - UNTILED PHONE (VINYL 002)</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-untiled-phone-vinyl-002" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35235271-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-UNTILED-PHONE-VINYL-002" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=Ah9s078j3wc&list=OLAK5uy_m3WfPVhIG5wZhfDsU14NB9rqzMwELVb1M" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 6: VINYL 002 PESADILLA -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - VINYL 002 PESADILLA</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-vinyl-002-pesadilla" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35235343-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-VINYL-002-PESADILLA" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=dUAzkOL5hWg&list=OLAK5uy_kjfDfFL_bBuEk41pVVGChLxFQpYqSmlIg" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 7: OLD SCHOOL HARDTECHNO SCHRANZ (FACE A) -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - OLD SCHOOL HARDTECHNO SCHRANZ (FACE A)</div>
+            <div class="vinyl-description">A1 PSYCHOBLAST & A2 TOXIC OVERLOAD</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/album/dj-flugel-rtbs-crew-old-school-hardtechno-schranz-face-a" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35235382-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-OLD-SCHOOL-HARDTECHNO-SCHRANZ-FACE-A" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=pxqp6rTGibg&list=OLAK5uy_kTy8oGAF0BljToklnwrF1_RwlCk2Nt7JM" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 8: NUKLEAR VOID -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - NUKLEAR VOID</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-nuklear-void" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35235463-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-NUKLEAR-VOID" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=eyXcEBJvKK8&list=OLAK5uy_mrA2oYjTI4xqMhc4eWeQByXhVFlH_ZVqY" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 9: OLD SCHOOL HARDTECHNO SCHRANZ (FACE B) -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - OLD SCHOOL HARDTECHNO SCHRANZ (FACE B)</div>
+            <div class="vinyl-description">B1 DELIRIUMCODE & B2 NEURO SCREAM</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/album/dj-flugel-rtbs-crew-old-school-hardtechno-schranz-face-b" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35296312-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-OLD-SCHOOL-HARDTECHNO-SCHRANZ-FACE-B" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=7p2CmsvanaY&list=OLAK5uy_kPjfYSC8qOPLFVQ-lJVuzmrExYBUyLdCQ" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 10: GHOST LOOP MIX -->
+        <div class="vinyl-item">
+          <div class="vinyl-decoration"></div>
+          <div class="vinyl-content">
+            <div class="vinyl-title">DJ FLUGEL RTBS CREW - GHOST LOOP MIX</div>
+            <div class="vinyl-links">
+              <a href="https://rtbscrew.bandcamp.com/track/ghost-loop-mix" target="_blank">Bandcamp</a>
+              <a href="https://www.discogs.com/release/35429950-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-GHOST-LOOP-MIX" target="_blank">Discogs</a>
+              <a href="https://www.youtube.com/watch?v=p-4SdiX75pw&list=OLAK5uy_k0-Nx2MpbZakJx0jAG8UTdyo_IzMW_Cag" target="_blank">YouTube</a>
+            </div>
+            <div class="like-dislike">
+              <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+              <span class="like-count">0</span>
+              <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+              <span class="dislike-count">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <a href="https://rtbscrew.bandcamp.com" target="_blank" class="bandcamp-link">🎵 VER TODOS NUESTROS LANZAMIENTOS EN BANDCAMP 🎵</a>
+    </div>
   </div>
 
   <!-- SECCIÓN VÍDEOS VISUALES (EN OBRAS) -->
@@ -1326,5 +1500,53 @@ function showTabWithTransition(tabId) {
 }
 </script>
 
+<script>
+// --- Función de pantalla completa para el DJ ---
+function toggleFullScreenDJ() {
+  const iframe = document.getElementById('djPlayer');
+  if (!document.fullscreenElement) {
+    iframe.requestFullscreen().catch(err => alert('No se pudo activar pantalla completa: ' + err));
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// --- Mostrar/ocultar lanzamientos según DJ ---
+let djActivo = null;
+
+function toggleDJ(dj) {
+  const lanzamientos = document.getElementById('lanzamientos-flugel');
+  const djFlugel = document.getElementById('dj-flugel');
+  const djTouxman = document.getElementById('dj-touxman');
+  
+  if (djActivo === dj) {
+    // Si haces clic en el mismo DJ, ocultar los lanzamientos
+    lanzamientos.classList.remove('active');
+    djFlugel.classList.remove('active');
+    djTouxman.classList.remove('active');
+    djActivo = null;
+  } else {
+    // Mostrar los lanzamientos del DJ seleccionado
+    if (dj === 'flugel') {
+      lanzamientos.classList.add('active');
+      djFlugel.classList.add('active');
+      djTouxman.classList.remove('active');
+      djActivo = 'flugel';
+      
+      // Desplazar suavemente a los lanzamientos
+      setTimeout(() => {
+        lanzamientos.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    } else if (dj === 'touxman') {
+      // TOUXMAN DJ aún no tiene contenido
+      lanzamientos.classList.remove('active');
+      djFlugel.classList.remove('active');
+      djTouxman.classList.add('active');
+      djActivo = 'touxman';
+      alert('TOUXMAN DJ - Próximamente contenido');
+    }
+  }
+}
+</script>
 </body>
 </html>

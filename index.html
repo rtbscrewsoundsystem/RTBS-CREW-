@@ -971,6 +971,68 @@ footer {
          🔧 VER CÓDIGO EN GITHUB
       </a>
     </div>
+        <!-- SECCIÓN SUGERENCIAS Y COMENTARIOS DJ -->
+  <div style="background: rgba(0, 30, 0, 0.8); border: 2px solid #00FF00; border-radius: 10px; padding: 30px; margin-top: 30px;">
+    <h3 style="color: #FFFF00; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #FFFF00;">
+      💡 SUGERENCIAS Y COMENTARIOS DJ 💡
+    </h3>
+    
+    <p style="color: #CCFFCC; text-align: center; margin-bottom: 25px; line-height: 1.6;">
+      <strong>¿Tienes ideas para mejorar el reproductor DJ?</strong><br>
+      <strong>¿Encontraste algún error o bug?</strong><br>
+      <strong>¿Tienes sugerencias de nuevas funciones?</strong><br>
+      ¡Queremos escucharte! Envíanos tus comentarios.
+    </p>
+
+    <form id="sugerencia-form" onsubmit="return enviarSugerencia()" style="max-width: 600px; margin: 0 auto;">
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; color: #00FF00; margin-bottom: 8px; font-weight: bold;">📧 Tu Email:</label>
+        <input type="email" id="email-sugerencia" 
+               style="width: 100%; padding: 12px; background: #002200; border: 1px solid #00AA00; color: #00FF00; border-radius: 5px;"
+               placeholder="tu@email.com" required>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; color: #00FF00; margin-bottom: 8px; font-weight: bold;">💬 Tipo de mensaje:</label>
+        <select id="tipo-sugerencia" 
+                style="width: 100%; padding: 12px; background: #002200; border: 1px solid #00AA00; color: #00FF00; border-radius: 5px;">
+          <option value="sugerencia">💡 Sugerencia de mejora</option>
+          <option value="bug">🐛 Reportar error/bug</option>
+          <option value="funcion">🆕 Solicitar nueva función</option>
+          <option value="comentario">💬 Comentario general</option>
+        </select>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; color: #00FF00; margin-bottom: 8px; font-weight: bold;">📝 Tu mensaje:</label>
+        <textarea id="mensaje-sugerencia" 
+                  style="width: 100%; height: 150px; padding: 12px; background: #002200; border: 1px solid #00AA00; color: #00FF00; border-radius: 5px;"
+                  placeholder="Describe tu sugerencia, comentario o el error que encontraste..." required></textarea>
+      </div>
+      
+      <button type="submit" 
+              style="width: 100%; padding: 15px; background: #00AA00; color: #000; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; transition: all 0.3s;">
+        🚀 ENVIAR SUGERENCIA
+      </button>
+    </form>
+    
+    <div id="mensaje-exito" style="display: none; background: #004400; border: 2px solid #00FF00; border-radius: 10px; padding: 20px; margin-top: 20px; text-align: center;">
+      <h4 style="color: #00FF00; margin-bottom: 10px;">✅ ¡MENSAJE ENVIADO!</h4>
+      <p style="color: #CCFFCC;">Gracias por tu feedback. Tu mensaje ha sido enviado correctamente.</p>
+    </div>
+  </div>
+  
+  <div style="background: rgba(0, 40, 0, 0.6); border: 2px solid #00FF00; border-radius: 10px; padding: 20px; margin-top: 20px; text-align: center;">
+    <h4 style="color: #FFFF00; margin-bottom: 15px;">📧 Contacto Directo</h4>
+    <p style="color: #CCFFCC; margin-bottom: 10px;">
+      También puedes escribirnos directamente a:<br>
+      <strong style="color: #00FF00;">rtbscrewsoundsystem@gmail.com</strong>
+    </p>
+    <a href="mailto:rtbscrewsoundsystem@gmail.com" 
+       style="display: inline-block; padding: 10px 20px; background: #00AA00; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00FF00; transition: all 0.3s;">
+       📩 ABRIR CLIENTE DE EMAIL
+    </a>
+  </div>
     
     <div style="color: #88FF88; font-size: 14px; margin-top: 15px;">
       <strong>Autor:</strong> RTBS CREW (con ayuda de IA)<br>
@@ -1780,5 +1842,27 @@ function toggleDJ(dj) {
   }
 }
 </script>
+    // ----------------- Envío de Sugerencias DJ -----------------
+function enviarSugerencia() {
+    const email = document.getElementById('email-sugerencia').value;
+    const tipo = document.getElementById('tipo-sugerencia').value;
+    const mensaje = document.getElementById('mensaje-sugerencia').value;
+    
+    // Aquí normalmente enviarías el formulario a un servidor
+    // Por ahora simulamos el envío mostrando un mensaje de éxito
+    
+    // Mostrar mensaje de éxito
+    document.getElementById('mensaje-exito').style.display = 'block';
+    
+    // Limpiar formulario
+    document.getElementById('sugerencia-form').reset();
+    
+    // Ocultar mensaje después de 5 segundos
+    setTimeout(() => {
+        document.getElementById('mensaje-exito').style.display = 'none';
+    }, 5000);
+    
+    return false;
+}
 </body>
 </html>

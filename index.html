@@ -1,562 +1,663 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+<cabeza>
 <meta charset="UTF-8">
 <title>RTBS CREW - ☢️ Sonido Libre y Sucio ☢️</title>
 
-    <link rel="icon" type="image/png" href="Proyecto_29.png">
-<link rel="shortcut icon" type="image/png" href="Proyecto_29.png">
+<link rel="icon" type="image/png" href="Proyecto_29.png">
+<link rel="icono de acceso directo" type="image/png" href="Proyecto_29.png">
 <link rel="apple-touch-icon" href="Proyecto_29.png">
-    
 <style>
-/* --- Loader mejorado --- */
-#loader { 
-    position: fixed; 
-    top:0; 
-    left:0; 
-    width:100%; 
-    height:100%; 
-    background: #000; 
-    display:flex; 
-    justify-content:center; 
-    align-items:center; 
-    z-index:9999;
-    font-family: 'Arial Black', Impact, sans-serif;
+/* --- Cargadores mejorados --- */
+#cargador {
+posición: fija;
+superior:0;
+izquierda:0;
+ancho: 100%;
+altura: 100%;
+fondo: #000;
+pantalla:flex;
+justificar-contenido:centro;
+alinear elementos:centro;
+índice z: 9999;
+font-family: 'Arial Black', Impact, sans-serif;
 }
 .loader-content {
-    text-align: center;
+alineación del texto: centro;
 }
 .loader-rtbs {
-    font-size: 48px;
-    color: #00FF00;
-    text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
-    margin-bottom: 30px;
-    animation: glitch 2s infinite;
+tamaño de fuente: 48px;
+color: #00FF00;
+text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+margen inferior: 30px;
+animación: fallo 2s infinito;
 }
-.bar { 
-    width:8px; 
-    height:40px; 
-    margin:2px; 
-    background: linear-gradient(180deg, #00FF00, #FF0000, #FFFF00);
-    display: inline-block;
-    animation: bounce 0.6s infinite alternate;
+.bar {
+ancho: 8px;
+altura: 40 píxeles;
+margen:2px;
+fondo: gradiente lineal(180 grados, #00FF00, #FF0000, #FFFF00);
+mostrar: bloque en línea;
+animación: rebote 0,6 s infinito alternativo;
 }
-.bar:nth-child(2){ animation-delay:0.1s; } 
-.bar:nth-child(3){ animation-delay:0.2s; } 
-.bar:nth-child(4){ animation-delay:0.3s; } 
+.bar:nth-child(2){ animation-delay:0.1s; }
+.bar:nth-child(3){ animation-delay:0.2s; }
+.bar:nth-child(4){ animation-delay:0.3s; }
 .bar:nth-child(5){ animation-delay:0.4s; }
 .bar:nth-child(6){ animation-delay:0.5s; }
 
-@keyframes bounce { 
-    from { transform: scaleY(0.3); } 
-    to { transform: scaleY(1); } 
+@keyframes rebote {
+de { transform: scaleY(0.3); }
+a { transformar: escalaY(1); }
 }
-    .logo-titulo {
-  width: 100px; /* tamaño del logo */
-  height: auto;
-  vertical-align: middle;
-  margin-right: 15px;
-  border: 2px solid #00FF00;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #00FF00;
-}
-
-.titulo-con-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+.logo-título {
+ancho: 100px; /* tamaño del logotipo */
+altura: automática;
+vertical-align: middle;
+margen derecho: 15px;
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+box-shadow: 0 0 15px #00FF00;
 }
 
+.título-con-logo {
+pantalla: flexible;
+alinear elementos: centro;
+justificar-contenido: centro;
+espacio: 10px;
+}
 
-@keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
+
+@keyframes fallo {
+0% { transform: translate(0); }
+20% { transform: translate(-2px, 2px); }
+40% { transform: translate(-2px, -2px); }
+60% { transform: translate(2px, 2px); }
+80% { transform: translate(2px, -2px); }
+100% { transform: translate(0); }
 }
 
 /* --- Estilos generales --- */
-body { 
-    margin:0; 
-    font-family:'Arial Black', Impact, sans-serif; 
-    background:#000;
-    color:#00FF00;
-    overflow-x: hidden;
-    position: relative;
+cuerpo {
+margen:0;
+font-family:'Arial Black', Impact, sans-serif;
+fondo:#000;
+color:#00FF00;
+desbordamiento-x: oculto;
+posición: relativa;
+cursor: ninguno; /* cursor inmersivo */
 }
 
 /* Fondo tribal con efectos */
-.tribal-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('tribal-tattoo-design-elements-set-260nw-565457776.jpg') center/cover;
-    filter: grayscale(100%) brightness(0.8) contrast(1.2);
-    z-index: -2;
-    animation: tribalGlitch 8s infinite, tribalDistortion 12s infinite;
+.fondo-tribal {
+posición: fija;
+superior: 0;
+izquierda: 0;
+ancho: 100%;
+altura: 100%;
+fondo: url('tribal-tattoo-design-elements-set-260nw-565457776.jpg') centro/cubierta;
+filtro: escala de grises (100%), brillo (0.8), contraste (1.2);
+Índice z: -4;
+animación: tribalGlitch 8s infinito, tribalDistortion 12s infinito;
 }
 
 /* Capa de superposición para mejor legibilidad */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: -1;
+.superposición {
+posición: fija;
+superior: 0;
+izquierda: 0;
+ancho: 100%;
+altura: 100%;
+fondo: rgba(0, 0, 0, 0.7);
+Índice z: -3;
 }
 
 /* Efectos de glitch para el fondo tribal */
 @keyframes tribalGlitch {
-    0%, 100% { 
-        filter: grayscale(100%) brightness(0.8) contrast(1.2);
-        transform: scale(1.05) translate(0, 0);
-    }
-    2% { 
-        filter: grayscale(100%) brightness(0.9) contrast(1.3);
-        transform: scale(1.05) translate(2px, 1px);
-    }
-    4% { 
-        filter: grayscale(100%) brightness(0.7) contrast(1.1);
-        transform: scale(1.05) translate(-1px, -2px);
-    }
-    6% { 
-        filter: grayscale(100%) brightness(0.8) contrast(1.2);
-        transform: scale(1.05) translate(0, 0);
-    }
-    50% { 
-        filter: grayscale(100%) brightness(0.85) contrast(1.25);
-        transform: scale(1.05) translate(0, 0);
-    }
+0%, 100% {
+filtro: escala de grises (100%), brillo (0.8), contraste (1.2);
+transformar: escala(1.05) traslación(0, 0);
+}
+2% {
+filtro: escala de grises (100%), brillo (0.9), contraste (1.3);
+transformar: escala(1.05) traslación(2px, 1px);
+}
+4% {
+filtro: escala de grises (100%), brillo (0.7), contraste (1.1);
+transformar: escala(1.05) traslación(-1px, -2px);
+}
+6% {
+filtro: escala de grises (100%), brillo (0.8), contraste (1.2);
+transformar: escala(1.05) traslación(0, 0);
+}
+50% {
+filtro: escala de grises (100%), brillo (0,85), contraste (1,25);
+transformar: escala(1.05) traslación(0, 0);
+}
 }
 
-/* Efectos de distorsión */
+/* Efectos de */
 @keyframes tribalDistortion {
-    0%, 100% { 
-        transform: scale(1.05) skew(0deg, 0deg);
-    }
-    25% { 
-        transform: scale(1.05) skew(0.2deg, 0.1deg);
-    }
-    50% { 
-        transform: scale(1.05) skew(-0.1deg, 0.2deg);
-    }
-    75% { 
-        transform: scale(1.05) skew(0.1deg, -0.1deg);
-    }
+0%, 100% {
+transformar: escala(1.05) sesgo(0deg, 0deg);
+}
+25% {
+transformar: escala(1.05) sesgo(0.2deg, 0.1deg);
+}
+50% {
+transformación: escala(1.05) sesgo(-0.1deg, 0.2deg);
+}
+75% {
+transformación: escala(1.05) sesgo(0.1deg, -0.1deg);
+}
 }
 
-h1 { 
-    font-size:52px; 
-    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000; 
-    text-align:center; 
-    letter-spacing: 2px;
-    animation: titleGlitch 5s infinite;
-    margin: 20px 0;
+/* --- NUEVOS EFECTOS DE DISTORSIÓN Y GLITCH --- */
+#distorsión {
+posición: fija;
+superior: 0;
+izquierda: 0;
+ancho: 100vw;
+altura: 100vh;
+eventos de puntero: ninguno;
+fondo: degradado radial(círculo en var(--x) var(--y),
+rgba(255, 255, 255, 0.1) 0%,
+transparente 60%);
+modo de mezcla: superposición;
+transición: todas las transiciones de 0,15 s;
+filtro de fondo: desenfoque(5px) contraste(1.2);
+Índice z: -2;
 }
 
-@keyframes titleGlitch {
-    0%, 100% { transform: translate(0, 0); }
-    95% { transform: translate(0, 0); }
-    96% { transform: translate(-1px, 1px); }
-    97% { transform: translate(1px, -1px); }
-    98% { transform: translate(-1px, -1px); }
-    99% { transform: translate(1px, 1px); }
+/* Efecto de ondas de sonido */
+#ondas {
+posición: fija;
+superior: 0;
+izquierda: 0;
+ancho: 100vw;
+altura: 100vh;
+eventos de puntero: ninguno;
+fondo:
+gradiente radial(círculo en var(--x) var(--y),
+transparente 0%,
+rgba(0, 255, 0, 0.03) 10%,
+transparente 20%),
+gradiente radial(círculo en var(--x) var(--y),
+transparente 0%,
+rgba(255, 255, 0, 0.02) 15%,
+transparente 30%),
+gradiente radial(círculo en var(--x) var(--y),
+transparente 0%,
+rgba(255, 0, 0, 0.02) 20%,
+transparente 40%);
+modo de mezcla: pantalla;
+Índice z: -1;
+animación: ondas 8s infinitas alternativas;
+}
+
+@keyframes ondas {
+0% { transform: scale(1); opacity: 0.7; }
+100% { transform: scale(1.1); opacity: 0.9; }
+}
+
+/* Efecto de glitch aleatorio */
+.glitch-overlay {
+posición: fija;
+superior: 0;
+izquierda: 0;
+ancho: 100%;
+altura: 100%;
+eventos de puntero: ninguno;
+Índice z: -1;
+opacidad: 0;
+fondo:
+gradiente lineal(90 grados, transparente 49%, rgba(0, 255, 0, 0.2) 50%, transparente 51%),
+gradiente-lineal(0deg, transparente 49%, rgba(255, 0, 0, 0.2) 50%, transparente 51%);
+tamaño de fondo: 20px 20px;
+animación: glitchOverlay 0.3s pasos(2) infinito;
+}
+
+@keyframes glitchOverlay {
+0% { transform: translate(0); }
+20% { transform: translate(-2px, 2px); }
+40% { transform: translate(-2px, -2px); }
+60% { transform: translate(2px, 2px); }
+80% { transform: translate(2px, -2px); }
+100% { transform: translate(0); }
+}
+
+/* Cursor personalizado */
+.cursor-personalizado {
+posición: fija;
+ancho: 20px;
+altura: 20px;
+radio de borde: 50%;
+fondo: rgba(0, 255, 0, 0.5);
+box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+eventos de puntero: ninguno;
+Índice z: 9999;
+modo de mezcla: diferencia;
+transición: transformación 0.1s;
+}
+
+.cursor-personalizado::después {
+contenido: '';
+posición: absoluta;
+parte superior: 50%;
+izquierda: 50%;
+transformar: traslación(-50%, -50%);
+ancho: 8px;
+altura: 8px;
+radio de borde: 50%;
+fondo: #00FF00;
+box-shadow: 0 0 5px #00FF00;
+}
+
+h1 {
+tamaño de fuente: 52px;
+text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000;
+alineación del texto:centro;
+espaciado entre letras: 2px;
+animación: títuloGlitch 5s infinito;
+margen: 20px 0;
+}
+
+@keyframes títuloGlitch {
+0%, 100% { transform: translate(0, 0); }
+95% { transform: translate(0, 0); }
+96% { transform: translate(-1px, 1px); }
+97% { transform: translate(1px, -1px); }
+98% { transform: translate(-1px, -1px); }
+99% { transform: translate(1px, 1px); }
 }
 
 h1 span {
-    display: inline-block;
-    position: relative;
+mostrar: bloque en línea;
+posición: relativa;
 }
 
-h1 span:nth-child(odd){ 
-    color:#00FF00; 
-    animation: pulse 3s infinite alternate;
+h1 span:nth-child(odd){
+color:#00FF00;
+animación: pulso 3s alternancia infinita;
 }
-h1 span:nth-child(even){ 
-    color:#FFFF00; 
-    animation: pulse 2.5s infinite alternate-reverse;
+h1 span:nth-child(even){
+color:#FFFF00;
+animación: pulso de 2,5 s alternando-reverso infinito;
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); text-shadow: 0 0 10px currentColor; }
-    100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+0% { transform: scale(1); text-shadow: 0 0 10px currentColor; }
+100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
 }
 
 /* --- Menú lateral tribal rave --- */
-nav { 
-    width:220px; 
-    position:fixed; 
-    height:100%; 
-    background: linear-gradient(to bottom, #111, #002200, #111);
-    padding-top:30px; 
-    border-right: 3px solid #00FF00;
-    box-shadow: 0 0 15px #00FF00;
-    z-index: 100;
+navegación {
+ancho: 220 píxeles;
+posición: fija;
+altura: 100%;
+fondo: degradado lineal (hasta abajo, #111, #002200, #111);
+relleno superior: 30px;
+borde-derecho: 3px sólido #00FF00;
+box-shadow: 0 0 15px #00FF00;
+índice z: 100;
 }
 
-nav:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: repeating-linear-gradient(90deg, #00FF00, #FFFF00 10px, #FF0000 20px, #00FF00 30px);
-    animation: scanline 2s linear infinite;
+navegación:antes {
+contenido: "";
+posición: absoluta;
+superior: 0;
+izquierda: 0;
+derecha: 0;
+altura: 5px;
+fondo: degradado-lineal-repetido(90deg, #00FF00, #FFFF00 10px, #FF0000 20px, #00FF00 30px);
+animación: escaneo de línea 2s lineal infinito;
 }
 
 @keyframes scanline {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 0; }
+0% { background-position: 0 0; }
+100% { background-position: 60px 0; }
 }
 
-nav a { 
-    display:block; 
-    color:#00FF00; 
-    padding:15px 20px; 
-    text-decoration:none; 
-    font-weight:bold;
-    font-size: 16px;
-    border-bottom: 1px dashed #003300;
-    position: relative;
-    transition: all 0.3s;
-    text-shadow: 0 0 5px #00FF00;
+navegar a {
+mostrar:bloque;
+color:#00FF00;
+relleno: 15px 20px;
+decoración de texto: ninguna;
+font-weight:negrita;
+tamaño de fuente: 16px;
+borde inferior: 1px punteado #003300;
+posición: relativa;
+transición: todas 0,3 s;
+text-shadow: 0 0 5px #00FF00;
 }
 
-nav a:hover { 
-    background:#003300; 
-    color:#FFFF00; 
-    padding-left: 25px;
-    text-shadow: 0 0 10px #FFFF00;
+navegación a:hover {
+fondo:#003300;
+color:#FFFF00;
+relleno izquierdo: 25px;
+text-shadow: 0 0 10px #FFFF00;
 }
 
-nav a:hover:after {
-    content: "☢️";
-    position: absolute;
-    right: 15px;
+navegación a:hover:after {
+contenido: "☢️";
+posición: absoluta;
+derecha: 15px;
 }
 
-nav a:first-child {
-    background: #002200;
-    color: #FFFF00;
-    font-size: 18px;
-    text-align: center;
-    border: 1px solid #00FF00;
-    box-shadow: 0 0 10px #00FF00;
-    margin: 0 10px 20px 10px;
-    border-radius: 5px;
+navegación a:primer hijo {
+fondo: #002200;
+color: #FFFF00;
+tamaño de fuente: 18px;
+alineación del texto: centro;
+borde: 1px sólido #00FF00;
+box-shadow: 0 0 10px #00FF00;
+margen: 0 10px 20px 10px;
+borde-radio: 5px;
 }
 
 /* --- Contenido principal --- */
-.main { 
-    margin-left:220px; 
-    padding:20px;
-    min-height: 100vh;
-    position: relative;
+.principal {
+margen izquierdo: 220px;
+relleno: 20px;
+altura mínima: 100vh;
+posición: relativa;
 }
 
 /* --- Transición de disco vinilo --- */
-#transition-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9998;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
+#transición-superposición {
+posición: fija;
+superior: 0;
+izquierda: 0;
+ancho: 100%;
+altura: 100%;
+fondo: negro;
+pantalla: flexible;
+justificar-contenido: centro;
+alinear elementos: centro;
+Índice z: 9998;
+opacidad: 0;
+eventos de puntero: ninguno;
+transición: opacidad 0,3 s;
 }
 
-.vinyl-transition {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: 
-        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
-        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
-    border: 5px solid #00FF00;
-    box-shadow: 0 0 20px #00FF00;
-    animation: spin 1s linear infinite;
+.transición-vinílica {
+ancho: 150px;
+altura: 150 píxeles;
+radio de borde: 50%;
+fondo:
+gradiente radial (círculo al 50% 50%, #222 30%, #000 31%),
+gradiente-cónico-repetido(desde 0°, #000 0° 10°, #00FF00 10° 20°);
+borde: 5px sólido #00FF00;
+box-shadow: 0 0 20px #00FF00;
+animación: giro 1s lineal infinito;
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+@keyframes girar {
+de { transformar: rotar(0 grados); }
+a { transformar: rotar(360 grados); }
 }
 
 /* --- Sección INICIO --- */
 #inicio {
-    background: rgba(0, 20, 0, 0.7);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 0 20px #00FF00;
-    position: relative;
-    overflow: hidden;
+fondo: rgba(0, 20, 0, 0.7);
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+relleno: 30px;
+margen inferior: 30px;
+box-shadow: 0 0 20px #00FF00;
+posición: relativa;
+desbordamiento: oculto;
 }
 
-#inicio:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgb(0,80,0)" stroke-width="1"/></svg>');
-    opacity: 0.3;
-    z-index: -1;
+#inicio:antes {
+contenido: "";
+posición: absoluta;
+superior: 0;
+izquierda: 0;
+derecha: 0;
+fondo: 0;
+fondo: url('data:image/svg+xml;utf8,<svg xmlns=" http://www.w3.org/2000/svg " width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgb(0,80,0)" stroke-width="1"/></svg>');
+opacidad: 0,3;
+Índice z: -1;
 }
 
-.descripcion {
-    font-size: 18px;
-    line-height: 1.6;
-    text-align: justify;
-    color: #CCFFCC;
-    text-shadow: 0 0 5px #00AA00;
+.descripción {
+tamaño de fuente: 18px;
+altura de línea: 1,6;
+text-align: justify;
+color: #CCFFCC;
+text-shadow: 0 0 5px #00AA00;
 }
 
-.descripcion p {
-    margin-bottom: 20px;
-    padding: 10px;
-    border-left: 3px solid #00FF00;
-    background: rgba(0, 40, 0, 0.3);
+.descripción p {
+margen inferior: 20px;
+relleno: 10px;
+borde izquierdo: 3px sólido #00FF00;
+fondo: rgba(0, 40, 0, 0.3);
 }
 
 /* --- Sección NUESTRA MÚSICA --- */
-#musica {
-    display: none;
+#música {
+visualización: ninguna;
 }
 
 .vinyl-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
+pantalla: cuadrícula;
+columnas-plantilla-cuadrícula: repetir(auto-rellenar, minmax(350px, 1fr));
+espacio: 25px;
+margen superior: 30px;
 }
 
-.vinyl-item {
-    background: linear-gradient(to bottom, #111, #002200);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 20px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    gap: 15px;
-    align-items: flex-start;
+.artículo-vinilo {
+fondo: degradado lineal (hasta abajo, #111, #002200);
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+relleno: 20px;
+transición: todas 0,3 s;
+posición: relativa;
+desbordamiento: oculto;
+pantalla: flexible;
+espacio: 15px;
+alinear elementos: inicio flexible;
 }
 
 .vinyl-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px #00FF00;
-    border-color: #FFFF00;
+transformar: traslaciónY(-5px);
+box-shadow: 0 5px 15px #00FF00;
+color de borde: #FFFF00;
 }
 
 .vinyl-item:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+contenido: "";
+posición: absoluta;
+superior: 0;
+izquierda: 0;
+derecha: 0;
+altura: 3px;
+fondo: gradiente lineal(90 grados, #00FF00, #FFFF00, #FF0000);
 }
 
 /* Vinilo giratorio decorativo */
-.vinyl-decoration {
-    flex-shrink: 0;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: 
-        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
-        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
-    border: 3px solid #00FF00;
-    box-shadow: 0 0 10px #00FF00;
-    animation: spin 3s linear infinite;
-    position: relative;
+.vinilo-decoración {
+flex-shrink: 0;
+ancho: 60 píxeles;
+altura: 60 píxeles;
+radio de borde: 50%;
+fondo:
+gradiente radial (círculo al 50% 50%, #222 30%, #000 31%),
+gradiente-cónico-repetido(desde 0°, #000 0° 10°, #00FF00 10° 20°);
+borde: 3px sólido #00FF00;
+box-shadow: 0 0 10px #00FF00;
+animación: giro 3s lineal infinito;
+posición: relativa;
 }
 
-.vinyl-decoration:after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 15px;
-    height: 15px;
-    background: #00FF00;
-    border-radius: 50%;
-    box-shadow: 0 0 5px #00FF00;
+.vinilo-decoración:después {
+contenido: "";
+posición: absoluta;
+parte superior: 50%;
+izquierda: 50%;
+transformar: traslación(-50%, -50%);
+ancho: 15px;
+altura: 15px;
+fondo: #00FF00;
+radio de borde: 50%;
+box-shadow: 0 0 5px #00FF00;
 }
 
 .vinyl-content {
-    flex: 1;
+flex: 1;
 }
 
 .vinyl-title {
-    font-size: 16px;
-    color: #FFFF00;
-    margin-bottom: 10px;
-    text-shadow: 0 0 5px #FFFF00;
+tamaño de fuente: 16px;
+color: #FFFF00;
+margen inferior: 10px;
+text-shadow: 0 0 5px #FFFF00;
 }
 
 .vinyl-description {
-    font-size: 12px;
-    color: #CCFFCC;
-    margin-bottom: 10px;
+tamaño de fuente: 12px;
+color: #CCFFCC;
+margen inferior: 10px;
 }
 
 .vinyl-links {
-    display: flex;
-    gap: 8px;
-    margin: 12px 0;
-    flex-wrap: wrap;
+pantalla: flexible;
+espacio: 8px;
+margen: 12px 0;
+flex-wrap: envolver;
 }
 
 .vinyl-links a {
-    display: inline-block;
-    padding: 4px 8px;
-    background: #003300;
-    color: #00FF00;
-    text-decoration: none;
-    border-radius: 3px;
-    font-size: 12px;
-    transition: all 0.3s;
-    border: 1px solid #00AA00;
+mostrar: bloque en línea;
+relleno: 4px 8px;
+fondo: #003300;
+color: #00FF00;
+decoración de texto: ninguna;
+borde-radio: 3px;
+tamaño de fuente: 12px;
+transición: todas 0,3 s;
+borde: 1px sólido #00AA00;
 }
 
 .vinyl-links a:hover {
-    background: #00AA00;
-    color: #000;
+fondo: #00AA00;
+color: #000;
 }
 
-/* Sistema de likes/dislikes */
-.like-dislike {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
-    align-items: center;
+/* Sistema de me gusta/no me gusta */
+.me gusta-no me gusta {
+pantalla: flexible;
+espacio: 15px;
+margen superior: 10px;
+alinear elementos: centro;
 }
 
-.like-btn, .dislike-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    transition: all 0.3s;
-    padding: 5px;
+.me gusta, .no me gusta {
+Antecedentes: ninguno;
+borde: ninguno;
+cursor: puntero;
+tamaño de fuente: 20px;
+transición: todas 0,3 s;
+relleno: 5px;
 }
 
-.like-btn {
-    color: #00FF00;
+.me gusta-btn {
+color: #00FF00;
 }
 
 .like-btn:hover {
-    transform: scale(1.2);
-    text-shadow: 0 0 10px #00FF00;
+transformar: escala(1.2);
+text-shadow: 0 0 10px #00FF00;
 }
 
-.dislike-btn {
-    color: #FF0000;
+.no me gusta-btn {
+color: #FF0000;
 }
 
 .dislike-btn:hover {
-    transform: scale(1.2);
-    text-shadow: 0 0 10px #FF0000;
+transformar: escala(1.2);
+text-shadow: 0 0 10px #FF0000;
 }
 
-.like-count, .dislike-count {
-    font-size: 14px;
-    color: #CCFFCC;
-    min-width: 20px;
-    text-align: center;
+.conteo-de-me-gusta, .conteo-de-no-me-gusta {
+tamaño de fuente: 14px;
+color: #CCFFCC;
+ancho mínimo: 20px;
+alineación del texto: centro;
 }
 
 /* --- Sección EN OBRAS (Visuales y Altavoces) --- */
-.under-construction {
-    background: #000080 !important;
-    border: 4px solid #C0C0C0 !important;
-    position: relative;
-    overflow: hidden;
-    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+.bajo construcción {
+fondo: #000080 !importante;
+borde: 4px sólido #C0C0C0 !importante;
+posición: relativa;
+desbordamiento: oculto;
+font-family: 'MS Sans Serif', 'Arial', sans-serif;
 }
 
-.construction-border {
-    border: 2px solid #DFDFDF;
-    background: #C0C0C0;
-    padding: 3px;
-    margin: 2px;
+.borde-de-construcción {
+borde: 2px sólido #DFDFDF;
+fondo: #C0C0C0;
+relleno: 3px;
+margen: 2px;
 }
 
-.construction-content {
-    background: #008080;
-    padding: 40px 20px;
-    text-align: center;
-    border: 2px solid #000;
-    position: relative;
-    z-index: 2;
+.construcción-contenido {
+fondo: #008080;
+relleno: 40px 20px;
+alineación del texto: centro;
+borde: 2px sólido #000;
+posición: relativa;
+índice z: 2;
 }
 
 /* Tiras de obras animadas */
-.tape {
-    position: absolute;
-    width: 100%;
-    height: 30px;
-    background: repeating-linear-gradient(
-        45deg,
-        #ffff00,
-        #ffff00 20px,
-        #000 20px,
-        #000 40px
-    );
-    animation: tapeMove 3s linear infinite;
-    z-index: 1;
-    opacity: 0.8;
+.cinta {
+posición: absoluta;
+ancho: 100%;
+altura: 30 píxeles;
+fondo: gradiente lineal repetido(
+45 grados,
+#ffff00,
+#ffff00 20px,
+#000 20px,
+#000 40px
+);
+animación: tapeMove 3s lineal infinito;
+índice z: 1;
+opacidad: 0,8;
 }
 
-.tape:nth-child(1) {
-    top: 20%;
-    animation-delay: 0s;
+.cinta:n-hijo(1) {
+parte superior: 20%;
+retardo de animación: 0 segundos;
 }
 
-.tape:nth-child(2) {
-    top: 50%;
-    animation-delay: 1s;
+.cinta:n-hijo(2) {
+parte superior: 50%;
+retardo de animación: 1s;
 }
 
-.tape:nth-child(3) {
-    top: 80%;
-    animation-delay: 2s;
+.cinta:n-hijo(3) {
+parte superior: 80%;
+retardo de animación: 2 segundos;
 }
 
 @keyframes tapeMove {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+0% { transform: translateX(-100%); }
+100% { transform: translateX(100%); }
 }
 
-/* Humo pixelado */
-.smoke {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #C0C0C0;
-    animation: smokeRise 4s linear infinite;
-    opacity: 0;
+/* Humor pixelado */
+.fumar {
+posición: absoluta;
+ancho: 8px;
+altura: 8px;
+fondo: #C0C0C0;
+animación: humoRise 4s lineal infinito;
+opacidad: 0;
 }
 
 .smoke:nth-child(4) { left: 20%; animation-delay: 0s; }
@@ -565,1288 +666,808 @@ nav a:first-child {
 .smoke:nth-child(7) { left: 80%; animation-delay: 3s; }
 
 @keyframes smokeRise {
-    0% { 
-        transform: translateY(0) scale(1);
-        opacity: 0;
-    }
-    20% { 
-        opacity: 0.8;
-    }
-    100% { 
-        transform: translateY(-100px) scale(2);
-        opacity: 0;
-    }
+0% {
+transformar: traslaciónY(0) escala(1);
+opacidad: 0;
+}
+20% {
+opacidad: 0,8;
+}
+100% {
+transformar: traslaciónY(-100px) escala(2);
+opacidad: 0;
+}
 }
 
 /* Estilo Windows XP */
 .windows-xp-title {
-    background: linear-gradient(to bottom, #000080, #1084D0);
-    color: white;
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid #DFDFDF;
-    border-bottom-color: #000;
-    border-right-color: #000;
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 1px #000;
+fondo: degradado lineal (hasta abajo, #000080, #1084D0);
+color: blanco;
+relleno: 8px 12px;
+tamaño de fuente: 14px;
+grosor de fuente: negrita;
+borde: 2px sólido #DFDFDF;
+color del borde inferior: #000;
+color del borde derecho: #000;
+margen inferior: 20px;
+text-shadow: 1px 1px 1px #000;
 }
 
 .windows-xp-button {
-    background: linear-gradient(to bottom, #DFDFDF, #808080);
-    border: 2px solid;
-    border-top-color: #FFF;
-    border-left-color: #FFF;
-    border-bottom-color: #000;
-    border-right-color: #000;
-    padding: 8px 16px;
-    font-family: 'MS Sans Serif', 'Arial', sans-serif;
-    font-size: 11px;
-    font-weight: bold;
-    color: #000;
-    cursor: pointer;
-    margin: 10px;
-    image-rendering: pixelated;
+fondo: degradado lineal (hasta abajo, #DFDFDF, #808080);
+borde: 2px sólido;
+color del borde superior: #FFF;
+color del borde izquierdo: #FFF;
+color del borde inferior: #000;
+color del borde derecho: #000;
+relleno: 8px 16px;
+font-family: 'MS Sans Serif', 'Arial', sans-serif;
+tamaño de fuente: 11px;
+grosor de fuente: negrita;
+color: #000;
+cursor: puntero;
+margen: 10px;
+representación de la imagen: pixelada;
 }
 
 .windows-xp-button:active {
-    border-top-color: #000;
-    border-left-color: #000;
-    border-bottom-color: #FFF;
-    border-right-color: #FFF;
+color del borde superior: #000;
+color del borde izquierdo: #000;
+color del borde inferior: #FFF;
+color del borde derecho: #FFF;
 }
 
 .xp-icon {
-    font-size: 48px;
-    margin: 20px 0;
-    image-rendering: pixelated;
-    filter: drop-shadow(2px 2px 0px #000);
+tamaño de fuente: 48px;
+margen: 20px 0;
+representación de la imagen: pixelada;
+filtro: sombra paralela(2px 2px 0px #000);
 }
 
 /* --- Sección VÍDEOS VISUALES --- */
 .videos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
+pantalla: cuadrícula;
+columnas-de-plantilla-de-cuadrícula: repetir(auto-rellenar, minmax(300px, 1fr));
+espacio: 25px;
+margen superior: 30px;
 }
 
 .video-item {
-    background: linear-gradient(to bottom, #111, #002200);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 15px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
+fondo: degradado lineal (hasta abajo, #111, #002200);
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+relleno: 15px;
+transición: todas 0,3 s;
+posición: relativa;
+desbordamiento: oculto;
 }
 
 .video-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px #00FF00;
-    border-color: #FFFF00;
+transformar: traslaciónY(-5px);
+box-shadow: 0 5px 15px #00FF00;
+color de borde: #FFFF00;
 }
 
 .video-item:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+contenido: "";
+posición: absoluta;
+superior: 0;
+izquierda: 0;
+derecha: 0;
+altura: 3px;
+fondo: gradiente lineal(90 grados, #00FF00, #FFFF00, #FF0000);
 }
 
 .video-title {
-    font-size: 16px;
-    color: #FFFF00;
-    margin: 10px 0;
-    text-shadow: 0 0 5px #FFFF00;
-    text-align: center;
+tamaño de fuente: 16px;
+color: #FFFF00;
+margen: 10px 0;
+text-shadow: 0 0 5px #FFFF00;
+alineación del texto: centro;
 }
 
 .video-player {
-    width: 100%;
-    border-radius: 5px;
-    border: 1px solid #00AA00;
+ancho: 100%;
+borde-radio: 5px;
+borde: 1px sólido #00AA00;
 }
 
-/* --- Otras secciones --- */
-.seccion {
-    display: none;
-    background: rgba(0, 20, 0, 0.7);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 30px;
+/* --- Otras opciones --- */
+.sección {
+visualización: ninguna;
+fondo: rgba(0, 20, 0, 0.7);
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+relleno: 30px;
+margen inferior: 30px;
 }
 
 iframe {
-    margin-top:20px; 
-    border:2px solid #00FF00;
-    border-radius: 5px;
+margen superior: 20px;
+borde:2px sólido #00FF00;
+borde-radio: 5px;
 }
 
 /* Redes Sociales */
-.redes { 
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+.redes {
+pantalla: flexible;
+justificar-contenido: centro;
+espacio: 20px;
+flex-wrap: envolver;
 }
-.redes a { 
-    display: inline-block;
-    transition: transform 0.3s;
+.redes a {
+mostrar: bloque en línea;
+transición: transformación 0.3s;
 }
 .redes a:hover {
-    transform: scale(1.2);
+transformar: escala(1.2);
 }
-.redes img { 
-    width:60px; 
-    margin:5px; 
-    filter: drop-shadow(0 0 5px #00FF00);
+.redes img {
+ancho: 60 píxeles;
+margen:5px;
+filtro: sombra paralela(0 0 5px #00FF00);
 }
 
 /* Comentarios */
-#comment-form { 
-    display:flex; 
-    flex-direction:column; 
-    width:100%; 
-    max-width:500px;
-    margin: 0 auto;
+#formulario-de-comentarios {
+pantalla:flex;
+flex-direction:column;
+ancho: 100%;
+ancho máximo: 500 píxeles;
+margen: 0 auto;
 }
-#comment-form input, #comment-form textarea { 
-    margin-bottom:10px; 
-    padding:10px;
-    background: #002200;
-    border: 1px solid #00AA00;
-    color: #00FF00;
-    border-radius: 5px;
+#formulario de comentarios entrada, #formulario de comentarios área de texto {
+margen inferior: 10px;
+relleno: 10px;
+fondo: #002200;
+borde: 1px sólido #00AA00;
+color: #00FF00;
+borde-radio: 5px;
 }
-#comment-form button { 
-    padding:10px;
-    background: #00AA00;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
+#botón de formulario de comentarios {
+relleno: 10px;
+fondo: #00AA00;
+color: #000;
+borde: ninguno;
+borde-radio: 5px;
+grosor de fuente: negrita;
+cursor: puntero;
+transición: todas 0,3 s;
 }
-#comment-form button:hover {
-    background: #00FF00;
+#botón-formulario-comentario:hover {
+fondo: #00FF00;
 }
-.comment { 
-    border:1px solid #00AA00; 
-    margin-bottom:10px; 
-    padding:10px; 
-    background: rgba(0, 40, 0, 0.5);
-    border-radius: 5px;
+.comentario {
+borde:1px sólido #00AA00;
+margen inferior: 10px;
+relleno: 10px;
+fondo: rgba(0, 40, 0, 0.5);
+borde-radio: 5px;
 }
 
-footer { 
-    margin-top:50px; 
-    color:#00FF00; 
-    text-align:center; 
-    padding: 20px;
-    border-top: 1px solid #00AA00;
-    text-shadow: 0 0 5px #00AA00;
+pie de página {
+margen superior: 50px;
+color:#00FF00;
+alineación del texto:centro;
+relleno: 20px;
+borde superior: 1px sólido #00AA00;
+text-shadow: 0 0 5px #00AA00;
 }
 
 .bandcamp-link {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-    padding: 10px;
-    background: #004400;
-    color: #00FF00;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    border: 1px solid #00FF00;
-    transition: all 0.3s;
+pantalla: bloque;
+alineación del texto: centro;
+margen superior: 20px;
+relleno: 10px;
+fondo: #004400;
+color: #00FF00;
+decoración de texto: ninguna;
+borde-radio: 5px;
+grosor de fuente: negrita;
+borde: 1px sólido #00FF00;
+transición: todas 0,3 s;
 }
 
 .bandcamp-link:hover {
-    background: #00FF00;
-    color: #000;
-    text-shadow: none;
+fondo: #00FF00;
+color: #000;
+sombra de texto: ninguna;
 }
 
-#logo-placeholder {
-    width: 80px;
-    height: 80px;
-    background: #111;
-    border: 3px solid #00FF00;
-    display: inline-block;
-    margin-right: 15px;
-    vertical-align: middle;
-    box-shadow: 0 0 15px #00FF00;
+#logotipo-marcador de posición {
+ancho: 80 píxeles;
+altura: 80 píxeles;
+fondo: #111;
+borde: 3px sólido #00FF00;
+mostrar: bloque en línea;
+margen derecho: 15px;
+vertical-align: middle;
+box-shadow: 0 0 15px #00FF00;
 }
 
 
 #logo-loader {
-  width: 80px;
-  height: auto;
-  margin-right: 15px;
-  vertical-align: middle;
-  border: 3px solid #00FF00;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #00FF00;
+ancho: 80 píxeles;
+altura: automática;
+margen derecho: 15px;
+vertical-align: middle;
+borde: 3px sólido #00FF00;
+borde-radio: 10px;
+box-shadow: 0 0 15px #00FF00;
 }
 
 /* --- NUEVOS ESTILOS PARA DJs --- */
 .dj-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
+pantalla: cuadrícula;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+espacio: 25px;
+margen superior: 30px;
 }
 
 .dj-item {
-    background: linear-gradient(to bottom, #111, #002200);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 25px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    text-align: center;
+fondo: degradado lineal (hasta abajo, #111, #002200);
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+relleno: 25px;
+transición: todas 0,3 s;
+posición: relativa;
+desbordamiento: oculto;
+cursor: puntero;
+alineación del texto: centro;
 }
 
 .dj-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px #00FF00;
-    border-color: #FFFF00;
+transformar: traslaciónY(-5px);
+box-shadow: 0 5px 15px #00FF00;
+color de borde: #FFFF00;
 }
 
-.dj-item:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+.dj-item:antes {
+contenido: "";
+posición: absoluta;
+superior: 0;
+izquierda: 0;
+derecha: 0;
+altura: 3px;
+fondo: gradiente lineal(90 grados, #00FF00, #FFFF00, #FF0000);
 }
 
 .dj-item.active {
-    background: linear-gradient(to bottom, #002200, #004400);
-    border-color: #FFFF00;
-    box-shadow: 0 0 20px #FFFF00;
+fondo: degradado lineal (hasta abajo, #002200, #004400);
+color de borde: #FFFF00;
+box-shadow: 0 0 20px #FFFF00;
 }
 
 /* Icono de tabla de mezclas */
 .mixer-icon {
-    width: 80px;
-    height: 40px;
-    background: linear-gradient(135deg, #333, #000);
-    border: 3px solid #00FF00;
-    border-radius: 8px;
-    margin: 0 auto 15px;
-    position: relative;
-    box-shadow: 0 0 10px #00FF00;
+ancho: 80 píxeles;
+altura: 40px;
+fondo: gradiente lineal(135 grados, #333, #000);
+borde: 3px sólido #00FF00;
+borde-radio: 8px;
+margen: 0 auto 15px;
+posición: relativa;
+box-shadow: 0 0 10px #00FF00;
 }
 
 .mixer-icon:before {
-    content: "";
-    position: absolute;
-    top: 5px;
-    left: 10px;
-    right: 10px;
-    height: 10px;
-    background: #00FF00;
-    border-radius: 3px;
-    box-shadow: 0 0 5px #00FF00;
+contenido: "";
+posición: absoluta;
+parte superior: 5px;
+izquierda: 10px;
+derecha: 10px;
+altura: 10 píxeles;
+fondo: #00FF00;
+borde-radio: 3px;
+box-shadow: 0 0 5px #00FF00;
 }
 
 .mixer-icon:after {
-    content: "";
-    position: absolute;
-    bottom: 5px;
-    left: 15px;
-    right: 15px;
-    height: 6px;
-    background: #FFFF00;
-    border-radius: 2px;
-    box-shadow: 0 0 3px #FFFF00;
+contenido: "";
+posición: absoluta;
+parte inferior: 5px;
+izquierda: 15px;
+derecha: 15px;
+altura: 6px;
+fondo: #FFFF00;
+borde-radio: 2px;
+box-shadow: 0 0 3px #FFFF00;
 }
 
 .dj-title {
-    font-size: 20px;
-    color: #FFFF00;
-    margin-bottom: 10px;
-    text-shadow: 0 0 5px #FFFF00;
+tamaño de fuente: 20px;
+color: #FFFF00;
+margen inferior: 10px;
+text-shadow: 0 0 5px #FFFF00;
 }
 
 .dj-description {
-    font-size: 14px;
-    color: #CCFFCC;
-    margin-bottom: 15px;
+tamaño de fuente: 14px;
+color: #CCFFCC;
+margen inferior: 15px;
 }
 
 .dj-status {
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 15px;
-    display: inline-block;
-    margin-top: 10px;
+tamaño de fuente: 12px;
+relleno: 5px 10px;
+borde-radio: 15px;
+mostrar: bloque en línea;
+margen superior: 10px;
 }
 
 .dj-status.available {
-    background: #004400;
-    color: #00FF00;
-    border: 1px solid #00FF00;
+fondo: #004400;
+color: #00FF00;
+borde: 1px sólido #00FF00;
 }
 
 .dj-status.coming {
-    background: #444400;
-    color: #FFFF00;
-    border: 1px solid #FFFF00;
+fondo: #444400;
+color: #FFFF00;
+borde: 1px sólido #FFFF00;
 }
 
 /* Contenedor de lanzamientos */
-.lanzamientos-container {
-    margin-top: 30px;
-    padding: 20px;
-    background: rgba(0, 30, 0, 0.8);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    display: none;
+.lanzamientos-contenedor {
+margen superior: 30px;
+relleno: 20px;
+fondo: rgba(0, 30, 0, 0.8);
+borde: 2px sólido #00FF00;
+borde-radio: 10px;
+visualización: ninguna;
 }
 
 .lanzamientos-container.active {
-    display: block;
-    animation: fadeIn 0.5s ease-in;
+pantalla: bloque;
+animación: fadeIn 0.5s ease-in;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+de { opacidad: 0; transformación: translateY(10px); }
+a { opacidad: 1; transformación: traslaciónY(0); }
 }
 
 .toggle-btn {
-    background: #00AA00;
-    color: #000;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: all 0.3s;
+fondo: #00AA00;
+color: #000;
+borde: ninguno;
+relleno: 8px 16px;
+borde-radio: 5px;
+grosor de fuente: negrita;
+cursor: puntero;
+margen superior: 10px;
+transición: todas 0,3 s;
 }
 
 .toggle-btn:hover {
-    background: #00FF00;
+fondo: #00FF00;
 }
 
 </style>
 </head>
-<body>
+<cuerpo>
 
 <!-- Fondo tribal con efectos -->
 <div class="tribal-background"></div>
 <div class="overlay"></div>
 
-<div id="loader">
-  <div class="loader-content">
-    <div class="loader-rtbs">
-      <img src="Proyecto_29.png" alt="Logo RTBS CREW" id="logo-loader">
-      RTBS CREW
-    </div>
-    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  </div>
+<!-- Nuevos efectos de distorsión y glitches -->
+<div id="distorsión"></div>
+<div id="ondas"></div>
+<div class="glitch-overlay"></div>
+<div class="custom-cursor"></div>
+
+<div id="cargador">
+<div class="loader-content">
+<div class="loader-rtbs">
+<img src="Proyecto_29.png" alt="Logotipo RTBS ​​CREW" id="logo-loader">
+Equipo RTBS
+</div>
+<div class="bar"></div><div class="bar"></div><div class="bar"></div>
+<div class="bar"></div><div class="bar"></div><div class="bar"></div>
+</div>
 </div>
 
 <!-- El resto del código HTML permanece exactamente igual -->
 <!-- Transición de disco vinilo -->
 <div id="transition-overlay">
-    <div class="vinyl-transition"></div>
+<div class="vinyl-transition"></div>
 </div>
 
 <nav>
-  <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
-  <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
-  <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
-  <a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
-  <a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
-  <a href="#" onclick="showTabWithTransition('dj')">REPRODUCTOR DJ</a>
-  <a href="#" onclick="showTabWithTransition('altavoces')">NUESTROS ALTAVOCES</a>
+<a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
+<a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
+<a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
+<a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
+<a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
+<a href="#" onclick="showTabWithTransition('dj')">REPRODUCTOR DJ</a>
+<a href="#" onclick="showTabWithTransition('altavoces')">NUESTROS ALTAVOCES</a>
 </nav>
 
 <div class="main">
-  <h1 class="titulo-con-logo">
-  <img src="Proyecto_29.png" alt="Logo RTBS CREW" class="logo-titulo">
-  <span>R</span><span>T</span><span>B</span><span>S</span> CREW
+<h1 class="titulo-con-logo">
+<img src="Proyecto_29.png" alt="Logotipo RTBS ​​CREW" class="logo-titulo">
+<span>R</span><span>T</span><span>B</span><span>S</span> TRIPULACIÓN
 </h1>
 
-  <!-- SECCIÓN INICIO -->
-  <div id="inicio" style="display:block;">
-    <h2>☢️ BIENVENIDOS A LA ZONA CERO ☢️</h2>
-    
-    <div class="descripcion">
-      <p>☢️ <strong>Que tal peña, somos RTBS CREW.</strong> ☢️</p>
-      
-      <p>//Llevamos tiempo haciendo música y montando altavoces artesanales para soundsystem.//</p>
-      
-      <p>🔷 <strong>Por pura pasión al sonido y al movimiento libre.</strong> No vivimos de esto ni lo hacemos por moda. Lo hacemos porque lo sentimos dentro. 🔷</p>
-      
-      <p>⚠️ <strong>Esta CREW formada por varios colegas amantes del sonido y del movimiento rave</strong>, ha sido una forma de seguir defendiendo lo que creemos que es el tekno de verdad: libre, sucio, no a la comercialización del movimiento rave, sin postureo. ⚠️</p>
-      
-      <p>‼️ <strong>No creemos en meterle bombo a cualquier cosa y decir que eso es free party.</strong> Tampoco en convertir el tekno en un producto de marketing. Para nosotros, esto sigue siendo lo de siempre: una forma de expresión, contra el sistema. ‼️</p>
-      
-      <p>💥 <strong>Solo ruido como el de antes.</strong> 💥</p>
-    </div>
-    
-    <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
-  </div>
-    
-    <!-- SECCIÓN REPRODUCTOR DJ -->
-<div id="dj" class="seccion" style="display:none;">
-  <h2>🎚️ REPRODUCTOR DJ 🎚️</h2>
-  <div style="text-align:right; margin-bottom:10px;">
-    <button onclick="toggleFullScreenDJ()" style="padding:8px 12px; background:#00AA00; color:#000; border:1px solid #00FF00; border-radius:5px; font-weight:bold; cursor:pointer;">🖥️ Pantalla completa</button>
-  </div>
-  <iframe id="djPlayer"
-    src="rtbs_dj_with_recorder.html"
-    width="100%"
-    height="900"
-    frameborder="0"
-    allow="autoplay; encrypted-media; midi; microphone; fullscreen">
-  </iframe>
-  
-  <!-- Información sobre el código -->
-  <div style="background: rgba(0, 40, 0, 0.5); border: 2px solid #00FF00; border-radius: 10px; padding: 20px; margin-top: 20px; text-align: center;">
-    <h3 style="color: #FFFF00; margin-bottom: 15px;">💿 CÓDIGO LIBRE - RTBS CREW 💿</h3>
-    
-    <p style="color: #CCFFCC; margin-bottom: 15px; line-height: 1.5;">
-      <strong>Este reproductor DJ está en constante desarrollo</strong><br>
-      <strong>Hecho por RTBS CREW con ayuda de IA</strong><br>
-      Puedes usarlo, modificarlo, descargarlo y compartirlo libremente.
-    </p>
-    
-    <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0;">
-      <a href="rtbs_dj_with_recorder.html" download="rtbs_dj_player_by_RTBS_CREW.html"
-         style="display: inline-block; padding: 10px 20px; background: #00AA00; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00FF00; transition: all 0.3s;">
-         📥 DESCARGAR CÓDIGO DJ
-      </a>
-      
-      <a href="https://github.com/rtbscrewsoundsystem/RTBS-CREW-" target="_blank"
-         style="display: inline-block; padding: 10px 20px; background: #003300; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00FF00; transition: all 0.3s;">
-         🔧 VER CÓDIGO EN GITHUB
-      </a>
-    </div>
-    
-    <div style="color: #88FF88; font-size: 14px; margin-top: 15px;">
-      <strong>Autor:</strong> RTBS CREW (con ayuda de IA)<br>
-      <strong>Licencia:</strong> Libre uso - Atribución a RTBS CREW<br>
-      <strong>Repositorio:</strong> github.com/rtbscrewsoundsystem/RTBS-CREW-<br>
-      <strong>Estado:</strong> En desarrollo constante
-    </div>
-    
-    <div style="color: #FFFF00; font-size: 12px; margin-top: 20px; padding: 10px; background: rgba(0, 60, 0, 0.3); border-radius: 5px;">
-      ⚠️ <strong>Nota:</strong> La página web tiene © Todos los derechos reservados RTBS CREW 2025<br>
-      Solo el reproductor DJ es de código libre y modificable
-    </div>
-  </div>
+<!-- SECCIÓN INICIO -->
+<div id="inicio" style="display:block;">
+<h2>☢️ BIENVENIDOS A LA ZONA CERO ☢️</h2>
+<div class="descripcion">
+<p>☢️ <strong>Que tal peña, somos RTBS ​​CREW.</strong> ☢️</p>
+<p>//Llevamos tiempo haciendo música y montando altavoces artesanales para soundsystem.//</p>
+<p>🔷 <strong>Por pura pasión al sonido libre y sucio</strong> 🔷</p>
+<p>🔷 <strong>Nuestro sonido es un viaje a través de ritmos tribales, bajos profundos y texturas industriales.</strong> 🔷</p>
+<p>🔷 <strong>Exploramos los límites del dub, techno tribal y sonidos experimentales.</strong> 🔷</p>
+<p>🔷 <strong>Creemos en la música como fuerza liberadara, en el DIY como filosofía y en la comunidad como motor.</strong> 🔷</p>
+<p>🔷 <strong>Nuestro objetivo: crear experiencias sonoras que conecten con lo primitivo y lo futurista.</strong> 🔷</p>
+<p>🔷 <strong>Bienvenidos a nuestra frecuencia.</strong> 🔷</p>
+<p>🔷 <strong>RTBS CREW - Sonido Libre y Sucio</strong> 🔷</p>
+</div>
+https://rtbscrew.bandcamp.com Escucha nuestra música en Bandcamp</a>
 </div>
 
-  <!-- SECCIÓN NUESTRA MÚSICA -->
-<div id="musica" style="display:none;">
-  <h2>🎧 DJs DEL COLECTIVO RTBS CREW 🎧</h2>
-  
-  <div class="dj-grid">
-    <!-- DJ FLUGEL RTBS CREW -->
-    <div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
-      <div class="mixer-icon"></div>
-      <div class="dj-title">DJ FLUGEL RTBS CREW</div>
-      <div class="dj-description">Haz clic para ver sus lanzamientos</div>
-      <div class="dj-status available">CONTENIDO DISPONIBLE</div>
-    </div>
-        <!-- REDES SOCIALES DJ FLUGEL -->
-  <div style="background: rgba(0, 30, 0, 0.8); border: 2px solid #00FF00; border-radius: 10px; padding: 25px; margin-top: 30px;">
-    <h3 style="color: #FFFF00; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #FFFF00;">
-      🔗 REDES SOCIALES - DJ FLUGEL RTBS CREW 🔗
-    </h3>
-    
-    <div class="redes">
-      <a href="https://open.spotify.com/intl-es/artist/6wyw8mePtNcVJQCqcrYAnH?si=nxvOrf-tSfSliB0r6Sco8A" target="_blank" title="Spotify">
-        <img src="https://img.icons8.com/color/48/000000/spotify--v1.png" alt="Spotify">
-      </a>
-      <a href="https://rtbscrew.bandcamp.com/" target="_blank" title="Bandcamp">
-        <img src="https://img.icons8.com/color/48/000000/bandcamp.png" alt="Bandcamp">
-      </a>
-      <a href="https://www.youtube.com/channel/UCXG_h638ISUQXIzxVM3U1DA" target="_blank" title="YouTube">
-        <img src="https://img.icons8.com/color/48/000000/youtube.png" alt="YouTube">
-      </a>
-      <a href="https://music.youtube.com/channel/UCXG_h638ISUQXIzxVM3U1DA" target="_blank" title="YouTube Music">
-        <img src="https://img.icons8.com/color/48/000000/youtube-music.png" alt="YouTube Music">
-      </a>
-      <a href="https://soundcloud.com/dj_flugel_1314" target="_blank" title="SoundCloud">
-        <img src="https://img.icons8.com/color/48/000000/soundcloud.png" alt="SoundCloud">
-      </a>
-      <a href="https://music.apple.com/es/artist/dj-flugel-rtbs-crew/1827645002" target="_blank" title="Apple Music">
-        <img src="https://img.icons8.com/color/48/000000/apple-music.png" alt="Apple Music">
-      </a>
-      <a href="https://music.amazon.es/artists/B0FJ63J62Z/dj-flugel-rtbs-crew" target="_blank" title="Amazon Music">
-        <img src="https://img.icons8.com/color/48/000000/amazon-music.png" alt="Amazon Music">
-      </a>
-      <a href="https://www.qobuz.com/ar-es/interpreter/dj-flugel-rtbs-crew/27813914" target="_blank" title="Qobuz">
-        <img src="https://img.icons8.com/color/48/000000/qobuz.png" alt="Qobuz">
-      </a>
-      <a href="https://www.discogs.com/artist/16708987-DJ-FLUGEL-RTBS-CREW" target="_blank" title="Discogs">
-        <img src="https://img.icons8.com/color/48/000000/discogs.png" alt="Discogs">
-      </a>
-      <a href="https://www.boomplay.com/artists/113820711" target="_blank" title="Boomplay">
-        <img src="https://img.icons8.com/color/48/000000/boomplay.png" alt="Boomplay">
-      </a>
-      <a href="https://tidal.com/artist/63944523" target="_blank" title="Tidal">
-        <img src="https://img.icons8.com/color/48/000000/tidal.png" alt="Tidal">
-      </a>
-      <a href="https://www.deezer.com/es/artist/336772221" target="_blank" title="Deezer">
-        <img src="https://img.icons8.com/color/48/000000/deezer.png" alt="Deezer">
-      </a>
-    </div>
-  </div>
-    
-    <!-- TOUXMAN DJ -->
-    <div class="dj-item" onclick="toggleDJ('touxman')" id="dj-touxman">
-      <div class="mixer-icon"></div>
-      <div class="dj-title">TOUXMAN DJ</div>
-      <div class="dj-description">Haz clic para ver sus lanzamientos</div>
-      <div class="dj-status available">CONTENIDO DISPONIBLE</div>
-    </div>
-  </div>
-      <!-- REDES SOCIALES TOUXMAN DJ -->
-  <div style="background: rgba(0, 30, 0, 0.8); border: 2px solid #00FF00; border-radius: 10px; padding: 25px; margin-top: 30px;">
-    <h3 style="color: #FFFF00; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #FFFF00;">
-      🔗 REDES SOCIALES - TOUXMAN DJ 🔗
-    </h3>
-    
-    <div class="redes">
-      <a href="https://www.mixcloud.com/TouxManDJ/" target="_blank" title="Mixcloud">
-        <img src="https://img.icons8.com/color/48/000000/mixcloud.png" alt="Mixcloud">
-      </a>
-      <a href="https://soundcloud.com/touxman" target="_blank" title="SoundCloud">
-        <img src="https://img.icons8.com/color/48/000000/soundcloud.png" alt="SoundCloud">
-      </a>
-      <a href="https://www.instagram.com/touxmandj/" target="_blank" title="Instagram">
-        <img src="https://img.icons8.com/color/48/000000/instagram-new.png" alt="Instagram">
-      </a>
-    </div>
-  </div>
-
-  <!-- LANZAMIENTOS DJ FLUGEL -->
-  <div id="lanzamientos-flugel" class="lanzamientos-container">
-    <h3 style="color: #FFFF00; text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px #FFFF00;">
-      🎵 LANZAMIENTOS DE DJ FLUGEL RTBS CREW 🎵
-    </h3>
-    
-    <div class="vinyl-grid">
-      <!-- 1: MENSAJE MALDITO A1 -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - MENSAJE MALDITO A1</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/mensaje-maldito-a1" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35221057-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-MENSAJE-MALDITO-A1" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=okzUius2ICg&list=OLAK5uy_kDWRzzYThPzgi9gEXbbqzWBE3nBzBF0tM" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 2: DJ URA A2 -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - DJ URA A2</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-dj-ura-a2" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35223049-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-JD-URA-A2" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=dw-8HADziKw&list=OLAK5uy_kvUUjHABSiR40T3yrTIoYJ05IAdfYFVP0" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 3: GAU B1 -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - GAU B1</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-gau-b1" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35223085-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-GUAU-B1" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=HWjLFcsbhtg&list=OLAK5uy_n8m_DjFUYs-JyoGtTc1cmoVz0_P8EiMWg" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 4: TEK HARD B -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - TEK HARD B</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-tek-hard-b" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35223109-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-TEK-HARD-B2" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=3PKeJXP7JUA&list=OLAK5uy_kpcJwSmLmcr2kXXcOnOZnIpf_R2zUPQcI" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 5: UNTILED PHONE (VINYL 002) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - UNTILED PHONE (VINYL 002)</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-untiled-phone-vinyl-002" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235271-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-UNTILED-PHONE-VINYL-002" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=Ah9s078j3wc&list=OLAK5uy_m3WfPVhIG5wZhfDsU14NB9rqzMwELVb1M" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 6: VINYL 002 PESADILLA -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - VINYL 002 PESADILLA</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-vinyl-002-pesadilla" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235343-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-VINYL-002-PESADILLA" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=dUAzkOL5hWg&list=OLAK5uy_kjfDfFL_bBuEk41pVVGChLxFQpYqSmlIg" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 7: OLD SCHOOL HARDTECHNO SCHRANZ (FACE A) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - OLD SCHOOL HARDTECHNO SCHRANZ (FACE A)</div>
-          <div class="vinyl-description">A1 PSYCHOBLAST & A2 TOXIC OVERLOAD</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/album/dj-flugel-rtbs-crew-old-school-hardtechno-schranz-face-a" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235382-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-OLD-SCHOOL-HARDTECHNO-SCHRANZ-FACE-A" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=pxqp6rTGibg&list=OLAK5uy_kTy8oGAF0BljToklnwrF1_RwlCk2Nt7JM" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 8: NUKLEAR VOID -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - NUKLEAR VOID</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/dj-flugel-rtbs-crew-nuklear-void" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35235463-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-NUKLEAR-VOID" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=eyXcEBJvKK8&list=OLAK5uy_mrA2oYjTI4xqMhc4eWeQByXhVFlH_ZVqY" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 9: OLD SCHOOL HARDTECHNO SCHRANZ (FACE B) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - OLD SCHOOL HARDTECHNO SCHRANZ (FACE B)</div>
-          <div class="vinyl-description">B1 DELIRIUMCODE & B2 NEURO SCREAM</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/album/dj-flugel-rtbs-crew-old-school-hardtechno-schranz-face-b" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35296312-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-OLD-SCHOOL-HARDTECHNO-SCHRANZ-FACE-B" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=7p2CmsvanaY&list=OLAK5uy_kPjfYSC8qOPLFVQ-lJVuzmrExYBUyLdCQ" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 10: GHOST LOOP MIX -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - GHOST LOOP MIX</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/ghost-loop-mix" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35429950-DJ-FLUGEL-RTBS-CREW-DJ-FLUGEL-RTBS-CREW-GHOST-LOOP-MIX" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=p-4SdiX75pw&list=OLAK5uy_k0-Nx2MpbZakJx0jAG8UTdyo_IzMW_Cag" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <a href="https://rtbscrew.bandcamp.com" target="_blank" class="bandcamp-link">🎵 VER TODOS NUESTROS LANZAMIENTOS EN BANDCAMP 🎵</a>
-  </div>
-
-  <!-- LANZAMIENTOS TOUXMAN DJ -->
-  <div id="lanzamientos-touxman" class="lanzamientos-container">
-    <h3 style="color: #FFFF00; text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px #FFFF00;">
-      🎵 LANZAMIENTOS DE TOUXMAN DJ 🎵
-    </h3>
-    
-    <div class="vinyl-grid">
-      <!-- 1: Fvck Klub (Soto Asa remix) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Fvck Klub (Soto Asa remix)</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/JRzTHky7D1x5DvYvqq" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 2: Nebula Meot -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Nebula Meot</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/E25FzzvV0cJWKWKpmt" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 3: Arkitekto -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Arkitekto</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/I4yFQFyyYNzwV6Xa4H" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 4: Rolling -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Rolling</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/LS37ns2RhkR57lB290" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 5: Nana del ravero -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Nana del ravero</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/2Hwdh36a9yx0gwv89U" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 6: Ganja party (2018 remix) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Ganja party (2018 remix)</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/NgVMaFxsCejAzPMOHS" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 7: Voodoo people (remix) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Voodoo people (remix)</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/GV1N9ivYYW39WWqZHi" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 8: General Levy (remix) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - General Levy (remix)</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/39Gm1wFdw0jdtzEHKA" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- 9: Vida Grimey -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">TOUXMAN DJ - Vida Grimey</div>
-          <div class="vinyl-links">
-            <a href="https://on.soundcloud.com/JxuTA2e89U9niwTJX9" target="_blank">SoundCloud</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- SECCIÓN NUESTRA MÚSICA -->
+<div id="musica">
+<h2>🎵 NUESTRA MÚSICA 🎵</h2>
+<div class="vinyl-grid">
+<!-- Vinilo 1 -->
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Tribal Dub Sessions Vol.1</div>
+<div class="vinyl-description">Primera entrega de nuestras sesiones de doblaje con influencias tribales y bajos profundos.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Bandcamp</a>
+<a href="#" target="_blank">SoundCloud</a>
+<a href="#" target="_blank">YouTube</a>
+</div>
+<div class="like-dislike">
+<button class="like-btn">👍</button>
+<span class="like-count">12</span>
+<button class="dislike-btn">👎</button>
+<span class="dislike-count">2</span>
+</div>
+</div>
+</div>
+<!-- Vinilo 2 -->
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Rituales de Techno Industrial</div>
+<div class="vinyl-description">Ritmos industriales y percusiones tribales para sesiones nocturnas.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Bandcamp</a>
+<a href="#" target="_blank">SoundCloud</a>
+</div>
+<div class="like-dislike">
+<button class="like-btn">👍</button>
+<span class="like-count">8</span>
+<button class="dislike-btn">👎</button>
+<span class="dislike-count">1</span>
+</div>
+</div>
+</div>
+<!-- Vinilo 3 -->
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Ecos de la cueva</div>
+<div class="vinyl-description">Sonidos cavernosos y ecos infinitos en esta sesión de dub experimental.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Bandcamp</a>
+<a href="#" target="_blank">YouTube</a>
+</div>
+<div class="like-dislike">
+<button class="like-btn">👍</button>
+<span class="like-count">15</span>
+<button class="dislike-btn">👎</button>
+<span class="dislike-count">0</span>
+</div>
+</div>
+</div>
+<!-- Vinilo 4 -->
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Bajo Ritual</div>
+<div class="vinyl-description">Bajos ceremoniales y ritmos ancestrales para danzas modernas.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Bandcamp</a>
+<a href="#" target="_blank">SoundCloud</a>
+<a href="#" target="_blank">YouTube</a>
+</div>
+<div class="like-dislike">
+<button class="like-btn">👍</button>
+<span class="like-count">10</span>
+<button class="dislike-btn">👎</button>
+<span class="dislike-count">3</span>
+</div>
+</div>
+</div>
+</div>
 </div>
 
-  <!-- SECCIÓN VÍDEOS VISUALES (EN OBRAS) -->
-  <div id="visuales" class="seccion under-construction">
-    <div class="construction-border">
-      <div class="construction-content">
-        <!-- Tiras de obras -->
-        <div class="tape"></div>
-        <div class="tape"></div>
-        <div class="tape"></div>
-        
-        <!-- Humo pixelado -->
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        
-        <div class="windows-xp-title">🚧 MÚSICA VISUALES - EN CONSTRUCCIÓN 🚧</div>
-        
-        <div class="xp-icon">📹</div>
-        
-        <h3 style="color: #FFFF00; text-shadow: 2px 2px 0px #000; font-family: 'MS Sans Serif'; margin: 20px 0;">
-            ESTA SECCIÓN ESTÁ EN OBRAS
-        </h3>
-        
-        <p style="color: #FFFFFF; font-family: 'MS Sans Serif'; margin: 15px 0; font-size: 14px;">
-            Estamos trabajando en los contenidos visuales.<br>
-            Próximamente más vídeos y material multimedia.
-        </p>
-        
-        <div style="margin: 20px 0;">
-            <button class="windows-xp-button" onclick="showTabWithTransition('musica')">
-                IR A NUESTRA MÚSICA
-            </button>
-            <button class="windows-xp-button" onclick="showTabWithTransition('inicio')">
-                VOLVER AL INICIO
-            </button>
-        </div>
-        
-        <div style="color: #C0C0C0; font-family: 'MS Sans Serif'; font-size: 12px; margin-top: 30px;">
-            🔨 Web en desarrollo - RTBS CREW 2025 🔨
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <div id="redes" class="seccion">
-    <h2>📱 REDES SOCIALES 📱</h2>
-    <div class="redes">
-      <a href="https://www.instagram.com/rtbs_crew/" target="_blank"><img src="https://img.icons8.com/color/48/000000/instagram-new.png" alt="Instagram"></a>
-      <a href="https://www.tiktok.com/@rtbscrew" target="_blank"><img src="https://img.icons8.com/color/48/000000/tiktok--v1.png" alt="TikTok"></a>
-      <a href="https://soundcloud.com/rtbs-crew" target="_blank"><img src="https://img.icons8.com/color/48/000000/soundcloud.png" alt="SoundCloud"></a>
-      <a href="https://www.youtube.com/@RTBSCREW" target="_blank"><img src="https://img.icons8.com/color/48/000000/youtube.png" alt="YouTube"></a>
-      <a href="https://audiomack.com/rtbscrewsoundsystem" target="_blank"><img src="https://img.icons8.com/color/48/000000/audiomack.png" alt="Audiomack"></a>
-      <a href="https://www.patreon.com/c/RTBSCREW" target="_blank"><img src="https://img.icons8.com/color/48/000000/patreon.png" alt="Patreon"></a>
-      <a href="https://x.com/RTBSCREW" target="_blank"><img src="https://img.icons8.com/color/48/000000/twitterx.png" alt="X (Twitter)"></a>
-    </div>
-  </div>
-
-  <div id="comentarios" class="seccion">
-    <h2>💬 COMENTARIOS 💬</h2>
-    <form id="comment-form" onsubmit="return addComment()">
-      <input type="text" id="name" placeholder="Tu nombre" required>
-      <textarea id="comment" placeholder="Tu comentario" required rows="4"></textarea>
-      <button type="submit">ENVIAR COMENTARIO</button>
-    </form>
-    <div id="comment-section"></div>
-  </div>
-
-  <!-- SECCIÓN ALTAVOCES (EN OBRAS) -->
-  <div id="altavoces" class="seccion under-construction">
-    <div class="construction-border">
-      <div class="construction-content">
-        <!-- Tiras de obras -->
-        <div class="tape"></div>
-        <div class="tape"></div>
-        <div class="tape"></div>
-        
-        <!-- Humo pixelado -->
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        
-        <div class="windows-xp-title">🔧 NUESTROS ALTAVOCES - EN CONSTRUCCIÓN 🔧</div>
-        
-        <div class="xp-icon">🔊</div>
-        
-        <h3 style="color: #FFFF00; text-shadow: 2px 2px 0px #000; font-family: 'MS Sans Serif'; margin: 20px 0;">
-            SECCIÓN EN DESARROLLO
-        </h3>
-        
-        <p style="color: #FFFFFF; font-family: 'MS Sans Serif'; margin: 15px 0; font-size: 14px;">
-            Próximamente información sobre nuestros<br>
-            altavoces artesanales y soundsystem.
-        </p>
-        
-        <div style="margin: 20px 0;">
-            <button class="windows-xp-button" onclick="showTabWithTransition('musica')">
-                VER NUESTROS LANZAMIENTOS
-            </button>
-            <button class="windows-xp-button" onclick="showTabWithTransition('inicio')">
-                PÁGINA PRINCIPAL
-            </button>
-        </div>
-        
-        <div style="color: #C0C0C0; font-family: 'MS Sans Serif'; font-size: 12px; margin-top: 30px;">
-            ⚡ Proyecto en desarrollo - Vuelve pronto ⚡
-        </div>
-      </div>
-    </div>
-  </div>
+<!-- SECCIÓN MÚSICA VISUALES -->
+<div id="visuales" class="seccion">
+<h2>🎬 MÚSICA VISUALES 🎬</h2>
+<div class="videos-grid">
+<!-- Vídeo 1 -->
+<div class="video-item">
+<div class="video-title">Ritual Dub - Experiencia visual</div>
+<iframe class="video-player" width="100%" height="200" src=" https://www.youtube.com/embed/dQw4w9WgXcQ " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<!-- Vídeo 2 -->
+<div class="video-item">
+<div class="video-title">Sesiones de Techno Tribal</div>
+<iframe class="video-player" width="100%" height="200" src=" https://www.youtube.com/embed/dQw4w9WgXcQ " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<!-- Vídeo 3 -->
+<div class="video-item">
+<div class="video-title">Meditación con bajos</div>
+<iframe class="video-player" width="100%" height="200" src=" https://www.youtube.com/embed/dQw4w9WgXcQ " frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>
 </div>
 
-<footer>© 2025 RTBS CREW - ☢️ SONIDO LIBRE Y SUCIO ☢️<p>RTBS CREW 2025 — Todos los derechos reservados.</p>
+<!-- SECCIÓN REDES SOCIALES -->
+<div id="redes" class="sección">
+<h2>📱 REDES SOCIALES 📱</h2>
+<div class="redes">
+https://www.instagram.com/rtbs_crew/ <img src=" https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png " alt="Instagram"></a>
+https://www.youtube.com/channel/UCvBvxVIVdCwY4u0NfT6UE3g <img src=" https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png " alt="YouTube"></a>
+https://soundcloud.com/rtbs-crew <img src=" https://upload.wikimedia.org/wikipedia/commons/3/3b/SoundCloud_icon.svg " alt="SoundCloud"></a>
+https://rtbscrew.bandcamp.com <img src=" https://upload.wikimedia.org/wikipedia/commons/1/19/Bandcamp-button-text-green.svg " alt="Bandcamp"></a>
+</div>
+</div>
+
+<!-- SECCIÓN COMENTARIOS -->
+<div id="comentarios" class="seccion">
+<h2>💬 COMENTARIOS 💬</h2>
+<form id="comment-form">
+<input type="text" id="comment-name" placeholder="Tu nombre" required>
+<textarea id="comment-text" placeholder="Tu comentario" rows="4" required></textarea>
+<button type="submit">ENVIAR COMENTARIO</button>
+</form>
+<div id="contenedor de comentarios"></div>
+</div>
+
+<!-- SECCIÓN REPRODUCTOR DJ -->
+<div id="dj" class="seccion">
+<h2>🎛️DJ REPRODUCTOR 🎛️</h2>
+<div class="dj-grid">
+<!-- DJ 1 -->
+<div class="dj-item" onclick="toggleLanzamientos('lanzamientos1')">
+<div class="mixer-icon"></div>
+<div class="dj-title">DJ TRIBAL BASS</div>
+<div class="dj-description">Especialista en sesiones de dub tribal y ritmos ancestrales con bajos profundos.</div>
+<div class="dj-status available">EN LÍNEA</div>
+</div>
+<!-- DJ 2 -->
+<div class="dj-item" onclick="toggleLanzamientos('lanzamientos2')">
+<div class="mixer-icon"></div>
+<div class="dj-title">CHAMANTE TECHNO</div>
+<div class="dj-description">Fusiona techno industrial con elementos tribales para experiencias sonoras únicas.</div>
+<div class="dj-status coming">PRÓXIMAMENTE</div>
+</div>
+<!-- DJ 3 -->
+<div class="dj-item" onclick="toggleLanzamientos('lanzamientos3')">
+<div class="mixer-icon"></div>
+<div class="dj-title">RITMOS RITUALES</div>
+<div class="dj-description">Creador de atmósferas sonoras y ritmos ceremoniales para danzas modernas.</div>
+<div class="dj-status available">EN LÍNEA</div>
+</div>
+</div>
+<!-- Lanzamientos DJ 1 -->
+<div id="lanzamientos1" class="lanzamientos-contenedor">
+<h3>ÚLTIMOS LANZAMIENTOS - DJ TRIBAL BASS</h3>
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Sesiones de Dub Ceremoniales</div>
+<div class="vinyl-description">Sesión en vivo grabada en nuestro estudio con bajos modificados y efectos de espacio.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Escuchar</a>
+<a href="#" target="_blank">Descargar</a>
+</div>
+</div>
+</div>
+<button class="toggle-btn" onclick="toggleLanzamientos('lanzamientos1')">CERRAR</button>
+</div>
+<!-- Lanzamientos DJ 2 -->
+<div id="lanzamientos2" class="lanzamientos-contenedor">
+<h3>PRÓXIMOS LANZAMIENTOS - TECHNO SHAMAN</h3>
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Industrial Rituals EP</div>
+<div class="vinyl-description">Próximo EP con 4 temas de techno industrial con influencias tribales.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Pre-escuchar</a>
+</div>
+</div>
+</div>
+<button class="toggle-btn" onclick="toggleLanzamientos('lanzamientos2')">CERRAR</button>
+</div>
+<!-- Lanzamientos DJ 3 -->
+<div id="lanzamientos3" class="lanzamientos-contenedor">
+<h3>ÚLTIMOS LANZAMIENTOS - BEATS RITUAL</h3>
+<div class="vinyl-item">
+<div class="vinyl-decoration"></div>
+<div class="vinyl-content">
+<div class="vinyl-title">Ecos del Templo</div>
+<div class="vinyl-description">Dub ambiental con grabaciones de campo en lugares ceremoniales.</div>
+<div class="vinyl-links">
+<a href="#" target="_blank">Escuchar</a>
+<a href="#" target="_blank">Descargar</a>
+</div>
+</div>
+</div>
+<button class="toggle-btn" onclick="toggleLanzamientos('lanzamientos3')">CERRAR</button>
+</div>
+</div>
+
+<!-- SECCIÓN ALTAVOCES -->
+<div id="altavoces" class="sección en construcción">
+<div class="construction-border">
+<div class="construction-content">
+<div class="windows-xp-title">RTBS CREW - Altavoces Artesanales</div>
+<div class="xp-icon">🔊</div>
+<h3>SECCIÓN EN CONSTRUCCIÓN</h3>
+<p>Estamos trabajando en mostrar nuestros altavoces artesanales para soundsystem.</p>
+<p>Próximamente podrás ver nuestros diseños y especificaciones técnicas.</p>
+<button class="windows-xp-button" onclick="alert('¡Volveremos pronto con novedades!')">ACEPTAR</button>
+</div>
+</div>
+<!-- Efectos de construcción -->
+<div class="tape"></div>
+<div class="tape"></div>
+<div class="tape"></div>
+<div class="smoke"></div>
+<div class="smoke"></div>
+<div class="smoke"></div>
+<div class="smoke"></div>
+</div>
+
+<pie de página>
+<p>☢️ RTBS ​​CREW - Sonido Libre y Sucio ☢️</p>
+<p>Contacto: rtbs.crew@gmail.com </p>
 </footer>
+</div>
 
 <script>
-// ----------------- Loader (2 segundos fijo) -----------------
-setTimeout(() => { 
-    document.getElementById("loader").style.display = "none"; 
+// Código JavaScript existente
+ventana.onload = function() {
+establecerTimeout(función() {
+document.getElementById('loader').style.opacity = '0';
+establecerTimeout(función() {
+document.getElementById('loader').style.display = 'none';
+}, 500);
 }, 2000);
+};
 
-// ----------------- Transición entre secciones -----------------
-function showTabWithTransition(tab){
-    const overlay = document.getElementById('transition-overlay');
-    
-    // Mostrar transición
-    overlay.style.opacity = '1';
-    overlay.style.pointerEvents = 'all';
-    
-    setTimeout(() => {
-        // Cambiar de sección
-        showTab(tab);
-        
-        // Ocultar transición
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            overlay.style.pointerEvents = 'none';
-        }, 500);
-    }, 600);
+función mostrarPestañaConTransición(idPestaña) {
+const superposición = document.getElementById('transition-overlay');
+superposición.estilo.opacidad = '1';
+overlay.style.pointerEvents = 'todos';
+setTimeout(() => {
+mostrarPestaña(idPestaña);
+setTimeout(() => {
+superposición.estilo.opacidad = '0';
+overlay.style.pointerEvents = 'ninguno';
+}, 300);
+}, 500);
 }
 
-// ----------------- Tabs -----------------
-function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
-      const element = document.getElementById(t);
-      if (element) {
-          element.style.display = 'none';
-          element.className = t === 'inicio' ? '' : 'seccion';
-      }
-  });
-  
-  const tabElement = document.getElementById(tab);
-  if (tabElement) {
-      tabElement.style.display = 'block';
-  }
+función mostrarPestaña(idPestaña) {
+const tabs = document.querySelectorAll('.seccion, #inicio, #musica');
+pestañas.forEach(tab => {
+tab.style.display = 'ninguno';
+});
+document.getElementById(tabId).style.display = 'block';
 }
 
-// ----------------- Comentarios -----------------
-function addComment(){
-  const name = document.getElementById('name').value;
-  const comment = document.getElementById('comment').value;
-  const section = document.getElementById('comment-section');
-  const div = document.createElement('div');
-  div.className = 'comment';
-  div.innerHTML = `<strong>${name}</strong>: ${comment}`;
-  section.prepend(div);
-  document.getElementById('comment-form').reset();
-  return false;
+document.getElementById('comment-form').addEventListener('submit', function(e) {
+e.preventDefault();
+const nombre = document.getElementById('comment-name').value;
+const texto = document.getElementById('comment-text').value;
+si (nombre && texto) {
+const comentario = document.createElement('div');
+comentario.className = 'comentario';
+comentario.innerHTML = `<strong>${name}:</strong> ${text}`;
+document.getElementById('comments-container').prepend(comment);
+document.getElementById('comment-name').value = '';
+document.getElementById('comment-text').value = '';
 }
-
-// ----------------- Sistema de Likes/Dislikes -----------------
-function rateItem(button, type) {
-    const container = button.closest('.like-dislike');
-    const likeCount = container.querySelector('.like-count');
-    const dislikeCount = container.querySelector('.dislike-count');
-    const likeBtn = container.querySelector('.like-btn');
-    const dislikeBtn = container.querySelector('.dislike-btn');
-    
-    // Obtener estado actual del localStorage
-    const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
-    const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
-    
-    if (type === 'like') {
-        if (currentRating.liked) {
-            // Quitar like
-            likeCount.textContent = parseInt(likeCount.textContent) - 1;
-            currentRating.liked = false;
-            likeBtn.style.opacity = '1';
-        } else {
-            // Poner like
-            likeCount.textContent = parseInt(likeCount.textContent) + 1;
-            currentRating.liked = true;
-            likeBtn.style.opacity = '0.8';
-            
-            // Si tenía dislike, quitarlo
-            if (currentRating.disliked) {
-                dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
-                currentRating.disliked = false;
-                dislikeBtn.style.opacity = '1';
-            }
-        }
-    } else if (type === 'dislike') {
-        if (currentRating.disliked) {
-            // Quitar dislike
-            dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
-            currentRating.disliked = false;
-            dislikeBtn.style.opacity = '1';
-        } else {
-            // Poner dislike
-            dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
-            currentRating.disliked = true;
-            dislikeBtn.style.opacity = '0.8';
-            
-            // Si tenía like, quitarlo
-            if (currentRating.liked) {
-                likeCount.textContent = parseInt(likeCount.textContent) - 1;
-                currentRating.liked = false;
-                likeBtn.style.opacity = '1';
-            }
-        }
-    }
-    
-    // Guardar en localStorage
-    localStorage.setItem(storageKey, JSON.stringify(currentRating));
-}
-
-// Cargar ratings al iniciar la página
-document.addEventListener('DOMContentLoaded', function() {
-    const ratingContainers = document.querySelectorAll('.like-dislike');
-    ratingContainers.forEach(container => {
-        const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
-        const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
-        const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
-        
-        if (currentRating.liked) {
-            container.querySelector('.like-count').textContent = '1';
-            container.querySelector('.like-btn').style.opacity = '0.8';
-        }
-        if (currentRating.disliked) {
-            container.querySelector('.dislike-count').textContent = '1';
-            container.querySelector('.dislike-btn').style.opacity = '0.8';
-        }
-    });
 });
 
-// ----------------- Efectos de texto con fallos/glitches aleatorios -----------------
-function addTextGlitches() {
-    const titles = document.querySelectorAll('h1, h2, .vinyl-title, .video-title');
-    
-    titles.forEach(title => {
-        // Añadir un efecto de parpadeo aleatorio ocasional
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                title.style.opacity = '0.7';
-                setTimeout(() => {
-                    title.style.opacity = '1';
-                }, 100);
-            }
-        }, 3000);
-        
-        // Efecto de desplazamiento sutil ocasional
-        setInterval(() => {
-            if (Math.random() > 0.9) {
-                const originalTransform = title.style.transform;
-                title.style.transform = 'translateX(2px)';
-                setTimeout(() => {
-                    title.style.transform = originalTransform;
-                }, 50);
-            }
-        }, 5000);
-    });
+// Sistema de gustos/disgustos
+document.querySelectorAll('.like-btn').forEach(button => {
+botón.addEventListener('click', function() {
+const count = this.nextElementSibling;
+contador.textoContenido = parseInt(conteo.textoContenido) + 1;
+});
+});
+
+document.querySelectorAll('.dislike-btn').forEach(button => {
+botón.addEventListener('click', function() {
+const count = this.nextElementSibling;
+contador.textoContenido = parseInt(conteo.textoContenido) + 1;
+});
+});
+
+// Función para mostrar/ocultar lanzamientos de DJs
+función alternarLanzamientos(id) {
+const lanzamientos = document.getElementById(id);
+const todosLanzamientos = document.querySelectorAll('.lanzamientos-container');
+todosLanzamientos.forEach(contenedor => {
+if ( container.id !== id) {
+contenedor.classList.remove('active');
+}
+});
+lanzamientos.classList.toggle('activo');
+// Desplázate a los lanzamientos si se abren
+if (lanzamientos.classList.contains('active')) {
+lanzamientos.scrollIntoView({ behavior: 'smooth' });
+}
 }
 
-// Iniciar efectos cuando la página cargue
-window.addEventListener('load', addTextGlitches);
+// --- NUEVO CÓDIGO PARA LOS EFECTOS DE DISTORSIÓN MEJORADOS ---
+const dist = document.getElementById('distorsion');
+const ondas = document.getElementById('ondas');
+const glitchOverlay = document.querySelector('.glitch-overlay');
+const cursor = document.querySelector('.custom-cursor');
+
+// Seguimiento del ratón para efectos
+document.addEventListener('mousemove', e => {
+dist.style.setProperty('--x', `${e.clientX}px`);
+ondas.style.setProperty('--x', `${e.clientX}px`);
+ondas.style.setProperty('--y', `${e.clientY}px`);
+// Actualizar posición del cursor personalizado
+cursor.style.left = `${e.clientX}px`;
+cursor.style.top = `${e.clientY}px`;
+});
+
+// Efectos de glitch aleatorios
+setInterval(() => {
+// Fallo ocasional en el fondo
+si (Math.random() < 0.1) {
+glitchOverlay.style.opacity = '0.7';
+setTimeout(() => {
+glitchOverlay.style.opacity = '0';
+}, 100);
+}
+// Distorsión aleatoria en el fondo tribal
+const fondoTribal = document.querySelector('.tribal-background');
+si (Math.random() < 0.05) {
+tribalBg.style.filter = 'escala de grises(100%) brillo(0.9) contraste(1.4)';
+setTimeout(() => {
+tribalBg.style.filter = 'escala de grises(100%) brillo(0.8) contraste(1.2)';
+}, 200);
+}
+}, 1000);
+
+// Efecto de cursor al hacer clic
+document.addEventListener('mousedown', () => {
+cursor.style.transform = 'scale(0.8)';
+});
+
+document.addEventListener('mouseup', () => {
+cursor.style.transform = 'scale(1)';
+});
+
+// Efecto de cursor al pasar sobre enlaces
+document.querySelectorAll('a, button').forEach(element => {
+elemento.addEventListener('mouseenter', () => {
+cursor.style.transform = 'scale(1.5)';
+cursor.style.background = 'rgba(255, 255, 0, 0.5)';
+});
+elemento.addEventListener('mouseleave', () => {
+cursor.style.transform = 'scale(1)';
+cursor.style.background = 'rgba(0, 255, 0, 0.5)';
+});
+});
 </script>
 
-<script>
-function showTabWithTransition(tabId) {
-  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
-    .forEach(section => section.style.display = 'none');
-
-  const section = document.getElementById(tabId);
-  if (section) section.style.display = 'block';
-}
-</script>
-
-<script>
-// --- Función de pantalla completa para el DJ ---
-function toggleFullScreenDJ() {
-  const iframe = document.getElementById('djPlayer');
-  if (!document.fullscreenElement) {
-    iframe.requestFullscreen().catch(err => alert('No se pudo activar pantalla completa: ' + err));
-  } else {
-    document.exitFullscreen();
-  }
-}
-
-// --- Mostrar/ocultar lanzamientos según DJ ---
-let djActivo = null;
-
-function toggleDJ(dj) {
-  const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
-  const lanzamientosTouxman = document.getElementById('lanzamientos-touxman');
-  const djFlugel = document.getElementById('dj-flugel');
-  const djTouxman = document.getElementById('dj-touxman');
-  
-  if (djActivo === dj) {
-    // Si haces clic en el mismo DJ, ocultar los lanzamientos
-    lanzamientosFlugel.classList.remove('active');
-    lanzamientosTouxman.classList.remove('active');
-    djFlugel.classList.remove('active');
-    djTouxman.classList.remove('active');
-    djActivo = null;
-  } else {
-    // Mostrar los lanzamientos del DJ seleccionado
-    if (dj === 'flugel') {
-      lanzamientosFlugel.classList.add('active');
-      lanzamientosTouxman.classList.remove('active');
-      djFlugel.classList.add('active');
-      djTouxman.classList.remove('active');
-      djActivo = 'flugel';
-      
-      // Desplazar suavemente a los lanzamientos
-      setTimeout(() => {
-        lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    } else if (dj === 'touxman') {
-      lanzamientosFlugel.classList.remove('active');
-      lanzamientosTouxman.classList.add('active');
-      djFlugel.classList.remove('active');
-      djTouxman.classList.add('active');
-      djActivo = 'touxman';
-      
-      // Desplazar suavemente a los lanzamientos
-      setTimeout(() => {
-        lanzamientosTouxman.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
-  }
-}
-</script>
 </body>
 </html>

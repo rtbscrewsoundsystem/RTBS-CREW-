@@ -340,6 +340,36 @@ nav a:first-child {
     display: none;
 }
 
+    /* --- Estilos para fotos de DJs con vinilo --- */
+.dj-photo-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+}
+
+.dj-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00FF00;
+  box-shadow: 0 0 15px #00FF00;
+  position: relative;
+  z-index: 2;
+}
+
+.dj-vinyl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  z-index: 1;
+  opacity: 0.7;
+}
+
 .vinyl-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -1059,13 +1089,17 @@ footer {
   <h2>🎧 DJs DEL COLECTIVO RTBS CREW 🎧</h2>
   
   <div class="dj-grid">
-    <!-- DJ FLUGEL RTBS CREW -->
-    <div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
-      <div class="mixer-icon"></div>
-      <div class="dj-title">DJ FLUGEL RTBS CREW</div>
-      <div class="dj-description">Haz clic para ver sus lanzamientos</div>
-      <div class="dj-status available">CONTENIDO DISPONIBLE</div>
-    </div>
+<!-- DJ FLUGEL RTBS CREW -->
+<div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
+  <div class="dj-photo-container">
+    <img src="Proyecto_43_112957.png" alt="DJ FLUGEL RTBS CREW" class="dj-photo">
+    <div class="vinyl-decoration dj-vinyl"></div>
+  </div>
+  <div class="dj-title">DJ FLUGEL RTBS CREW</div>
+  <div class="dj-description">Haz clic para ver sus lanzamientos</div>
+  <div class="dj-status available">CONTENIDO DISPONIBLE</div>
+</div>
+
         <!-- REDES SOCIALES DJ FLUGEL -->
   <div style="background: rgba(0, 30, 0, 0.8); border: 2px solid #00FF00; border-radius: 10px; padding: 25px; margin-top: 30px;">
     <h3 style="color: #FFFF00; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #FFFF00;">
@@ -1112,14 +1146,16 @@ footer {
     </div>
   </div>
     
-    <!-- TOUXMAN DJ -->
-    <div class="dj-item" onclick="toggleDJ('touxman')" id="dj-touxman">
-      <div class="mixer-icon"></div>
-      <div class="dj-title">TOUXMAN DJ</div>
-      <div class="dj-description">Haz clic para ver sus lanzamientos</div>
-      <div class="dj-status available">CONTENIDO DISPONIBLE</div>
-    </div>
+ <!-- TOUXMAN DJ -->
+<div class="dj-item" onclick="toggleDJ('touxman')" id="dj-touxman">
+  <div class="dj-photo-container">
+    <img src="IMG-20251028-WA0075-Photoroom.png" alt="TOUXMAN DJ" class="dj-photo">
+    <div class="vinyl-decoration dj-vinyl"></div>
   </div>
+  <div class="dj-title">TOUXMAN DJ</div>
+  <div class="dj-description">Haz clic para ver sus lanzamientos</div>
+  <div class="dj-status available">CONTENIDO DISPONIBLE</div>
+</div>
       <!-- REDES SOCIALES TOUXMAN DJ -->
   <div style="background: rgba(0, 30, 0, 0.8); border: 2px solid #00FF00; border-radius: 10px; padding: 25px; margin-top: 30px;">
     <h3 style="color: #FFFF00; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #FFFF00;">

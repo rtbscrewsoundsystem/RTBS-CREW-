@@ -340,7 +340,7 @@ nav a:first-child {
     display: none;
 }
 
-    /* --- Estilos para fotos de DJs con vinilo --- */
+    //* --- FOTOS DE DJs CON EFECTO VINILO AL HOVER --- */
 .dj-photo-container {
   position: relative;
   width: 100px;
@@ -355,21 +355,33 @@ nav a:first-child {
   object-fit: cover;
   border: 3px solid #00FF00;
   box-shadow: 0 0 15px #00FF00;
+  transition: transform 0.8s ease;
+  cursor: pointer;
+}
+
+/* Efecto vinilo al hacer hover - SOLO para fotos de DJ */
+.dj-item:hover .dj-photo {
+  animation: spin 3s linear infinite;
+}
+
+/* ELIMINAR el vinilo decorativo que estaba encima del texto */
+.dj-vinyl {
+  display: none;
+}
+
+/* Asegurar que el texto sea visible */
+.dj-status {
   position: relative;
   z-index: 2;
+  background: #004400;
+  color: #00FF00;
+  border: 1px solid #00FF00;
+  padding: 5px 10px;
+  border-radius: 15px;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
 }
-
-.dj-vinyl {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  z-index: 1;
-  opacity: 0.7;
-}
-
 .vinyl-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -1089,27 +1101,25 @@ footer {
   <h2>🎧 DJs DEL COLECTIVO RTBS CREW 🎧</h2>
 
     <div class="dj-grid">
-    <!-- DJ FLUGEL RTBS CREW -->
-    <div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
-        <div class="dj-photo-container">
-            <img src="Proyecto_43_112957.png" alt="DJ FLUGEL RTBS CREW" class="dj-photo">
-            <div class="vinyl-decoration dj-vinyl"></div>
-        </div>
-        <div class="dj-title">DJ FLUGEL RTBS CREW</div>
-        <div class="dj-description">Haz clic para ver sus lanzamientos</div>
-        <div class="dj-status available">CONTENIDO DISPONIBLE</div>
+ <!-- DJ FLUGEL RTBS CREW -->
+<div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
+    <div class="dj-photo-container">
+        <img src="Proyecto_43_112957.png" alt="DJ FLUGEL RTBS CREW" class="dj-photo">
     </div>
-    
-    <!-- TOUXMAN DJ -->
-    <div class="dj-item" onclick="toggleDJ('touxman')" id="dj-touxman">
-        <div class="dj-photo-container">
-            <img src="IMG-20251028-WA0075-Photoroom.png" alt="TOUXMAN DJ" class="dj-photo">
-            <div class="vinyl-decoration dj-vinyl"></div>
-        </div>
-        <div class="dj-title">TOUXMAN DJ</div>
-        <div class="dj-description">Haz clic para ver sus lanzamientos</div>
-        <div class="dj-status available">CONTENIDO DISPONIBLE</div>
+    <div class="dj-title">DJ FLUGEL RTBS CREW</div>
+    <div class="dj-description">Haz clic para ver sus lanzamientos</div>
+    <div class="dj-status available">CONTENIDO DISPONIBLE</div>
+</div>
+
+<!-- TOUXMAN DJ -->
+<div class="dj-item" onclick="toggleDJ('touwman')" id="dj-touwman">
+    <div class="dj-photo-container">
+        <img src="IMG-20251028-MA0075-Photoroom.png" alt="TOUXMAN DJ" class="dj-photo">
     </div>
+    <div class="dj-title">TOUXMAN DJ</div>
+    <div class="dj-description">Haz clic para ver sus lanzamientos</div>
+    <div class="dj-status available">CONTENIDO DISPONIBLE</div>
+</div>
 </div>
 
 <!-- REDES SOCIALES DJ FLUGEL -->

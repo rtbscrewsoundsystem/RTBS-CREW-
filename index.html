@@ -475,47 +475,6 @@ nav a:first-child {
     color: #000;
 }
 
-    /* --- ESTILOS ESPECÍFICOS PARA LA DENUNCIA --- */
-#denuncia h2 {
-    color: var(--color-error); /* Rojo para impacto */
-    text-shadow: 0 0 8px var(--color-error);
-    font-size: 2.5em; 
-    border-bottom: 3px solid var(--color-error);
-    padding-bottom: 10px;
-    margin-bottom: 25px;
-    font-family: 'Arial Black', Impact, sans-serif;
-}
-#denuncia h3 {
-    color: var(--color-neon);
-    text-shadow: 0 0 3px var(--color-neon);
-    font-size: 1.6em; 
-    margin-top: 35px; 
-    border-left: 5px solid var(--color-neon);
-    padding-left: 10px;
-}
-#denuncia p, #denuncia ul {
-    font-size: 1.15em;
-    margin-bottom: 20px;
-    text-align: justify;
-}
-#denuncia strong {
-    color: var(--color-neon);
-}
-.error-data {
-    color: var(--color-error);
-    font-weight: bold;
-    font-family: 'Courier New', monospace;
-    background: #300;
-    padding: 2px 5px;
-    border-radius: 3px;
-    display: inline-block;
-}
-.proof-link {
-    color: #4CAF50;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
 /* Sistema de likes/dislikes */
 .like-dislike {
     display: flex;
@@ -558,7 +517,7 @@ nav a:first-child {
     text-align: center;
 }
 
-    /* --- Sección EN OBRAS (Visuales y Altavoces) --- */
+/* --- Sección EN OBRAS (Visuales y Altavoces) --- */
 .under-construction {
     background: #000080 !important;
     border: 4px solid #C0C0C0 !important;
@@ -1041,7 +1000,6 @@ footer {
 <nav>
   <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
   <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
-<a href="#" id="denuncia-publica" class="active" onclick="mostrarSeccion('denuncia')">📢 Manifiesto de Resistencia</a>
   <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
   <a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
   <a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
@@ -1075,60 +1033,6 @@ footer {
     
     <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
   </div>
-
-    <!-- SECCIÓN DE DENUNCIA -->
-<div id="denuncia" class="seccion" style="display:none;">
-    <h2>☢️ EL GRAN ENGAÑO: Fraude Algorítmico y Negligencia de Soporte de DistroKid ☢️</h2>
-    
-    <p>
-        Este documento es una **denuncia pública y detallada** de la experiencia catastrófica sufrida por RTBS CREW con Spotify y nuestra distribuidora, DistroKid. Hemos sido víctimas de un **fraude algorítmico masivo** que destruyó nuestra subida orgánica y de una **negligencia de soporte** que se burla de nuestra cuota de servicio **PREMIUM**.
-    </p>
-    
-    <h3>1. Cronología del Sabotaje y las Pruebas Irrefutables</h3>
-    <p>
-        Nuestra cuenta sufrió un ataque de censura sistemática y *shadowban* inmediatamente después de conseguir una subida de oyentes **100% orgánica**, con *streams* verificados de países premium como Alemania y Noruega, que garantizaban ingresos por nuestro trabajo [cite: Captura de pantalla 2025-10-22 233952.png].
-    </p>
-    
-    <h4>El Error de la Máquina (9.455 Streams / Listener)</h4>
-    <p>
-        La prueba de que el sistema está completamente roto es un error de métricas que nadie puede justificar. La propia plataforma reporta la locura matemática de **<span class="error-data">9.455 Streams / Listener</span>** [cite: Captura de pantalla 2025-11-05 115318.png]. Este valor es físicamente imposible y demuestra que los datos son falsos, la penalización es arbitraria y, por tanto, la acusación de "fraude" es un pretexto para la censura y la retención de ganancias.
-    </p>
-
-    <h4>La Censura Total y el Robo de Ganancias</h4>
-    <ul>
-        <li><strong>Invisibilidad:</strong> Nuestro perfil de artista ha sido borrado de las búsquedas de Google (un 'shadowban' total) [cite: Captura de pantalla 2025-11-09 041037.png], destruyendo meses de trabajo de posicionamiento orgánico.</li>
-        <li><strong>Retención:</strong> Las ganancias legítimas obtenidas por *streams* de países premium, valoradas en **<span class="error-data">€6 (o más)</span>**, fueron retenidas de forma indebida bajo una falsa acusación de fraude, un claro acto de retención de capital por un servicio ya prestado.</li>
-        <li><strong>Destrucción Orgánica:</strong> Toda la subida de seguidores y *streams* orgánicos fue eliminada, obligándonos a empezar de cero si no tomábamos medidas drásticas [cite: Screenshot_20250927-035816.png].</li>
-    </ul>
-
-    <h3>2. La Burla del Soporte PREMIUM (Plan Musical Plus: +€40)</h3>
-    <p>
-        La situación se convierte en una vergüenza cuando se implica a DistroKid. Pagamos la cuota más alta, el **Plan PREMIUM MUSICAL PLUS (+€40)**, que debería garantizar una gestión rápida y un soporte de calidad superior. Lo que recibimos fue:
-    </p>
-    
-    <h4>Negligencia del Agente Yze</h4>
-    <p>
-        El agente de soporte Yze se ha negado a tratar el caso como un problema grave. A pesar de haberle proporcionado todas las pruebas documentadas (errores, capturas, cronología), su única respuesta ha sido una evasión constante, usando **<span class="error-data">scripts genéricos y enlaces inútiles</span>** que no abordan la gravedad de la situación.
-    </p>
-    <p>
-        Se ha ignorado nuestra solicitud de **retirada total (*takedown*) de nuestra música, iniciada el 1 de noviembre** [cite: Captura de pantalla 2025-11-09 043626.png]. Al no ejecutar el *takedown* de forma inmediata y al responder con evasivas, DistroKid demuestra una **negligencia esencial en su servicio pagado**, manteniéndonos cautivos de una plataforma que nos está difamando.
-    </p>
-    <p>
-        **Hemos pagado por soporte humano y hemos recibido respuestas de robot.** Esta es la máxima falta de respeto al artista que financia su propia distribuidora.
-    </p>
-    
-    <h3>3. El Veredicto Final de RTBS CREW: Libertad y Resistencia</h3>
-    <p>
-        Ante el incumplimiento de contrato, el fraude algorítmico y la negligencia de DistroKid, nuestra decisión es la **retirada inmediata, definitiva e irrevocable** de Spotify y la exigencia del **reembolso total** de nuestra cuota Premium (+€40) por el servicio de sabotaje no prestado.
-    </p>
-    <p>
-        Nuestra música no está en venta para el algoritmo. RTBS CREW retoma el control. A partir de ahora, solo nos encontrarán en plataformas que respeten el sonido *underground* y a sus creadores: **YouTube y SoundCloud**.
-    </p>
-    <p class="final-call">
-        **Escucha el rugido de nuestra libertad. Escucha el track de la resistencia, inmune a su censura:**
-        <a href="[Link YouTube ∞ km/h]" target="_blank" class="proof-link">EL AFILADOR OLD SCHOOLD HARDTEK KICK (∞ km/h Edition)</a>
-    </p>
-    </div>
     
     <!-- SECCIÓN REPRODUCTOR DJ -->
 <div id="dj" class="seccion" style="display:none;">
@@ -1929,124 +1833,6 @@ function showTabWithTransition(tabId) {
 </script>
 
 <script>
-
-    // Variable para rastrear qué DJ está activo (solo para la lógica de los lanzamientos)
-let djActivo = null;
-
-/**
- * Función genérica para mostrar cualquier sección de contenido que NO sea un DJ.
- * Se usa para 'denuncia' y 'ejemplo'.
- * @param {string} seccionId - El ID de la sección a mostrar (e.g., 'denuncia', 'ejemplo').
- */
-function mostrarSeccion(seccionId) {
-    const secciones = document.querySelectorAll('.content-section');
-    const enlaces = document.querySelectorAll('.sidebar a');
-    
-    // 1. Ocultar todas las secciones de contenido (incluyendo lanzamientos y denuncia)
-    secciones.forEach(sec => sec.classList.remove('active'));
-
-    // 2. Desactivar todos los enlaces del sidebar
-    enlaces.forEach(link => link.classList.remove('active'));
-
-    // 3. Mostrar la sección específica (e.g., la denuncia)
-    const seccionMostrar = document.getElementById(seccionId);
-    if (seccionMostrar) {
-        seccionMostrar.classList.add('active');
-        
-        // 4. Activar el enlace del menú lateral
-        // Usamos el ID del enlace específico si es 'denuncia', si no, usamos el ID de la sección
-        const enlaceId = (seccionId === 'denuncia') ? 'denuncia-publica' : seccionId;
-        const enlace = document.getElementById(enlaceId);
-        if (enlace) {
-            enlace.classList.add('active');
-        }
-
-        // 5. IMPORTANTE: Reiniciar el estado de DJ activo. Si la denuncia está abierta, 
-        // no hay ningún DJ activo.
-        djActivo = null;
-        
-        // 6. Asegurar que el scroll vaya al inicio de la sección
-         setTimeout(() => {
-            seccionMostrar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
-    }
-}
-
-/**
- * Función exclusiva para gestionar el click y toggle de los lanzamientos de DJ.
- * No toca la sección de 'denuncia'.
- * @param {string} dj - 'flugel' o 'touxman'.
- */
-function toggleLanzamientos(dj) {
-  const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
-  const lanzamientosTouxman = document.getElementById('lanzamientos-touxman');
-  const djFlugel = document.getElementById('dj-flugel');
-  const djTouxman = document.getElementById('dj-touxman');
-  
-  // Ocultar cualquier otra sección que pudiera estar activa (e.g., la denuncia o ejemplo)
-  document.getElementById('denuncia').classList.remove('active');
-  const denunciaLink = document.getElementById('denuncia-publica');
-  if (denunciaLink) {
-    denunciaLink.classList.remove('active');
-  }
-
-  // Si tienes un 'ejemplo-link' y 'ejemplo', también deberían desactivarse aquí.
-  const ejemplo = document.getElementById('ejemplo');
-  const ejemploLink = document.getElementById('ejemplo-link'); 
-  if (ejemplo) ejemplo.classList.remove('active');
-  if (ejemploLink) ejemploLink.classList.remove('active');
-
-  // Lógica de toggle para los DJ
-  if (djActivo === dj) {
-    // Si haces clic en el mismo DJ, ocultar los lanzamientos
-    lanzamientosFlugel.classList.remove('active');
-    lanzamientosTouxman.classList.remove('active');
-    djFlugel.classList.remove('active');
-    djTouxman.classList.remove('active');
-    djActivo = null;
-
-  } else {
-    // Mostrar los lanzamientos del DJ seleccionado
-    if (dj === 'flugel') {
-      lanzamientosFlugel.classList.add('active');
-      lanzamientosTouxman.classList.remove('active');
-      djFlugel.classList.add('active');
-      djTouxman.classList.remove('active');
-      djActivo = 'flugel';
-
-      // Desplazar suavemente a los lanzamientos
-      setTimeout(() => {
-        lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    } else if (dj === 'touxman') {
-      lanzamientosFlugel.classList.remove('active');
-      lanzamientosTouxman.classList.add('active');
-      djFlugel.classList.remove('active');
-      djTouxman.classList.add('active');
-      djActivo = 'touxman';
-
-       // Desplazar suavemente a los lanzamientos
-      setTimeout(() => {
-        lanzamientosTouxman.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    }
-  }
-}
-
-// Inicializar: No hacer nada al cargar para que el área de contenido esté vacía
-document.addEventListener('DOMContentLoaded', () => {
-    // Asegurarse de que ninguna sección (ni denuncia, ni lanzamientos, ni ejemplo) esté visible al inicio
-    document.getElementById('denuncia').classList.remove('active');
-    document.getElementById('lanzamientos-flugel').classList.remove('active');
-    document.getElementById('lanzamientos-touxman').classList.remove('active');
-    
-    // Desactivar el enlace de denuncia por defecto
-    const denunciaLink = document.getElementById('denuncia-publica');
-    if (denunciaLink) {
-        denunciaLink.classList.remove('active');
-    }
-});
-    
 // --- Función de pantalla completa para el DJ ---
 function toggleFullScreenDJ() {
   const iframe = document.getElementById('djPlayer');
@@ -2100,53 +1886,6 @@ function toggleDJ(dj) {
     }
   }
 }
-</script>
-
-    <script>
-// Variable para rastrear qué DJ está activo (solo para la lógica de los lanzamientos)
-let djActivo = null;
-
-/**
- * Función genérica para mostrar cualquier sección de contenido que NO sea un DJ.
- * Se usa para 'denuncia' y 'ejemplo'.
- * @param {string} seccionId - El ID de la sección a mostrar (e.g., 'denuncia', 'ejemplo').
- */
-function mostrarSeccion(seccionId) {
-    // Ocultar todas las secciones principales
-    const secciones = document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj');
-    secciones.forEach(section => section.style.display = 'none');
-    
-    // Ocultar también los lanzamientos de DJs
-    document.getElementById('lanzamientos-flugel').classList.remove('active');
-    document.getElementById('lanzamientos-touxman').classList.remove('active');
-    document.getElementById('dj-flugel').classList.remove('active');
-    document.getElementById('dj-touxman').classList.remove('active');
-    djActivo = null;
-
-    // Desactivar todos los enlaces del sidebar
-    const enlaces = document.querySelectorAll('nav a');
-    enlaces.forEach(link => link.classList.remove('active'));
-
-    // Mostrar la sección específica (e.g., la denuncia)
-    const seccionMostrar = document.getElementById(seccionId);
-    if (seccionMostrar) {
-        seccionMostrar.style.display = 'block';
-        
-        // Activar el enlace del menú lateral
-        const enlaceId = (seccionId === 'denuncia') ? 'denuncia-publica' : seccionId;
-        const enlace = document.getElementById(enlaceId);
-        if (enlace) {
-            enlace.classList.add('active');
-        }
-
-        // Asegurar que el scroll vaya al inicio de la sección
-        setTimeout(() => {
-            seccionMostrar.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
-    }
-}
-
-// El resto del código permanece igual...
 </script>
 </body>
 </html>

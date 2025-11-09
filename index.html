@@ -2101,5 +2101,52 @@ function toggleDJ(dj) {
   }
 }
 </script>
+
+    <script>
+// Variable para rastrear qué DJ está activo (solo para la lógica de los lanzamientos)
+let djActivo = null;
+
+/**
+ * Función genérica para mostrar cualquier sección de contenido que NO sea un DJ.
+ * Se usa para 'denuncia' y 'ejemplo'.
+ * @param {string} seccionId - El ID de la sección a mostrar (e.g., 'denuncia', 'ejemplo').
+ */
+function mostrarSeccion(seccionId) {
+    // Ocultar todas las secciones principales
+    const secciones = document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj');
+    secciones.forEach(section => section.style.display = 'none');
+    
+    // Ocultar también los lanzamientos de DJs
+    document.getElementById('lanzamientos-flugel').classList.remove('active');
+    document.getElementById('lanzamientos-touxman').classList.remove('active');
+    document.getElementById('dj-flugel').classList.remove('active');
+    document.getElementById('dj-touxman').classList.remove('active');
+    djActivo = null;
+
+    // Desactivar todos los enlaces del sidebar
+    const enlaces = document.querySelectorAll('nav a');
+    enlaces.forEach(link => link.classList.remove('active'));
+
+    // Mostrar la sección específica (e.g., la denuncia)
+    const seccionMostrar = document.getElementById(seccionId);
+    if (seccionMostrar) {
+        seccionMostrar.style.display = 'block';
+        
+        // Activar el enlace del menú lateral
+        const enlaceId = (seccionId === 'denuncia') ? 'denuncia-publica' : seccionId;
+        const enlace = document.getElementById(enlaceId);
+        if (enlace) {
+            enlace.classList.add('active');
+        }
+
+        // Asegurar que el scroll vaya al inicio de la sección
+        setTimeout(() => {
+            seccionMostrar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+    }
+}
+
+// El resto del código permanece igual...
+</script>
 </body>
 </html>

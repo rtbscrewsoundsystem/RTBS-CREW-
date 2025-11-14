@@ -973,21 +973,20 @@ footer {
     box-shadow: 0 0 20px #FFFF00;
 }
 
-    /* Asegurar que los lanzamientos de TOUXMAN se muestren correctamente */
-#lanzamientos-touxman .vinyl-item {
+    /* Arreglar altura de los vinyl-items */
+.vinyl-item {
     min-height: 180px;
-    padding: 20px;
-    margin-bottom: 0;
+    height: auto;
 }
 
-#lanzamientos-touxman .vinyl-content {
-    min-height: 120px;
+.vinyl-content {
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-#lanzamientos-touxman .vinyl-title {
+.vinyl-title {
     font-size: 15px;
     line-height: 1.3;
     margin-bottom: 8px;
@@ -996,19 +995,20 @@ footer {
     align-items: center;
 }
 
-#lanzamientos-touxman .vinyl-description {
+.vinyl-description {
     font-size: 12px;
     color: #88FF88;
     margin-bottom: 10px;
     min-height: 30px;
 }
 
-#lanzamientos-touxman .vinyl-links {
-    margin: 10px 0;
+/* Asegurar que TOUXMAN DJ se vea igual que FLUGEL */
+#lanzamientos-touxman .vinyl-item {
+    min-height: 180px;
 }
 
-#lanzamientos-touxman .like-dislike {
-    margin-top: auto;
+#lanzamientos-touxman .vinyl-content {
+    min-height: 140px;
 }
     
 /* Icono de tabla de mezclas */
@@ -1521,26 +1521,25 @@ footer {
       </div>
     </div>
 
-                  <!-- 11: EL AFILADOR HARDTEK KICK (∞ KM/H EDITION) -->
-      <div class="vinyl-item">
-        <div class="vinyl-decoration"></div>
-        <div class="vinyl-content">
-          <div class="vinyl-title">DJ FLUGEL RTBS CREW - EL AFILADOR HARDTEK KICK (∞ KM/H EDITION)</div>
-          <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/el-afilador-hardtek-kick-km-h-edition" target="_blank">Bandcamp</a>
-            <a href="https://www.discogs.com/release/35632840-DJ-FLUGEL-RTBS-CREW-EL-AFILADOR-HARDTEK-KICK--KMH-EDITION" target="_blank">Discogs</a>
-            <a href="https://www.youtube.com/watch?v=fK6tE5kB18Y&list=OLAK5uy_n3oj4OfbtK7lGGp8RZ3DQyRSxoqxKRNos" target="_blank">YouTube</a>
-          </div>
-          <div class="like-dislike">
-            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-          </div>
-        </div>
-      </div>
-
-          </div>
+      <!-- 11: EL AFILADOR HARDTEK KICK (∞ KM/H EDITION) -->
+<div class="vinyl-item">
+  <div class="vinyl-decoration"></div>
+  <div class="vinyl-content">
+    <div class="vinyl-title">DJ FLUGEL RTBS CREW - EL AFILADOR HARDTEK KICK (∞ KM/H EDITION)</div>
+    <div class="vinyl-description">Edición especial de alta velocidad</div>
+    <div class="vinyl-links">
+      <a href="https://rtbscrew.bandcamp.com/track/el-afilador-hardtek-kick-km-h-edition" target="_blank">Bandcamp</a>
+      <a href="https://www.discogs.com/release/35632840-DJ-FLUGEL-RTBS-CREW-EL-AFILADOR-HARDTEK-KICK--KMH-EDITION" target="_blank">Discogs</a>
+      <a href="https://www.youtube.com/watch?v=fK6tE5kB18Y&list=OLAK5uy_n3oj4OfbtK7lGGp8RZ3DQyRSxoqxKRNos" target="_blank">YouTube</a>
+    </div>
+    <div class="like-dislike">
+      <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
+      <span class="like-count">0</span>
+      <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
+      <span class="dislike-count">0</span>
+    </div>
+  </div>
+</div>
 
     <!-- PÁGINAS DETALLADAS DE LANZAMIENTOS DJ FLUGEL -->
     
@@ -1680,7 +1679,7 @@ footer {
     <a href="https://rtbscrew.bandcamp.com" target="_blank" class="bandcamp-link">🎵 VER TODOS NUESTROS LANZAMIENTOS EN BANDCAMP 🎵</a>
   </div>
 
-      <!-- LANZAMIENTOS TOUXMAN DJ -->
+  <!-- LANZAMIENTOS TOUXMAN DJ -->
 <div id="lanzamientos-touxman" class="lanzamientos-container">
   <h3 style="color: #FFFF00; text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px #FFFF00;">
     🎵 LANZAMIENTOS DE TOUXMAN DJ 🎵

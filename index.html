@@ -10,16 +10,16 @@
 
 <style>
 /* --- Loader mejorado --- */
-#loader {
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: #000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+#loader { 
+    position: fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background: #000; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
     z-index:9999;
     font-family: 'Arial Black', Impact, sans-serif;
 }
@@ -33,23 +33,23 @@
     margin-bottom: 30px;
     animation: glitch 2s infinite;
 }
-.bar {
-    width:8px;
-    height:40px;
-    margin:2px;
+.bar { 
+    width:8px; 
+    height:40px; 
+    margin:2px; 
     background: linear-gradient(180deg, #00FF00, #FF0000, #FFFF00);
     display: inline-block;
     animation: bounce 0.6s infinite alternate;
 }
-.bar:nth-child(2){ animation-delay:0.1s; }
-.bar:nth-child(3){ animation-delay:0.2s; }
-.bar:nth-child(4){ animation-delay:0.3s; }
+.bar:nth-child(2){ animation-delay:0.1s; } 
+.bar:nth-child(3){ animation-delay:0.2s; } 
+.bar:nth-child(4){ animation-delay:0.3s; } 
 .bar:nth-child(5){ animation-delay:0.4s; }
 .bar:nth-child(6){ animation-delay:0.5s; }
 
-@keyframes bounce {
-    from { transform: scaleY(0.3); }
-    to { transform: scaleY(1); }
+@keyframes bounce { 
+    from { transform: scaleY(0.3); } 
+    to { transform: scaleY(1); } 
 }
     .logo-titulo {
   width: 100px; /* tamaño del logo */
@@ -79,9 +79,9 @@
 }
 
 /* --- Estilos generales --- */
-body {
-    margin:0;
-    font-family:'Arial Black', Impact, sans-serif;
+body { 
+    margin:0; 
+    font-family:'Arial Black', Impact, sans-serif; 
     background:#000;
     color:#00FF00;
     overflow-x: hidden;
@@ -114,23 +114,23 @@ body {
 
 /* Efectos de glitch para el fondo tribal */
 @keyframes tribalGlitch {
-    0%, 100% {
+    0%, 100% { 
         filter: grayscale(100%) brightness(0.8) contrast(1.2);
         transform: scale(1.05) translate(0, 0);
     }
-    2% {
+    2% { 
         filter: grayscale(100%) brightness(0.9) contrast(1.3);
         transform: scale(1.05) translate(2px, 1px);
     }
-    4% {
+    4% { 
         filter: grayscale(100%) brightness(0.7) contrast(1.1);
         transform: scale(1.05) translate(-1px, -2px);
     }
-    6% {
+    6% { 
         filter: grayscale(100%) brightness(0.8) contrast(1.2);
         transform: scale(1.05) translate(0, 0);
     }
-    50% {
+    50% { 
         filter: grayscale(100%) brightness(0.85) contrast(1.25);
         transform: scale(1.05) translate(0, 0);
     }
@@ -138,24 +138,24 @@ body {
 
 /* Efectos de distorsión */
 @keyframes tribalDistortion {
-    0%, 100% {
+    0%, 100% { 
         transform: scale(1.05) skew(0deg, 0deg);
     }
-    25% {
+    25% { 
         transform: scale(1.05) skew(0.2deg, 0.1deg);
     }
-    50% {
+    50% { 
         transform: scale(1.05) skew(-0.1deg, 0.2deg);
     }
-    75% {
+    75% { 
         transform: scale(1.05) skew(0.1deg, -0.1deg);
     }
 }
 
-h1 {
-    font-size:52px;
-    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000;
-    text-align:center;
+h1 { 
+    font-size:52px; 
+    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000; 
+    text-align:center; 
     letter-spacing: 2px;
     animation: titleGlitch 5s infinite;
     margin: 20px 0;
@@ -175,12 +175,12 @@ h1 span {
     position: relative;
 }
 
-h1 span:nth-child(odd){
-    color:#00FF00;
+h1 span:nth-child(odd){ 
+    color:#00FF00; 
     animation: pulse 3s infinite alternate;
 }
-h1 span:nth-child(even){
-    color:#FFFF00;
+h1 span:nth-child(even){ 
+    color:#FFFF00; 
     animation: pulse 2.5s infinite alternate-reverse;
 }
 
@@ -190,12 +190,12 @@ h1 span:nth-child(even){
 }
 
 /* --- Menú lateral tribal rave --- */
-nav {
-    width:220px;
-    position:fixed;
-    height:100%;
+nav { 
+    width:220px; 
+    position:fixed; 
+    height:100%; 
     background: linear-gradient(to bottom, #111, #002200, #111);
-    padding-top:30px;
+    padding-top:30px; 
     border-right: 3px solid #00FF00;
     box-shadow: 0 0 15px #00FF00;
     z-index: 100;
@@ -217,11 +217,11 @@ nav:before {
     100% { background-position: 60px 0; }
 }
 
-nav a {
-    display:block;
-    color:#00FF00;
-    padding:15px 20px;
-    text-decoration:none;
+nav a { 
+    display:block; 
+    color:#00FF00; 
+    padding:15px 20px; 
+    text-decoration:none; 
     font-weight:bold;
     font-size: 16px;
     border-bottom: 1px dashed #003300;
@@ -230,9 +230,9 @@ nav a {
     text-shadow: 0 0 5px #00FF00;
 }
 
-nav a:hover {
-    background:#003300;
-    color:#FFFF00;
+nav a:hover { 
+    background:#003300; 
+    color:#FFFF00; 
     padding-left: 25px;
     text-shadow: 0 0 10px #FFFF00;
 }
@@ -255,8 +255,8 @@ nav a:first-child {
 }
 
 /* --- Contenido principal --- */
-.main {
-    margin-left:220px;
+.main { 
+    margin-left:220px; 
     padding:20px;
     min-height: 100vh;
     position: relative;
@@ -283,7 +283,7 @@ nav a:first-child {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background:
+    background: 
         radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
         repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
     border: 5px solid #00FF00;
@@ -445,7 +445,7 @@ nav a:first-child {
 .vinyl-item:hover {
     transform: translateY(-5px) scale(1.02);
 }
-   
+    
     /* --- Estilos para fotos de DJs con vinilo --- */
 .dj-photo-container {
   position: relative;
@@ -518,7 +518,7 @@ nav a:first-child {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background:
+    background: 
         radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
         repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
     border: 3px solid #00FF00;
@@ -701,14 +701,14 @@ nav a:first-child {
 .smoke:nth-child(7) { left: 80%; animation-delay: 3s; }
 
 @keyframes smokeRise {
-    0% {
+    0% { 
         transform: translateY(0) scale(1);
         opacity: 0;
     }
-    20% {
+    20% { 
         opacity: 0.8;
     }
-    100% {
+    100% { 
         transform: translateY(-100px) scale(2);
         opacity: 0;
     }
@@ -818,48 +818,48 @@ nav a:first-child {
 }
 
 iframe {
-    margin-top:20px;
+    margin-top:20px; 
     border:2px solid #00FF00;
     border-radius: 5px;
 }
 
 /* Redes Sociales */
-.redes {
+.redes { 
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
 }
-.redes a {
+.redes a { 
     display: inline-block;
     transition: transform 0.3s;
 }
 .redes a:hover {
     transform: scale(1.2);
 }
-.redes img {
-    width:60px;
-    margin:5px;
+.redes img { 
+    width:60px; 
+    margin:5px; 
     filter: drop-shadow(0 0 5px #00FF00);
 }
 
 /* Comentarios */
-#comment-form {
-    display:flex;
-    flex-direction:column;
-    width:100%;
+#comment-form { 
+    display:flex; 
+    flex-direction:column; 
+    width:100%; 
     max-width:500px;
     margin: 0 auto;
 }
-#comment-form input, #comment-form textarea {
-    margin-bottom:10px;
+#comment-form input, #comment-form textarea { 
+    margin-bottom:10px; 
     padding:10px;
     background: #002200;
     border: 1px solid #00AA00;
     color: #00FF00;
     border-radius: 5px;
 }
-#comment-form button {
+#comment-form button { 
     padding:10px;
     background: #00AA00;
     color: #000;
@@ -872,18 +872,18 @@ iframe {
 #comment-form button:hover {
     background: #00FF00;
 }
-.comment {
-    border:1px solid #00AA00;
-    margin-bottom:10px;
-    padding:10px;
+.comment { 
+    border:1px solid #00AA00; 
+    margin-bottom:10px; 
+    padding:10px; 
     background: rgba(0, 40, 0, 0.5);
     border-radius: 5px;
 }
 
-footer {
-    margin-top:50px;
-    color:#00FF00;
-    text-align:center;
+footer { 
+    margin-top:50px; 
+    color:#00FF00; 
+    text-align:center; 
     padding: 20px;
     border-top: 1px solid #00AA00;
     text-shadow: 0 0 5px #00AA00;
@@ -1010,7 +1010,7 @@ footer {
 #lanzamientos-touxman .vinyl-content {
     min-height: 140px;
 }
-   
+    
 /* Icono de tabla de mezclas */
 .mixer-icon {
     width: 80px;
@@ -1135,6 +1135,7 @@ footer {
   </div>
 </div>
 
+<!-- El resto del código HTML permanece exactamente igual -->
 <!-- Transición de disco vinilo -->
 <div id="transition-overlay">
     <div class="vinyl-transition"></div>
@@ -1227,7 +1228,7 @@ footer {
   </div>
 </div>
 
-<!-- SECCIÓN NUESTRA MÚSICA -->
+    <!-- SECCIÓN NUESTRA MÚSICA -->
 <div id="musica" style="display:none;">
   <h2>🎧 DJs DEL COLECTIVO RTBS CREW 🎧</h2>
 
@@ -2095,24 +2096,23 @@ footer {
 </footer>
 
 <script>
-
-    // ----------------- Loader (2 segundos fijo) -----------------
-setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
+// ----------------- Loader (2 segundos fijo) -----------------
+setTimeout(() => { 
+    document.getElementById("loader").style.display = "none"; 
 }, 2000);
 
 // ----------------- Transición entre secciones -----------------
 function showTabWithTransition(tab){
     const overlay = document.getElementById('transition-overlay');
-   
+    
     // Mostrar transición
     overlay.style.opacity = '1';
     overlay.style.pointerEvents = 'all';
-   
+    
     setTimeout(() => {
         // Cambiar de sección
         showTab(tab);
-       
+        
         // Ocultar transición
         setTimeout(() => {
             overlay.style.opacity = '0';
@@ -2123,14 +2123,14 @@ function showTabWithTransition(tab){
 
 // ----------------- Tabs -----------------
 function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'].forEach(t => {
+  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
       const element = document.getElementById(t);
       if (element) {
           element.style.display = 'none';
           element.className = t === 'inicio' ? '' : 'seccion';
       }
   });
- 
+  
   const tabElement = document.getElementById(tab);
   if (tabElement) {
       tabElement.style.display = 'block';
@@ -2157,12 +2157,12 @@ function rateItem(button, type) {
     const dislikeCount = container.querySelector('.dislike-count');
     const likeBtn = container.querySelector('.like-btn');
     const dislikeBtn = container.querySelector('.dislike-btn');
-   
+    
     // Obtener estado actual del localStorage
     const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
     const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
     const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
-   
+    
     if (type === 'like') {
         if (currentRating.liked) {
             // Quitar like
@@ -2174,7 +2174,7 @@ function rateItem(button, type) {
             likeCount.textContent = parseInt(likeCount.textContent) + 1;
             currentRating.liked = true;
             likeBtn.style.opacity = '0.8';
-           
+            
             // Si tenía dislike, quitarlo
             if (currentRating.disliked) {
                 dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
@@ -2193,7 +2193,7 @@ function rateItem(button, type) {
             dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
             currentRating.disliked = true;
             dislikeBtn.style.opacity = '0.8';
-           
+            
             // Si tenía like, quitarlo
             if (currentRating.liked) {
                 likeCount.textContent = parseInt(likeCount.textContent) - 1;
@@ -2202,7 +2202,7 @@ function rateItem(button, type) {
             }
         }
     }
-   
+    
     // Guardar en localStorage
     localStorage.setItem(storageKey, JSON.stringify(currentRating));
 }
@@ -2214,7 +2214,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
         const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
         const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
-       
+        
         if (currentRating.liked) {
             container.querySelector('.like-count').textContent = '1';
             container.querySelector('.like-btn').style.opacity = '0.8';
@@ -2229,7 +2229,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ----------------- Efectos de texto con fallos/glitches aleatorios -----------------
 function addTextGlitches() {
     const titles = document.querySelectorAll('h1, h2, .vinyl-title, .video-title');
-   
+    
     titles.forEach(title => {
         // Añadir un efecto de parpadeo aleatorio ocasional
         setInterval(() => {
@@ -2240,7 +2240,7 @@ function addTextGlitches() {
                 }, 100);
             }
         }, 3000);
-       
+        
         // Efecto de desplazamiento sutil ocasional
         setInterval(() => {
             if (Math.random() > 0.9) {
@@ -2256,7 +2256,19 @@ function addTextGlitches() {
 
 // Iniciar efectos cuando la página cargue
 window.addEventListener('load', addTextGlitches);
+</script>
 
+<script>
+function showTabWithTransition(tabId) {
+  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
+    .forEach(section => section.style.display = 'none');
+
+  const section = document.getElementById(tabId);
+  if (section) section.style.display = 'block';
+}
+</script>
+
+<script>
 // --- Función de pantalla completa para el DJ ---
 function toggleFullScreenDJ() {
   const iframe = document.getElementById('djPlayer');
@@ -2275,7 +2287,7 @@ function toggleDJ(dj) {
   const lanzamientosTouxman = document.getElementById('lanzamientos-touxman');
   const djFlugel = document.getElementById('dj-flugel');
   const djTouxman = document.getElementById('dj-touxman');
- 
+  
   if (djActivo === dj) {
     // Si haces clic en el mismo DJ, ocultar los lanzamientos
     lanzamientosFlugel.classList.remove('active');
@@ -2291,7 +2303,7 @@ function toggleDJ(dj) {
       djFlugel.classList.add('active');
       djTouxman.classList.remove('active');
       djActivo = 'flugel';
-     
+      
       // Desplazar suavemente a los lanzamientos
       setTimeout(() => {
         lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2302,7 +2314,7 @@ function toggleDJ(dj) {
       djFlugel.classList.remove('active');
       djTouxman.classList.add('active');
       djActivo = 'touxman';
-     
+      
       // Desplazar suavemente a los lanzamientos
       setTimeout(() => {
         lanzamientosTouxman.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2316,7 +2328,7 @@ function mostrarLanzamientoDetalle(lanzamientoId) {
     document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
         detalle.classList.remove('active');
     });
-   
+    
     // Mostrar el detalle seleccionado
     const detalle = document.getElementById('detalle-' + lanzamientoId);
     if (detalle) {

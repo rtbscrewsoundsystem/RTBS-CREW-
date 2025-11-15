@@ -1135,7 +1135,6 @@ footer {
   </div>
 </div>
 
-<!-- El resto del código HTML permanece exactamente igual -->
 <!-- Transición de disco vinilo -->
 <div id="transition-overlay">
     <div class="vinyl-transition"></div>
@@ -2024,7 +2023,7 @@ footer {
     </div>
   </div>
 
-    <div id="redes" class="seccion">
+    <div id="redes" class="seccion" style="display:none;">
     <h2>📱 REDES SOCIALES 📱</h2>
     <div class="redes">
       <a href="https://www.instagram.com/rtbs_crew/" target="_blank"><img src="https://img.icons8.com/color/48/000000/instagram-new.png" alt="Instagram"></a>
@@ -2037,7 +2036,7 @@ footer {
     </div>
   </div>
 
-  <div id="comentarios" class="seccion">
+  <div id="comentarios" class="seccion" style="display:none;">
     <h2>💬 COMENTARIOS 💬</h2>
     <form id="comment-form" onsubmit="return addComment()">
       <input type="text" id="name" placeholder="Tu nombre" required>
@@ -2048,7 +2047,7 @@ footer {
   </div>
 
   <!-- SECCIÓN ALTAVOCES (EN OBRAS) -->
-  <div id="altavoces" class="seccion under-construction">
+  <div id="altavoces" class="seccion under-construction" style="display:none;">
     <div class="construction-border">
       <div class="construction-content">
         <!-- Tiras de obras -->
@@ -2123,7 +2122,7 @@ function showTabWithTransition(tab){
 
 // ----------------- Tabs -----------------
 function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
+  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'].forEach(t => {
       const element = document.getElementById(t);
       if (element) {
           element.style.display = 'none';
@@ -2256,19 +2255,7 @@ function addTextGlitches() {
 
 // Iniciar efectos cuando la página cargue
 window.addEventListener('load', addTextGlitches);
-</script>
 
-<script>
-function showTabWithTransition(tabId) {
-  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
-    .forEach(section => section.style.display = 'none');
-
-  const section = document.getElementById(tabId);
-  if (section) section.style.display = 'block';
-}
-</script>
-
-<script>
 // --- Función de pantalla completa para el DJ ---
 function toggleFullScreenDJ() {
   const iframe = document.getElementById('djPlayer');
@@ -2345,7 +2332,6 @@ function volverALanzamientos() {
         detalle.classList.remove('active');
     });
 }
-    
 </script>
 </body>
 </html>

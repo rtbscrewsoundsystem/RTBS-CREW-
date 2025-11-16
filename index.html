@@ -1080,6 +1080,22 @@ footer {
     border: 1px solid #FFFF00;
 }
 
+    /* 🔴 FORZAR VISIBILIDAD DE MIERDA */
+#redes.seccion,
+#comentarios.seccion, 
+#visuales.seccion,
+#altavoces.seccion {
+    display: none;
+}
+
+#redes[style*="display: block"],
+#comentarios[style*="display: block"],
+#visuales[style*="display: block"], 
+#altavoces[style*="display: block"] {
+    display: block !important;
+    background: rgba(255,0,0,0.1) !important; /* 🔴 PARA VER SI SE MUESTRA */
+}
+    
 /* Contenedor de lanzamientos */
 .lanzamientos-container {
     margin-top: 30px;
@@ -1134,7 +1150,7 @@ footer {
     <div class="bar"></div><div class="bar"></div><div class="bar"></div>
   </div>
 </div>
-
+    
 <!-- El resto del código HTML permanece exactamente igual -->
 <!-- Transición de disco vinilo -->
 <div id="transition-overlay">
@@ -2123,17 +2139,32 @@ function showTabWithTransition(tab){
 
 // ----------------- Tabs -----------------
 function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
+  console.log("🔴 MOSTRANDO SECCIÓN:", tab);
+  
+  // LISTA COMPLETA DE TODAS LAS PUTAS SECCIONES
+  const todasLasSecciones = ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'];
+  
+  todasLasSecciones.forEach(t => {
       const element = document.getElementById(t);
       if (element) {
+          console.log("🔴 OCULTANDO:", t);
           element.style.display = 'none';
-          element.className = t === 'inicio' ? '' : 'seccion';
+          if (t !== 'inicio') {
+              element.className = 'seccion';
+          }
       }
   });
   
   const tabElement = document.getElementById(tab);
   if (tabElement) {
+      console.log("🔴 MOSTRANDO:", tab);
       tabElement.style.display = 'block';
+      
+      // DEBUG EXTREMO
+      console.log("🔴 ESTILO ACTUAL:", tabElement.style.display);
+      console.log("🔴 CLASE ACTUAL:", tabElement.className);
+  } else {
+      console.log("❌ NO SE ENCUENTRA LA SECCIÓN:", tab);
   }
 }
 

@@ -1095,6 +1095,51 @@ footer {
     display: block !important;
     background: rgba(255,0,0,0.1) !important; /* 🔴 PARA VER SI SE MUESTRA */
 }
+
+    /* 💥 ESTILOS DE EMERGENCIA PARA LAS SECCIONES PROBLEMA */
+#redes {
+    display: none;
+    background: rgba(0, 20, 0, 0.7) !important;
+    border: 2px solid #00FF00 !important;
+    border-radius: 10px !important;
+    padding: 30px !important;
+    margin-bottom: 30px !important;
+}
+
+#comentarios {
+    display: none;
+    background: rgba(0, 20, 0, 0.7) !important;
+    border: 2px solid #00FF00 !important;
+    border-radius: 10px !important;
+    padding: 30px !important;
+    margin-bottom: 30px !important;
+}
+
+#visuales {
+    display: none;
+    background: rgba(0, 20, 0, 0.7) !important;
+    border: 2px solid #00FF00 !important;
+    border-radius: 10px !important;
+    padding: 30px !important;
+    margin-bottom: 30px !important;
+}
+
+#altavoces {
+    display: none;
+    background: #000080 !important;
+    border: 4px solid #C0C0C0 !important;
+    border-radius: 10px !important;
+    padding: 30px !important;
+    margin-bottom: 30px !important;
+}
+
+/* 💥 CUANDO SE MUESTRAN */
+#redes[style*="display: block"],
+#comentarios[style*="display: block"], 
+#visuales[style*="display: block"],
+#altavoces[style*="display: block"] {
+    display: block !important;
+}
     
 /* Contenedor de lanzamientos */
 .lanzamientos-container {
@@ -2137,36 +2182,64 @@ function showTabWithTransition(tab){
     }, 600);
 }
 
-// ----------------- Tabs -----------------
-function showTab(tab){
-  console.log("🔴 MOSTRANDO SECCIÓN:", tab);
-  
-  // LISTA COMPLETA DE TODAS LAS PUTAS SECCIONES
-  const todasLasSecciones = ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'];
-  
-  todasLasSecciones.forEach(t => {
-      const element = document.getElementById(t);
-      if (element) {
-          console.log("🔴 OCULTANDO:", t);
-          element.style.display = 'none';
-          if (t !== 'inicio') {
-              element.className = 'seccion';
-          }
-      }
-  });
-  
-  const tabElement = document.getElementById(tab);
-  if (tabElement) {
-      console.log("🔴 MOSTRANDO:", tab);
-      tabElement.style.display = 'block';
-      
-      // DEBUG EXTREMO
-      console.log("🔴 ESTILO ACTUAL:", tabElement.style.display);
-      console.log("🔴 CLASE ACTUAL:", tabElement.className);
-  } else {
-      console.log("❌ NO SE ENCUENTRA LA SECCIÓN:", tab);
-  }
+// ----------------- SISTEMA DE SECCIONES NUEVO Y MEJORADO -----------------
+function showTabWithTransition(tab){
+    console.log("🔥 MOSTRANDO SECCIÓN:", tab);
+    
+    const overlay = document.getElementById('transition-overlay');
+    
+    // Mostrar transición de vinilo
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'all';
+    
+    setTimeout(() => {
+        // OCULTAR TODAS LAS PUTAS SECCIONES
+        const secciones = [
+            'inicio', 'musica', 'visuales', 'redes', 
+            'comentarios', 'altavoces', 'dj'
+        ];
+        
+        secciones.forEach(seccionId => {
+            const elemento = document.getElementById(seccionId);
+            if (elemento) {
+                elemento.style.display = 'none';
+            }
+        });
+        
+        // MOSTRAR LA SECCIÓN QUE QUEREMOS
+        const seccionTarget = document.getElementById(tab);
+        if (seccionTarget) {
+            seccionTarget.style.display = 'block';
+            console.log("✅ SECCIÓN ACTIVADA:", tab);
+        } else {
+            console.log("❌ SECCIÓN NO ENCONTRADA:", tab);
+        }
+        
+        // Ocultar transición
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            overlay.style.pointerEvents = 'none';
+        }, 500);
+        
+    }, 600);
 }
+
+// ----------------- FORZAR SECCIONES AL CARGAR -----------------
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🔴 PÁGINA CARGADA - VERIFICANDO SECCIONES...");
+    
+    // Verificar que todas las secciones existen
+    const secciones = ['redes', 'comentarios', 'visuales', 'altavoces'];
+    secciones.forEach(seccion => {
+        const elem = document.getElementById(seccion);
+        if (elem) {
+            console.log("✅ Sección encontrada:", seccion);
+            elem.style.display = 'none'; // Asegurar que están ocultas al inicio
+        } else {
+            console.log("❌ SECCIÓN NO EXISTE:", seccion);
+        }
+    });
+});
 
 // ----------------- Comentarios -----------------
 function addComment(){
@@ -2349,6 +2422,28 @@ function mostrarLanzamientoDetalle(lanzamientoId) {
     document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
         detalle.classList.remove('active');
     });
+
+    // DEBUG EXTREMO - VER QUÉ COÑO PASA
+function debugSections() {
+    console.log("=== 🔴 DEBUG EXTREMO ===");
+    const sections = ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'];
+    
+    sections.forEach(section => {
+        const elem = document.getElementById(section);
+        if (elem) {
+            console.log(`✅ ${section}:`, {
+                exists: true,
+                display: elem.style.display,
+                className: elem.className,
+                computedDisplay: window.getComputedStyle(elem).display
+            });
+        } else {
+            console.log(`❌ ${section}: NO EXISTE`);
+        }
+    });
+}
+
+debugSections();
     
     // Mostrar el detalle seleccionado
     const detalle = document.getElementById('detalle-' + lanzamientoId);

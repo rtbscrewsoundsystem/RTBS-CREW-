@@ -2121,19 +2121,20 @@ function showTabWithTransition(tab){
     }, 600);
 }
 
-// ----------------- Tabs -----------------
+// --- Tabs ---
 function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
-      const element = document.getElementById(t);
-      if (element) {
-          element.style.display = 'none';
-          element.className = t === 'inicio' ? '' : 'seccion';
-      }
+  // INCLUYE 'dj' en la lista de secciones a ocultar
+  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'].forEach(t => {
+    const element = document.getElementById(t);
+    if (element) {
+      element.style.display = 'none';
+      element.className = t === 'inicio' ? '' : 'seccion';
+    }
   });
   
   const tabElement = document.getElementById(tab);
   if (tabElement) {
-      tabElement.style.display = 'block';
+    tabElement.style.display = 'block';
   }
 }
 

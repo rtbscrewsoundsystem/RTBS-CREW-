@@ -2259,16 +2259,6 @@ window.addEventListener('load', addTextGlitches);
 </script>
 
 <script>
-function showTabWithTransition(tabId) {
-  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
-    .forEach(section => section.style.display = 'none');
-
-  const section = document.getElementById(tabId);
-  if (section) section.style.display = 'block';
-}
-</script>
-
-<script>
 // --- Función de pantalla completa para el DJ ---
 function toggleFullScreenDJ() {
   const iframe = document.getElementById('djPlayer');

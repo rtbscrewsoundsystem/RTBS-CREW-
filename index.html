@@ -2278,29 +2278,6 @@ function toggleDJ(dj) {
     }
   }
 }
-    // --- Sistema de páginas detalladas de lanzamientos ---
-function mostrarLanzamientoDetalle(lanzamientoId) {
-    // Ocultar todos los detalles primero
-    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
-        detalle.classList.remove('active');
-    });
-    
-    // Mostrar el detalle seleccionado
-    const detalle = document.getElementById('detalle-' + lanzamientoId);
-    if (detalle) {
-        detalle.classList.add('active');
-        // Desplazar suavemente al detalle
-        setTimeout(() => {
-            detalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
-    }
-}
-
-function volverALanzamientos() {
-    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
-        detalle.classList.remove('active');
-    });
-}
     
 </script>
 </body>

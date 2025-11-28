@@ -1080,6 +1080,165 @@ footer {
     border: 1px solid #FFFF00;
 }
 
+    /* --- SECCIÓN VÍDEOS VISUALES MEJORADA --- */
+#visuales {
+    display: none;
+    padding: 30px;
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.video-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 3px solid #00FF00;
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+}
+
+.video-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px #00FF00;
+    border-color: #FFFF00;
+}
+
+.video-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+    z-index: 2;
+}
+
+.video-player-container {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.video-player {
+    width: 100%;
+    height: 250px;
+    border: none;
+    border-radius: 10px;
+    background: #000;
+}
+
+.video-thumbnail {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.video-thumbnail:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+}
+
+.play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 255, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 3px solid #00FF00;
+    box-shadow: 0 0 20px #00FF00;
+}
+
+.play-button:hover {
+    background: #00FF00;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-button:before {
+    content: "▶";
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.video-title {
+    font-size: 18px;
+    color: #FFFF00;
+    margin: 15px 0 10px 0;
+    text-shadow: 0 0 8px #FFFF00;
+    text-align: center;
+    line-height: 1.4;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-description {
+    font-size: 14px;
+    color: #CCFFCC;
+    text-align: center;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.video-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #00AA00;
+}
+
+.video-duration {
+    background: #003300;
+    color: #00FF00;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    border: 1px solid #00AA00;
+}
+
+.video-views {
+    color: #88FF88;
+    font-size: 12px;
+}
+
+/* Para móviles */
+@media (max-width: 768px) {
+    .videos-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .video-player,
+    .video-thumbnail {
+        height: 200px;
+    }
+}
+    
 /* Contenedor de lanzamientos */
 .lanzamientos-container {
     margin-top: 30px;
@@ -1850,50 +2009,83 @@ footer {
   </div>
 </div>
 
-    <!-- SECCIÓN VÍDEOS VISUALES -->
-  <div id="visuales" class="seccion" style="display:none;">
+  <!-- SECCIÓN VÍDEOS VISUALES MEJORADA -->
+<div id="visuales" class="seccion" style="display:none;">
     <h2>🎬 MÚSICA VISUALES 🎬</h2>
+    <p style="text-align: center; color: #CCFFCC; margin-bottom: 30px; font-size: 16px;">
+        Descubre nuestras sesiones y visuales en alta calidad
+    </p>
     
     <div class="videos-grid">
-      <!-- Video 1 -->
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/t1FxYs6qza0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div class="video-title">DJ FLUGEL RTBS CREW - MINI IMPROMIX //HARDTEK - SCHRANZ//</div>
-      </div>
-      
-      <!-- Video 2 -->
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/tBARcjoLgnE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div class="video-title">TRAKS PSIKOTIK 001 - TOUXMAN DJ</div>
-      </div>
-      
-      <!-- Video 3 -->
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/d9Pl4Otti6s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div class="video-title">DJ FLUGEL RTBS CREW - MANIATIK SCHRANZ SESION</div>
-      </div>
-      
-      <!-- Próximamente 1 -->
-      <div class="video-item">
-        <div style="background: #002200; height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #00FF00; border-radius: 5px;">
-          <div style="text-align: center; color: #FFFF00; font-size: 24px; text-shadow: 0 0 10px #FFFF00;">
-            🚧 PRÓXIMAMENTE 🚧
-          </div>
+        <!-- Video 1 - Con previsualización real -->
+        <div class="video-item">
+            <div class="video-player-container">
+                <img src="https://img.youtube.com/vi/t1FxYs6qza0/maxresdefault.jpg" 
+                     alt="DJ FLUGEL RTBS CREW - MINI IMPROMIX" 
+                     class="video-thumbnail"
+                     onclick="cargarVideo(this, 't1FxYs6qza0')">
+                <div class="play-button" onclick="cargarVideo(this.parentNode.querySelector('.video-thumbnail'), 't1FxYs6qza0')"></div>
+            </div>
+            <div class="video-title">DJ FLUGEL RTBS CREW - MINI IMPROMIX //HARDTEK - SCHRANZ//</div>
+            <div class="video-description">Sesión intensa de Hardtek y Schranz en directo</div>
+            <div class="video-stats">
+                <span class="video-duration">45:28</span>
+                <span class="video-views">🎥 Vista previa</span>
+            </div>
         </div>
-        <div class="video-title">NUEVO CONTENIDO EN PREPARACIÓN</div>
-      </div>
-      
-      <!-- Próximamente 2 -->
-      <div class="video-item">
-        <div style="background: #002200; height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #00FF00; border-radius: 5px;">
-          <div style="text-align: center; color: #FFFF00; font-size: 24px; text-shadow: 0 0 10px #FFFF00;">
-            🚧 PRÓXIMAMENTE 🚧
-          </div>
+        
+        <!-- Video 2 - Con previsualización real -->
+        <div class="video-item">
+            <div class="video-player-container">
+                <img src="https://img.youtube.com/vi/tBARcjoLgnE/maxresdefault.jpg" 
+                     alt="TRAKS PSIKOTIK 001 - TOUXMAN DJ" 
+                     class="video-thumbnail"
+                     onclick="cargarVideo(this, 'tBARcjoLgnE')">
+                <div class="play-button" onclick="cargarVideo(this.parentNode.querySelector('.video-thumbnail'), 'tBARcjoLgnE')"></div>
+            </div>
+            <div class="video-title">TRAKS PSIKOTIK 001 - TOUXMAN DJ</div>
+            <div class="video-description">Selección psicodélica de tracks experimentales</div>
+            <div class="video-stats">
+                <span class="video-duration">32:15</span>
+                <span class="video-views">🎥 Vista previa</span>
+            </div>
         </div>
-        <div class="video-title">NUEVO CONTENIDO EN PREPARACIÓN</div>
-      </div>
+        
+        <!-- Video 3 - Con previsualización real -->
+        <div class="video-item">
+            <div class="video-player-container">
+                <img src="https://img.youtube.com/vi/d9Pl4Otti6s/maxresdefault.jpg" 
+                     alt="DJ FLUGEL RTBS CREW - MANIATIK SCHRANZ SESION" 
+                     class="video-thumbnail"
+                     onclick="cargarVideo(this, 'd9Pl4Otti6s')">
+                <div class="play-button" onclick="cargarVideo(this.parentNode.querySelector('.video-thumbnail'), 'd9Pl4Otti6s')"></div>
+            </div>
+            <div class="video-title">DJ FLUGEL RTBS CREW - MANIATIK SCHRANZ SESION</div>
+            <div class="video-description">Sesión maniática de Schranz puro y duro</div>
+            <div class="video-stats">
+                <span class="video-duration">38:42</span>
+                <span class="video-views">🎥 Vista previa</span>
+            </div>
+        </div>
+        
+        <!-- Próximamente con mejor diseño -->
+        <div class="video-item">
+            <div class="video-player-container">
+                <div style="background: linear-gradient(45deg, #002200, #004400); height: 250px; display: flex; align-items: center; justify-content: center; border: 3px dashed #00FF00; border-radius: 10px;">
+                    <div style="text-align: center; color: #FFFF00; font-size: 28px; text-shadow: 0 0 15px #FFFF00;">
+                        🚧<br>PRÓXIMAMENTE
+                    </div>
+                </div>
+            </div>
+            <div class="video-title">NUEVO CONTENIDO EN PREPARACIÓN</div>
+            <div class="video-description">Estamos trabajando en nuevo material visual</div>
+            <div class="video-stats">
+                <span class="video-duration">--:--</span>
+                <span class="video-views">🔧 En desarrollo</span>
+            </div>
+        </div>
     </div>
-  </div>
+</div>
 
     <div id="redes" class="seccion">
     <h2>📱 REDES SOCIALES 📱</h2>
@@ -2211,6 +2403,21 @@ function mostrarLanzamientoDetalle(lanzamientoId) {
     }
 }
 
+    // --- Función para cargar vídeos al hacer clic ---
+function cargarVideo(elemento, videoId) {
+    const contenedor = elemento.closest('.video-player-container');
+    
+    // Reemplazar la miniatura con el iframe del video
+    contenedor.innerHTML = `
+        <iframe class="video-player" 
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+    `;
+}
+    
 function volverALanzamientos() {
     document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
         detalle.classList.remove('active');

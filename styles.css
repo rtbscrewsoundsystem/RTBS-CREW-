@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>RTBS CREW - ☢️ Sonido Libre y Sucio ☢️</title>
+
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+
+<style>
+/* --- Loader mejorado --- */
+#loader { 
+    position: fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background: #000; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    z-index:9999;
+    font-family: 'Arial Black', Impact, sans-serif;
+}
+.loader-content {
+    text-align: center;
+}
+.loader-rtbs {
+    font-size: 48px;
+    color: #00FF00;
+    text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+    margin-bottom: 30px;
+    animation: glitch 2s infinite;
+}
+.bar { 
+    width:8px; 
+    height:40px; 
+    margin:2px; 
+    background: linear-gradient(180deg, #00FF00, #FF0000, #FFFF00);
+    display: inline-block;
+    animation: bounce 0.6s infinite alternate;
+}
+.bar:nth-child(2){ animation-delay:0.1s; } 
+.bar:nth-child(3){ animation-delay:0.2s; } 
+.bar:nth-child(4){ animation-delay:0.3s; } 
+.bar:nth-child(5){ animation-delay:0.4s; }
+.bar:nth-child(6){ animation-delay:0.5s; }
+
+@keyframes bounce { 
+    from { transform: scaleY(0.3); } 
+    to { transform: scaleY(1); } 
+}
+    .logo-titulo {
+  width: 100px; /* tamaño del logo */
+  height: auto;
+  vertical-align: middle;
+  margin-right: 15px;
+  border: 2px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+.titulo-con-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* --- Estilos generales --- */
+body { 
+    margin:0; 
+    font-family:'Arial Black', Impact, sans-serif; 
+    background:#000;
+    color:#00FF00;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fondo tribal con efectos */
+.tribal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('tribal-tattoo-design-elements-set-260nw-565457776.jpg') center/cover;
+    filter: grayscale(100%) brightness(0.8) contrast(1.2);
+    z-index: -2;
+    animation: tribalGlitch 8s infinite, tribalDistortion 12s infinite;
+}
+
+/* Capa de superposición para mejor legibilidad */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+/* Efectos de glitch para el fondo tribal */
+@keyframes tribalGlitch {
+    0%, 100% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    2% { 
+        filter: grayscale(100%) brightness(0.9) contrast(1.3);
+        transform: scale(1.05) translate(2px, 1px);
+    }
+    4% { 
+        filter: grayscale(100%) brightness(0.7) contrast(1.1);
+        transform: scale(1.05) translate(-1px, -2px);
+    }
+    6% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    50% { 
+        filter: grayscale(100%) brightness(0.85) contrast(1.25);
+        transform: scale(1.05) translate(0, 0);
+    }
+}
+
+/* Efectos de distorsión */
+@keyframes tribalDistortion {
+    0%, 100% { 
+        transform: scale(1.05) skew(0deg, 0deg);
+    }
+    25% { 
+        transform: scale(1.05) skew(0.2deg, 0.1deg);
+    }
+    50% { 
+        transform: scale(1.05) skew(-0.1deg, 0.2deg);
+    }
+    75% { 
+        transform: scale(1.05) skew(0.1deg, -0.1deg);
+    }
+}
+
+h1 { 
+    font-size:52px; 
+    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000; 
+    text-align:center; 
+    letter-spacing: 2px;
+    animation: titleGlitch 5s infinite;
+    margin: 20px 0;
+}
+
+@keyframes titleGlitch {
+    0%, 100% { transform: translate(0, 0); }
+    95% { transform: translate(0, 0); }
+    96% { transform: translate(-1px, 1px); }
+    97% { transform: translate(1px, -1px); }
+    98% { transform: translate(-1px, -1px); }
+    99% { transform: translate(1px, 1px); }
+}
+
+h1 span {
+    display: inline-block;
+    position: relative;
+}
+
+h1 span:nth-child(odd){ 
+    color:#00FF00; 
+    animation: pulse 3s infinite alternate;
+}
+h1 span:nth-child(even){ 
+    color:#FFFF00; 
+    animation: pulse 2.5s infinite alternate-reverse;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); text-shadow: 0 0 10px currentColor; }
+    100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+/* --- Menú lateral tribal rave --- */
+nav { 
+    width:220px; 
+    position:fixed; 
+    height:100%; 
+    background: linear-gradient(to bottom, #111, #002200, #111);
+    padding-top:30px; 
+    border-right: 3px solid #00FF00;
+    box-shadow: 0 0 15px #00FF00;
+    z-index: 100;
+}
+
+nav:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, #00FF00, #FFFF00 10px, #FF0000 20px, #00FF00 30px);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 0; }
+}
+
+nav a { 
+    display:block; 
+    color:#00FF00; 
+    padding:15px 20px; 
+    text-decoration:none; 
+    font-weight:bold;
+    font-size: 16px;
+    border-bottom: 1px dashed #003300;
+    position: relative;
+    transition: all 0.3s;
+    text-shadow: 0 0 5px #00FF00;
+}
+
+nav a:hover { 
+    background:#003300; 
+    color:#FFFF00; 
+    padding-left: 25px;
+    text-shadow: 0 0 10px #FFFF00;
+}
+
+nav a:hover:after {
+    content: "☢️";
+    position: absolute;
+    right: 15px;
+}
+
+nav a:first-child {
+    background: #002200;
+    color: #FFFF00;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #00FF00;
+    box-shadow: 0 0 10px #00FF00;
+    margin: 0 10px 20px 10px;
+    border-radius: 5px;
+}
+
+/* --- Contenido principal --- */
+.main { 
+    margin-left:220px; 
+    padding:20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* --- Transición de disco vinilo --- */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.vinyl-transition {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
+        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
+    border: 5px solid #00FF00;
+    box-shadow: 0 0 20px #00FF00;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Sección INICIO --- */
+#inicio {
+    background: rgba(0, 20, 0, 0.7);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px #00FF00;
+    position: relative;
+    overflow: hidden;
+}
+
+#inicio:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgb(0,80,0)" stroke-width="1"/></svg>');
+    opacity: 0.3;
+    z-index: -1;
+}
+
+.descripcion {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+    color: #CCFFCC;
+    text-shadow: 0 0 5px #00AA00;
+}
+
+.descripcion p {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-left: 3px solid #00FF00;
+    background: rgba(0, 40, 0, 0.3);
+}
+
+/* --- Sección NUESTRA MÚSICA --- */
+#musica {
+    display: none;
+}
+
+    /* --- Estilos para páginas detalladas de lanzamientos --- */
+.lanzamiento-detalle {
+    display: none;
+    background: rgba(0, 20, 0, 0.9);
+    border: 3px solid #00FF00;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 0;
+    position: relative;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.lanzamiento-detalle.active {
+    display: block;
+}
+
+.portada-lanzamiento {
+    width: 300px;
+    height: 300px;
+    border: 3px solid #00FF00;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00FF00;
+    margin: 0 auto 20px;
+    object-fit: cover;
+}
+
+.info-lanzamiento {
+    background: rgba(0, 40, 0, 0.6);
+    border: 2px solid #00AA00;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.info-lanzamiento h4 {
+    color: #FFFF00;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px #FFFF00;
+}
+
+.info-lanzamiento p {
+    color: #CCFFCC;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.links-extras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.link-extra {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #003300;
+    border: 1px solid #00AA00;
+    border-radius: 8px;
+    color: #00FF00;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.link-extra:hover {
+    background: #00AA00;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+.link-extra img {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-volver {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #00AA00;
+    color: #000;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 2px solid #00FF00;
+    transition: all 0.3s;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn-volver:hover {
+    background: #00FF00;
+    transform: scale(1.05);
+}
+
+.vinyl-item {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.vinyl-item:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+    
+    /* --- Estilos para fotos de DJs con vinilo --- */
+.dj-photo-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+}
+
+.dj-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00FF00;
+  box-shadow: 0 0 15px #00FF00;
+  position: relative;
+  z-index: 2;
+}
+
+.dj-vinyl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.vinyl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.vinyl-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.vinyl-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.vinyl-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+/* Vinilo giratorio decorativo */
+.vinyl-decoration {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
+        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
+    border: 3px solid #00FF00;
+    box-shadow: 0 0 10px #00FF00;
+    animation: spin 3s linear infinite;
+    position: relative;
+}
+
+.vinyl-decoration:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    background: #00FF00;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.vinyl-content {
+    flex: 1;
+}
+
+.vinyl-title {
+    font-size: 16px;
+    color: #FFFF00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #FFFF00;
+}
+
+.vinyl-description {
+    font-size: 12px;
+    color: #CCFFCC;
+    margin-bottom: 10px;
+}
+
+.vinyl-links {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+}
+
+.vinyl-links a {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #003300;
+    color: #00FF00;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: all 0.3s;
+    border: 1px solid #00AA00;
+}
+
+.vinyl-links a:hover {
+    background: #00AA00;
+    color: #000;
+}
+
+/* Sistema de likes/dislikes */
+.like-dislike {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.like-btn, .dislike-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s;
+    padding: 5px;
+}
+
+.like-btn {
+    color: #00FF00;
+}
+
+.like-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #00FF00;
+}
+
+.dislike-btn {
+    color: #FF0000;
+}
+
+.dislike-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #FF0000;
+}
+
+.like-count, .dislike-count {
+    font-size: 14px;
+    color: #CCFFCC;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* --- Sección EN OBRAS (Visuales y Altavoces) --- */
+.under-construction {
+    background: #000080 !important;
+    border: 4px solid #C0C0C0 !important;
+    position: relative;
+    overflow: hidden;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+}
+
+.construction-border {
+    border: 2px solid #DFDFDF;
+    background: #C0C0C0;
+    padding: 3px;
+    margin: 2px;
+}
+
+.construction-content {
+    background: #008080;
+    padding: 40px 20px;
+    text-align: center;
+    border: 2px solid #000;
+    position: relative;
+    z-index: 2;
+}
+
+/* Tiras de obras animadas */
+.tape {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffff00,
+        #ffff00 20px,
+        #000 20px,
+        #000 40px
+    );
+    animation: tapeMove 3s linear infinite;
+    z-index: 1;
+    opacity: 0.8;
+}
+
+.tape:nth-child(1) {
+    top: 20%;
+    animation-delay: 0s;
+}
+
+.tape:nth-child(2) {
+    top: 50%;
+    animation-delay: 1s;
+}
+
+.tape:nth-child(3) {
+    top: 80%;
+    animation-delay: 2s;
+}
+
+@keyframes tapeMove {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Humo pixelado */
+.smoke {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #C0C0C0;
+    animation: smokeRise 4s linear infinite;
+    opacity: 0;
+}
+
+.smoke:nth-child(4) { left: 20%; animation-delay: 0s; }
+.smoke:nth-child(5) { left: 40%; animation-delay: 1s; }
+.smoke:nth-child(6) { left: 60%; animation-delay: 2s; }
+.smoke:nth-child(7) { left: 80%; animation-delay: 3s; }
+
+@keyframes smokeRise {
+    0% { 
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+    20% { 
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translateY(-100px) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Estilo Windows XP */
+.windows-xp-title {
+    background: linear-gradient(to bottom, #000080, #1084D0);
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #DFDFDF;
+    border-bottom-color: #000;
+    border-right-color: #000;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 1px #000;
+}
+
+.windows-xp-button {
+    background: linear-gradient(to bottom, #DFDFDF, #808080);
+    border: 2px solid;
+    border-top-color: #FFF;
+    border-left-color: #FFF;
+    border-bottom-color: #000;
+    border-right-color: #000;
+    padding: 8px 16px;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    margin: 10px;
+    image-rendering: pixelated;
+}
+
+.windows-xp-button:active {
+    border-top-color: #000;
+    border-left-color: #000;
+    border-bottom-color: #FFF;
+    border-right-color: #FFF;
+}
+
+.xp-icon {
+    font-size: 48px;
+    margin: 20px 0;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0px #000);
+}
+
+/* --- Sección VÍDEOS VISUALES --- */
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.video-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.video-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+.video-title {
+    font-size: 16px;
+    color: #FFFF00;
+    margin: 10px 0;
+    text-shadow: 0 0 5px #FFFF00;
+    text-align: center;
+}
+
+.video-player {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #00AA00;
+}
+
+/* --- Otras secciones --- */
+.seccion {
+    display: none;
+    background: rgba(0, 20, 0, 0.7);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+iframe {
+    margin-top:20px; 
+    border:2px solid #00FF00;
+    border-radius: 5px;
+}
+
+/* Redes Sociales */
+.redes { 
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.redes a { 
+    display: inline-block;
+    transition: transform 0.3s;
+}
+.redes a:hover {
+    transform: scale(1.2);
+}
+.redes img { 
+    width:60px; 
+    margin:5px; 
+    filter: drop-shadow(0 0 5px #00FF00);
+}
+
+/* Comentarios */
+#comment-form { 
+    display:flex; 
+    flex-direction:column; 
+    width:100%; 
+    max-width:500px;
+    margin: 0 auto;
+}
+#comment-form input, #comment-form textarea { 
+    margin-bottom:10px; 
+    padding:10px;
+    background: #002200;
+    border: 1px solid #00AA00;
+    color: #00FF00;
+    border-radius: 5px;
+}
+#comment-form button { 
+    padding:10px;
+    background: #00AA00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+#comment-form button:hover {
+    background: #00FF00;
+}
+.comment { 
+    border:1px solid #00AA00; 
+    margin-bottom:10px; 
+    padding:10px; 
+    background: rgba(0, 40, 0, 0.5);
+    border-radius: 5px;
+}
+
+footer { 
+    margin-top:50px; 
+    color:#00FF00; 
+    text-align:center; 
+    padding: 20px;
+    border-top: 1px solid #00AA00;
+    text-shadow: 0 0 5px #00AA00;
+}
+
+.bandcamp-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background: #004400;
+    color: #00FF00;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 1px solid #00FF00;
+    transition: all 0.3s;
+}
+
+.bandcamp-link:hover {
+    background: #00FF00;
+    color: #000;
+    text-shadow: none;
+}
+
+#logo-placeholder {
+    width: 80px;
+    height: 80px;
+    background: #111;
+    border: 3px solid #00FF00;
+    display: inline-block;
+    margin-right: 15px;
+    vertical-align: middle;
+    box-shadow: 0 0 15px #00FF00;
+}
+
+
+#logo-loader {
+  width: 80px;
+  height: auto;
+  margin-right: 15px;
+  vertical-align: middle;
+  border: 3px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+/* --- NUEVOS ESTILOS PARA DJs --- */
+.dj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.dj-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 25px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+}
+
+.dj-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.dj-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+.dj-item.active {
+    background: linear-gradient(to bottom, #002200, #004400);
+    border-color: #FFFF00;
+    box-shadow: 0 0 20px #FFFF00;
+}
+
+    /* Arreglar altura de los vinyl-items */
+.vinyl-item {
+    min-height: 180px;
+    height: auto;
+}
+
+.vinyl-content {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.vinyl-title {
+    font-size: 15px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.vinyl-description {
+    font-size: 12px;
+    color: #88FF88;
+    margin-bottom: 10px;
+    min-height: 30px;
+}
+
+/* Asegurar que TOUXMAN DJ se vea igual que FLUGEL */
+#lanzamientos-touxman .vinyl-item {
+    min-height: 180px;
+}
+
+#lanzamientos-touxman .vinyl-content {
+    min-height: 140px;
+}
+    
+/* Icono de tabla de mezclas */
+.mixer-icon {
+    width: 80px;
+    height: 40px;
+    background: linear-gradient(135deg, #333, #000);
+    border: 3px solid #00FF00;
+    border-radius: 8px;
+    margin: 0 auto 15px;
+    position: relative;
+    box-shadow: 0 0 10px #00FF00;
+}
+
+.mixer-icon:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    right: 10px;
+    height: 10px;
+    background: #00FF00;
+    border-radius: 3px;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.mixer-icon:after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 15px;
+    right: 15px;
+    height: 6px;
+    background: #FFFF00;
+    border-radius: 2px;
+    box-shadow: 0 0 3px #FFFF00;
+}
+
+.dj-title {
+    font-size: 20px;
+    color: #FFFF00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #FFFF00;
+}
+
+.dj-description {
+    font-size: 14px;
+    color: #CCFFCC;
+    margin-bottom: 15px;
+}
+
+.dj-status {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.dj-status.available {
+    background: #004400;
+    color: #00FF00;
+    border: 1px solid #00FF00;
+}
+
+.dj-status.coming {
+    background: #444400;
+    color: #FFFF00;
+    border: 1px solid #FFFF00;
+}
+
+/* Contenedor de lanzamientos */
+.lanzamientos-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 30, 0, 0.8);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    display: none;
+}
+
+.lanzamientos-container.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toggle-btn {
+    background: #00AA00;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #00FF00;
+}
+
+</style>
+</head>
+<body>

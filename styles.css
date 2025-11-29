@@ -1,0 +1,268 @@
+/* --- Estilos generales --- */
+body { 
+    margin:0; 
+    font-family:'Arial Black', Impact, sans-serif; 
+    background:#000;
+    color:#00FF00;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fondo tribal con efectos */
+.tribal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('tribal-tattoo-design-elements-set-260nw-565457776.jpg') center/cover;
+    filter: grayscale(100%) brightness(0.8) contrast(1.2);
+    z-index: -2;
+    animation: tribalGlitch 8s infinite, tribalDistortion 12s infinite;
+}
+
+/* Capa de superposición para mejor legibilidad */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+/* Efectos de glitch para el fondo tribal */
+@keyframes tribalGlitch {
+    0%, 100% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    2% { 
+        filter: grayscale(100%) brightness(0.9) contrast(1.3);
+        transform: scale(1.05) translate(2px, 1px);
+    }
+    4% { 
+        filter: grayscale(100%) brightness(0.7) contrast(1.1);
+        transform: scale(1.05) translate(-1px, -2px);
+    }
+    6% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    50% { 
+        filter: grayscale(100%) brightness(0.85) contrast(1.25);
+        transform: scale(1.05) translate(0, 0);
+    }
+}
+
+/* Efectos de distorsión */
+@keyframes tribalDistortion {
+    0%, 100% { 
+        transform: scale(1.05) skew(0deg, 0deg);
+    }
+    25% { 
+        transform: scale(1.05) skew(0.2deg, 0.1deg);
+    }
+    50% { 
+        transform: scale(1.05) skew(-0.1deg, 0.2deg);
+    }
+    75% { 
+        transform: scale(1.05) skew(0.1deg, -0.1deg);
+    }
+}
+
+h1 { 
+    font-size:52px; 
+    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000; 
+    text-align:center; 
+    letter-spacing: 2px;
+    animation: titleGlitch 5s infinite;
+    margin: 20px 0;
+}
+
+@keyframes titleGlitch {
+    0%, 100% { transform: translate(0, 0); }
+    95% { transform: translate(0, 0); }
+    96% { transform: translate(-1px, 1px); }
+    97% { transform: translate(1px, -1px); }
+    98% { transform: translate(-1px, -1px); }
+    99% { transform: translate(1px, 1px); }
+}
+
+h1 span {
+    display: inline-block;
+    position: relative;
+}
+
+h1 span:nth-child(odd){ 
+    color:#00FF00; 
+    animation: pulse 3s infinite alternate;
+}
+h1 span:nth-child(even){ 
+    color:#FFFF00; 
+    animation: pulse 2.5s infinite alternate-reverse;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); text-shadow: 0 0 10px currentColor; }
+    100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+/* --- Menú lateral tribal rave --- */
+nav { 
+    width:220px; 
+    position:fixed; 
+    height:100%; 
+    background: linear-gradient(to bottom, #111, #002200, #111);
+    padding-top:30px; 
+    border-right: 3px solid #00FF00;
+    box-shadow: 0 0 15px #00FF00;
+    z-index: 100;
+}
+
+nav:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, #00FF00, #FFFF00 10px, #FF0000 20px, #00FF00 30px);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 0; }
+}
+
+nav a { 
+    display:block; 
+    color:#00FF00; 
+    padding:15px 20px; 
+    text-decoration:none; 
+    font-weight:bold;
+    font-size: 16px;
+    border-bottom: 1px dashed #003300;
+    position: relative;
+    transition: all 0.3s;
+    text-shadow: 0 0 5px #00FF00;
+}
+
+nav a:hover { 
+    background:#003300; 
+    color:#FFFF00; 
+    padding-left: 25px;
+    text-shadow: 0 0 10px #FFFF00;
+}
+
+nav a:hover:after {
+    content: "☢️";
+    position: absolute;
+    right: 15px;
+}
+
+nav a:first-child {
+    background: #002200;
+    color: #FFFF00;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #00FF00;
+    box-shadow: 0 0 10px #00FF00;
+    margin: 0 10px 20px 10px;
+    border-radius: 5px;
+}
+
+/* --- Contenido principal --- */
+.main { 
+    margin-left:220px; 
+    padding:20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* --- Transición de disco vinilo --- */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.vinyl-transition {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
+        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
+    border: 5px solid #00FF00;
+    box-shadow: 0 0 20px #00FF00;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Sección INICIO --- */
+#inicio {
+    background: rgba(0, 20, 0, 0.7);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px #00FF00;
+    position: relative;
+    overflow: hidden;
+}
+
+#inicio:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgb(0,80,0)" stroke-width="1"/></svg>');
+    opacity: 0.3;
+    z-index: -1;
+}
+
+.descripcion {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+    color: #CCFFCC;
+    text-shadow: 0 0 5px #00AA00;
+}
+
+.descripcion p {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-left: 3px solid #00FF00;
+    background: rgba(0, 40, 0, 0.3);
+}
+
+/* --- Otras secciones --- */
+.seccion {
+    display: none;
+    background: rgba(0, 20, 0, 0.7);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+/* Añade aquí el resto de los estilos que tenías en el archivo original */

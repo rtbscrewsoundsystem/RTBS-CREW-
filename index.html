@@ -1953,6 +1953,48 @@ function toggleDJ(dj) {
     }
   }
 }
+    // ----------------- Función ESSENCIAL para mostrar secciones -----------------
+function showTab(tab){
+  // Ocultar todas las secciones primero
+  const sections = ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces', 'dj'];
+  sections.forEach(section => {
+    const element = document.getElementById(section);
+    if (element) {
+      element.style.display = 'none';
+    }
+  });
+  
+  // Mostrar la sección seleccionada
+  const tabElement = document.getElementById(tab);
+  if (tabElement) {
+    tabElement.style.display = 'block';
+  }
+}
+
+// ----------------- Función para transiciones (opcional pero recomendada) -----------------
+function showTabWithTransition(tab){
+  const overlay = document.getElementById('transition-overlay');
+  
+  if (overlay) {
+    // Mostrar transición
+    overlay.style.opacity = '1';
+    overlay.style.pointerEvents = 'all';
+    
+    setTimeout(() => {
+      // Cambiar de sección
+      showTab(tab);
+      
+      // Ocultar transición
+      setTimeout(() => {
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+      }, 500);
+    }, 600);
+  } else {
+    // Si no hay transición, cambiar directamente
+    showTab(tab);
+  }
+}
     
 </script>
 </body>

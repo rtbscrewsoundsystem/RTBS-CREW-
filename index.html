@@ -2209,6 +2209,8 @@ footer {
 </footer>
 
 <script>
+
+    <script>
 // ----------------- Loader (2 segundos fijo) -----------------
 setTimeout(() => { 
     document.getElementById("loader").style.display = "none"; 
@@ -2249,8 +2251,6 @@ function showTab(tab){
       tabElement.style.display = 'block';
   }
 }
-
-    <script>
 
 // ----------------- Comentarios -----------------
 function addComment(){
@@ -2374,16 +2374,6 @@ window.addEventListener('load', addTextGlitches);
 </script>
 
 <script>
-function showTabWithTransition(tabId) {
-  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
-    .forEach(section => section.style.display = 'none');
-
-  const section = document.getElementById(tabId);
-  if (section) section.style.display = 'block';
-}
-</script>
-
-<script>
 // --- Función de pantalla completa para el DJ ---
 function toggleFullScreenDJ() {
   const iframe = document.getElementById('djPlayer');
@@ -2437,7 +2427,8 @@ function toggleDJ(dj) {
     }
   }
 }
-    // --- Sistema de páginas detalladas de lanzamientos ---
+
+// --- Sistema de páginas detalladas de lanzamientos ---
 function mostrarLanzamientoDetalle(lanzamientoId) {
     // Ocultar todos los detalles primero
     document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
@@ -2460,8 +2451,9 @@ function volverALanzamientos() {
         detalle.classList.remove('active');
     });
 }
+</script>
 
-    <script>
+<script>
 // Cargar script de TikTok cuando se muestre la sección
 document.addEventListener('DOMContentLoaded', function() {
   // Precargar el script de TikTok
@@ -2496,6 +2488,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-</script>
 </body>
+</html>
 </html>

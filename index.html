@@ -1145,6 +1145,7 @@ footer {
   <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
   <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
   <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
+  <a href="#" onclick="showTabWithTransition('videos-cortos')">VÍDEOS CORTOS 🎬</a>
   <a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
   <a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
   <a href="#" onclick="showTabWithTransition('dj')">REPRODUCTOR DJ</a>
@@ -1895,6 +1896,38 @@ footer {
     </div>
   </div>
 
+    <div id="videos-cortos" class="seccion" style="display:none;">
+    <h2>📱 VÍDEOS CORTOS (TikToks & Reels) 📱</h2>
+    <p style="text-align: center; margin-bottom: 20px; color: #CCFFCC; text-shadow: 0 0 5px #00AA00;">
+        Aquí encontrarás nuestros TikToks, Reels y otros vídeos cortos. ¡Síguenos en las redes!
+    </p>
+    <div class="videos-grid">
+        <div class="video-item" style="max-width: 605px; margin: 0 auto; padding: 0;">
+            <div style="padding: 15px;">
+                <div class="video-title">DJ FLUGEL RTBS CREW - EL AFILADOR HARDTEK KICK</div>
+            </div>
+            <div style="display: flex; justify-content: center; padding: 10px;">
+                <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@rtbscrew/video/7571501850973850902" data-video-id="7571501850973850902" style="max-width: 605px;min-width: 325px;" > 
+                    <section> 
+                        <a target="_blank" title="@rtbscrew" href="https://www.tiktok.com/@rtbscrew?refer=embed">@rtbscrew</a> DJ FLUGEL RTBS CREW EL AFILADOR HARDTEK KICK (∞ KM&#47;H EDITION) 🪚💥 
+                        <a title="hardtek" target="_blank" href="https://www.tiktok.com/tag/hardtek?refer=embed">#hardtek</a> 
+                        <a title="teuf" target="_blank" href="https://www.tiktok.com/tag/teuf?refer=embed">#teuf</a> 
+                        <a title="freeparty" target="_blank" href="https://www.tiktok.com/tag/freeparty?refer=embed">#freeparty</a> 
+                        <a title="rave" target="_blank" href="https://www.tiktok.com/tag/rave?refer=embed">#rave</a> 
+                        <a title="elafilador" target="_blank" href="https://www.tiktok.com/tag/elafilador?refer=embed">#elafilador</a> 
+                        <a target="_blank" title="♬ EL AFILADOR HARDTEK KICK (∞ KM&#47;H EDITION) - DJ FLUGEL RTBS CREW" href="https://www.tiktok.com/music/EL-AFILADOR-HARDTEK-KICK-∞-KMH-EDITION-7571275297527220240?refer=embed">♬ EL AFILADOR HARDTEK KICK (∞ KM&#47;H EDITION) - DJ FLUGEL RTBS CREW</a> 
+                    </section> 
+                </blockquote> 
+            </div>
+        </div>
+        <div class="video-item" style="height: 400px; display: flex; align-items: center; justify-content: center; background: rgba(0, 30, 0, 0.9); border: 2px dashed #FFFF00;">
+            <div style="text-align: center; color: #FFFF00; font-size: 20px; text-shadow: 0 0 10px #FFFF00;">
+                ➕ PRÓXIMAMENTE MÁS VÍDEOS CORTOS ➕
+            </div>
+        </div>
+    </div>
+</div>
+    
     <div id="redes" class="seccion">
     <h2>📱 REDES SOCIALES 📱</h2>
     <div class="redes">
@@ -1994,18 +2027,18 @@ function showTabWithTransition(tab){
 
 // ----------------- Tabs -----------------
 function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
-      const element = document.getElementById(t);
-      if (element) {
-          element.style.display = 'none';
-          element.className = t === 'inicio' ? '' : 'seccion';
-      }
-  });
-  
-  const tabElement = document.getElementById(tab);
-  if (tabElement) {
-      tabElement.style.display = 'block';
-  }
+    // Se ha añadido 'videos-cortos' y 'dj' para asegurar que todas las pestañas de la navegación se gestionen.
+    ['inicio', 'musica', 'visuales', 'videos-cortos', 'redes', 'comentarios', 'dj', 'altavoces'].forEach(t => {
+        const element = document.getElementById(t);
+        if (element) {
+            element.style.display = 'none';
+            element.className = t === 'inicio' ? '' : 'seccion';
+        }
+    });
+    const tabElement = document.getElementById(tab);
+    if (tabElement) {
+        tabElement.style.display = 'block';
+    }
 }
 
 // ----------------- Comentarios -----------------
@@ -2218,5 +2251,7 @@ function volverALanzamientos() {
 }
     
 </script>
+
+    <script async src="https://www.tiktok.com/embed.js"></script> 
 </body>
 </html>

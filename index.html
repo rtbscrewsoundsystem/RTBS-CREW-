@@ -2117,19 +2117,30 @@ function showTabWithTransition(tab){
 }
 
 // ----------------- Tabs -----------------
-function showTab(tab){
-    // Se ha añadido 'videos-cortos' y 'dj' para asegurar que todas las pestañas de la navegación se gestionen.
-    ['inicio', 'musica', 'visuales', 'videos-cortos', 'redes', 'comentarios', 'dj', 'altavoces'].forEach(t => {
-        const element = document.getElementById(t);
-        if (element) {
-            element.style.display = 'none';
-            element.className = t === 'inicio' ? '' : 'seccion';
-        }
+// --- Función para mostrar pestañas (Corregida) ---
+function showTab(tabId) {
+    // CORRECCIÓN: Ocultar todas las secciones. Ahora incluye #videos-cortos.
+    document.querySelectorAll('#inicio, #musica, #visuales, #videos-cortos, #redes, #comentarios, #altavoces, #dj') 
+        .forEach(section => section.style.display = 'none');
+    
+    // Si hay detalles de lanzamientos abiertos, cerrarlos
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
     });
-    const tabElement = document.getElementById(tab);
-    if (tabElement) {
-        tabElement.style.display = 'block';
+
+    // Si se está mostrando la música, volver a la vista principal (ocultar lanzamientos de DJ)
+    if (tabId !== 'musica') {
+         // Esto evita que se quede solo un detalle de lanzamiento abierto si cambias de pestaña
+         const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
+         if (lanzamientosFlugel) lanzamientosFlugel.classList.remove('active');
+         const lanzamientosTouxman = document.getElementById('lanzamientos-touxman');
+         if (lanzamientosTouxman) lanzamientosTouxman.classList.remove('active');
+         // Restablecer el DJ activo para la próxima vez que se vuelva a 'musica'
+         djActivo = null; 
     }
+    
+    const section = document.getElementById(tabId);
+    if (section) section.style.display = 'block';
 }
 
 // ----------------- Comentarios -----------------

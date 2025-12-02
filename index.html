@@ -1080,106 +1080,6 @@ footer {
     border: 1px solid #FFFF00;
 }
 
-    /* --- Sección VIDEOS CORTOS --- */
-#shorts {
-    display: none;
-    background: rgba(0, 20, 0, 0.7);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 30px;
-    margin-bottom: 30px;
-}
-
-.shorts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
-}
-
-.short-item {
-    background: linear-gradient(to bottom, #111, #002200);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 15px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-.short-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px #00FF00;
-    border-color: #FFFF00;
-}
-
-.short-item:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
-}
-
-.short-title {
-    font-size: 16px;
-    color: #FFFF00;
-    margin: 10px 0;
-    text-shadow: 0 0 5px #FFFF00;
-    text-align: center;
-}
-
-.short-player {
-    width: 100%;
-    border-radius: 5px;
-    border: 1px solid #00AA00;
-    min-height: 500px;
-}
-
-.tiktok-container, .youtube-short-container {
-    width: 100%;
-    max-width: 325px;
-    margin: 0 auto;
-}
-
-.platform-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background: rgba(0,0,0,0.7);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-}
-
-.tiktok-icon {
-    color: #00FF00;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.youtube-icon {
-    color: #FF0000;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.short-description {
-    font-size: 12px;
-    color: #88FF88;
-    text-align: center;
-    margin-top: 10px;
-    padding: 5px;
-    background: rgba(0, 50, 0, 0.3);
-    border-radius: 5px;
-}
-    
 /* Contenedor de lanzamientos */
 .lanzamientos-container {
     margin-top: 30px;
@@ -1245,7 +1145,6 @@ footer {
   <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
   <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
   <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
-  <a href="#" onclick="showTabWithTransition('shorts')">VIDEOS CORTOS</a>  
   <a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
   <a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
   <a href="#" onclick="showTabWithTransition('dj')">REPRODUCTOR DJ</a>
@@ -1996,147 +1895,6 @@ footer {
     </div>
   </div>
 
-    <!-- SECCIÓN VIDEOS CORTOS -->
-<div id="shorts" class="seccion" style="display:none;">
-  <h2>📱 VIDEOS CORTOS 📱</h2>
-  <p style="text-align: center; color: #CCFFCC; margin-bottom: 20px;">
-    TikToks y YouTube Shorts del colectivo RTBS CREW
-  </p>
-  
-  <div class="shorts-grid">
-    <!-- TikTok 1: EL AFILADOR HARDTEK KICK -->
-    <div class="short-item">
-      <div class="platform-icon tiktok-icon">TT</div>
-      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@rtbscrew/video/7571501850973850902" 
-          data-video-id="7571501850973850902">
-        <section>
-          <a target="_blank" title="@rtbscrew" href="https://www.tiktok.com/@rtbscrew?refer=embed">@rtbscrew</a>
-          DJ FLUGEL RTBS CREW EL AFILADOR HARDTEK KICK (∞ KM/H EDITION) 🪚💥
-          <a title="hardtek" target="_blank" href="https://www.tiktok.com/tag/hardtek?refer=embed">#hardtek</a>
-          <a title="teuf" target="_blank" href="https://www.tiktok.com/tag/teuf?refer=embed">#teuf</a>
-          <a title="freeparty" target="_blank" href="https://www.tiktok.com/tag/freeparty?refer=embed">#freeparty</a>
-          <a title="rave" target="_blank" href="https://www.tiktok.com/tag/rave?refer=embed">#rave</a>
-          <a title="elafilador" target="_blank" href="https://www.tiktok.com/tag/elafilador?refer=embed">#elafilador</a>
-          <a target="_blank" title="♬ EL AFILADOR HARDTEK KICK (∞ KM/H EDITION) - DJ FLUGEL RTBS CREW" 
-             href="https://www.tiktok.com/music/EL-AFILADOR-HARDTEK-KICK-∞-KMH-EDITION-7571275297527220240?refer=embed">
-            ♬ EL AFILADOR HARDTEK KICK (∞ KM/H EDITION) - DJ FLUGEL RTBS CREW
-          </a>
-        </section>
-      </blockquote>
-      <div class="short-description">EL AFILADOR HARDTEK KICK (∞ KM/H EDITION)</div>
-    </div>
-    
-    <!-- TikTok 2: Proyecto de caja acústica VOID -->
-    <div class="short-item">
-      <div class="platform-icon tiktok-icon">TT</div>
-      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@rtbscrew/video/7570036469864074518" 
-          data-video-id="7570036469864074518">
-        <section>
-          <a target="_blank" title="@rtbscrew" href="https://www.tiktok.com/@rtbscrew?refer=embed">@rtbscrew</a>
-          ⚒️🪚 retomando proyecto de caja acústica inspirada en VOID ⚒️🦇
-          <a title="speaker" target="_blank" href="https://www.tiktok.com/tag/speaker?refer=embed">#speaker</a>
-          <a title="soundsystem" target="_blank" href="https://www.tiktok.com/tag/soundsystem?refer=embed">#soundsystem</a>
-          <a title="rrave" target="_blank" href="https://www.tiktok.com/tag/rrave?refer=embed">#rrave</a>
-          <a title="teuf" target="_blank" href="https://www.tiktok.com/tag/teuf?refer=embed">#teuf</a>
-          <a title="hardtek" target="_blank" href="https://www.tiktok.com/tag/hardtek?refer=embed">#hardtek</a>
-          <a target="_blank" title="♬ Pandémie - Tlb" 
-             href="https://www.tiktok.com/music/Pandémie-6782690157377095682?refer=embed">
-            ♬ Pandémie - Tlb
-          </a>
-        </section>
-      </blockquote>
-      <div class="short-description">Proyecto caja acústica inspirada en VOID</div>
-    </div>
-    
-    <!-- YouTube Shorts -->
-    <div class="short-item">
-      <div class="platform-icon youtube-icon">YT</div>
-      <iframe class="short-player" src="https://www.youtube.com/embed/yBEgDGQEa7A" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-      </iframe>
-      <div class="short-description">YouTube Short - Sesión en estudio</div>
-    </div>
-    
-    <div class="short-item">
-      <div class="platform-icon youtube-icon">YT</div>
-      <iframe class="short-player" src="https://www.youtube.com/embed/wRbO4Z9dYcs" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-      </iframe>
-      <div class="short-description">YouTube Short - Demostración técnica</div>
-    </div>
-    
-    <!-- Más TikToks -->
-    <div class="short-item">
-      <div class="platform-icon tiktok-icon">TT</div>
-      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@rtbscrew/video/7568891444400819478" 
-          data-video-id="7568891444400819478">
-        <section>
-          <a target="_blank" title="@rtbscrew" href="https://www.tiktok.com/@rtbscrew?refer=embed">@rtbscrew</a>
-          CERWIN VEGA 1.0 ESCALA 1:3 todas las piezas ya puestas, ultimas pintadas y ya está 100% acabado 😝
-          <a title="teuf" target="_blank" href="https://www.tiktok.com/tag/teuf?refer=embed">#teuf</a>
-          <a title="rrave" target="_blank" href="https://www.tiktok.com/tag/rrave?refer=embed">#rrave</a>
-          <a title="freeparty" target="_blank" href="https://www.tiktok.com/tag/freeparty?refer=embed">#freeparty</a>
-          <a title="soundsystem" target="_blank" href="https://www.tiktok.com/tag/soundsystem?refer=embed">#soundsystem</a>
-          <a title="speaker" target="_blank" href="https://www.tiktok.com/tag/speaker?refer=embed">#speaker</a>
-          <a target="_blank" title="♬ Teknival - Floxytek" 
-             href="https://www.tiktok.com/music/Teknival-6709399339896145922?refer=embed">
-            ♬ Teknival - Floxytek
-          </a>
-        </section>
-      </blockquote>
-      <div class="short-description">CERWIN VEGA 1.0 - Proyecto terminado</div>
-    </div>
-    
-    <div class="short-item">
-      <div class="platform-icon youtube-icon">YT</div>
-      <iframe class="short-player" src="https://www.youtube.com/embed/TxVTusa-1IE" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-      </iframe>
-      <div class="short-description">YouTube Short - Vista rápida</div>
-    </div>
-    
-    <!-- Más YouTube Shorts -->
-    <div class="short-item">
-      <div class="platform-icon youtube-icon">YT</div>
-      <iframe class="short-player" src="https://www.youtube.com/embed/WjzHW1lHwmw" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-      </iframe>
-      <div class="short-description">YouTube Short - Demostración live</div>
-    </div>
-    
-    <div class="short-item">
-      <div class="platform-icon youtube-icon">YT</div>
-      <iframe class="short-player" src="https://www.youtube.com/embed/hZkkmPRr5Wc" 
-              frameborder="0" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-      </iframe>
-      <div class="short-description">YouTube Short - Fragmento DJ</div>
-    </div>
-    
-    <!-- Puedes añadir más TikToks y YouTube Shorts según necesites -->
-  </div>
-  
-  <div style="text-align: center; margin-top: 30px;">
-    <a href="https://www.tiktok.com/@rtbscrew" target="_blank" class="bandcamp-link" 
-       style="background: #000000; border-color: #00FF00; margin-right: 10px;">
-      📱 SEGUIR EN TIKTOK
-    </a>
-    <a href="https://www.youtube.com/@RTBSCREW/shorts" target="_blank" class="bandcamp-link" 
-       style="background: #FF0000; border-color: #FFFFFF;">
-      ▶ VER MÁS SHORTS
-    </a>
-  </div>
-</div>
-    
     <div id="redes" class="seccion">
     <h2>📱 REDES SOCIALES 📱</h2>
     <div class="redes">
@@ -2209,7 +1967,7 @@ footer {
 </footer>
 
 <script>
-     ----------------- Loader (2 segundos fijo) -----------------
+// ----------------- Loader (2 segundos fijo) -----------------
 setTimeout(() => { 
     document.getElementById("loader").style.display = "none"; 
 }, 2000);
@@ -2236,7 +1994,7 @@ function showTabWithTransition(tab){
 
 // ----------------- Tabs -----------------
 function showTab(tab){
-  ['inicio', 'musica', 'visuales', 'shorts', 'redes', 'comentarios', 'altavoces', 'dj'].forEach(t => {
+  ['inicio', 'musica', 'visuales', 'redes', 'comentarios', 'altavoces'].forEach(t => {
       const element = document.getElementById(t);
       if (element) {
           element.style.display = 'none';
@@ -2372,6 +2130,16 @@ window.addEventListener('load', addTextGlitches);
 </script>
 
 <script>
+function showTabWithTransition(tabId) {
+  document.querySelectorAll('.seccion, #inicio, #musica, #visuales, #redes, #comentarios, #altavoces, #dj')
+    .forEach(section => section.style.display = 'none');
+
+  const section = document.getElementById(tabId);
+  if (section) section.style.display = 'block';
+}
+</script>
+
+<script>
 // --- Función de pantalla completa para el DJ ---
 function toggleFullScreenDJ() {
   const iframe = document.getElementById('djPlayer');
@@ -2425,8 +2193,7 @@ function toggleDJ(dj) {
     }
   }
 }
-
-// --- Sistema de páginas detalladas de lanzamientos ---
+    // --- Sistema de páginas detalladas de lanzamientos ---
 function mostrarLanzamientoDetalle(lanzamientoId) {
     // Ocultar todos los detalles primero
     document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
@@ -2449,44 +2216,7 @@ function volverALanzamientos() {
         detalle.classList.remove('active');
     });
 }
-</script>
-
-<script>
-// Cargar script de TikTok cuando se muestre la sección
-document.addEventListener('DOMContentLoaded', function() {
-  // Precargar el script de TikTok
-  const tiktokScript = document.createElement('script');
-  tiktokScript.src = 'https://www.tiktok.com/embed.js';
-  tiktokScript.async = true;
-  document.head.appendChild(tiktokScript);
-  
-  // Recargar embeds cuando se muestre la sección
-  function reloadTikTokEmbeds() {
-    if (typeof tiktokEmbeds !== 'undefined') {
-      tiktokEmbeds.reloadEmbeds();
-    }
-  }
-  
-  // Observar cambios en la sección
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-        const section = document.getElementById('shorts');
-        if (section && section.style.display === 'block') {
-          // Pequeño delay para asegurar que los elementos están visibles
-          setTimeout(reloadTikTokEmbeds, 100);
-        }
-      }
-    });
-  });
-  
-  const shortsSection = document.getElementById('shorts');
-  if (shortsSection) {
-    observer.observe(shortsSection, { attributes: true });
-  }
-});
-</script>
     
+</script>
 </body>
-</html>
 </html>

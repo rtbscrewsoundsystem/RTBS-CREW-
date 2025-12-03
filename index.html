@@ -624,76 +624,6 @@ nav a:first-child {
     text-align: center;
 }
 
-    /* --- INICIO DE CÓDIGO A AÑADIR: Estilos de Altavoces Timeline --- */
-.altavoces-timeline {
-    margin-top: 50px;
-    padding: 20px 0;
-}
-
-.altavoz-post {
-    /* Estilo oscuro con bordes rave */
-    background: linear-gradient(to bottom, #002200, #111);
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    padding: 25px;
-    margin-bottom: 40px;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
-    position: relative;
-    overflow: hidden;
-}
-
-.altavoz-post h3 {
-    color: #FFFF00;
-    text-shadow: 0 0 8px #FFFF00;
-    margin-top: 0;
-    margin-bottom: 15px;
-    border-bottom: 1px dashed #00FF00;
-    padding-bottom: 10px;
-}
-
-.altavoz-media {
-    /* Muestra fotos y videos en una cuadrícula adaptable */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.altavoz-media img,
-.altavoz-media video {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border: 3px solid #00FF00;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-}
-
-.altavoz-link a {
-    /* Estilo de botón para el enlace de Instagram */
-    display: inline-block;
-    padding: 8px 15px;
-    background: #004400;
-    color: #00FF00;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-top: 15px;
-    border: 1px solid #00FF00;
-    transition: background 0.3s;
-}
-
-.altavoz-link a:hover {
-    background: #00AA00;
-    color: #000;
-}
-
-/* Modificación para el título "Próximamente" (reutilizando estilo XP) */
-.windows-xp-title {
-    font-size: 18px; /* Ajuste el tamaño para el recuadro "Próximamente" */
-}
-/* --- FIN DE CÓDIGO A AÑADIR --- */
-    
 /* --- Sección EN OBRAS (Visuales y Altavoces) --- */
 .under-construction {
     background: #000080 !important;
@@ -2147,92 +2077,107 @@ footer {
         <div class="smoke"></div>
         
         <div class="windows-xp-title">🔧 NUESTROS ALTAVOCES - EN CONSTRUCCIÓN 🔧</div>
-      <section id="altavoces" class="seccion">
-    
+        <section id="nuestros-altavoces" class="nuestros-altavoces">
     <div class="contenedor-principal">
-        
         <h2 class="titulo-seccion">NUESTROS ALTAVOCES</h2>
         <p class="subtitulo-seccion">El sonido libre y sucio requiere el equipo adecuado. Conoce nuestros proyectos de construcción y mejora de cajas acústicas.</p>
         
+        <!-- Contenido de la sección Altavoces -->
         <div class="altavoces-contenido">
-            
+            <!-- Bloque de Introducción/Resumen -->
             <div class="altavoces-resumen">
                 <h3 class="resumen-titulo">CERWIN VEGA 1.0 y 2.0 - Escala 1:3</h3>
                 <p class="resumen-texto">El proyecto comenzó con la versión **CERWIN VEGA 1.0 Escala 1:3**. Se inició el desarrollo, trabajando continuamente para mejorar y perfeccionar el equipo. Lamentablemente, el altavoz original del 1.0 acabó fallando por completo y tuvo que ser descartado. A pesar del contratiempo, se logró encontrar un sustituto para la caja acústica, y el CERWIN VEGA 1.0 fue revivido y completado al 100%, pendiente solo de volver a colocar la tapa final.</p>
                 <p class="resumen-texto">Paralelamente, se inició el proyecto **CERWIN VEGA 2.0 Escala 1:3**. Una vez colocadas todas las piezas, se procedió a aplicar masilla de madera en los huecos superiores restantes para lograr un aislamiento sonoro total, finalizando con la primera prueba de sonido del CERWIN VEGA 2.0.</p>
             </div>
-
-            <div class="altavoces-timeline">
-                
-                <div class="altavoz-post">
-                    <h3>POST 1: Inicio</h3>
-                    <div class="altavoz-media">
-                        <img src="SaveClip.App_496821849_17851473531447325_2752775863769893307_n.jpg" alt="Inicio del proyecto de altavoces, Foto 1">
-                        <img src="SaveClip.App_497063848_17851473540447325_646349771874319268_n.jpg" alt="Inicio del proyecto de altavoces, Foto 2">
-                        <img src="SaveClip.App_497141184_17851473549447325_3293157005935637525_n.jpg" alt="Inicio del proyecto de altavoces, Foto 3">
+ <!-- Post 1: Inicio CERWIN VEGA 1.0 y 2.0 -->
+                <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+                    <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+                        POST 1: INICIO DEL PROYECTO CERWIN VEGA 1.0 y 2.0
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                        <img src="SaveClip.App_496821849_17851473531447325_2752775863769893307_n.jpg" alt="Foto 1" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+                        <img src="SaveClip.App_497063848_17851473540447325_646349771874319268_n.jpg" alt="Foto 2" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+                        <img src="SaveClip.App_497141184_17851473549447325_3293157005935637525_n.jpg" alt="Foto 3" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+                    </div>
+                    <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+                        El proyecto comenzó con la versión CERWIN VEGA 1.0 Escala 1:3, trabajando continuamente para mejorar el equipo.
                     </div>
                 </div>
 
-                <div class="altavoz-post">
-                    <h3>POST 2: 1.0 revivido</h3>
-                    <div class="altavoz-media" style="grid-template-columns: minmax(200px, 1fr);">
-                        <video controls class="video-player">
+                <!-- Post 2: CERWIN VEGA 1.0 Revivido -->
+                <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+                    <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+                        POST 2: CERWIN VEGA 1.0 REVIVIDO (SUSTITUTO DE CAJA ACÚSTICA)
+                    </div>
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <video controls style="width: 80%; max-width: 400px; border: 3px solid #00FF00;">
                             <source src="SaveClip.App_AQNseJYjUP18QoZ1g2EZI6SOKzO7tO3Uj40FUiJbMEoyMnP2rW0fXfP1BqeqRN21uj4QXeh-9KBpdB50Cb_tWkGknjfwQl14TE8N9Bg.MP4" type="video/mp4">
-                            Tu navegador no soporta el tag de video.
+                            Tu navegador no soporta el video.
                         </video>
                     </div>
-                </div>
-
-                <div class="altavoz-post">
-                    <h3>POST 3: 2.0 montaje</h3>
-                    <div class="altavoz-media">
-                        <img src="SaveClip.App_555084652_17868788139447325_841079977886370508_n.jpg" alt="Montaje Cerwin Vega 2.0, Foto 1">
-                        <img src="SaveClip.App_554996255_17868788130447325_7273488961855246324_n (1).jpg" alt="Montaje Cerwin Vega 2.0, Foto 2">
-                        <img src="SaveClip.App_554822942_17868788148447325_1966711022279555211_n.jpg" alt="Montaje Cerwin Vega 2.0, Foto 3">
-                    </div>
-                    <div class="altavoz-link">
-                        <a href="https://www.instagram.com/p/DPHYCGKjY3x/?igsh=ZTBzcTVwMmZuZGk2" target="_blank"> Ver Post Original en Instagram (Montaje 2.0)</a>
+                    <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+                        El altavoz original falló, pero encontramos un sustituto y lo terminamos al 100%.
                     </div>
                 </div>
 
-                <div class="altavoz-post">
-                    <h3>POST 4: 2.0 prueba</h3>
-                    <div class="altavoz-media" style="grid-template-columns: minmax(200px, 1fr);">
-                        <video controls class="video-player">
-                            <source src="SaveClip.App_AQPkj0I7EwYWW_B8DA0boNhP5ohbsWE-1vBoNlzuLdPT6Cx6vxHBJnu_MB7rcHu2Kj2uclh5_gbg2gaId4pfcs2s-PS_poAHXH5dhNA.MP4" type="video/mp4">
-                            Tu navegador no soporta el tag de video.
+                <!-- Post 3: CERWIN VEGA 2.0 Montaje -->
+                <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+                    <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+                        POST 3: CERWIN VEGA 2.0 MONTAJE FINAL Y AISLAMIENTO
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px;">
+                        <img src="SaveClip.App_555084652_17868788139447325_841079977886370508_n.jpg" alt="Foto 1" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+                        <img src="SaveClip.App_554996255_17868788130447325_7273488961855246324_n (1).jpg" alt="Foto 2" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+                        <img src="SaveClip.App_554822942_17868788148447325_1966711022279555211_n.jpg" alt="Foto 3" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+                    </div>
+                    <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+                        <a href="https://www.instagram.com/p/DPHYCGKjY3x/?igsh=ZTBzcTV3MmZuZGk2" target="_blank" style="color: #00FF00;">Ver post original en Instagram</a>
+                    </div>
+                </div>
+
+                <!-- Post 4: CERWIN VEGA 2.0 Prueba de sonido -->
+                <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+                    <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+                        POST 4: CERWIN VEGA 2.0 ¡PRIMERA PRUEBA DE SONIDO!
+                    </div>
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <video controls style="width: 80%; max-width: 400px; border: 3px solid #00FF00;">
+                            <source src="SaveClip.App_AQPkj0I7EwYWW_B8DA0boNhP5ohbsWE-1vBoNlzuLdPT6Cx6vxHBjnu_MB7rcHu2Kj2uclh5_gbg2gaId4pfcs2s-PS_poAHXH5dhNA.MP4" type="video/mp4">
+                            Tu navegador no soporta el video.
                         </video>
                     </div>
-                </div>
-                
-            </div> 
-            <div class="under-construction" style="margin-top: 60px;">
-                
-                <div class="tape"></div>
-                <div class="tape" style="top: 45%; animation-delay: 0.5s; animation-direction: reverse;"></div>
-                <div class="tape" style="top: 75%; animation-delay: 1.5s;"></div>
-                
-                <div class="construction-border">
-                    <div class="windows-xp-title">🚧 RTBS CREW - PRÓXIMAMENTE 🚧</div>
-                    <div class="construction-content" style="padding: 20px;">
-                        <div class="smoke"></div>
-                        <div class="smoke" style="left: 40%; animation-delay: 1s;"></div>
-                        <div class="smoke" style="left: 60%; animation-delay: 2s;"></div>
-                        <div class="smoke" style="left: 80%; animation-delay: 3s;"></div>
-
-                        <h3 style="color: #FFF; font-size: 24px; text-shadow: 1px 1px 1px #000;">EN OBRAS...</h3>
-                        <p style="color: #CCC; font-size: 16px; margin-bottom: 20px;">
-                            Estamos trabajando en la siguiente fase de desarrollo de nuestros Soundsystem.<br>
-                            ¡Vuelve pronto para ver más avances en el soundsystem!
-                        </p>
-                        <a href="https://github.com/rtbscrewsoundsystem/RTBS-CREW-" target="_blank" class="windows-xp-button">🔧 VER CÓDIGO EN GITHUB</a>
+                    <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+                        Primera prueba de sonido del CERWIN VEGA 2.0.
                     </div>
                 </div>
+
+                <!-- SECCIÓN "EN OBRAS" (abajo del todo, con cintas y humo) -->
+                <div style="margin-top: 50px; padding: 20px; background: #000080; border: 3px solid #C0C0C0; position: relative; overflow: hidden;">
+                    <!-- Cintas de obras -->
+                    <div class="tape"></div>
+                    <div class="tape"></div>
+                    <div class="tape"></div>
+                    
+                    <!-- Humo pixelado -->
+                    <div class="smoke"></div>
+                    <div class="smoke"></div>
+                    <div class="smoke"></div>
+                    <div class="smoke"></div>
+                    
+                    <div class="windows-xp-title">🚧 PRÓXIMOS PROYECTOS - EN CONSTRUCCIÓN 🚧</div>
+                    <div style="color: #C0C0C0; font-family: 'MS Sans Serif'; font-size: 14px; margin-top: 20px; text-align: center;">
+                        ⚡ Seguimos trabajando en nuevos diseños y mejoras. ¡Pronto más novedades! ⚡
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="windows-xp-button" onclick="alert('Próximamente más info!')">VER AVANCES</button>
+                    </div>
+                </div>
+
             </div>
-            </div>
+        </div>
     </div>
-</section>
-          
+        
 <!-- INICIO DE CSS ESPECÍFICO PARA LA SECCIÓN NUESTROS ALTAVOCES -->
 <style>
 /* CSS para la nueva sección de altavoces */

@@ -686,6 +686,44 @@ nav a:first-child {
     100% { transform: translateX(100%); }
 }
 
+    /* --- NUEVOS ESTILOS PARA CINTAS VERTICALES EN LA SECCIÓN EN OBRAS (.under-construction) --- */
+
+/* 1. Modificar la cinta para que sea vertical y cambiar la animación */
+.under-construction .tape {
+    width: 30px; /* Ancho para la cinta vertical */
+    height: 100%; /* Cubre toda la altura de la sección */
+    top: 0;
+    /* La animación original 'tapeMove' hace un movimiento horizontal que ya no sirve,
+       así que usamos una nueva keyframe 'tapeVerticalScroll'. */
+    animation: tapeVerticalScroll 3s linear infinite;
+}
+
+/* 2. Posicionar la primera cinta a la izquierda */
+.under-construction .tape:nth-child(1) {
+    left: 0;
+    right: auto;
+    /* Las propiedades 'top' horizontales originales se anulan con el 'top: 0' de arriba */
+    animation-delay: 0s;
+}
+
+/* 3. Posicionar la segunda cinta a la derecha */
+.under-construction .tape:nth-child(2) {
+    right: 0;
+    left: auto; /* Asegura que se pegue a la derecha */
+    animation-delay: 1.5s; /* Desfase para que no se muevan a la vez */
+}
+
+/* 4. Ocultar la tercera cinta (si existe) */
+.under-construction .tape:nth-child(3) {
+    display: none;
+}
+
+/* 5. Definir la nueva animación: desplaza el patrón de fondo verticalmente */
+@keyframes tapeVerticalScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 40px; } /* Mueve el fondo la distancia de una repetición (40px) */
+}
+    
 /* Humo pixelado */
 .smoke {
     position: absolute;
@@ -2062,13 +2100,10 @@ footer {
   </div>
 
   <!-- SECCIÓN ALTAVOCES (EN OBRAS) -->
-  <div id="altavoces" class="seccion under-construction">
-    <div class="construction-border">
-      <div class="construction-content">
-        <!-- Tiras de obras -->
-        <div class="tape"></div>
-        <div class="tape"></div>
-        <div class="tape"></div>
+  <div id="altavoces" class="seccion under-construction" style="display: none;">
+    <div class="tape"></div>
+    <div class="tape"></div>
+    <div class="smoke"></div>
         
         <!-- Humo pixelado -->
         <div class="smoke"></div>

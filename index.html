@@ -686,6 +686,33 @@ nav a:first-child {
     margin: 0 auto;
 }
 
+    /* --- ESTILOS PARA GALERÍA DE 3 FOTOS EN HORIZONTAL --- */
+.three-col-gallery {
+    display: flex; /* Usar Flexbox para poner las imágenes en línea */
+    justify-content: space-around; /* Distribuir el espacio entre ellas */
+    align-items: flex-start;
+    margin: 20px 0;
+    gap: 10px; /* Espacio entre las imágenes */
+}
+
+.three-col-gallery img {
+    width: 30%; /* Cada imagen ocupa aproximadamente un tercio del contenedor */
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #00FF00; /* Borde para que se destaquen */
+}
+
+/* Diseño Responsive: Apilar en dispositivos pequeños */
+@media (max-width: 600px) {
+    .three-col-gallery {
+        flex-direction: column;
+    }
+    .three-col-gallery img {
+        width: 80%;
+        margin: 10px auto;
+    }
+}
+    
 /* Estilo para el enlace a Instagram */
 .post-link a {
     display: block;

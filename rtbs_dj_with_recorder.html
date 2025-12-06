@@ -159,6 +159,47 @@ h1 { text-align: center; margin-top: 0; }
 /* Ensure crossfader doesn't cover buttons */
 .crossfader-container, .buttons { z-index: 3; }
 
+    .rotary-knob {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 60px; /* Ancho para el control */
+    height: 25px; /* Altura para el control */
+    /* Se elimina 'transform: rotate(270deg);' para que sea horizontal */
+}
+/* Estilo del Pomo (la "Rueda") */
+.rotary-knob::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 20px;
+    width: 20px;
+    background-color: #00f;
+    border-radius: 50%; /* Pomo redondo */
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    margin-top: 2px; /* Centra el pomo verticalmente sobre la pista */
+}
+.rotary-knob::-moz-range-thumb {
+    height: 20px;
+    width: 20px;
+    background-color: #00f;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+/* Estilo de la Pista (la base del dial) */
+.rotary-knob::-webkit-slider-runnable-track {
+    background: #555;
+    height: 8px; /* Pista más gruesa */
+    border-radius: 4px;
+}
+.rotary-knob::-moz-range-track {
+    background: #555;
+    height: 8px;
+    border-radius: 4px;
+    }
+    
 /* Botones de navegación rápida */
 .navigation-buttons {
     display: flex;

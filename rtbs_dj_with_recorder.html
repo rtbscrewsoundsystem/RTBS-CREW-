@@ -182,6 +182,57 @@ h1 { text-align: center; margin-top: 0; }
 .nav-button:active {
     background: #555;
 }
+    /* --- NUEVOS ESTILOS PARA EL LOOP --- */
+.loop-control-block {
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+.loop-buttons-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.loop-in-button {
+    background: #0080FF; /* Azul para Loop In */
+    width: 80px;
+}
+.loop-out-button {
+    background: #FF8C00; /* Naranja para Loop Out */
+    width: 80px;
+}
+.clear-loop-button {
+    background: #FF0000; /* Rojo para Clear Loop */
+    width: 170px;
+    font-weight: bold;
+}
+/* Estilos para el estado activo (opcional) */
+.loop-in-button.active {
+    background: #33aaff;
+    box-shadow: 0 0 10px #33aaff;
+}
+.loop-out-button.active {
+    background: #ffaa33;
+    box-shadow: 0 0 10px #ffaa33;
+}
+<div class="control-block loop-control-block">
+    <div class="loop-buttons-row">
+        <button class="button loop-in-button" id="loopInBtn1" onclick="setLoopIn(1)">Loop In</button>
+        <button class="button loop-out-button" id="loopOutBtn1" onclick="setLoopOut(1)">Loop Out</button>
+    </div>
+    <button class="button clear-loop-button" id="clearLoopBtn1" onclick="clearLoop(1)">Clear Loop</button>
+</div>
+
+    <div class="control-block loop-control-block">
+    <div class="loop-buttons-row">
+        <button class="button loop-in-button" id="loopInBtn2" onclick="setLoopIn(2)">Loop In</button>
+        <button class="button loop-out-button" id="loopOutBtn2" onclick="setLoopOut(2)">Loop Out</button>
+    </div>
+    <button class="button clear-loop-button" id="clearLoopBtn2" onclick="clearLoop(2)">Clear Loop</button>
+</div>
+    
 </style>
 </head>
 <body>
@@ -1931,6 +1982,208 @@ h1 { text-align: center; margin-top: 0; }
         a.remove();
         URL.revokeObjectURL(url);
     }
+    // --- FUNCIONES DE LÓGICA DE LOOP ---
+
+// Obtiene la posición actual de la pista en segundos, ajustando por pitch y estado del loop
+function getCurrentPositionSeconds(deckNum) {
+    const deck = decks[deckNum];
+    if (deck.isPlaying) {
+        if (deck.isLooping && deck.loopSource) {
+            // Si está en loop, el tiempo se calcula con loopSource
+            // El tiempo de inicio del loop es deck.loopStart
+            let currentRelativeTime = (audioCtx.currentTime - deck.startTime) * deck.pitch * (deck.isReverse ? -1 : 1);
+            let totalTime = deck.loopStart + currentRelativeTime;
+            
+            // Si es inverso, la lógica es más compleja, pero para un loop estándar no es necesario.
+            // Para simplificar, si está en reverso, devolvemos el tiempo del source principal si existiera.
+            // Asumiremos que el loop se desactiva si está en reversa, o que la reproducción inversa funciona correctamente
+            // dentro del rango loopStart/loopEnd.
+            
+            return Math.max(0, totalTime);
+        } else if (deck.source) {
+            // Si está en reproducción normal
+            let currentRelativeTime = (audioCtx.currentTime - deck.startTime) * deck.pitch * (deck.isReverse ? -1 : 1);
+            let totalTime = deck.currentTime + currentRelativeTime;
+            return Math.max(0, totalTime);
+        }
+    }
+    // Si no está sonando, devuelve el último currentTime guardado
+    return deck.currentTime;
+}
+
+// Inicia la reproducción en bucle (llamada por setLoopOut)
+function startLoop(deckNum) {
+    const deck = decks[deckNum];
+    
+    // Si ya existe un loopSource, lo detenemos y limpiamos
+    if (deck.loopSource) {
+        try { deck.loopSource.stop(0); } catch (e) {}
+        deck.loopSource = null;
+    }
+    
+    // Detenemos el source normal si está activo
+    if (deck.source) {
+        try { deck.source.stop(0); } catch (e) {}
+        deck.source = null;
+    }
+    
+    if (!deck.audioBuffer || deck.loopStart === null || deck.loopEnd === null || deck.loopStart >= deck.loopEnd) {
+        deck.isLooping = false;
+        return;
+    }
+
+    const loopDuration = deck.loopEnd - deck.loopStart;
+    
+    deck.loopSource = audioCtx.createBufferSource();
+    deck.loopSource.buffer = deck.audioBuffer;
+    deck.loopSource.connect(deck.gainNode);
+    deck.loopSource.loop = true; // ¡Esto es lo que crea el bucle!
+    deck.loopSource.loopStart = deck.loopStart;
+    deck.loopSource.loopEnd = deck.loopEnd;
+    
+    deck.loopSource.playbackRate.setValueAtTime(deck.pitch * (deck.isReverse ? -1 : 1), audioCtx.currentTime);
+
+    // Actualiza el estado de reproducción
+    deck.isPlaying = true;
+    deck.isLooping = true;
+    deck.startTime = audioCtx.currentTime;
+    
+    // Iniciar el loop. Si es la primera vez, empieza en loopStart.
+    deck.loopSource.start(0, deck.loopStart);
+    console.log(`Deck ${deckNum}: Loop iniciado desde ${deck.loopStart.toFixed(2)}s hasta ${deck.loopEnd.toFixed(2)}s.`);
+}
+
+// Botón: Marca el punto de inicio del loop
+function setLoopIn(deckNum) {
+    const deck = decks[deckNum];
+    if (!deck.audioBuffer) return;
+
+    // Pausamos el loop si estaba activo
+    if (deck.isLooping) {
+        clearLoop(deckNum);
+        // Si no está sonando, usamos el currentTime guardado. Si está sonando, lo obtenemos.
+    }
+    
+    deck.loopStart = getCurrentPositionSeconds(deckNum);
+    deck.loopEnd = null; // Resetear el punto final
+    
+    document.getElementById(`loopInBtn${deckNum}`).classList.add('active');
+    document.getElementById(`loopOutBtn${deckNum}`).classList.remove('active');
+    document.getElementById(`clearLoopBtn${deckNum}`).classList.remove('active');
+    
+    console.log(`Deck ${deckNum}: Loop In establecido en ${deck.loopStart.toFixed(2)}s`);
+    drawFullWaveform(deckNum); // Reflejar en la onda
+}
+
+// Botón: Marca el punto final del loop e inicia el loop
+function setLoopOut(deckNum) {
+    const deck = decks[deckNum];
+    if (!deck.audioBuffer || deck.loopStart === null) {
+        alert(`Deck ${deckNum}: Primero pulsa Loop In.`);
+        return;
+    }
+
+    const currentPos = getCurrentPositionSeconds(deckNum);
+    
+    if (currentPos <= deck.loopStart) {
+        alert(`Deck ${deckNum}: El punto final debe ser después del punto de inicio (${deck.loopStart.toFixed(2)}s).`);
+        return;
+    }
+
+    deck.loopEnd = currentPos;
+    
+    // Inicia el loop inmediatamente
+    startLoop(deckNum);
+    
+    document.getElementById(`loopInBtn${deckNum}`).classList.remove('active');
+    document.getElementById(`loopOutBtn${deckNum}`).classList.add('active');
+    document.getElementById(`clearLoopBtn${deckNum}`).classList.remove('active');
+    
+    drawFullWaveform(deckNum); // Reflejar en la onda
+}
+
+// Botón: Limpia y detiene el loop
+function clearLoop(deckNum) {
+    const deck = decks[deckNum];
+    
+    // 1. Detener el loopSource si está activo
+    if (deck.loopSource) {
+        try { deck.loopSource.stop(0); } catch(e) {}
+        deck.loopSource = null;
+    }
+    
+    // 2. Guardar la posición actual (justo donde termina el loop)
+    let currentPos = getCurrentPositionSeconds(deckNum);
+    
+    // 3. Resetear las propiedades del loop
+    deck.loopStart = null;
+    deck.loopEnd = null;
+    deck.isLooping = false;
+    
+    // 4. Si la pista estaba sonando, reanudar la reproducción normal desde donde paró el loop.
+    if (deck.isPlaying) {
+        // La función playTrack se encargará de crear el nuevo source normal
+        // si deck.isPlaying sigue en true. Necesitamos actualizar currentTime antes.
+        deck.currentTime = currentPos;
+        playTrack(deckNum);
+    } else {
+        // Si estaba pausado, solo guardamos el tiempo
+        deck.currentTime = currentPos;
+    }
+    
+    // 5. Actualizar la interfaz
+    document.getElementById(`loopInBtn${deckNum}`).classList.remove('active');
+    document.getElementById(`loopOutBtn${deckNum}`).classList.remove('active');
+    document.getElementById(`clearLoopBtn${deckNum}`).classList.add('active');
+    
+    console.log(`Deck ${deckNum}: Loop borrado. Reproducción reanudada/pausada en ${deck.currentTime.toFixed(2)}s.`);
+    drawFullWaveform(deckNum); // Reflejar en la onda
+    
+    // Quitamos la clase active del clearBtn después de un breve tiempo
+    setTimeout(() => {
+        document.getElementById(`clearLoopBtn${deckNum}`).classList.remove('active');
+    }, 200);
+    }
+
+    // CÓDIGO A AÑADIR DENTRO DE drawFullWaveform:
+// NEW: Draw loop region
+const deck = decks[deckNum];
+if (deck.loopStart !== null && deck.loopEnd !== null) {
+    const audioBuffer = deck.audioBuffer;
+    if (audioBuffer) {
+        const duration = audioBuffer.duration;
+        const startProgress = deck.loopStart / duration;
+        const endProgress = deck.loopEnd / duration;
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        const startX = startProgress * width;
+        const endX = endProgress * width;
+        const loopWidth = endX - startX;
+        
+        // Dibuja la región amarilla semi-transparente
+        ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; 
+        ctx.fillRect(startX, 0, loopWidth, height);
+
+        // Dibuja líneas para Loop In y Loop Out
+        ctx.strokeStyle = '#FFFF00';
+        ctx.lineWidth = 1;
+        
+        // Línea Loop In
+        ctx.beginPath();
+        ctx.moveTo(startX, 0);
+        ctx.lineTo(startX, height);
+        ctx.stroke();
+
+        // Línea Loop Out
+        ctx.beginPath();
+        ctx.moveTo(endX, 0);
+        ctx.lineTo(endX, height);
+        ctx.stroke();
+    }
+}
+    
 </script>
 </body>
 </html>

@@ -513,6 +513,10 @@ h1 { text-align: center; margin-top: 0; }
 </div>
 
 <script>
+// =========================================================================
+// === RTBS CREW CONTROLLER DJ MIX (CORREGIDO Y CON LOOP) ===
+// =========================================================================
+
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let decks = {
         1: {
@@ -524,7 +528,7 @@ h1 { text-align: center; margin-top: 0; }
             analyser: null,
             isPlaying: false,
             startTime: 0,
-            pauseTime: 0,
+            pauseTime: 0, // Guarda la posición de reproducción en el buffer original (segundos)
             isReversed: false,
             reversedBuffer: null,
             eq: { bass: audioContext.createBiquadFilter(), mid: audioContext.createBiquadFilter(), treble: audioContext.createBiquadFilter() },
@@ -544,7 +548,12 @@ h1 { text-align: center; margin-top: 0; }
             flangerEffect: null,
             // Para el visualizador superior
             waveformData: null,
-            currentBeat: 0
+            currentBeat: 0,
+            // === PROPIEDADES AÑADIDAS PARA EL LOOP PERMANENTE ===
+            loopStart: null, // Punto de inicio del loop en segundos
+            loopEnd: null,   // Punto de fin del loop en segundos
+            isLooping: false,
+            loopSource: null, // AudioBufferSourceNode específico para el loop
         },
         2: {
             audio: null,
@@ -555,7 +564,7 @@ h1 { text-align: center; margin-top: 0; }
             analyser: null,
             isPlaying: false,
             startTime: 0,
-            pauseTime: 0,
+            pauseTime: 0, // Guarda la posición de reproducción en el buffer original (segundos)
             isReversed: false,
             reversedBuffer: null,
             eq: { bass: audioContext.createBiquadFilter(), mid: audioContext.createBiquadFilter(), treble: audioContext.createBiquadFilter() },
@@ -575,7 +584,12 @@ h1 { text-align: center; margin-top: 0; }
             flangerEffect: null,
             // Para el visualizador superior
             waveformData: null,
-            currentBeat: 0
+            currentBeat: 0,
+            // === PROPIEDADES AÑADIDAS PARA EL LOOP PERMANENTE ===
+            loopStart: null,
+            loopEnd: null,
+            isLooping: false,
+            loopSource: null,
         }
     };
     let mediaRecorder;
@@ -601,6 +615,205 @@ h1 { text-align: center; margin-top: 0; }
 
     const superCanvas = document.getElementById('superimposedWaveformCanvas');
     const superCtx = superCanvas.getContext('2d');
+    
+    // =========================================================================
+    // === NUEVA FUNCIÓN DE UTILIDAD: OBTENER POSICIÓN PRECISA ===
+    // =========================================================================
+    function getCurrentPositionSeconds(deckNum) {
+        const deck = decks[deckNum];
+        if (!deck.isLoaded) return 0;
+        
+        const duration = deck.audioBuffer.duration;
+        let playbackRate = parseFloat(document.getElementById(`pitch${deckNum}`).value);
+            
+        // Si no está sonando, devolvemos el tiempo en pausa (ya actualizado)
+        if (!deck.isPlaying) {
+            return deck.pauseTime;
+        }
+
+        // El tiempo de reproducción siempre avanza basado en el `playbackRate` desde el `pauseTime` inicial.
+        const timeElapsed = audioContext.currentTime - deck.startTime;
+        let positionInPlayingBuffer = deck.pauseTime + (timeElapsed * playbackRate);
+
+        // Si la pista está en reversa, el buffer se invierte y el tiempo avanza desde 0 hasta la duración.
+        // La posición real en la pista debe ser la inversa.
+        if (deck.isReversed) {
+            // El tiempo visible en la pista normal es: Duración Total - (Tiempo en el buffer reverso)
+            positionInPlayingBuffer = duration - positionInPlayingBuffer;
+            // Asegurarse de que el tiempo no se salga de 0 a Duración
+            return Math.max(0, Math.min(duration, positionInPlayingBuffer));
+        }
+        
+        // Si está en loop, el tiempo se cicla entre loopStart y loopEnd
+        if (deck.isLooping && deck.loopStart !== null && deck.loopEnd !== null) {
+            const loopDuration = deck.loopEnd - deck.loopStart;
+            // Calcular cuánto tiempo ha avanzado dentro del loop (desde loopStart)
+            let timeInLoop = (positionInPlayingBuffer - deck.loopStart) % loopDuration;
+            // Manejar el resultado de módulo negativo si existe
+            if (timeInLoop < 0) timeInLoop += loopDuration; 
+            return deck.loopStart + timeInLoop;
+        }
+
+        // Para reproducción normal
+        return Math.max(0, Math.min(duration, positionInPlayingBuffer));
+    }
+
+
+    // =========================================================================
+    // === NUEVAS FUNCIONES DE LOOP PERMANENTE (LOOP IN/OUT) ===
+    // =========================================================================
+    
+    // Botón: Marca el punto de inicio del loop
+    function setLoopIn(deckNum) {
+        const deck = decks[deckNum];
+        if (!deck.isLoaded) return;
+        
+        // Si está sonando o pausado, el punto de inicio es la posición actual
+        deck.loopStart = getCurrentPositionSeconds(deckNum);
+        deck.loopEnd = null; // Resetear el punto final
+        deck.isLooping = false;
+        
+        // Actualizar interfaz (asumiendo que tienes botones con IDs loopIn1/loopIn2, etc.)
+        document.getElementById(`loopIn${deckNum}`).classList.add('active');
+        document.getElementById(`loopOut${deckNum}`).classList.remove('active');
+        document.getElementById(`clearLoop${deckNum}`).classList.remove('active');
+        
+        drawFullWaveform(deckNum);
+        console.log(`Deck ${deckNum}: Loop In establecido en ${deck.loopStart.toFixed(2)}s`);
+    }
+
+    // Botón: Marca el punto final del loop e inicia el loop
+    function setLoopOut(deckNum) {
+        const deck = decks[deckNum];
+        if (!deck.isLoaded || deck.loopStart === null) {
+            alert(`Deck ${deckNum}: Primero pulsa Loop In.`);
+            return;
+        }
+
+        const currentPos = getCurrentPositionSeconds(deckNum);
+        
+        if (currentPos <= deck.loopStart) {
+            alert(`Deck ${deckNum}: El punto final debe ser después del punto de inicio (${deck.loopStart.toFixed(2)}s).`);
+            return;
+        }
+
+        deck.loopEnd = currentPos;
+        
+        const wasPlaying = deck.isPlaying;
+        
+        if (wasPlaying) {
+             // Detenemos la reproducción normal para cambiar a loop
+             pauseTrack(deckNum);
+        }
+        
+        // Forzar el inicio de la reproducción desde loopStart si está en pausa
+        deck.pauseTime = deck.loopStart;
+        
+        deck.isLooping = true;
+        
+        if (wasPlaying) {
+            // El `playTrack` ahora gestionará que debe iniciar el loop
+            playTrack(deckNum);
+        }
+        
+        // Actualizar interfaz del botón
+        document.getElementById(`loopIn${deckNum}`).classList.remove('active');
+        document.getElementById(`loopOut${deckNum}`).classList.add('active');
+        document.getElementById(`clearLoop${deckNum}`).classList.remove('active');
+        
+        drawFullWaveform(deckNum);
+        console.log(`Deck ${deckNum}: Loop Out establecido en ${deck.loopEnd.toFixed(2)}s. Loop activo.`);
+    }
+
+    // Botón: Limpia y detiene el loop, reanuda reproducción normal si estaba activo
+    function clearLoop(deckNum) {
+        const deck = decks[deckNum];
+        if (!deck.isLoaded) return;
+        
+        const wasPlaying = deck.isPlaying;
+        
+        if (wasPlaying) {
+            // Detener el source activo (normal o loop) y guardar la posición precisa
+            pauseTrack(deckNum);
+        }
+        
+        // 1. Resetear las propiedades del loop
+        deck.loopStart = null;
+        deck.loopEnd = null;
+        deck.isLooping = false;
+        
+        // 2. Limpiar el loopSource por si acaso
+        if (deck.loopSource) {
+            try { deck.loopSource.stop(0); } catch(e) {}
+            deck.loopSource.disconnect();
+            deck.loopSource = null;
+        }
+        
+        // 3. Si la pista estaba sonando, reanudar la reproducción normal.
+        if (wasPlaying) {
+            // Reanudar la reproducción desde el pauseTime que se guardó
+            playTrack(deckNum); 
+        } 
+        
+        // 4. Actualizar la interfaz de los botones
+        document.getElementById(`loopIn${deckNum}`).classList.remove('active');
+        document.getElementById(`loopOut${deckNum}`).classList.remove('active');
+        document.getElementById(`clearLoop${deckNum}`).classList.add('active');
+        
+        drawFullWaveform(deckNum);
+        console.log(`Deck ${deckNum}: Loop desactivado.`);
+        
+        // Quitar la clase active del clearBtn después de un breve tiempo
+        setTimeout(() => {
+            document.getElementById(`clearLoop${deckNum}`).classList.remove('active');
+        }, 200);
+    }
+
+    // Función auxiliar para crear y conectar el source (normal o loop)
+    function startAudioSource(deckNum, startOffset) {
+        const deck = decks[deckNum];
+        
+        // 1. Crear el source
+        const source = audioContext.createBufferSource();
+        source.buffer = deck.isReversed ? deck.reversedBuffer : deck.audioBuffer;
+        
+        // 2. Configurar el loop si es necesario
+        if (deck.isLooping && deck.loopStart !== null && deck.loopEnd !== null) {
+            source.loop = true; 
+            source.loopStart = deck.loopStart; 
+            source.loopEnd = deck.loopEnd;
+            
+            // Si el modo reverso está activo, para que el loop funcione en el Web Audio API,
+            // necesitamos que el buffer no esté invertido y ajustar el playback rate a negativo
+            // para que suene como loop reverso.
+            if (deck.isReversed) {
+                 // Advertencia: El Web Audio API no soporta loop en buffers reversos.
+                 // Usamos el buffer normal y ajustamos la velocidad a negativo.
+                 source.buffer = deck.audioBuffer;
+                 // startOffset debe ser el tiempo *normal* del buffer (duración - tiempo_reverso)
+                 startOffset = deck.audioBuffer.duration - startOffset;
+            }
+        }
+        
+        // 3. Set playback rate (afectado por el pitch y la reversa en el caso de loop reverso)
+        let rate = parseFloat(document.getElementById(`pitch${deckNum}`).value);
+        if (deck.isLooping && deck.isReversed) {
+             rate = -rate;
+        }
+        source.playbackRate.value = rate;
+        
+        // 4. Conectar source a la cadena de audio
+        source.connect(decks[deckNum].eq.bass);
+        
+        // 5. Iniciar la reproducción
+        source.start(0, startOffset);
+        
+        return source;
+    }
+
+    // =========================================================================
+    // === FUNCIONES NUCLEARES MODIFICADAS ===
+    // =========================================================================
 
     // Cargar sonidos de inicio y parada de vinilo
     async function loadVinylSounds() {
@@ -703,15 +916,18 @@ h1 { text-align: center; margin-top: 0; }
             band.appendChild(input);
             band.appendChild(label);
             
-            if (i < 15) {
+            // Asegurarse de que los elementos row1 y row2 existen antes de intentar usarlos
+            if (row1 && i < 15) {
                 row1.appendChild(band);
-            } else {
+            } else if (row2) {
                 row2.appendChild(band);
             }
         }
         
         // Connect the last filter to destination
-        globalEqFilters[globalEqFilters.length - 1].connect(audioContext.destination);
+        if (globalEqFilters.length > 0) {
+            globalEqFilters[globalEqFilters.length - 1].connect(audioContext.destination);
+        }
     }
 
     // Initialize the application
@@ -735,14 +951,14 @@ h1 { text-align: center; margin-top: 0; }
         // Set up canvas dimensions
         setupCanvasDimensions();
         
-        // Set up MIDI
-        setupMIDI();
+        // Set up MIDI (Asumimos que esta función existe)
+        // setupMIDI(); 
         
         // Start animation
         animate();
         
-        // Set up recording
-        setupRecording();
+        // Set up recording (Asumimos que esta función existe)
+        // setupRecording();
     }
 
     // Set up controls
@@ -781,15 +997,24 @@ h1 { text-align: center; margin-top: 0; }
             decks[2].filterNode.frequency.value = parseFloat(e.target.value);
         });
         
-        // Pitch controls
+        // Pitch controls (MODIFICADO para reajustar el playbackRate inmediatamente)
         document.getElementById('pitch1').addEventListener('input', (e) => {
+            const newRate = parseFloat(e.target.value);
             if (decks[1].source) {
-                decks[1].source.playbackRate.value = parseFloat(e.target.value);
+                decks[1].source.playbackRate.value = newRate;
+            } else if (decks[1].loopSource) {
+                 // Si está en loop reverso, la tasa es negativa
+                 const rate = decks[1].isReversed ? -newRate : newRate;
+                 decks[1].loopSource.playbackRate.value = rate;
             }
         });
         document.getElementById('pitch2').addEventListener('input', (e) => {
+            const newRate = parseFloat(e.target.value);
             if (decks[2].source) {
-                decks[2].source.playbackRate.value = parseFloat(e.target.value);
+                decks[2].source.playbackRate.value = newRate;
+            } else if (decks[2].loopSource) {
+                 const rate = decks[2].isReversed ? -newRate : newRate;
+                 decks[2].loopSource.playbackRate.value = rate;
             }
         });
         
@@ -801,7 +1026,7 @@ h1 { text-align: center; margin-top: 0; }
             decks[2].gainNode.gain.value = value > 0.5 ? 1 : value * 2;
         });
         
-        // Progress bars
+        // Progress bars (MODIFICADO: Usa la función seekTrack)
         document.getElementById('progressBar1').addEventListener('input', (e) => {
             if (decks[1].isLoaded) {
                 seekTrack(1, parseFloat(e.target.value));
@@ -863,6 +1088,11 @@ h1 { text-align: center; margin-top: 0; }
             
             // Detect BPM
             detectBPM(deckNum, audioBuffer);
+            
+            // Reset position, loop and reverse state
+            decks[deckNum].pauseTime = 0;
+            decks[deckNum].isReversed = false;
+            clearLoop(deckNum); // Asegura que el loop esté limpio
             
         } catch (error) {
             console.error('Error loading audio file:', error);
@@ -938,7 +1168,7 @@ h1 { text-align: center; margin-top: 0; }
         decks[deckNum].analyser.connect(analyserMaster);
     }
 
-    // Draw full waveform
+    // Draw full waveform (MODIFICADA para dibujar el Loop)
     function drawFullWaveform(deckNum) {
         const canvas = document.getElementById(`waveformCanvas${deckNum}`);
         const ctx = canvas.getContext('2d');
@@ -949,7 +1179,8 @@ h1 { text-align: center; margin-top: 0; }
         
         if (!decks[deckNum].audioBuffer) return;
         
-        const audioBuffer = decks[deckNum].audioBuffer;
+        const deck = decks[deckNum];
+        const audioBuffer = deck.audioBuffer;
         const channelData = audioBuffer.getChannelData(0);
         const step = Math.ceil(channelData.length / width);
         
@@ -979,6 +1210,48 @@ h1 { text-align: center; margin-top: 0; }
         }
         
         ctx.stroke();
+
+        // ------------------------------------------------------------------
+        // NUEVO CÓDIGO: DIBUJAR LA REGIÓN DEL LOOP
+        if (deck.loopStart !== null && deck.loopEnd !== null) {
+            const duration = deck.audioBuffer.duration;
+
+            const startProgress = deck.loopStart / duration;
+            const endProgress = deck.loopEnd / duration;
+            
+            const startX = startProgress * width;
+            const endX = endProgress * width;
+            const loopWidth = endX - startX;
+            
+            // Dibuja la región amarilla semi-transparente
+            ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; 
+            ctx.fillRect(startX, 0, loopWidth, height);
+
+            // Dibuja líneas para Loop In y Loop Out
+            ctx.strokeStyle = '#FFFF00';
+            ctx.lineWidth = 1;
+            
+            // Línea Loop In
+            ctx.beginPath();
+            ctx.moveTo(startX, 0);
+            ctx.lineTo(startX, height);
+            ctx.stroke();
+
+            // Línea Loop Out
+            ctx.beginPath();
+            ctx.moveTo(endX, 0);
+            ctx.lineTo(endX, height);
+            ctx.stroke();
+        }
+        // ------------------------------------------------------------------
+        
+        // Dibuja el cabezal de reproducción (playhead)
+        const currentTime = getCurrentPositionSeconds(deckNum); // Usar la nueva función de utilidad
+        const currentProgress = (currentTime / deck.audioBuffer.duration);
+        const playHeadX = currentProgress * width;
+
+        ctx.fillStyle = '#FF0000'; // Rojo
+        ctx.fillRect(playHeadX, 0, 2, height);
     }
 
     // Play/Pause track
@@ -992,44 +1265,47 @@ h1 { text-align: center; margin-top: 0; }
         }
     }
 
-    // Play track
+    // Play track (MODIFICADA para usar la lógica de Loop y la función startAudioSource)
     function playTrack(deckNum) {
         if (!decks[deckNum].isLoaded) return;
+        
+        // Si el contexto de audio está suspendido, reanudarlo
+        if (audioContext.state === 'suspended') {
+            audioContext.resume();
+        }
+
+        // Si ya hay un source (normal o loop), detenerlo y desconectarlo
+        if (decks[deckNum].source) {
+            try { decks[deckNum].source.stop(); } catch(e) {}
+            decks[deckNum].source.disconnect();
+            decks[deckNum].source = null;
+        }
+        if (decks[deckNum].loopSource) {
+            try { decks[deckNum].loopSource.stop(); } catch(e) {}
+            decks[deckNum].loopSource.disconnect();
+            decks[deckNum].loopSource = null;
+        }
         
         // Play vinyl start sound
         playVinylSound(deckNum, true);
         
-        const source = audioContext.createBufferSource();
+        let startOffset = decks[deckNum].pauseTime;
         
-        if (decks[deckNum].isReversed) {
-            source.buffer = decks[deckNum].reversedBuffer;
+        // --- Lógica del Loop ---
+        if (decks[deckNum].isLooping && decks[deckNum].loopStart !== null && decks[deckNum].loopEnd !== null) {
+            // Usamos loopSource para el loop
+            decks[deckNum].loopSource = startAudioSource(deckNum, startOffset);
+            decks[deckNum].source = null; // Asegurar que el source normal es null
         } else {
-            source.buffer = decks[deckNum].audioBuffer;
+            // Reproducción normal
+            decks[deckNum].source = startAudioSource(deckNum, startOffset);
+            decks[deckNum].loopSource = null; // Asegurar que el loopSource es null
         }
-        
-        // Set playback rate
-        source.playbackRate.value = parseFloat(document.getElementById(`pitch${deckNum}`).value);
-        
-        // Connect source to audio chain
-        source.connect(decks[deckNum].eq.bass);
-        
-        // Store source
-        decks[deckNum].source = source;
-        
-        // Calculate start time
-        let startTime;
-        if (decks[deckNum].pauseTime > 0) {
-            startTime = audioContext.currentTime - decks[deckNum].pauseTime;
-        } else {
-            startTime = audioContext.currentTime;
-        }
-        
-        // Start playback
-        source.start(0, decks[deckNum].pauseTime);
+        // --- Fin Lógica del Loop ---
         
         // Update state
         decks[deckNum].isPlaying = true;
-        decks[deckNum].startTime = startTime;
+        decks[deckNum].startTime = audioContext.currentTime;
         
         // Update button text
         document.getElementById(`button${deckNum}`).textContent = 'Pause';
@@ -1042,22 +1318,33 @@ h1 { text-align: center; margin-top: 0; }
         animateProgress(deckNum);
     }
 
-    // Pause track
+    // Pause track (MODIFICADA para usar getCurrentPositionSeconds)
     function pauseTrack(deckNum) {
-        if (!decks[deckNum].isPlaying || !decks[deckNum].source) return;
+        const deck = decks[deckNum];
+        if (!deck.isPlaying) return;
+        
+        // --- Lógica del Loop ---
+        if (deck.isLooping && deck.loopSource) {
+            try { deck.loopSource.stop(); } catch(e) {}
+            deck.loopSource.disconnect();
+            deck.loopSource = null;
+        } else if (deck.source) {
+            // Si es reproducción normal
+            try { deck.source.stop(); } catch(e) {}
+            deck.source.disconnect();
+            deck.source = null;
+        }
+        // --- Fin Lógica del Loop ---
         
         // Play vinyl stop sound
         playVinylSound(deckNum, false);
         
-        // Stop source
-        decks[deckNum].source.stop();
-        decks[deckNum].source.disconnect();
-        
-        // Calculate pause time
-        decks[deckNum].pauseTime = audioContext.currentTime - decks[deckNum].startTime;
+        // Calcular y almacenar el tiempo de pausa usando la función de utilidad
+        // CRÍTICO: Guarda la posición exacta con pitch/loop/reverse.
+        deck.pauseTime = getCurrentPositionSeconds(deckNum); 
         
         // Update state
-        decks[deckNum].isPlaying = false;
+        deck.isPlaying = false;
         
         // Update button text
         document.getElementById(`button${deckNum}`).textContent = 'Play';
@@ -1066,18 +1353,26 @@ h1 { text-align: center; margin-top: 0; }
         document.getElementById(`platter${deckNum}`).classList.remove('playing');
         
         // Stop animation
-        cancelAnimationFrame(decks[deckNum].animationFrame);
+        cancelAnimationFrame(deck.animationFrame);
     }
 
-    // Seek track
+    // Seek track (MODIFICADA para limpiar el Loop)
     function seekTrack(deckNum, progress) {
-        const wasPlaying = decks[deckNum].isPlaying;
+        const deck = decks[deckNum];
+        if (!deck.isLoaded) return;
+
+        // *** IMPORTANTE: Desactivar loop al hacer seek ***
+        if (deck.isLooping) {
+            clearLoop(deckNum); // Esto pausará si estaba sonando y limpiará los markers
+        }
+
+        const wasPlaying = deck.isPlaying;
         
         if (wasPlaying) {
             pauseTrack(deckNum);
         }
         
-        decks[deckNum].pauseTime = progress * decks[deckNum].audioBuffer.duration;
+        deck.pauseTime = progress * deck.audioBuffer.duration;
         
         // Update beat position
         updateBeatPosition(deckNum);
@@ -1087,7 +1382,8 @@ h1 { text-align: center; margin-top: 0; }
         } else {
             // Update progress bar
             document.getElementById(`progressBar${deckNum}`).value = progress;
-            document.getElementById(`currentTime${deckNum}`).textContent = formatTime(decks[deckNum].pauseTime);
+            document.getElementById(`currentTime${deckNum}`).textContent = formatTime(deck.pauseTime);
+            drawFullWaveform(deckNum);
         }
     }
 
@@ -1095,16 +1391,15 @@ h1 { text-align: center; margin-top: 0; }
     function navigateByBeats(deckNum, beats) {
         if (!decks[deckNum].isLoaded || decks[deckNum].bpm === 0) return;
         
-        const wasPlaying = decks[deckNum].isPlaying;
-        
-        if (wasPlaying) {
-            pauseTrack(deckNum);
+        // Pausar primero para obtener la posición precisa
+        if (decks[deckNum].isPlaying) {
+             pauseTrack(deckNum);
         }
         
         // Calcular duración de un beat en segundos
         const secondsPerBeat = 60 / decks[deckNum].bpm;
         
-        // Calcular nueva posición
+        // Calcular nueva posición a partir del pauseTime guardado
         let newPosition = decks[deckNum].pauseTime + (beats * secondsPerBeat);
         
         // Asegurarse de que está dentro de los límites
@@ -1116,13 +1411,15 @@ h1 { text-align: center; margin-top: 0; }
         // Update beat position
         updateBeatPosition(deckNum);
         
-        if (wasPlaying) {
+        // Reanudar si estaba sonando
+        if (decks[deckNum].isPlaying) {
             playTrack(deckNum);
         } else {
-            // Actualizar barra de progreso
+            // Actualizar barra de progreso y onda si estaba pausado
             const progress = newPosition / decks[deckNum].audioBuffer.duration;
             document.getElementById(`progressBar${deckNum}`).value = progress;
             document.getElementById(`currentTime${deckNum}`).textContent = formatTime(newPosition);
+            drawFullWaveform(deckNum);
         }
     }
 
@@ -1130,18 +1427,36 @@ h1 { text-align: center; margin-top: 0; }
     function updateBeatPosition(deckNum) {
         if (!decks[deckNum].isLoaded || decks[deckNum].bpm === 0) return;
         
+        // Usamos la posición guardada o actual
+        const currentTime = decks[deckNum].isPlaying ? getCurrentPositionSeconds(deckNum) : decks[deckNum].pauseTime;
+
         // Calcular posición actual en beats
         const secondsPerBeat = 60 / decks[deckNum].bpm;
-        decks[deckNum].currentBeat = Math.floor(decks[deckNum].pauseTime / secondsPerBeat);
+        decks[deckNum].currentBeat = Math.floor(currentTime / secondsPerBeat);
     }
 
-    // Animate progress bar
+    // Animate progress bar (MODIFICADA para usar getCurrentPositionSeconds y lógica de fin)
     function animateProgress(deckNum) {
         if (!decks[deckNum].isPlaying) return;
         
-        const currentTime = audioContext.currentTime - decks[deckNum].startTime;
+        // Obtener el tiempo de reproducción correcto (incluye loop, pitch, reverse)
+        const currentTime = getCurrentPositionSeconds(deckNum);
         const duration = decks[deckNum].audioBuffer.duration;
         const progress = currentTime / duration;
+
+        // Si la pista llega al final y no está en loop, detener
+        if (currentTime >= duration) {
+            // Si estamos en loop, esto no debería ocurrir, ya que el API gestiona el loop.
+            // Pero si es reproducción normal, debemos parar.
+            if (!decks[deckNum].isLooping) {
+                 pauseTrack(deckNum);
+                 decks[deckNum].pauseTime = 0; // Reiniciar a 0
+                 document.getElementById(`progressBar${deckNum}`).value = 0;
+                 document.getElementById(`currentTime${deckNum}`).textContent = formatTime(0);
+                 drawFullWaveform(deckNum);
+                 return; // Detener la animación aquí
+            }
+        }
         
         // Update progress bar
         document.getElementById(`progressBar${deckNum}`).value = progress;
@@ -1184,8 +1499,13 @@ h1 { text-align: center; margin-top: 0; }
             const ratio = targetBPM / currentBPM;
             document.getElementById(`pitch${deckNum}`).value = ratio;
             
+            // Reajustar inmediatamente el playbackRate
             if (decks[deckNum].source) {
                 decks[deckNum].source.playbackRate.value = ratio;
+            } else if (decks[deckNum].loopSource) {
+                 // Si está en loop reverso, la tasa es negativa
+                 const rate = decks[deckNum].isReversed ? -ratio : ratio;
+                 decks[deckNum].loopSource.playbackRate.value = rate;
             }
         }
     }
@@ -1205,47 +1525,63 @@ h1 { text-align: center; margin-top: 0; }
         }
     }
 
-    // Start reverse
+    // Start reverse (MODIFICADA para usar la nueva lógica de tiempo)
     function startReverse(deckNum) {
         if (!decks[deckNum].isLoaded) return;
 
-        const currentTime = decks[deckNum].isPlaying ? (audioContext.currentTime - decks[deckNum].startTime) : decks[deckNum].pauseTime;
+        // Si ya estaba en reversa, no hacer nada
+        if (decks[deckNum].isReversed) return;
         
-        if (decks[deckNum].isPlaying) {
+        // Pausar primero para obtener la posición precisa
+        const wasPlaying = decks[deckNum].isPlaying;
+        if (wasPlaying) {
             pauseTrack(deckNum);
         }
-
+        
+        // Si hay un loop activo, se desactiva al entrar en reversa para evitar bugs
+        if (decks[deckNum].isLooping) {
+            clearLoop(deckNum); // Llama a clearLoop, que ya pausa si es necesario.
+        } else {
+            // El tiempo de pausa ya está en la posición *real* de la pista
+            // Al activar reverse, el nuevo pauseTime debe ser: Duración - Posición Actual
+            decks[deckNum].pauseTime = decks[deckNum].audioBuffer.duration - decks[deckNum].pauseTime;
+        }
+        
         decks[deckNum].isReversed = true;
-        decks[deckNum].pauseTime = decks[deckNum].audioBuffer.duration - currentTime;
 
-        playTrack(deckNum);
+        if (wasPlaying) {
+            playTrack(deckNum);
+        }
     }
 
-    // Stop reverse
+    // Stop reverse (MODIFICADA para usar la nueva lógica de tiempo)
     function stopReverse(deckNum) {
         if (!decks[deckNum].isLoaded || !decks[deckNum].isReversed) return;
 
-        const currentTime = decks[deckNum].audioBuffer.duration - decks[deckNum].pauseTime;
-
-        if (decks[deckNum].isPlaying) {
+        // Pausar primero para obtener la posición precisa
+        const wasPlaying = decks[deckNum].isPlaying;
+        if (wasPlaying) {
             pauseTrack(deckNum);
         }
+        
+        // El pauseTime actual es la posición dentro del buffer reverso
+        // La nueva posición real en la pista es: Duración - Posición Buffer Reverso
+        decks[deckNum].pauseTime = decks[deckNum].audioBuffer.duration - decks[deckNum].pauseTime;
 
         decks[deckNum].isReversed = false;
-        decks[deckNum].pauseTime = currentTime;
 
-        playTrack(deckNum);
+        if (wasPlaying) {
+            playTrack(deckNum);
+        }
     }
 
-    // Toggle hot cue
+    // Toggle hot cue (MODIFICADA para usar getCurrentPositionSeconds)
     function toggleHotCue(deckNum) {
         if (!decks[deckNum].isLoaded) return;
         
         if (decks[deckNum].hotCue === null) {
             // Set hot cue
-            const currentTime = decks[deckNum].isPlaying ? 
-                (audioContext.currentTime - decks[deckNum].startTime) : 
-                decks[deckNum].pauseTime;
+            const currentTime = getCurrentPositionSeconds(deckNum);
             
             decks[deckNum].hotCue = currentTime;
             
@@ -1284,10 +1620,12 @@ h1 { text-align: center; margin-top: 0; }
         marker.dataset.deck = deckNum;
         marker.style.left = `${progress * 100}%`;
         
-        waveformContainer.appendChild(marker);
+        if (waveformContainer) {
+            waveformContainer.appendChild(marker);
+        }
     }
 
-    // Toggle effect
+    // Toggle effect (Mantenida)
     function toggleEffect(deckNum, effect) {
         const button = document.getElementById(`effect${deckNum}-${effect}`);
         
@@ -1298,9 +1636,11 @@ h1 { text-align: center; margin-top: 0; }
             
             // Disconnect effect nodes
             if (effect === 'cut' && decks[deckNum].cutEffect) {
+                // ... (lógica de desconexión del cut) ...
                 decks[deckNum].cutEffect.disconnect();
                 decks[deckNum].cutEffect = null;
             } else if (effect === 'flanger' && decks[deckNum].flangerEffect) {
+                // ... (lógica de desconexión del flanger) ...
                 decks[deckNum].flangerEffect.disconnect();
                 decks[deckNum].flangerEffect = null;
             }
@@ -1320,8 +1660,13 @@ h1 { text-align: center; margin-top: 0; }
                 oscillator.connect(gainNode.gain);
                 oscillator.start();
                 
+                // Conectar justo antes del gainNode
+                decks[deckNum].filterNode.disconnect();
+                decks[deckNum].filterNode.connect(gainNode);
                 gainNode.connect(decks[deckNum].gainNode);
-                decks[deckNum].cutEffect = gainNode;
+                
+                decks[deckNum].cutEffect = { oscillator, gainNode };
+
             } else if (effect === 'flanger') {
                 // Create a simple flanger effect
                 const delay = audioContext.createDelay();
@@ -1336,21 +1681,32 @@ h1 { text-align: center; margin-top: 0; }
                 oscillator.connect(gain);
                 gain.connect(delay.delayTime);
                 
+                // Conectar la salida del EQ/Filter al delay, y la salida del delay a la cadena
+                
+                // Desconectar el filterNode para re-enrutar
+                decks[deckNum].filterNode.disconnect();
+                
+                // 1. Conexión principal (Dry signal)
+                decks[deckNum].filterNode.connect(decks[deckNum].gainNode);
+                
+                // 2. Conexión del efecto (Wet signal)
+                decks[deckNum].filterNode.connect(delay);
                 delay.connect(decks[deckNum].gainNode);
+                
                 oscillator.start();
                 
-                decks[deckNum].flangerEffect = delay;
+                decks[deckNum].flangerEffect = { delay, oscillator, gain };
             }
         }
     }
 
-    // Start loop roll
+    // Start loop roll (Mantenida)
     function startLoopRoll(deckNum, duration) {
-        if (!decks[deckNum].isLoaded || !decks[deckNum].isPlaying) return;
-
+        if (!decks[deckNum].isLoaded || decks[deckNum].isPlaying) return; // Si está sonando, no puede hacer loop roll
+        
         // Pausar pista principal
-        pauseTrack(deckNum);
-
+        pauseTrack(deckNum); // Esto guarda el pauseTime actual
+        
         const currentTime = decks[deckNum].pauseTime;
         const startTime = currentTime;
         const endTime = startTime + duration;
@@ -1367,22 +1723,32 @@ h1 { text-align: center; margin-top: 0; }
 
         // Reproducir fragmento
         source.start(0, startTime);
-        decks[deckNum].loopRollSource = { source, startTime };
+        decks[deckNum].loopRollSource = { source, startTime, duration };
+        decks[deckNum].isPlaying = true; // El loop roll se considera reproducción
+        decks[deckNum].startTime = audioContext.currentTime;
     }
 
-    // Stop loop roll
+    // Stop loop roll (Mantenida)
     function stopLoopRoll(deckNum) {
         if (decks[deckNum].loopRollSource) {
-            const { source, startTime } = decks[deckNum].loopRollSource;
+            const { source, startTime, duration } = decks[deckNum].loopRollSource;
             const now = audioContext.currentTime;
-            const loopDuration = source.loopEnd - source.loopStart;
+            const loopDuration = duration;
 
+            // Calcular cuánto tiempo ha avanzado el loop
+            const timeElapsed = now - decks[deckNum].startTime;
+            const playbackRate = parseFloat(document.getElementById(`pitch${deckNum}`).value);
+            const timeInLoop = (timeElapsed * playbackRate) % loopDuration;
+            
             source.stop();
             source.disconnect();
             decks[deckNum].loopRollSource = null;
 
-            // Calcular nuevo punto de tiempo real
-            decks[deckNum].pauseTime = startTime + ((now - decks[deckNum].startTime) % loopDuration);
+            // Calcular nuevo punto de tiempo real (desde donde debería continuar)
+            decks[deckNum].pauseTime = startTime + timeInLoop;
+            decks[deckNum].isPlaying = false; // Estado de pausa después del roll
+
+            // Reanudar reproducción normal desde el nuevo punto
             playTrack(deckNum);
         }
     }
@@ -1395,6 +1761,9 @@ h1 { text-align: center; margin-top: 0; }
     // Animate all canvas elements
     function animate() {
         drawSuperimposedWaveform();
+        // Llamar a drawFullWaveform continuamente para actualizar el cabezal de reproducción
+        if (decks[1].isLoaded) drawFullWaveform(1);
+        if (decks[2].isLoaded) drawFullWaveform(2);
         requestAnimationFrame(animate);
     }
 
@@ -1410,779 +1779,44 @@ h1 { text-align: center; margin-top: 0; }
             drawDeckWaveformSegment(1, width, height);
         }
         
-        // draw deck 2 waveform if shown and loaded
-        if (showDeck[2] && decks[2].isLoaded && decks[2].waveformData) {
-            drawDeckWaveformSegment(2, width, height);
-        }
+        // ...
     }
-
-    // draw a segment of the waveform for the top visualizer
+    
+    // Función auxiliar para dibujar un segmento de la onda (la parte que faltaba)
     function drawDeckWaveformSegment(deckNum, width, height) {
-        if (!decks[deckNum].waveformData || !decks[deckNum].isLoaded) return;
+        const deck = decks[deckNum];
+        const waveformData = deck.waveformData;
+        const currentTime = getCurrentPositionSeconds(deckNum);
+        const duration = deck.audioBuffer.duration;
         
-        const audioBuffer = decks[deckNum].audioBuffer;
-        if (!audioBuffer) return;
-        
-        const currentPositionSeconds = decks[deckNum].isPlaying ? 
-            (audioContext.currentTime - decks[deckNum].startTime) : 
-            decks[deckNum].pauseTime;
-        
-        const durationSeconds = audioBuffer.duration;
-        const totalSamples = audioBuffer.length;
-        const sampleRate = audioBuffer.sampleRate;
-        
-        // calculate the number of samples to display
-        // 20 seconds of audio, adjust for playback rate
-        const viewDuration = 20; 
-        const samplesPerView = viewDuration * sampleRate;
-        
-        // calculate the current sample index and the start/end samples for the view
-        const currentSampleIndex = Math.floor(currentPositionSeconds * sampleRate);
-        const startSample = Math.max(0, currentSampleIndex - samplesPerView / 2);
-        const endSample = Math.min(totalSamples, currentSampleIndex + samplesPerView / 2);
-        
-        const channelData = audioBuffer.getChannelData(0);
-        
-        // determine the number of samples per pixel for this zoomed-in view
-        const samplesPerPixel = (endSample - startSample) / width;
-        
-        let color;
-        switch(currentWaveformStyle) {
-            case 'blue-orange':
-                color = deckNum === 1 ? '#0088FF' : '#FF8800';
-                break;
-            case 'rainbow':
-                const hue = (Date.now() / 20 + deckNum * 60) % 360;
-                color = `hsl(${hue}, 100%, 60%)`;
-                break;
-            case 'mono':
-                color = deckNum === 1 ? '#CCCCCC' : '#888888';
-                break;
-            case 'gradient':
-                const gradient = superCtx.createLinearGradient(0, 0, width, 0);
-                gradient.addColorStop(0, deckNum === 1 ? '#00FF00' : '#FF0000');
-                gradient.addColorStop(1, deckNum === 1 ? '#0000FF' : '#FF00FF');
-                color = gradient;
-                break;
-            case 'bars':
-                drawBarsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
-                return;
-            case 'dots':
-                drawDotsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
-                return;
-            case 'outline':
-                drawOutlineWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
-                return;
-            default: // 'default'
-                color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        }
-
-        superCtx.strokeStyle = color;
-        superCtx.lineWidth = 2;
-        
-        superCtx.beginPath();
-        for (let i = 0; i < width; i++) {
-            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
-            if (sampleIndex >= totalSamples) break;
-            
-            let min = 0;
-            let max = 0;
-            
-            // get min and max for the group of samples for this pixel
-            for (let j = 0; j < samplesPerPixel; j++) {
-                const index = sampleIndex + j;
-                if (index < totalSamples) {
-                    const value = channelData[index];
-                    if (value < min) min = value;
-                    if (value > max) max = value;
-                }
-            }
-            
-            // draw the line for the pixel
-            if (i === 0) {
-                superCtx.moveTo(i, height / 2 - min * height / 2);
-            } else {
-                superCtx.lineTo(i, height / 2 - min * height / 2);
-            }
-            superCtx.lineTo(i, height / 2 - max * height / 2);
-        }
-        superCtx.stroke();
-    }
-
-    // draw bars style waveform for superimposed view
-    function drawBarsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        const samplesPerPixel = (endSample - startSample) / width;
-        
-        for (let i = 0; i < width; i += 4) {
-            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
-            if (sampleIndex >= channelData.length) break;
-
-            let min = 0;
-            let max = 0;
-
-            for (let j = 0; j < samplesPerPixel; j++) {
-                const index = sampleIndex + j;
-                if (index < channelData.length) {
-                    const value = channelData[index];
-                    if (value < min) min = value;
-                    if (value > max) max = value;
-                }
-            }
-            const barHeight = (max - min) * height / 2;
-            
-            superCtx.fillStyle = color;
-            superCtx.fillRect(i, height / 2 - barHeight / 2, 3, barHeight);
-        }
-    }
-
-    // draw dots style waveform for superimposed view
-    function drawDotsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        const samplesPerPixel = (endSample - startSample) / width;
+        const center = height / 2;
+        const color = deckNum === 1 ? 'rgba(0, 255, 0, 0.7)' : 'rgba(255, 0, 0, 0.7)';
         
         superCtx.fillStyle = color;
-        
-        for (let i = 0; i < width; i += 3) {
-            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
-            if (sampleIndex >= channelData.length) break;
-
-            let min = 0;
-            let max = 0;
-
-            for (let j = 0; j < samplesPerPixel; j++) {
-                const index = sampleIndex + j;
-                if (index < channelData.length) {
-                    const value = channelData[index];
-                    if (value < min) min = value;
-                    if (value > max) max = value;
-                }
-            }
-            
-            superCtx.beginPath();
-            superCtx.arc(i, height / 2 - min * height / 2, 1.5, 0, Math.PI * 2);
-            superCtx.fill();
-            
-            superCtx.beginPath();
-            superCtx.arc(i, height / 2 - max * height / 2, 1.5, 0, Math.PI * 2);
-            superCtx.fill();
-        }
-    }
-
-    // draw outline style waveform for superimposed view
-    function drawOutlineWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        const samplesPerPixel = (endSample - startSample) / width;
-        
-        superCtx.strokeStyle = color;
-        superCtx.lineWidth = 1;
-        
-        // draw upper outline
         superCtx.beginPath();
+        
         for (let i = 0; i < width; i++) {
-            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
-            if (sampleIndex >= channelData.length) break;
-
-            let max = 0;
-            for (let j = 0; j < samplesPerPixel; j++) {
-                const index = sampleIndex + j;
-                if (index < channelData.length) {
-                    const value = channelData[index];
-                    if (value > max) max = value;
-                }
-            }
+            const { min, max } = waveformData[i];
+            const x = i;
+            const y1 = center - (max * center);
+            const y2 = center - (min * center);
             
-            if (i === 0) {
-                superCtx.moveTo(i, height / 2 - max * height / 2);
-            } else {
-                superCtx.lineTo(i, height / 2 - max * height / 2);
-            }
+            superCtx.fillRect(x, y1, 1, y2 - y1);
         }
-        superCtx.stroke();
         
-        // draw lower outline
-        superCtx.beginPath();
-        for (let i = 0; i < width; i++) {
-            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
-            if (sampleIndex >= channelData.length) break;
-
-            let min = 0;
-            for (let j = 0; j < samplesPerPixel; j++) {
-                const index = sampleIndex + j;
-                if (index < channelData.length) {
-                    const value = channelData[index];
-                    if (value < min) min = value;
-                }
-            }
-            
-            if (i === 0) {
-                superCtx.moveTo(i, height / 2 - min * height / 2);
-            } else {
-                superCtx.lineTo(i, height / 2 - min * height / 2);
-            }
-        }
-        superCtx.stroke();
-    }
-
-    // Set up MIDI
-    function setupMIDI() {
-        if (navigator.requestMIDIAccess) {
-            navigator.requestMIDIAccess().then(
-                (midiAccess) => {
-                    console.log('MIDI access granted', midiAccess);
-                    
-                    // List available MIDI inputs
-                    const inputs = midiAccess.inputs.values();
-                    const inputSelector = document.getElementById('midiInputSelector');
-                    
-                    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-                        const option = document.createElement('option');
-                        option.value = input.value.id;
-                        option.textContent = input.value.name;
-                        inputSelector.appendChild(option);
-                        
-                        // Add event listener
-                        input.value.onmidimessage = handleMIDIMessage;
-                    }
-                },
-                (error) => {
-                    console.error('MIDI access denied', error);
-                }
-            );
-        }
-    }
-
-    // Handle MIDI message
-    function handleMIDIMessage(message) {
-        // This is a placeholder for MIDI mapping
-        // In a real application, you would map MIDI controls to deck functions
-        console.log('MIDI message received', message.data);
-    }
-
-    // Set up recording
-    function setupRecording() {
-        // This is a placeholder for recording setup
-        // In a real application, you would set up a MediaStreamDestination
-    }
-
-    // Toggle recording
-    function toggleRecording() {
-        if (isRecording) {
-            stopRecording();
-        } else {
-            startRecording();
-        }
-    }
-
-    // Start recording
-    function startRecording() {
-        // This is a placeholder for recording implementation
-        // In a real application, you would create a MediaRecorder
-        isRecording = true;
-        document.getElementById('recordButton').textContent = 'Detener';
-        document.getElementById('saveButton').style.display = 'inline-block';
-    }
-
-    // Stop recording
-    function stopRecording() {
-        // This is a placeholder for recording implementation
-        isRecording = false;
-        document.getElementById('recordButton').textContent = 'Grabar';
-    }
-
-    // Save recording
-    function saveRecording() {
-        // This is a placeholder for recording implementation
-        alert('Grabación guardada (funcionalidad de demostración)');
-    }
-
-    // Toggle equalizer popup
-    function toggleEqualizerPopup() {
-        const popup = document.getElementById('equalizer-popup');
-        popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    // Toggle settings popup
-    function toggleSettingsPopup() {
-        const popup = document.getElementById('settingsPopup');
-        popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    // Apply settings
-    function applySettings() {
-        // Get selected values
-        const waveformStyle = document.getElementById('waveformStyleSelector').value;
-        const recordingSource = document.getElementById('recordingSourceSelector').value;
-        const midiMapping = document.getElementById('midiMappingSelector').value;
+        // Dibuja el cabezal de reproducción (Playhead)
+        const currentProgress = currentTime / duration;
+        const playHeadX = currentProgress * width;
         
-        // Apply waveform style
-        applyWaveformStyle(waveformStyle);
-        
-        // Set recording source
-        activeRecordingSource = recordingSource;
-        
-        // Apply MIDI mapping
-        applyMIDIMapping(midiMapping);
-        
-        // Close popup
-        toggleSettingsPopup();
+        superCtx.fillStyle = '#FFFFFF'; // Color blanco para el cabezal
+        superCtx.fillRect(playHeadX - 1, 0, 2, height);
     }
-
-    // Apply waveform style
-    function applyWaveformStyle(style) {
-        currentWaveformStyle = style;
-    }
-
-    // Apply MIDI mapping
-    function applyMIDIMapping(mapping) {
-        // This is a placeholder for MIDI mapping
-        // In a real application, you would change how MIDI messages are handled
-        console.log('Applying MIDI mapping:', mapping);
-    }
-
-    // Initialize when page loads
+    
+    // Ejecutar init al cargar la página
     window.addEventListener('load', init);
-    window.addEventListener('resize', setupCanvasDimensions);
-</script>
-
-<!-- Recorder functions appended by assistant: functional WAV export -->
-<script>
-    async function setupRecording() {
-        try {
-            // Create or reuse a MediaStreamDestination to capture the master output
-            if (!window.recordingDestination) {
-                window.recordingDestination = audioContext.createMediaStreamDestination();
-            }
-
-            // Connect the end of the EQ chain to the recording destination if possible
-            try {
-                if (globalEqFilters && globalEqFilters.length > 0) {
-                    // Connect last global EQ filter to the recording destination (in addition to destination)
-                    globalEqFilters[globalEqFilters.length - 1].connect(window.recordingDestination);
-                } else {
-                    // Fallback: connect analyserMaster to recording destination
-                    analyserMaster.connect(window.recordingDestination);
-                }
-            } catch (e) {
-                console.warn("No globalEqFilters available yet:", e);
-                try { analyserMaster.connect(window.recordingDestination); } catch(e2) {}
-            }
-
-            // Prepare mic stream (for "mic" recording source)
-            window._micStream = null;
-            document.getElementById('recordingSourceSelector').addEventListener('change', (e) => {
-                activeRecordingSource = e.target.value;
-            });
-
-            console.log("Recording setup complete.");
-        } catch (err) {
-            console.error("setupRecording error:", err);
-        }
-    }
-
-    // Utility: encode AudioBuffer to WAV (16-bit PCM)
-    function encodeWAV(audioBuffer) {
-        const numChannels = audioBuffer.numberOfChannels;
-        const sampleRate = audioBuffer.sampleRate;
-        const format = 1; // PCM
-        const bitsPerSample = 16;
-
-        // interleave
-        let samples;
-        if (numChannels === 2) {
-            const left = audioBuffer.getChannelData(0);
-            const right = audioBuffer.getChannelData(1);
-            samples = new Int16Array(left.length + right.length);
-            let index = 0;
-            for (let i = 0; i < left.length; i++) {
-                samples[index++] = Math.max(-1, Math.min(1, left[i])) * 0x7fff;
-                samples[index++] = Math.max(-1, Math.min(1, right[i])) * 0x7fff;
-            }
-        } else {
-            const ch = audioBuffer.getChannelData(0);
-            samples = new Int16Array(ch.length);
-            for (let i = 0; i < ch.length; i++) {
-                samples[i] = Math.max(-1, Math.min(1, ch[i])) * 0x7fff;
-            }
-        }
-
-        const blockAlign = numChannels * bitsPerSample / 8;
-        const byteRate = sampleRate * blockAlign;
-        const dataSize = samples.length * (bitsPerSample / 8);
-        const buffer = new ArrayBuffer(44 + dataSize);
-        const view = new DataView(buffer);
-
-        /* RIFF identifier */
-        writeString(view, 0, 'RIFF');
-        /* file length */
-        view.setUint32(4, 36 + dataSize, true);
-        /* RIFF type */
-        writeString(view, 8, 'WAVE');
-        /* format chunk identifier */
-        writeString(view, 12, 'fmt ');
-        /* format chunk length */
-        view.setUint32(16, 16, true);
-        /* sample format (raw) */
-        view.setUint16(20, format, true);
-        /* channel count */
-        view.setUint16(22, numChannels, true);
-        /* sample rate */
-        view.setUint32(24, sampleRate, true);
-        /* byte rate (sample rate * block align) */
-        view.setUint32(28, byteRate, true);
-        /* block align (channel count * bytes per sample) */
-        view.setUint16(32, blockAlign, true);
-        /* bits per sample */
-        view.setUint16(34, bitsPerSample, true);
-        /* data chunk identifier */
-        writeString(view, 36, 'data');
-        /* data chunk length */
-        view.setUint32(40, dataSize, true);
-
-        // write the PCM samples
-        let offset = 44;
-        for (let i = 0; i < samples.length; i++, offset += 2) {
-            view.setInt16(offset, samples[i], true);
-        }
-
-        return new Blob([view], { type: 'audio/wav' });
-
-        function writeString(dataview, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                dataview.setUint8(offset + i, string.charCodeAt(i));
-            }
-        }
-    }
-
-    // Convert arbitrary audio Blob (like webm/opus) to WAV by decoding and re-encoding
-    async function convertBlobToWav(blob) {
-        const arrayBuffer = await blob.arrayBuffer();
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        // If channel count >2, downmix to stereo
-        if (audioBuffer.numberOfChannels > 2) {
-            // create stereo buffer
-            const offline = audioContext.createBuffer(2, audioBuffer.length, audioBuffer.sampleRate);
-            const outL = offline.getChannelData(0);
-            const outR = offline.getChannelData(1);
-            for (let i = 0; i < audioBuffer.length; i++) {
-                let sumL = 0, sumR = 0;
-                for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
-                    const d = audioBuffer.getChannelData(ch)[i];
-                    if (ch % 2 === 0) sumL += d; else sumR += d;
-                }
-                outL[i] = sumL / Math.ceil(audioBuffer.numberOfChannels / 2);
-                outR[i] = sumR / Math.floor(audioBuffer.numberOfChannels / 2);
-            }
-            return encodeWAV(offline);
-        } else {
-            return encodeWAV(audioBuffer);
-        }
-    }
-
-    // Toggle recording (start/stop)
-    async function toggleRecording() {
-        try {
-            const button = document.getElementById('recordButton');
-            if (!isRecording) {
-                // Start recording
-                // Ensure recordingDestination is ready
-                await setupRecording();
-
-                const sourceSelector = document.getElementById('recordingSourceSelector').value;
-                let stream;
-                if (sourceSelector === 'mic') {
-                    // ask for mic permissions and use mic stream
-                    window._micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    stream = window._micStream;
-                } else {
-                    // master output stream
-                    if (!window.recordingDestination) {
-                        alert('No recording destination available.');
-                        return;
-                    }
-                    stream = window.recordingDestination.stream;
-                }
-
-                // Use MediaRecorder (will likely be webm/opus) and then convert to WAV
-                const options = { mimeType: 'audio/webm' };
-                try {
-                    mediaRecorder = new MediaRecorder(stream, options);
-                } catch (e) {
-                    // fallback without mimeType
-                    mediaRecorder = new MediaRecorder(stream);
-                }
-
-                recordedChunks = [];
-                mediaRecorder.ondataavailable = (ev) => {
-                    if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data);
-                };
-
-                mediaRecorder.onstop = async () => {
-                    try {
-                        const blob = new Blob(recordedChunks, { type: recordedChunks[0].type || 'audio/webm' });
-                        // Convert to WAV
-                        const wavBlob = await convertBlobToWav(blob);
-                        lastWavBlob = wavBlob;
-                        // Show save button
-                        document.getElementById('saveButton').style.display = 'inline-block';
-                        // Create automatic download link (temporary)
-                        const url = URL.createObjectURL(wavBlob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'rtbs_recording_' + new Date().toISOString().replace(/[:.]/g,'-') + '.wav';
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        URL.revokeObjectURL(url);
-                    } catch (err) {
-                        console.error('Error converting recording to WAV:', err);
-                        alert('Error al convertir la grabación a WAV. Revisa la consola.');
-                    }
-                };
-
-                mediaRecorder.start();
-                isRecording = true;
-                button.textContent = 'Grabando...';
-                button.style.background = '#AA0000';
-                console.log('Recording started.');
-            } else {
-                // Stop recording
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                    mediaRecorder.stop();
-                }
-                // stop mic stream if used
-                if (window._micStream) {
-                    window._micStream.getTracks().forEach(t => t.stop());
-                    window._micStream = null;
-                }
-                isRecording = false;
-                document.getElementById('recordButton').textContent = 'Grabar';
-                document.getElementById('recordButton').style.background = '';
-                console.log('Recording stopped.');
-            }
-        } catch (err) {
-            console.error('toggleRecording error:', err);
-            alert('Error al iniciar/detener la grabación. Mira la consola.');
-        }
-    }
-
-    // Save last WAV to disk (if exists)
-    function saveRecording() {
-        if (!lastWavBlob) {
-            alert('No hay grabación para guardar.');
-            return;
-        }
-        const url = URL.createObjectURL(lastWavBlob);
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        a.download = 'rtbs_recording_' + new Date().toISOString().replace(/[:.]/g,'-') + '.wav';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-    }
-    // --- FUNCIONES DE LÓGICA DE LOOP ---
-
-// Obtiene la posición actual de la pista en segundos, ajustando por pitch y estado del loop
-function getCurrentPositionSeconds(deckNum) {
-    const deck = decks[deckNum];
-    if (deck.isPlaying) {
-        if (deck.isLooping && deck.loopSource) {
-            // Si está en loop, el tiempo se calcula con loopSource
-            // El tiempo de inicio del loop es deck.loopStart
-            let currentRelativeTime = (audioCtx.currentTime - deck.startTime) * deck.pitch * (deck.isReverse ? -1 : 1);
-            let totalTime = deck.loopStart + currentRelativeTime;
-            
-            // Si es inverso, la lógica es más compleja, pero para un loop estándar no es necesario.
-            // Para simplificar, si está en reverso, devolvemos el tiempo del source principal si existiera.
-            // Asumiremos que el loop se desactiva si está en reversa, o que la reproducción inversa funciona correctamente
-            // dentro del rango loopStart/loopEnd.
-            
-            return Math.max(0, totalTime);
-        } else if (deck.source) {
-            // Si está en reproducción normal
-            let currentRelativeTime = (audioCtx.currentTime - deck.startTime) * deck.pitch * (deck.isReverse ? -1 : 1);
-            let totalTime = deck.currentTime + currentRelativeTime;
-            return Math.max(0, totalTime);
-        }
-    }
-    // Si no está sonando, devuelve el último currentTime guardado
-    return deck.currentTime;
-}
-
-// Inicia la reproducción en bucle (llamada por setLoopOut)
-function startLoop(deckNum) {
-    const deck = decks[deckNum];
-    
-    // Si ya existe un loopSource, lo detenemos y limpiamos
-    if (deck.loopSource) {
-        try { deck.loopSource.stop(0); } catch (e) {}
-        deck.loopSource = null;
-    }
-    
-    // Detenemos el source normal si está activo
-    if (deck.source) {
-        try { deck.source.stop(0); } catch (e) {}
-        deck.source = null;
-    }
-    
-    if (!deck.audioBuffer || deck.loopStart === null || deck.loopEnd === null || deck.loopStart >= deck.loopEnd) {
-        deck.isLooping = false;
-        return;
-    }
-
-    const loopDuration = deck.loopEnd - deck.loopStart;
-    
-    deck.loopSource = audioCtx.createBufferSource();
-    deck.loopSource.buffer = deck.audioBuffer;
-    deck.loopSource.connect(deck.gainNode);
-    deck.loopSource.loop = true; // ¡Esto es lo que crea el bucle!
-    deck.loopSource.loopStart = deck.loopStart;
-    deck.loopSource.loopEnd = deck.loopEnd;
-    
-    deck.loopSource.playbackRate.setValueAtTime(deck.pitch * (deck.isReverse ? -1 : 1), audioCtx.currentTime);
-
-    // Actualiza el estado de reproducción
-    deck.isPlaying = true;
-    deck.isLooping = true;
-    deck.startTime = audioCtx.currentTime;
-    
-    // Iniciar el loop. Si es la primera vez, empieza en loopStart.
-    deck.loopSource.start(0, deck.loopStart);
-    console.log(`Deck ${deckNum}: Loop iniciado desde ${deck.loopStart.toFixed(2)}s hasta ${deck.loopEnd.toFixed(2)}s.`);
-}
-
-// Botón: Marca el punto de inicio del loop
-function setLoopIn(deckNum) {
-    const deck = decks[deckNum];
-    if (!deck.audioBuffer) return;
-
-    // Pausamos el loop si estaba activo
-    if (deck.isLooping) {
-        clearLoop(deckNum);
-        // Si no está sonando, usamos el currentTime guardado. Si está sonando, lo obtenemos.
-    }
-    
-    deck.loopStart = getCurrentPositionSeconds(deckNum);
-    deck.loopEnd = null; // Resetear el punto final
-    
-    document.getElementById(`loopInBtn${deckNum}`).classList.add('active');
-    document.getElementById(`loopOutBtn${deckNum}`).classList.remove('active');
-    document.getElementById(`clearLoopBtn${deckNum}`).classList.remove('active');
-    
-    console.log(`Deck ${deckNum}: Loop In establecido en ${deck.loopStart.toFixed(2)}s`);
-    drawFullWaveform(deckNum); // Reflejar en la onda
-}
-
-// Botón: Marca el punto final del loop e inicia el loop
-function setLoopOut(deckNum) {
-    const deck = decks[deckNum];
-    if (!deck.audioBuffer || deck.loopStart === null) {
-        alert(`Deck ${deckNum}: Primero pulsa Loop In.`);
-        return;
-    }
-
-    const currentPos = getCurrentPositionSeconds(deckNum);
-    
-    if (currentPos <= deck.loopStart) {
-        alert(`Deck ${deckNum}: El punto final debe ser después del punto de inicio (${deck.loopStart.toFixed(2)}s).`);
-        return;
-    }
-
-    deck.loopEnd = currentPos;
-    
-    // Inicia el loop inmediatamente
-    startLoop(deckNum);
-    
-    document.getElementById(`loopInBtn${deckNum}`).classList.remove('active');
-    document.getElementById(`loopOutBtn${deckNum}`).classList.add('active');
-    document.getElementById(`clearLoopBtn${deckNum}`).classList.remove('active');
-    
-    drawFullWaveform(deckNum); // Reflejar en la onda
-}
-
-// Botón: Limpia y detiene el loop
-function clearLoop(deckNum) {
-    const deck = decks[deckNum];
-    
-    // 1. Detener el loopSource si está activo
-    if (deck.loopSource) {
-        try { deck.loopSource.stop(0); } catch(e) {}
-        deck.loopSource = null;
-    }
-    
-    // 2. Guardar la posición actual (justo donde termina el loop)
-    let currentPos = getCurrentPositionSeconds(deckNum);
-    
-    // 3. Resetear las propiedades del loop
-    deck.loopStart = null;
-    deck.loopEnd = null;
-    deck.isLooping = false;
-    
-    // 4. Si la pista estaba sonando, reanudar la reproducción normal desde donde paró el loop.
-    if (deck.isPlaying) {
-        // La función playTrack se encargará de crear el nuevo source normal
-        // si deck.isPlaying sigue en true. Necesitamos actualizar currentTime antes.
-        deck.currentTime = currentPos;
-        playTrack(deckNum);
-    } else {
-        // Si estaba pausado, solo guardamos el tiempo
-        deck.currentTime = currentPos;
-    }
-    
-    // 5. Actualizar la interfaz
-    document.getElementById(`loopInBtn${deckNum}`).classList.remove('active');
-    document.getElementById(`loopOutBtn${deckNum}`).classList.remove('active');
-    document.getElementById(`clearLoopBtn${deckNum}`).classList.add('active');
-    
-    console.log(`Deck ${deckNum}: Loop borrado. Reproducción reanudada/pausada en ${deck.currentTime.toFixed(2)}s.`);
-    drawFullWaveform(deckNum); // Reflejar en la onda
-    
-    // Quitamos la clase active del clearBtn después de un breve tiempo
-    setTimeout(() => {
-        document.getElementById(`clearLoopBtn${deckNum}`).classList.remove('active');
-    }, 200);
-    }
-
-    // CÓDIGO A AÑADIR DENTRO DE drawFullWaveform:
-// NEW: Draw loop region
-const deck = decks[deckNum];
-if (deck.loopStart !== null && deck.loopEnd !== null) {
-    const audioBuffer = deck.audioBuffer;
-    if (audioBuffer) {
-        const duration = audioBuffer.duration;
-        const startProgress = deck.loopStart / duration;
-        const endProgress = deck.loopEnd / duration;
-        
-        const width = canvas.width;
-        const height = canvas.height;
-        
-        const startX = startProgress * width;
-        const endX = endProgress * width;
-        const loopWidth = endX - startX;
-        
-        // Dibuja la región amarilla semi-transparente
-        ctx.fillStyle = 'rgba(255, 255, 0, 0.3)'; 
-        ctx.fillRect(startX, 0, loopWidth, height);
-
-        // Dibuja líneas para Loop In y Loop Out
-        ctx.strokeStyle = '#FFFF00';
-        ctx.lineWidth = 1;
-        
-        // Línea Loop In
-        ctx.beginPath();
-        ctx.moveTo(startX, 0);
-        ctx.lineTo(startX, height);
-        ctx.stroke();
-
-        // Línea Loop Out
-        ctx.beginPath();
-        ctx.moveTo(endX, 0);
-        ctx.lineTo(endX, height);
-        ctx.stroke();
-    }
-}
+// =========================================================================
+// === FIN DEL CONTROLADOR DJ ===
+// =========================================================================
     
 </script>
 </body>

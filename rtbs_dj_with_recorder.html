@@ -460,10 +460,9 @@ h1 { text-align: center; margin-top: 0; }
     <button class="close-btn" onclick="applySettings()">Aplicar</button>
     <button class="close-btn" onclick="toggleSettingsPopup()">Cerrar</button>
 </div>
+
 <script>
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const masterGainNode = audioContext.createGain(); // Nodo principal del Master Bus
-    window.masterGainNode = masterGainNode; 
     let decks = {
         1: {
             audio: null,
@@ -477,12 +476,7 @@ h1 { text-align: center; margin-top: 0; }
             pauseTime: 0,
             isReversed: false,
             reversedBuffer: null,
-            // Inicialización de la EQ del plato 1 con tipos y ganancias correctas
-            eq: { 
-                bass: audioContext.createBiquadFilter(), 
-                mid: audioContext.createBiquadFilter(), 
-                treble: audioContext.createBiquadFilter() 
-            },
+            eq: { bass: audioContext.createBiquadFilter(), mid: audioContext.createBiquadFilter(), treble: audioContext.createBiquadFilter() },
             isLoaded: false,
             animationFrame: null,
             eqState: { bass: true, mid: true, treble: true },
@@ -494,12 +488,10 @@ h1 { text-align: center; margin-top: 0; }
             effects: { cut: false, flanger: false },
             vinylStartSound: null,
             vinylStopSound: null,
-            crossfaderNode: audioContext.createGain(), 
-            effectsBus: audioContext.createGain(), 
+            // Efectos
             cutEffect: null,
             flangerEffect: null,
-            flangerFeedback: null,
-            flangerLFO: null,
+            // Para el visualizador superior
             waveformData: null,
             currentBeat: 0
         },
@@ -515,12 +507,7 @@ h1 { text-align: center; margin-top: 0; }
             pauseTime: 0,
             isReversed: false,
             reversedBuffer: null,
-            // Inicialización de la EQ del plato 2 con tipos y ganancias correctas
-            eq: { 
-                bass: audioContext.createBiquadFilter(), 
-                mid: audioContext.createBiquadFilter(), 
-                treble: audioContext.createBiquadFilter() 
-            },
+            eq: { bass: audioContext.createBiquadFilter(), mid: audioContext.createBiquadFilter(), treble: audioContext.createBiquadFilter() },
             isLoaded: false,
             animationFrame: null,
             eqState: { bass: true, mid: true, treble: true },
@@ -532,12 +519,10 @@ h1 { text-align: center; margin-top: 0; }
             effects: { cut: false, flanger: false },
             vinylStartSound: null,
             vinylStopSound: null,
-            crossfaderNode: audioContext.createGain(), 
-            effectsBus: audioContext.createGain(), 
+            // Efectos
             cutEffect: null,
             flangerEffect: null,
-            flangerFeedback: null,
-            flangerLFO: null,
+            // Para el visualizador superior
             waveformData: null,
             currentBeat: 0
         }
@@ -545,17 +530,18 @@ h1 { text-align: center; margin-top: 0; }
     let mediaRecorder;
     let recordedChunks = [];
     let analyserMaster = audioContext.createAnalyser(); analyserMaster.fftSize = 2048;
-    let showDeck = {1:true,2:true};
+    let showDeck = {1:true,2:true}; // control which deck wave is superimposed
     
     let recordingStream;
     let isRecording = false;
     let activeRecordingSource = 'master';
     let currentWaveformStyle = 'default';
 
-    // 30-band equalizer (Frecuencias ISO estándar de 1/3 de octava)
+    // 30-band equalizer
     const frequencies = [
-        20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500,
-        630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000
+        32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000,
+        31, 62, 125, 250, 500, 1000, 2000, 4000, 8000, 16000,
+        20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240
     ];
     const eqNodes = [];
     let globalEqFilters = [];
@@ -568,6 +554,7 @@ h1 { text-align: center; margin-top: 0; }
     // Cargar sonidos de inicio y parada de vinilo
     async function loadVinylSounds() {
         try {
+            // Crear sonidos sintéticos para inicio y parada de vinilo
             const createVinylSound = (fadeIn, duration) => {
                 const sampleRate = audioContext.sampleRate;
                 const length = sampleRate * duration;
@@ -575,17 +562,20 @@ h1 { text-align: center; margin-top: 0; }
                 const data = buffer.getChannelData(0);
                 
                 for (let i = 0; i < length; i++) {
+                    // Ruido blanco
                     let value = Math.random() * 2 - 1;
                     
+                    // Aplicar filtro de paso bajo para simular ruido de vinilo
                     if (i > 0) {
                         value = 0.95 * data[i-1] + 0.05 * value;
                     }
                     
+                    // Aplicar envolvente
                     let envelope;
                     if (fadeIn) {
-                        envelope = Math.min(1, i / (sampleRate * 0.1)); 
+                        envelope = Math.min(1, i / (sampleRate * 0.1)); // Fade in rápido
                     } else {
-                        envelope = Math.max(0, 1 - (i / (sampleRate * 0.3))); 
+                        envelope = Math.max(0, 1 - (i / (sampleRate * 0.3))); // Fade out más lento
                     }
                     
                     data[i] = value * envelope * 0.3;
@@ -618,20 +608,21 @@ h1 { text-align: center; margin-top: 0; }
 
     // Inicializar ecualizador de 30 bandas
     function init30BandEQ() {
+        // Clear existing nodes
         while (globalEqFilters.length > 0) {
             const filter = globalEqFilters.pop();
             filter.disconnect();
         }
-        row1.innerHTML = '';
-        row2.innerHTML = '';
         
+        // Create new filters
         for (let i = 0; i < frequencies.length; i++) {
             const filter = audioContext.createBiquadFilter();
             filter.type = 'peaking';
             filter.frequency.value = frequencies[i];
-            filter.Q.value = 4.31; 
+            filter.Q.value = 1;
             filter.gain.value = 0;
             
+            // Connect in series
             if (i === 0) {
                 analyserMaster.connect(filter);
             } else {
@@ -640,8 +631,10 @@ h1 { text-align: center; margin-top: 0; }
             
             globalEqFilters.push(filter);
             
+            // Create UI controls
             const band = document.createElement('div');
             band.className = 'band';
+            
             const input = document.createElement('input');
             input.type = 'range';
             input.min = '-20';
@@ -652,10 +645,9 @@ h1 { text-align: center; margin-top: 0; }
                 const index = parseInt(e.target.dataset.index);
                 globalEqFilters[index].gain.value = parseFloat(e.target.value);
             });
-            const label = document.createElement('label');
             
-            let freq = frequencies[i];
-            label.textContent = freq >= 1000 ? `${(freq / 1000).toFixed(1).replace('.0','')}'k` : `${freq}Hz`;
+            const label = document.createElement('label');
+            label.textContent = `${frequencies[i]}Hz`;
             
             band.appendChild(input);
             band.appendChild(label);
@@ -667,345 +659,39 @@ h1 { text-align: center; margin-top: 0; }
             }
         }
         
-        if (globalEqFilters.length > 0) {
-            globalEqFilters[globalEqFilters.length - 1].connect(audioContext.destination);
-            if (window.recordingDestination) {
-                globalEqFilters[globalEqFilters.length - 1].connect(window.recordingDestination);
-            }
-        }
+        // Connect the last filter to destination
+        globalEqFilters[globalEqFilters.length - 1].connect(audioContext.destination);
     }
 
-    // Connect audio nodes for a deck (CORREGIDO: Tipos de filtro de EQ)
-    function setupAudioRouting(deckNum) {
-        const deck = decks[deckNum];
-        
-        // Disconnect all to reset chain
-        if (deck.source) deck.source.disconnect();
-        deck.eq.bass.disconnect();
-        deck.eq.mid.disconnect();
-        deck.eq.treble.disconnect();
-        deck.filterNode.disconnect();
-        deck.gainNode.disconnect();
-        deck.effectsBus.disconnect(); 
-        
-        // --- ASIGNACIÓN DE TIPOS DE FILTRO PARA LA EQ DE 3 BANDAS (FIX CRÍTICO) ---
-        deck.eq.bass.type = 'lowshelf';
-        deck.eq.mid.type = 'peaking';
-        deck.eq.treble.type = 'highshelf';
-        
-        // Frecuencias de corte estándar para la EQ de 3 bandas
-        deck.eq.bass.frequency.value = 120; // 120 Hz
-        deck.eq.mid.frequency.value = 1000; // 1 kHz
-        deck.eq.treble.frequency.value = 8000; // 8 kHz
-        deck.eq.mid.Q.value = 0.707; // Ancho de banda para mid
-        
-        // Asegurar la ganancia inicial a 0
-        deck.eq.bass.gain.value = deck.eqValue.bass;
-        deck.eq.mid.gain.value = deck.eqValue.mid;
-        deck.eq.treble.gain.value = deck.eqValue.treble;
-        
-        // --- DECK CHAIN ---
-        if (deck.source) deck.source.connect(deck.eq.bass);
-        
-        deck.eq.bass.connect(deck.eq.mid);
-        deck.eq.mid.connect(deck.eq.treble);
-        
-        deck.eq.treble.connect(deck.filterNode);
-        
-        deck.filterNode.connect(deck.gainNode);
-
-        deck.gainNode.connect(deck.effectsBus);
-        
-        // Aplicar routing de efectos (esto conectará effectsBus al crossfader, directa o indirectamente)
-        updateEffectRouting(deckNum);
-    }
-
-    // Draw waveform on deck canvas (omitted for brevity, assume correct)
-
-    // Play/Pause track (omitted for brevity, assume correct)
-
-    // Play track
-    function playTrack(deckNum) {
-        if (!decks[deckNum].isLoaded) return;
-        
-        playVinylSound(deckNum, true);
-        
-        const source = audioContext.createBufferSource();
-        if (decks[deckNum].isReversed) {
-            source.buffer = decks[deckNum].reversedBuffer;
-        } else {
-            source.buffer = decks[deckNum].audioBuffer;
-        }
-        
-        source.playbackRate.value = parseFloat(document.getElementById(`pitch${deckNum}`).value);
-        decks[deckNum].source = source;
-        
-        // --- LLAMADA A RUTA DE AUDIO CORREGIDA ---
-        setupAudioRouting(deckNum); 
-        
-        let startTime;
-        if (decks[deckNum].pauseTime > 0) {
-            startTime = audioContext.currentTime - decks[deckNum].pauseTime;
-        } else {
-            startTime = audioContext.currentTime;
-        }
-        
-        source.start(0, decks[deckNum].pauseTime);
-        
-        decks[deckNum].isPlaying = true;
-        decks[deckNum].startTime = startTime;
-        decks[deckNum].pauseTime = 0;
-        
-        document.getElementById(`button${deckNum}`).textContent = 'Pausa';
-        document.getElementById(`platter${deckNum}`).classList.add('playing');
-        
-        if (decks[deckNum].animationFrame) {
-            cancelAnimationFrame(decks[deckNum].animationFrame);
-        }
-        animateProgress(deckNum);
-        
-        source.onended = () => {
-            if (!decks[deckNum].isReversed) {
-                stopTrack(deckNum);
-            }
-        };
-    }
-
-    // Pause track (omitted for brevity, assume correct)
-
-    // Stop track and reset (omitted for brevity, assume correct)
-
-    // Seek track (omitted for brevity, assume correct)
-
-    // Sync BPM (omitted for brevity, assume correct)
-    
-    // Navegación por beats (4 tiempos) (omitted for brevity, assume correct)
-
-    // Update beat position for visualization (omitted for brevity, assume correct)
-
-    // Animate progress bar (omitted for brevity, assume correct)
-
-    // Format time (omitted for brevity, assume correct)
-
-    // Detect BPM (omitted for brevity, assume correct)
-
-    // Toggle EQ
-    function toggleEQ(band, deckNum) {
-        const deck = decks[deckNum];
-        if (deck.eqState[band]) {
-            // Kill
-            deck.eqValue[band] = deck.eq[band].gain.value; 
-            deck.eq[band].gain.value = -40; // Hard kill
-            deck.eqState[band] = false;
-        } else {
-            // Restore
-            deck.eq[band].gain.value = decks[deckNum].eqValue[band];
-            deck.eqState[band] = true;
-        }
-    }
-
-    // Start reverse function (omitted for brevity, assume correct)
-
-    // Stop reverse function (omitted for brevity, assume correct)
-
-    // Toggle hot cue (omitted for brevity, assume correct)
-
-    // Delete hot cue (omitted for brevity, assume correct)
-
-    // Create hot cue marker (omitted for brevity, assume correct)
-
-    // Start loop roll (omitted for brevity, assume correct)
-
-    // Stop loop roll (omitted for brevity, assume correct)
-
-    // Toggle superimpose (omitted for brevity, assume correct)
-
-    // Animate all canvas elements (omitted for brevity, assume correct)
-
-    // draw superimposed waveform for both decks (omitted for brevity, assume correct)
-
-    // Draw a segment of the waveform around the playhead (omitted for brevity, assume correct)
-    
-    // Draw bars style waveform for superimposed view (omitted for brevity, assume correct)
-    
-    // draw dots style waveform for superimposed view (omitted for brevity, assume correct)
-
-    // draw outline style waveform for superimposed view (omitted for brevity, assume correct)
-
-    // Set up MIDI (omitted for brevity, assume correct)
-
-    // Handle MIDI message (omitted for brevity, assume correct)
-
-    // Toggle equalizer popup (omitted for brevity, assume correct)
-
-    // Toggle settings popup (omitted for brevity, assume correct)
-
-    // Apply settings (omitted for brevity, assume correct)
-
-    // Update crossfader gain values
-    function updateCrossfader(e) {
-        const value = parseFloat(e.target.value); 
-        const gain1 = Math.cos(value * 0.5 * Math.PI);
-        const gain2 = Math.cos((1.0 - value) * 0.5 * Math.PI);
-        
-        decks[1].crossfaderNode.gain.value = gain1;
-        decks[2].crossfaderNode.gain.value = gain2;
-    }
-
-    // Update Effect Routing (SIMPLIFICADO y CORREGIDO)
-    function updateEffectRouting(deckNum) {
-        const deck = decks[deckNum];
-        
-        // 1. Disconnect everything from the effects bus
-        deck.effectsBus.disconnect();
-        
-        // Disconnect effect nodes from their output point (crossfader)
-        if (deck.cutEffect) deck.cutEffect.disconnect();
-        if (deck.flangerEffect) deck.flangerEffect.disconnect();
-
-        // 2. Build the linear chain (Insert Model)
-        let currentNode = deck.effectsBus;
-        
-        // Initialize effects if not done already
-        if (deck.cutEffect === null) {
-            // Inicialización de efectos (redundante si ya está en handleFileSelect, pero mejor aquí)
-            deck.cutEffect = audioContext.createBiquadFilter();
-            deck.flangerEffect = audioContext.createDelay(0.005); // Menor delay para flanger
-            deck.flangerFeedback = audioContext.createGain();
-            deck.flangerFeedback.gain.value = 0.5;
-            
-            // Flanger LFO setup
-            deck.flangerLFO = audioContext.createOscillator();
-            deck.flangerLFO.frequency.value = 0.5;
-            deck.flangerLFO.start(0);
-            const flangerGain = audioContext.createGain();
-            flangerGain.gain.value = 0.002;
-            deck.flangerLFO.connect(flangerGain);
-            flangerGain.connect(deck.flangerEffect.delayTime);
-            
-            // Desconectar inicialmente
-            deck.flangerEffect.disconnect();
-            deck.flangerFeedback.disconnect();
-            deck.flangerLFO.disconnect();
-        }
-
-        // --- EFFECT CHAIN ---
-        
-        // 2.1. CUT Effect (Lowpass Filter)
-        if (deck.effects.cut) {
-            deck.cutEffect.type = 'lowpass';
-            deck.cutEffect.frequency.value = 500; // Frecuencia de corte para el efecto
-            currentNode.connect(deck.cutEffect);
-            currentNode = deck.cutEffect;
-        } else {
-            deck.cutEffect.frequency.value = 22050; // Bypass
-        }
-        
-        // 2.2. FLANGER Effect (Insert Flanger)
-        if (deck.effects.flanger) {
-            // Conectar la ruta principal al flanger (WET signal)
-            currentNode.connect(deck.flangerEffect);
-            
-            // Conectar el flanger de vuelta al feedback para el efecto
-            deck.flangerEffect.connect(deck.flangerFeedback);
-            deck.flangerFeedback.connect(deck.flangerEffect);
-            
-            // Conectar la señal seca (DRY) y húmeda (WET) al destino con un mixer (GainNode)
-            const flangerMixer = audioContext.createGain();
-            flangerMixer.gain.value = 1; // Unity gain for the mixer
-            
-            currentNode.connect(flangerMixer); // DRY signal
-            deck.flangerEffect.connect(flangerMixer); // WET signal
-            
-            currentNode = flangerMixer; // El mezclador es el nuevo nodo final
-            
-        } else {
-            // Asegurarse de que el loop de feedback esté roto si el flanger está apagado
-            deck.flangerFeedback.disconnect(); 
-        }
-
-        // 3. Final connection to Crossfader Node
-        currentNode.connect(deck.crossfaderNode);
-    }
-
-    // Toggle effect
-    function toggleEffect(deckNum, effectName) {
-        const deck = decks[deckNum];
-        
-        // La inicialización se maneja en updateEffectRouting ahora
-        
-        deck.effects[effectName] = !deck.effects[effectName];
-        
-        const buttonId = `effect${deckNum}-${effectName}`;
-        document.getElementById(buttonId).classList.toggle('active', deck.effects[effectName]);
-        
-        // Re-route the entire effects bus to ensure correct connection
-        updateEffectRouting(deckNum);
-    }
-    
-    // Handle file selection
-    async function handleFileSelect(event, deckNum) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        decks[deckNum].effects = { cut: false, flanger: false };
-        
-        try {
-            const arrayBuffer = await file.arrayBuffer();
-            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            
-            decks[deckNum].audioBuffer = audioBuffer;
-            decks[deckNum].isLoaded = true;
-            
-            // Reinicializar nodos de efectos solo si es necesario (el chequeo está en updateEffectRouting)
-            
-            preprocessWaveformData(deckNum, audioBuffer);
-            createReversedBuffer(deckNum, audioBuffer);
-            
-            decks[deckNum].analyser = audioContext.createAnalyser();
-            decks[deckNum].analyser.fftSize = 2048;
-            
-            setupAudioRouting(deckNum); // Esto también llama a updateEffectRouting
-            
-            drawFullWaveform(deckNum);
-            
-            const duration = formatTime(audioBuffer.duration);
-            document.getElementById(`duration${deckNum}`).textContent = duration;
-            
-            detectBPM(deckNum, audioBuffer);
-        } catch (error) {
-            console.error('Error loading audio file:', error);
-        }
-    }
-
-    // Preprocess waveform data for the top visualizer (omitted for brevity, assume correct)
-
-    // Create reversed audio buffer (omitted for brevity, assume correct)
-    
-    // Initialize when page loads
+    // Initialize the application
     function init() {
-        // Set up master bus connections 
-        masterGainNode.connect(analyserMaster);
-        decks[1].crossfaderNode.connect(masterGainNode);
-        decks[2].crossfaderNode.connect(masterGainNode);
-
-        // Initialize 30-band EQ 
+        // Set up audio routing
+        analyserMaster.connect(audioContext.destination);
+        
+        // Initialize 30-band EQ
         init30BandEQ();
         
+        // Load vinyl sounds
         loadVinylSounds();
-
+        
+        // Set up file inputs
         document.getElementById('fileInput1').addEventListener('change', (e) => handleFileSelect(e, 1));
         document.getElementById('fileInput2').addEventListener('change', (e) => handleFileSelect(e, 2));
-
-        setupControls();
-
-        setupCanvasDimensions();
-
-        setupMIDI();
-
-        setupRecording(); 
         
-        animate(); 
+        // Set up controls
+        setupControls();
+        
+        // Set up canvas dimensions
+        setupCanvasDimensions();
+        
+        // Set up MIDI
+        setupMIDI();
+        
+        // Start animation
+        animate();
+        
+        // Set up recording
+        setupRecording();
     }
 
     // Set up controls
@@ -1017,38 +703,34 @@ h1 { text-align: center; margin-top: 0; }
         document.getElementById('volume2').addEventListener('input', (e) => {
             decks[2].gainNode.gain.value = parseFloat(e.target.value);
         });
-
+        
         // EQ controls
         ['bass', 'mid', 'treble'].forEach((band) => {
             for (let i = 1; i <= 2; i++) {
                 document.getElementById(`${band}${i}`).addEventListener('input', (e) => {
-                    const gainValue = parseFloat(e.target.value);
-                    decks[i].eq[band].gain.value = gainValue;
-                    decks[i].eqValue[band] = gainValue; 
-                    decks[i].eqState[band] = true;
+                    decks[i].eq[band].gain.value = parseFloat(e.target.value);
+                    decks[i].eqValue[band] = parseFloat(e.target.value);
                 });
             }
         });
         
-        // Gain (pre-fader) controls (omitted for brevity, assume correct)
-        for (let i = 1; i <= 2; i++) {
-            document.getElementById(`gain${i}`).addEventListener('input', (e) => {
-                if (decks[i].source) {
-                    // Nota: source no tiene gain, deberíamos usar masterGainNode si queremos un control de Pre-Fader Gain
-                    // Lo mantendremos como estaba si esta funcionalidad es solo para la UI.
-                }
-            });
-        }
+        // Gain controls
+        document.getElementById('gain1').addEventListener('input', (e) => {
+            decks[1].gainNode.gain.value = parseFloat(e.target.value);
+        });
+        document.getElementById('gain2').addEventListener('input', (e) => {
+            decks[2].gainNode.gain.value = parseFloat(e.target.value);
+        });
         
-        // Filter controls (omitted for brevity, assume correct)
-        for (let i = 1; i <= 2; i++) {
-            document.getElementById(`filter${i}`).addEventListener('input', (e) => {
-                decks[i].filterNode.frequency.value = parseFloat(e.target.value);
-            });
-            decks[i].filterNode.type = 'lowpass';
-        }
-
-        // Pitch controls (omitted for brevity, assume correct)
+        // Filter controls
+        document.getElementById('filter1').addEventListener('input', (e) => {
+            decks[1].filterNode.frequency.value = parseFloat(e.target.value);
+        });
+        document.getElementById('filter2').addEventListener('input', (e) => {
+            decks[2].filterNode.frequency.value = parseFloat(e.target.value);
+        });
+        
+        // Pitch controls
         document.getElementById('pitch1').addEventListener('input', (e) => {
             if (decks[1].source) {
                 decks[1].source.playbackRate.value = parseFloat(e.target.value);
@@ -1059,87 +741,1061 @@ h1 { text-align: center; margin-top: 0; }
                 decks[2].source.playbackRate.value = parseFloat(e.target.value);
             }
         });
-
-        // Crossfader control (NEW)
-        document.getElementById('crossfader').addEventListener('input', updateCrossfader);
-        updateCrossfader({ target: { value: document.getElementById('crossfader').value } });
-
-        // Progress bar controls (omitted for brevity, assume correct)
-        document.getElementById('progressBar1').addEventListener('input', (e) => { seekTrack(1, parseFloat(e.target.value)); });
-        document.getElementById('progressBar2').addEventListener('input', (e) => { seekTrack(2, parseFloat(e.target.value)); });
+        
+        // Crossfader
+        document.getElementById('crossfader').addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            // Adjust volumes based on crossfader position
+            decks[1].gainNode.gain.value = value < 0.5 ? 1 : 1 - ((value - 0.5) * 2);
+            decks[2].gainNode.gain.value = value > 0.5 ? 1 : value * 2;
+        });
+        
+        // Progress bars
+        document.getElementById('progressBar1').addEventListener('input', (e) => {
+            if (decks[1].isLoaded) {
+                seekTrack(1, parseFloat(e.target.value));
+            }
+        });
+        document.getElementById('progressBar2').addEventListener('input', (e) => {
+            if (decks[2].isLoaded) {
+                seekTrack(2, parseFloat(e.target.value));
+            }
+        });
     }
 
-    // Set up canvas dimensions (omitted for brevity, assume correct)
+    // Set up canvas dimensions
+    function setupCanvasDimensions() {
+        const canvases = [
+            document.getElementById('superimposedWaveformCanvas'),
+            document.getElementById('waveformCanvas1'),
+            document.getElementById('waveformCanvas2')
+        ];
+        
+        canvases.forEach(canvas => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+    }
 
-    let lastWavBlob = null; 
+    // Handle file selection
+    async function handleFileSelect(event, deckNum) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            
+            // Store audio buffer
+            decks[deckNum].audioBuffer = audioBuffer;
+            decks[deckNum].isLoaded = true;
+            
+            // Preprocess waveform data for the top visualizer
+            preprocessWaveformData(deckNum, audioBuffer);
+            
+            // Create reversed buffer
+            createReversedBuffer(deckNum, audioBuffer);
+            
+            // Create analyser
+            decks[deckNum].analyser = audioContext.createAnalyser();
+            decks[deckNum].analyser.fftSize = 2048;
+            
+            // Set up audio routing
+            setupAudioRouting(deckNum);
+            
+            // Draw waveform
+            drawFullWaveform(deckNum);
+            
+            // Update duration display
+            const duration = formatTime(audioBuffer.duration);
+            document.getElementById(`duration${deckNum}`).textContent = duration;
+            
+            // Detect BPM
+            detectBPM(deckNum, audioBuffer);
+            
+        } catch (error) {
+            console.error('Error loading audio file:', error);
+        }
+    }
 
-    // Set up recording (omitted for brevity, assume correct)
+    // Preprocess waveform data for the top visualizer
+    function preprocessWaveformData(deckNum, audioBuffer) {
+        const channelData = audioBuffer.getChannelData(0);
+        const samplesPerPixel = Math.floor(channelData.length / superCanvas.width);
+        decks[deckNum].waveformData = [];
+        
+        for (let i = 0; i < superCanvas.width; i++) {
+            let min = 0;
+            let max = 0;
+            
+            for (let j = 0; j < samplesPerPixel; j++) {
+                const index = i * samplesPerPixel + j;
+                if (index < channelData.length) {
+                    const value = channelData[index];
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                }
+            }
+            
+            decks[deckNum].waveformData.push({ min, max });
+        }
+    }
+
+    // Create reversed audio buffer
+    function createReversedBuffer(deckNum, audioBuffer) {
+        const reversedBuffer = audioContext.createBuffer(
+            audioBuffer.numberOfChannels,
+            audioBuffer.length,
+            audioBuffer.sampleRate
+        );
+        
+        for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+            const originalData = audioBuffer.getChannelData(channel);
+            const reversedData = reversedBuffer.getChannelData(channel);
+            
+            for (let i = 0; i < audioBuffer.length; i++) {
+                reversedData[i] = originalData[audioBuffer.length - 1 - i];
+            }
+        }
+        
+        decks[deckNum].reversedBuffer = reversedBuffer;
+    }
+
+    // Set up audio routing
+    function setupAudioRouting(deckNum) {
+        // Set up EQ
+        decks[deckNum].eq.bass.type = 'lowshelf';
+        decks[deckNum].eq.bass.frequency.value = 250;
+        
+        decks[deckNum].eq.mid.type = 'peaking';
+        decks[deckNum].eq.mid.frequency.value = 1000;
+        decks[deckNum].eq.mid.Q.value = 1;
+        
+        decks[deckNum].eq.treble.type = 'highshelf';
+        decks[deckNum].eq.treble.frequency.value = 4000;
+        
+        // Set up filter
+        decks[deckNum].filterNode.type = 'lowpass';
+        decks[deckNum].filterNode.frequency.value = 22050;
+        
+        // Connect nodes
+        decks[deckNum].eq.bass.connect(decks[deckNum].eq.mid);
+        decks[deckNum].eq.mid.connect(decks[deckNum].eq.treble);
+        decks[deckNum].eq.treble.connect(decks[deckNum].filterNode);
+        decks[deckNum].filterNode.connect(decks[deckNum].gainNode);
+        decks[deckNum].gainNode.connect(decks[deckNum].analyser);
+        decks[deckNum].analyser.connect(analyserMaster);
+    }
+
+    // Draw full waveform
+    function drawFullWaveform(deckNum) {
+        const canvas = document.getElementById(`waveformCanvas${deckNum}`);
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        if (!decks[deckNum].audioBuffer) return;
+        
+        const audioBuffer = decks[deckNum].audioBuffer;
+        const channelData = audioBuffer.getChannelData(0);
+        const step = Math.ceil(channelData.length / width);
+        
+        ctx.beginPath();
+        ctx.moveTo(0, height / 2);
+        
+        // Choose color based on deck
+        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        
+        for (let i = 0; i < width; i++) {
+            let min = 0;
+            let max = 0;
+            
+            for (let j = 0; j < step; j++) {
+                const index = i * step + j;
+                if (index < channelData.length) {
+                    const value = channelData[index];
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                }
+            }
+            
+            ctx.lineTo(i, height / 2 - min * height / 2);
+            ctx.lineTo(i, height / 2 - max * height / 2);
+        }
+        
+        ctx.stroke();
+    }
+
+    // Play/Pause track
+    function playPause(deckNum) {
+        if (!decks[deckNum].isLoaded) return;
+        
+        if (decks[deckNum].isPlaying) {
+            pauseTrack(deckNum);
+        } else {
+            playTrack(deckNum);
+        }
+    }
+
+    // Play track
+    function playTrack(deckNum) {
+        if (!decks[deckNum].isLoaded) return;
+        
+        // Play vinyl start sound
+        playVinylSound(deckNum, true);
+        
+        const source = audioContext.createBufferSource();
+        
+        if (decks[deckNum].isReversed) {
+            source.buffer = decks[deckNum].reversedBuffer;
+        } else {
+            source.buffer = decks[deckNum].audioBuffer;
+        }
+        
+        // Set playback rate
+        source.playbackRate.value = parseFloat(document.getElementById(`pitch${deckNum}`).value);
+        
+        // Connect source to audio chain
+        source.connect(decks[deckNum].eq.bass);
+        
+        // Store source
+        decks[deckNum].source = source;
+        
+        // Calculate start time
+        let startTime;
+        if (decks[deckNum].pauseTime > 0) {
+            startTime = audioContext.currentTime - decks[deckNum].pauseTime;
+        } else {
+            startTime = audioContext.currentTime;
+        }
+        
+        // Start playback
+        source.start(0, decks[deckNum].pauseTime);
+        
+        // Update state
+        decks[deckNum].isPlaying = true;
+        decks[deckNum].startTime = startTime;
+        
+        // Update button text
+        document.getElementById(`button${deckNum}`).textContent = 'Pause';
+        
+        // Start platter animation
+        document.getElementById(`platter${deckNum}`).classList.add('playing');
+        
+        // Start animation for progress bar
+        cancelAnimationFrame(decks[deckNum].animationFrame);
+        animateProgress(deckNum);
+    }
+
+    // Pause track
+    function pauseTrack(deckNum) {
+        if (!decks[deckNum].isPlaying || !decks[deckNum].source) return;
+        
+        // Play vinyl stop sound
+        playVinylSound(deckNum, false);
+        
+        // Stop source
+        decks[deckNum].source.stop();
+        decks[deckNum].source.disconnect();
+        
+        // Calculate pause time
+        decks[deckNum].pauseTime = audioContext.currentTime - decks[deckNum].startTime;
+        
+        // Update state
+        decks[deckNum].isPlaying = false;
+        
+        // Update button text
+        document.getElementById(`button${deckNum}`).textContent = 'Play';
+        
+        // Stop platter animation
+        document.getElementById(`platter${deckNum}`).classList.remove('playing');
+        
+        // Stop animation
+        cancelAnimationFrame(decks[deckNum].animationFrame);
+    }
+
+    // Seek track
+    function seekTrack(deckNum, progress) {
+        const wasPlaying = decks[deckNum].isPlaying;
+        
+        if (wasPlaying) {
+            pauseTrack(deckNum);
+        }
+        
+        decks[deckNum].pauseTime = progress * decks[deckNum].audioBuffer.duration;
+        
+        // Update beat position
+        updateBeatPosition(deckNum);
+        
+        if (wasPlaying) {
+            playTrack(deckNum);
+        } else {
+            // Update progress bar
+            document.getElementById(`progressBar${deckNum}`).value = progress;
+            document.getElementById(`currentTime${deckNum}`).textContent = formatTime(decks[deckNum].pauseTime);
+        }
+    }
+
+    // Navegación por beats (4 tiempos)
+    function navigateByBeats(deckNum, beats) {
+        if (!decks[deckNum].isLoaded || decks[deckNum].bpm === 0) return;
+        
+        const wasPlaying = decks[deckNum].isPlaying;
+        
+        if (wasPlaying) {
+            pauseTrack(deckNum);
+        }
+        
+        // Calcular duración de un beat en segundos
+        const secondsPerBeat = 60 / decks[deckNum].bpm;
+        
+        // Calcular nueva posición
+        let newPosition = decks[deckNum].pauseTime + (beats * secondsPerBeat);
+        
+        // Asegurarse de que está dentro de los límites
+        if (newPosition < 0) newPosition = 0;
+        if (newPosition > decks[deckNum].audioBuffer.duration) newPosition = decks[deckNum].audioBuffer.duration;
+        
+        decks[deckNum].pauseTime = newPosition;
+        
+        // Update beat position
+        updateBeatPosition(deckNum);
+        
+        if (wasPlaying) {
+            playTrack(deckNum);
+        } else {
+            // Actualizar barra de progreso
+            const progress = newPosition / decks[deckNum].audioBuffer.duration;
+            document.getElementById(`progressBar${deckNum}`).value = progress;
+            document.getElementById(`currentTime${deckNum}`).textContent = formatTime(newPosition);
+        }
+    }
+
+    // Update beat position for visualization
+    function updateBeatPosition(deckNum) {
+        if (!decks[deckNum].isLoaded || decks[deckNum].bpm === 0) return;
+        
+        // Calcular posición actual en beats
+        const secondsPerBeat = 60 / decks[deckNum].bpm;
+        decks[deckNum].currentBeat = Math.floor(decks[deckNum].pauseTime / secondsPerBeat);
+    }
+
+    // Animate progress bar
+    function animateProgress(deckNum) {
+        if (!decks[deckNum].isPlaying) return;
+        
+        const currentTime = audioContext.currentTime - decks[deckNum].startTime;
+        const duration = decks[deckNum].audioBuffer.duration;
+        const progress = currentTime / duration;
+        
+        // Update progress bar
+        document.getElementById(`progressBar${deckNum}`).value = progress;
+        document.getElementById(`currentTime${deckNum}`).textContent = formatTime(currentTime);
+        
+        // Update beat position
+        updateBeatPosition(deckNum);
+        
+        // Continue animation
+        decks[deckNum].animationFrame = requestAnimationFrame(() => animateProgress(deckNum));
+    }
+
+    // Format time
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // Detect BPM
+    function detectBPM(deckNum, audioBuffer) {
+        // Simple BPM detection (this is a placeholder)
+        // In a real application, you would use a more sophisticated algorithm
+        const estimatedBPM = Math.floor(80 + Math.random() * 60);
+        decks[deckNum].bpm = estimatedBPM;
+        document.getElementById(`bpmDisplay${deckNum}`).textContent = `${estimatedBPM} BPM`;
+    }
+
+    // Sync BPM
+    function sync(deckNum) {
+        const otherDeckNum = deckNum === 1 ? 2 : 1;
+        
+        if (!decks[otherDeckNum].isLoaded) return;
+        
+        // Set pitch to match other deck's BPM
+        const targetBPM = decks[otherDeckNum].bpm;
+        const currentBPM = decks[deckNum].bpm;
+        
+        if (currentBPM > 0) {
+            const ratio = targetBPM / currentBPM;
+            document.getElementById(`pitch${deckNum}`).value = ratio;
+            
+            if (decks[deckNum].source) {
+                decks[deckNum].source.playbackRate.value = ratio;
+            }
+        }
+    }
+
+    // Toggle EQ band
+    function toggleEQ(band, deckNum) {
+        const isEnabled = decks[deckNum].eqState[band];
+        
+        if (isEnabled) {
+            // Kill the band por completo
+            decks[deckNum].eq[band].gain.value = -40;
+            decks[deckNum].eqState[band] = false;
+        } else {
+            // Restaurar la banda al valor previo
+            decks[deckNum].eq[band].gain.value = decks[deckNum].eqValue[band];
+            decks[deckNum].eqState[band] = true;
+        }
+    }
+
+    // Start reverse
+    function startReverse(deckNum) {
+        if (!decks[deckNum].isLoaded) return;
+
+        const currentTime = decks[deckNum].isPlaying ? (audioContext.currentTime - decks[deckNum].startTime) : decks[deckNum].pauseTime;
+        
+        if (decks[deckNum].isPlaying) {
+            pauseTrack(deckNum);
+        }
+
+        decks[deckNum].isReversed = true;
+        decks[deckNum].pauseTime = decks[deckNum].audioBuffer.duration - currentTime;
+
+        playTrack(deckNum);
+    }
+
+    // Stop reverse
+    function stopReverse(deckNum) {
+        if (!decks[deckNum].isLoaded || !decks[deckNum].isReversed) return;
+
+        const currentTime = decks[deckNum].audioBuffer.duration - decks[deckNum].pauseTime;
+
+        if (decks[deckNum].isPlaying) {
+            pauseTrack(deckNum);
+        }
+
+        decks[deckNum].isReversed = false;
+        decks[deckNum].pauseTime = currentTime;
+
+        playTrack(deckNum);
+    }
+
+    // Toggle hot cue
+    function toggleHotCue(deckNum) {
+        if (!decks[deckNum].isLoaded) return;
+        
+        if (decks[deckNum].hotCue === null) {
+            // Set hot cue
+            const currentTime = decks[deckNum].isPlaying ? 
+                (audioContext.currentTime - decks[deckNum].startTime) : 
+                decks[deckNum].pauseTime;
+            
+            decks[deckNum].hotCue = currentTime;
+            
+            // Create visual marker
+            createHotCueMarker(deckNum, currentTime);
+            
+            document.getElementById(`hotCue${deckNum}`).textContent = 'GoTo';
+        } else {
+            // Go to hot cue
+            seekTrack(deckNum, decks[deckNum].hotCue / decks[deckNum].audioBuffer.duration);
+        }
+    }
+
+    // Delete hot cue
+    function deleteHotCue(deckNum) {
+        decks[deckNum].hotCue = null;
+        document.getElementById(`hotCue${deckNum}`).textContent = 'HotCue';
+        
+        // Remove visual marker
+        const markers = document.querySelectorAll(`.hot-cue-marker[data-deck="${deckNum}"]`);
+        markers.forEach(marker => marker.remove());
+    }
+
+    // Create hot cue marker
+    function createHotCueMarker(deckNum, time) {
+        const progress = time / decks[deckNum].audioBuffer.duration;
+        const waveformContainer = document.querySelector(`.waveform-deck-container.deck${deckNum}`);
+        
+        // Remove existing marker
+        const existingMarker = document.querySelector(`.hot-cue-marker[data-deck="${deckNum}"]`);
+        if (existingMarker) existingMarker.remove();
+        
+        // Create new marker
+        const marker = document.createElement('div');
+        marker.className = 'hot-cue-marker';
+        marker.dataset.deck = deckNum;
+        marker.style.left = `${progress * 100}%`;
+        
+        waveformContainer.appendChild(marker);
+    }
+
+    // Toggle effect
+    function toggleEffect(deckNum, effect) {
+        const button = document.getElementById(`effect${deckNum}-${effect}`);
+        
+        if (decks[deckNum].effects[effect]) {
+            // Disable effect
+            decks[deckNum].effects[effect] = false;
+            button.classList.remove('active');
+            
+            // Disconnect effect nodes
+            if (effect === 'cut' && decks[deckNum].cutEffect) {
+                decks[deckNum].cutEffect.disconnect();
+                decks[deckNum].cutEffect = null;
+            } else if (effect === 'flanger' && decks[deckNum].flangerEffect) {
+                decks[deckNum].flangerEffect.disconnect();
+                decks[deckNum].flangerEffect = null;
+            }
+        } else {
+            // Enable effect
+            decks[deckNum].effects[effect] = true;
+            button.classList.add('active');
+            
+            // Create and connect effect nodes
+            if (effect === 'cut') {
+                // Create a simple cut effect (mute/unmute rapidly)
+                const oscillator = audioContext.createOscillator();
+                oscillator.frequency.value = 10; // 10Hz for a choppy effect
+                const gainNode = audioContext.createGain();
+                gainNode.gain.value = 0;
+                
+                oscillator.connect(gainNode.gain);
+                oscillator.start();
+                
+                gainNode.connect(decks[deckNum].gainNode);
+                decks[deckNum].cutEffect = gainNode;
+            } else if (effect === 'flanger') {
+                // Create a simple flanger effect
+                const delay = audioContext.createDelay();
+                delay.delayTime.value = 0.005;
+                
+                const oscillator = audioContext.createOscillator();
+                oscillator.frequency.value = 0.5;
+                
+                const gain = audioContext.createGain();
+                gain.gain.value = 0.002;
+                
+                oscillator.connect(gain);
+                gain.connect(delay.delayTime);
+                
+                delay.connect(decks[deckNum].gainNode);
+                oscillator.start();
+                
+                decks[deckNum].flangerEffect = delay;
+            }
+        }
+    }
+
+    // Start loop roll
+    function startLoopRoll(deckNum, duration) {
+        if (!decks[deckNum].isLoaded || !decks[deckNum].isPlaying) return;
+
+        // Pausar pista principal
+        pauseTrack(deckNum);
+
+        const currentTime = decks[deckNum].pauseTime;
+        const startTime = currentTime;
+        const endTime = startTime + duration;
+
+        // Crear nuevo source en loop
+        const source = audioContext.createBufferSource();
+        source.buffer = decks[deckNum].audioBuffer;
+        source.loop = true;
+        source.loopStart = startTime;
+        source.loopEnd = endTime;
+
+        // Conectar source
+        source.connect(decks[deckNum].eq.bass);
+
+        // Reproducir fragmento
+        source.start(0, startTime);
+        decks[deckNum].loopRollSource = { source, startTime };
+    }
+
+    // Stop loop roll
+    function stopLoopRoll(deckNum) {
+        if (decks[deckNum].loopRollSource) {
+            const { source, startTime } = decks[deckNum].loopRollSource;
+            const now = audioContext.currentTime;
+            const loopDuration = source.loopEnd - source.loopStart;
+
+            source.stop();
+            source.disconnect();
+            decks[deckNum].loopRollSource = null;
+
+            // Calcular nuevo punto de tiempo real
+            decks[deckNum].pauseTime = startTime + ((now - decks[deckNum].startTime) % loopDuration);
+            playTrack(deckNum);
+        }
+    }
+
+    // Toggle superimpose
+    function toggleSuperimpose(deckNum) {
+        showDeck[deckNum] = !showDeck[deckNum];
+    }
+
+    // Animate all canvas elements
+    function animate() {
+        drawSuperimposedWaveform();
+        requestAnimationFrame(animate);
+    }
+
+    // draw superimposed waveform for both decks
+    function drawSuperimposedWaveform() {
+        const width = superCanvas.width;
+        const height = superCanvas.height;
+        
+        superCtx.clearRect(0, 0, width, height);
+        
+        // draw deck 1 waveform if shown and loaded
+        if (showDeck[1] && decks[1].isLoaded && decks[1].waveformData) {
+            drawDeckWaveformSegment(1, width, height);
+        }
+        
+        // draw deck 2 waveform if shown and loaded
+        if (showDeck[2] && decks[2].isLoaded && decks[2].waveformData) {
+            drawDeckWaveformSegment(2, width, height);
+        }
+    }
+
+    // draw a segment of the waveform for the top visualizer
+    function drawDeckWaveformSegment(deckNum, width, height) {
+        if (!decks[deckNum].waveformData || !decks[deckNum].isLoaded) return;
+        
+        const audioBuffer = decks[deckNum].audioBuffer;
+        if (!audioBuffer) return;
+        
+        const currentPositionSeconds = decks[deckNum].isPlaying ? 
+            (audioContext.currentTime - decks[deckNum].startTime) : 
+            decks[deckNum].pauseTime;
+        
+        const durationSeconds = audioBuffer.duration;
+        const totalSamples = audioBuffer.length;
+        const sampleRate = audioBuffer.sampleRate;
+        
+        // calculate the number of samples to display
+        // 20 seconds of audio, adjust for playback rate
+        const viewDuration = 20; 
+        const samplesPerView = viewDuration * sampleRate;
+        
+        // calculate the current sample index and the start/end samples for the view
+        const currentSampleIndex = Math.floor(currentPositionSeconds * sampleRate);
+        const startSample = Math.max(0, currentSampleIndex - samplesPerView / 2);
+        const endSample = Math.min(totalSamples, currentSampleIndex + samplesPerView / 2);
+        
+        const channelData = audioBuffer.getChannelData(0);
+        
+        // determine the number of samples per pixel for this zoomed-in view
+        const samplesPerPixel = (endSample - startSample) / width;
+        
+        let color;
+        switch(currentWaveformStyle) {
+            case 'blue-orange':
+                color = deckNum === 1 ? '#0088FF' : '#FF8800';
+                break;
+            case 'rainbow':
+                const hue = (Date.now() / 20 + deckNum * 60) % 360;
+                color = `hsl(${hue}, 100%, 60%)`;
+                break;
+            case 'mono':
+                color = deckNum === 1 ? '#CCCCCC' : '#888888';
+                break;
+            case 'gradient':
+                const gradient = superCtx.createLinearGradient(0, 0, width, 0);
+                gradient.addColorStop(0, deckNum === 1 ? '#00FF00' : '#FF0000');
+                gradient.addColorStop(1, deckNum === 1 ? '#0000FF' : '#FF00FF');
+                color = gradient;
+                break;
+            case 'bars':
+                drawBarsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
+                return;
+            case 'dots':
+                drawDotsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
+                return;
+            case 'outline':
+                drawOutlineWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
+                return;
+            default: // 'default'
+                color = deckNum === 1 ? '#00FF00' : '#FF0000';
+        }
+
+        superCtx.strokeStyle = color;
+        superCtx.lineWidth = 2;
+        
+        superCtx.beginPath();
+        for (let i = 0; i < width; i++) {
+            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
+            if (sampleIndex >= totalSamples) break;
+            
+            let min = 0;
+            let max = 0;
+            
+            // get min and max for the group of samples for this pixel
+            for (let j = 0; j < samplesPerPixel; j++) {
+                const index = sampleIndex + j;
+                if (index < totalSamples) {
+                    const value = channelData[index];
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                }
+            }
+            
+            // draw the line for the pixel
+            if (i === 0) {
+                superCtx.moveTo(i, height / 2 - min * height / 2);
+            } else {
+                superCtx.lineTo(i, height / 2 - min * height / 2);
+            }
+            superCtx.lineTo(i, height / 2 - max * height / 2);
+        }
+        superCtx.stroke();
+    }
+
+    // draw bars style waveform for superimposed view
+    function drawBarsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
+        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
+        const samplesPerPixel = (endSample - startSample) / width;
+        
+        for (let i = 0; i < width; i += 4) {
+            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
+            if (sampleIndex >= channelData.length) break;
+
+            let min = 0;
+            let max = 0;
+
+            for (let j = 0; j < samplesPerPixel; j++) {
+                const index = sampleIndex + j;
+                if (index < channelData.length) {
+                    const value = channelData[index];
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                }
+            }
+            const barHeight = (max - min) * height / 2;
+            
+            superCtx.fillStyle = color;
+            superCtx.fillRect(i, height / 2 - barHeight / 2, 3, barHeight);
+        }
+    }
+
+    // draw dots style waveform for superimposed view
+    function drawDotsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
+        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
+        const samplesPerPixel = (endSample - startSample) / width;
+        
+        superCtx.fillStyle = color;
+        
+        for (let i = 0; i < width; i += 3) {
+            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
+            if (sampleIndex >= channelData.length) break;
+
+            let min = 0;
+            let max = 0;
+
+            for (let j = 0; j < samplesPerPixel; j++) {
+                const index = sampleIndex + j;
+                if (index < channelData.length) {
+                    const value = channelData[index];
+                    if (value < min) min = value;
+                    if (value > max) max = value;
+                }
+            }
+            
+            superCtx.beginPath();
+            superCtx.arc(i, height / 2 - min * height / 2, 1.5, 0, Math.PI * 2);
+            superCtx.fill();
+            
+            superCtx.beginPath();
+            superCtx.arc(i, height / 2 - max * height / 2, 1.5, 0, Math.PI * 2);
+            superCtx.fill();
+        }
+    }
+
+    // draw outline style waveform for superimposed view
+    function drawOutlineWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
+        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
+        const samplesPerPixel = (endSample - startSample) / width;
+        
+        superCtx.strokeStyle = color;
+        superCtx.lineWidth = 1;
+        
+        // draw upper outline
+        superCtx.beginPath();
+        for (let i = 0; i < width; i++) {
+            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
+            if (sampleIndex >= channelData.length) break;
+
+            let max = 0;
+            for (let j = 0; j < samplesPerPixel; j++) {
+                const index = sampleIndex + j;
+                if (index < channelData.length) {
+                    const value = channelData[index];
+                    if (value > max) max = value;
+                }
+            }
+            
+            if (i === 0) {
+                superCtx.moveTo(i, height / 2 - max * height / 2);
+            } else {
+                superCtx.lineTo(i, height / 2 - max * height / 2);
+            }
+        }
+        superCtx.stroke();
+        
+        // draw lower outline
+        superCtx.beginPath();
+        for (let i = 0; i < width; i++) {
+            const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
+            if (sampleIndex >= channelData.length) break;
+
+            let min = 0;
+            for (let j = 0; j < samplesPerPixel; j++) {
+                const index = sampleIndex + j;
+                if (index < channelData.length) {
+                    const value = channelData[index];
+                    if (value < min) min = value;
+                }
+            }
+            
+            if (i === 0) {
+                superCtx.moveTo(i, height / 2 - min * height / 2);
+            } else {
+                superCtx.lineTo(i, height / 2 - min * height / 2);
+            }
+        }
+        superCtx.stroke();
+    }
+
+    // Set up MIDI
+    function setupMIDI() {
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess().then(
+                (midiAccess) => {
+                    console.log('MIDI access granted', midiAccess);
+                    
+                    // List available MIDI inputs
+                    const inputs = midiAccess.inputs.values();
+                    const inputSelector = document.getElementById('midiInputSelector');
+                    
+                    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+                        const option = document.createElement('option');
+                        option.value = input.value.id;
+                        option.textContent = input.value.name;
+                        inputSelector.appendChild(option);
+                        
+                        // Add event listener
+                        input.value.onmidimessage = handleMIDIMessage;
+                    }
+                },
+                (error) => {
+                    console.error('MIDI access denied', error);
+                }
+            );
+        }
+    }
+
+    // Handle MIDI message
+    function handleMIDIMessage(message) {
+        // This is a placeholder for MIDI mapping
+        // In a real application, you would map MIDI controls to deck functions
+        console.log('MIDI message received', message.data);
+    }
+
+    // Set up recording
+    function setupRecording() {
+        // This is a placeholder for recording setup
+        // In a real application, you would set up a MediaStreamDestination
+    }
+
+    // Toggle recording
+    function toggleRecording() {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    }
+
+    // Start recording
+    function startRecording() {
+        // This is a placeholder for recording implementation
+        // In a real application, you would create a MediaRecorder
+        isRecording = true;
+        document.getElementById('recordButton').textContent = 'Detener';
+        document.getElementById('saveButton').style.display = 'inline-block';
+    }
+
+    // Stop recording
+    function stopRecording() {
+        // This is a placeholder for recording implementation
+        isRecording = false;
+        document.getElementById('recordButton').textContent = 'Grabar';
+    }
+
+    // Save recording
+    function saveRecording() {
+        // This is a placeholder for recording implementation
+        alert('Grabación guardada (funcionalidad de demostración)');
+    }
+
+    // Toggle equalizer popup
+    function toggleEqualizerPopup() {
+        const popup = document.getElementById('equalizer-popup');
+        popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Toggle settings popup
+    function toggleSettingsPopup() {
+        const popup = document.getElementById('settingsPopup');
+        popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // Apply settings
+    function applySettings() {
+        // Get selected values
+        const waveformStyle = document.getElementById('waveformStyleSelector').value;
+        const recordingSource = document.getElementById('recordingSourceSelector').value;
+        const midiMapping = document.getElementById('midiMappingSelector').value;
+        
+        // Apply waveform style
+        applyWaveformStyle(waveformStyle);
+        
+        // Set recording source
+        activeRecordingSource = recordingSource;
+        
+        // Apply MIDI mapping
+        applyMIDIMapping(midiMapping);
+        
+        // Close popup
+        toggleSettingsPopup();
+    }
+
+    // Apply waveform style
+    function applyWaveformStyle(style) {
+        currentWaveformStyle = style;
+    }
+
+    // Apply MIDI mapping
+    function applyMIDIMapping(mapping) {
+        // This is a placeholder for MIDI mapping
+        // In a real application, you would change how MIDI messages are handled
+        console.log('Applying MIDI mapping:', mapping);
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', init);
+    window.addEventListener('resize', setupCanvasDimensions);
+</script>
+
+<!-- Recorder functions appended by assistant: functional WAV export -->
+<script>
     async function setupRecording() {
         try {
+            // Create or reuse a MediaStreamDestination to capture the master output
             if (!window.recordingDestination) {
                 window.recordingDestination = audioContext.createMediaStreamDestination();
             }
-            
-            document.getElementById('recordingSourceSelector').addEventListener('change', (e) => { 
-                activeRecordingSource = e.target.value; 
+
+            // Connect the end of the EQ chain to the recording destination if possible
+            try {
+                if (globalEqFilters && globalEqFilters.length > 0) {
+                    // Connect last global EQ filter to the recording destination (in addition to destination)
+                    globalEqFilters[globalEqFilters.length - 1].connect(window.recordingDestination);
+                } else {
+                    // Fallback: connect analyserMaster to recording destination
+                    analyserMaster.connect(window.recordingDestination);
+                }
+            } catch (e) {
+                console.warn("No globalEqFilters available yet:", e);
+                try { analyserMaster.connect(window.recordingDestination); } catch(e2) {}
+            }
+
+            // Prepare mic stream (for "mic" recording source)
+            window._micStream = null;
+            document.getElementById('recordingSourceSelector').addEventListener('change', (e) => {
+                activeRecordingSource = e.target.value;
             });
+
             console.log("Recording setup complete.");
         } catch (err) {
             console.error("setupRecording error:", err);
         }
     }
 
-    // Utility: encode AudioBuffer to WAV (16-bit PCM) (omitted for brevity, assume correct)
+    // Utility: encode AudioBuffer to WAV (16-bit PCM)
     function encodeWAV(audioBuffer) {
         const numChannels = audioBuffer.numberOfChannels;
         const sampleRate = audioBuffer.sampleRate;
-        const format = 1; 
+        const format = 1; // PCM
         const bitsPerSample = 16;
-        
+
+        // interleave
         let samples;
-        if (numChannels >= 2) {
+        if (numChannels === 2) {
             const left = audioBuffer.getChannelData(0);
             const right = audioBuffer.getChannelData(1);
-            const len = Math.min(left.length, right.length);
-            samples = new Int16Array(len * 2);
-            let offset = 0;
-            for (let i = 0; i < len; i++) {
-                samples[offset++] = left[i] * 0x7FFF;
-                samples[offset++] = right[i] * 0x7FFF;
+            samples = new Int16Array(left.length + right.length);
+            let index = 0;
+            for (let i = 0; i < left.length; i++) {
+                samples[index++] = Math.max(-1, Math.min(1, left[i])) * 0x7fff;
+                samples[index++] = Math.max(-1, Math.min(1, right[i])) * 0x7fff;
             }
         } else {
-            const mono = audioBuffer.getChannelData(0);
-            samples = new Int16Array(mono.length);
-            for (let i = 0; i < mono.length; i++) {
-                samples[i] = mono[i] * 0x7FFF;
+            const ch = audioBuffer.getChannelData(0);
+            samples = new Int16Array(ch.length);
+            for (let i = 0; i < ch.length; i++) {
+                samples[i] = Math.max(-1, Math.min(1, ch[i])) * 0x7fff;
             }
         }
-        
-        const dataSize = samples.byteLength;
+
+        const blockAlign = numChannels * bitsPerSample / 8;
+        const byteRate = sampleRate * blockAlign;
+        const dataSize = samples.length * (bitsPerSample / 8);
         const buffer = new ArrayBuffer(44 + dataSize);
         const view = new DataView(buffer);
-        
-        /* RIFF identifier */ writeString(view, 0, 'RIFF');
-        /* file length */ view.setUint32(4, 36 + dataSize, true);
-        /* RIFF type */ writeString(view, 8, 'WAVE');
-        /* format chunk identifier */ writeString(view, 12, 'fmt ');
-        /* format chunk length */ view.setUint32(16, 16, true);
-        /* sample format (1 = PCM) */ view.setUint16(20, format, true);
-        /* channel count */ view.setUint16(22, numChannels >= 2 ? 2 : 1, true); // Force stereo or mono
-        /* sample rate */ view.setUint32(24, sampleRate, true);
-        /* byte rate (sample rate * block align) */ view.setUint32(28, sampleRate * (numChannels >= 2 ? 2 : 1) * (bitsPerSample / 8), true);
-        /* block align (channel count * bytes per sample) */ view.setUint16(32, (numChannels >= 2 ? 2 : 1) * (bitsPerSample / 8), true);
-        /* bits per sample */ view.setUint16(34, bitsPerSample, true);
-        /* data chunk identifier */ writeString(view, 36, 'data');
-        /* data chunk length */ view.setUint32(40, dataSize, true);
-        
+
+        /* RIFF identifier */
+        writeString(view, 0, 'RIFF');
+        /* file length */
+        view.setUint32(4, 36 + dataSize, true);
+        /* RIFF type */
+        writeString(view, 8, 'WAVE');
+        /* format chunk identifier */
+        writeString(view, 12, 'fmt ');
+        /* format chunk length */
+        view.setUint32(16, 16, true);
+        /* sample format (raw) */
+        view.setUint16(20, format, true);
+        /* channel count */
+        view.setUint16(22, numChannels, true);
+        /* sample rate */
+        view.setUint32(24, sampleRate, true);
+        /* byte rate (sample rate * block align) */
+        view.setUint32(28, byteRate, true);
+        /* block align (channel count * bytes per sample) */
+        view.setUint16(32, blockAlign, true);
+        /* bits per sample */
+        view.setUint16(34, bitsPerSample, true);
+        /* data chunk identifier */
+        writeString(view, 36, 'data');
+        /* data chunk length */
+        view.setUint32(40, dataSize, true);
+
+        // write the PCM samples
         let offset = 44;
         for (let i = 0; i < samples.length; i++, offset += 2) {
             view.setInt16(offset, samples[i], true);
         }
-        
+
         return new Blob([view], { type: 'audio/wav' });
-        
+
         function writeString(dataview, offset, string) {
             for (let i = 0; i < string.length; i++) {
                 dataview.setUint8(offset + i, string.charCodeAt(i));
@@ -1147,63 +1803,65 @@ h1 { text-align: center; margin-top: 0; }
         }
     }
 
-    // Convert arbitrary audio Blob (like webm/opus) to WAV by decoding and re-encoding (omitted for brevity, assume correct)
+    // Convert arbitrary audio Blob (like webm/opus) to WAV by decoding and re-encoding
     async function convertBlobToWav(blob) {
         const arrayBuffer = await blob.arrayBuffer();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        
-        // Simplemente codificamos lo que hemos grabado (MediaRecorder)
-        
-        // Creamos un Offline Audio Context para asegurar el formato de salida (por ejemplo, a Stereo)
-        const offlineContext = new OfflineAudioContext(2, audioBuffer.length, audioBuffer.sampleRate);
-        const source = offlineContext.createBufferSource();
-        source.buffer = audioBuffer;
-        
-        // Si es mono o tiene más canales, forzamos la salida a dos (estéreo)
-        const merger = offlineContext.createChannelMerger(2);
-        source.connect(merger, 0, 0);
-        if (audioBuffer.numberOfChannels > 1) {
-            source.connect(merger, 1, 1);
+        // If channel count >2, downmix to stereo
+        if (audioBuffer.numberOfChannels > 2) {
+            // create stereo buffer
+            const offline = audioContext.createBuffer(2, audioBuffer.length, audioBuffer.sampleRate);
+            const outL = offline.getChannelData(0);
+            const outR = offline.getChannelData(1);
+            for (let i = 0; i < audioBuffer.length; i++) {
+                let sumL = 0, sumR = 0;
+                for (let ch = 0; ch < audioBuffer.numberOfChannels; ch++) {
+                    const d = audioBuffer.getChannelData(ch)[i];
+                    if (ch % 2 === 0) sumL += d; else sumR += d;
+                }
+                outL[i] = sumL / Math.ceil(audioBuffer.numberOfChannels / 2);
+                outR[i] = sumR / Math.floor(audioBuffer.numberOfChannels / 2);
+            }
+            return encodeWAV(offline);
         } else {
-            source.connect(merger, 0, 1); // Duplicar mono a estéreo
+            return encodeWAV(audioBuffer);
         }
-        merger.connect(offlineContext.destination);
-        
-        source.start(0);
-        const processedBuffer = await offlineContext.startRendering();
-        
-        return encodeWAV(processedBuffer);
     }
-    
-    // Toggle recording (omitted for brevity, assume correct)
+
+    // Toggle recording (start/stop)
     async function toggleRecording() {
-        if (audioContext.state === 'suspended') {
-            await audioContext.resume();
-        }
-        
         try {
+            const button = document.getElementById('recordButton');
             if (!isRecording) {
                 // Start recording
-                let streamToRecord;
-                
-                if (activeRecordingSource === 'mic') {
+                // Ensure recordingDestination is ready
+                await setupRecording();
+
+                const sourceSelector = document.getElementById('recordingSourceSelector').value;
+                let stream;
+                if (sourceSelector === 'mic') {
+                    // ask for mic permissions and use mic stream
                     window._micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    streamToRecord = window._micStream;
+                    stream = window._micStream;
                 } else {
+                    // master output stream
                     if (!window.recordingDestination) {
-                        await setupRecording();
+                        alert('No recording destination available.');
+                        return;
                     }
-                    streamToRecord = window.recordingDestination.stream;
+                    stream = window.recordingDestination.stream;
                 }
-                
-                if (!streamToRecord) {
-                    throw new Error("No stream available for recording.");
+
+                // Use MediaRecorder (will likely be webm/opus) and then convert to WAV
+                const options = { mimeType: 'audio/webm' };
+                try {
+                    mediaRecorder = new MediaRecorder(stream, options);
+                } catch (e) {
+                    // fallback without mimeType
+                    mediaRecorder = new MediaRecorder(stream);
                 }
 
                 recordedChunks = [];
-                // Usar codec de alta calidad (48kHz, mono/stereo)
-                mediaRecorder = new MediaRecorder(streamToRecord, { mimeType: 'audio/webm; codecs=opus' });
-
                 mediaRecorder.ondataavailable = (ev) => {
                     if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data);
                 };
@@ -1211,37 +1869,37 @@ h1 { text-align: center; margin-top: 0; }
                 mediaRecorder.onstop = async () => {
                     try {
                         const blob = new Blob(recordedChunks, { type: recordedChunks[0].type || 'audio/webm' });
+                        // Convert to WAV
                         const wavBlob = await convertBlobToWav(blob);
                         lastWavBlob = wavBlob;
-                        
+                        // Show save button
                         document.getElementById('saveButton').style.display = 'inline-block';
-                        
+                        // Create automatic download link (temporary)
                         const url = URL.createObjectURL(wavBlob);
                         const a = document.createElement('a');
-                        a.style.display = 'none';
                         a.href = url;
                         a.download = 'rtbs_recording_' + new Date().toISOString().replace(/[:.]/g,'-') + '.wav';
                         document.body.appendChild(a);
                         a.click();
                         a.remove();
                         URL.revokeObjectURL(url);
-
-                    } catch(e) {
-                        console.error("Error on mediaRecorder stop/convert:", e);
-                        alert('Error al procesar la grabación. Mira la consola.');
+                    } catch (err) {
+                        console.error('Error converting recording to WAV:', err);
+                        alert('Error al convertir la grabación a WAV. Revisa la consola.');
                     }
                 };
 
                 mediaRecorder.start();
                 isRecording = true;
-                document.getElementById('recordButton').textContent = 'Detener';
-                document.getElementById('recordButton').style.background = '#AA0000';
+                button.textContent = 'Grabando...';
+                button.style.background = '#AA0000';
                 console.log('Recording started.');
             } else {
                 // Stop recording
                 if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                     mediaRecorder.stop();
                 }
+                // stop mic stream if used
                 if (window._micStream) {
                     window._micStream.getTracks().forEach(t => t.stop());
                     window._micStream = null;
@@ -1257,7 +1915,7 @@ h1 { text-align: center; margin-top: 0; }
         }
     }
 
-    // Save last WAV to disk (if exists) (omitted for brevity, assume correct)
+    // Save last WAV to disk (if exists)
     function saveRecording() {
         if (!lastWavBlob) {
             alert('No hay grabación para guardar.');
@@ -1273,9 +1931,6 @@ h1 { text-align: center; margin-top: 0; }
         a.remove();
         URL.revokeObjectURL(url);
     }
-
-    window.addEventListener('load', init);
-    window.addEventListener('resize', setupCanvasDimensions);
-                </script>
+</script>
 </body>
 </html>

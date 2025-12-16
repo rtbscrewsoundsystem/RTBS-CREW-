@@ -1319,7 +1319,7 @@ footer {
         </h2>
 
         <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
-            Análisis técnico del desarrollo y estado actual de las características del controlador DJ.
+          Análisis técnico del desarrollo y estado actual de las características del controlador DJ.
         </p>
 
         <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
@@ -1331,6 +1331,13 @@ footer {
                         <ul>
                             <li>Animación de plato giratorio que se detiene en **pausa** (con botón de **Play/Pausa**).</li>
                             <li>Selector de archivo de audio para cargar pista individualmente en cada deck.</li>
+                            <li>Botón de **Revés (Reverse)** para reproducción inversa de la pista en cada Deck.</li>
+                        </ul>
+                    </li>
+                    <li>**Control de Cues y Loops:**
+                        <ul>
+                            <li>Funcionalidad completa de **Hot Cues** (Home Cue) con botón de eliminación por Hot Cue.</li>
+                            <li>**Controles de Loop** implementados perfectamente en fracciones: $\frac{1}{8}$, $\frac{1}{16}$, $\frac{1}{4}$, $\frac{2}{1}$, $\frac{2}{2}$ y 1 entero.</li>
                         </ul>
                     </li>
                     <li>**Ecualización por Deck:**
@@ -1346,10 +1353,11 @@ footer {
                             <li>**Crossfader** funcional.</li>
                         </ul>
                     </li>
-                    <li>**Visualizadores de Onda:**
+                    <li>**Visualizadores de Onda y Personalización:**
                         <ul>
-                            <li>**Visualizador Superior (Recuadro Azul):** Muestra la superposición de las ondas de audio de ambos Decks, avanzando con el tiempo de reproducción.</li>
-                            <li>**Visualizadores Inferiores (Verde/Rojo):** Muestra el espectro de onda completo de las pistas cargadas en el Deck 1 y Deck 2, respectivamente.</li>
+                            <li>**Visualizador Superior (Recuadro Azul):** Superposición de ondas de audio de ambos Decks, sincronizada con el tiempo de reproducción.</li>
+                            <li>**Visualizadores Inferiores (Verde/Rojo):** Muestra el espectro de onda completo de las pistas.</li>
+                            <li>**Personalización de Color** del Visualizador: Ajustes de color para las ondas (Verde, Rojo, Azul, Naranja, Arcoíris, Monocromático, Degradado, Barras, Puntos y Contornos).</li>
                         </ul>
                     </li>
                     <li>**Master y Pitch:**
@@ -1369,15 +1377,13 @@ footer {
                             <li>Funcionalidad implementada, pero requiere ajuste fino para asegurar una precisión de **4 tiempos** exactos.</li>
                         </ul>
                     </li>
-                    <li>**Controles de Loop:** Implementación de loops definidos ($\frac{1}{8}$, $\frac{1}{16}$, $\frac{1}{4}$, $\frac{2}{1}$, $\frac{2}{2}$ y 1 entero).</li>
                     <li>**Sincronización (SYNC):** Botón de sincronización. Requiere refinamiento para optimizar la precisión algorítmica.</li>
-                    <li>**Hot Cues:** Configuración y funcionalidad de los botones **Hot Cue** para cada Deck (incluye botón para eliminar el Hot Cue).</li>
                     <li>**Opción de Grabación:** Funcionalidad en desarrollo y optimización (actualmente graba correctamente, pero requiere implementación de interfaz final).</li>
-                    <li>**Rueda de Ajuste (Configuración):** Módulos de configuración pendientes de implementar/mejorar:
+                    <li>**Rueda de Ajuste (Configuración):** Módulos pendientes de implementar/mejorar:
                         <ul>
-                            <li>Salida de sonido, controlador **MIDI** y mapa MIDI.</li>
+                            <li>Configuración de salida de sonido.</li>
+                            <li>Configuración de controlador **MIDI** y mapa MIDI.</li>
                             <li>Puntos de grabación (Master/Micrófono).</li>
-                            <li>Personalización del Visualizador (Colores: Verde, Rojo, Azul, Naranja, Arcoíris, Monocromático, Degradado, Barras, Puntos y Contornos).</li>
                         </ul>
                     </li>
                 </ul>
@@ -1387,7 +1393,6 @@ footer {
                 <h3 style="color: #FF0000; margin-top: 0;">❌ Por Implementar (Roadmap Futuro)</h3>
                 <ul style="list-style-type: '🛑 '; padding-left: 20px;">
                     <li>**Efectos Master/Deck:** Implementación de efectos de audio **Echo**, **Cut** y **Flanger**.</li>
-                    <li>**Función de Reverse:** Botón de **Revés (Reverse)** para reproducción inversa de la pista en cada Deck.</li>
                 </ul>
             </div>
 

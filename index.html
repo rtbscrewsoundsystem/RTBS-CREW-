@@ -1302,282 +1302,99 @@ footer {
     <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
   </div>
     
-   <section id="dj-controller-desc" style="
-    background-color: #1a1a1a;
-    color: #00FF00;
-    padding: 20px;
-    margin-bottom: 30px;
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-    font-family: 'Arial', sans-serif;
-">
-    <h2 style="text-align: center; color: #00FF00; margin-top: 0; border-bottom: 1px solid #00FF00; padding-bottom: 10px;">
-        ⚙️ RTBS CREW DJ CONTROLLER MIX - Estado de Funcionalidades
-    </h2>
+    <div id="dj" class="seccion" style="display:none;">
 
-    <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
-        Análisis técnico del desarrollo y estado actual de las características del controlador DJ.
-    </p>
-
-    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
-
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #00FF00; background-color: #2a2a2a;">
-            <h3 style="color: #00FF00; margin-top: 0;">✅ Funcionalidades Estables (Completas)</h3>
-            <ul style="list-style-type: '⚡ '; padding-left: 20px;">
-                <li>**Control de Decks (Plato 1 y Plato 2):**
-                    <ul>
-                        <li>Animación de plato giratorio que se detiene en **pausa** (con botón de **Play/Pausa**).</li>
-                        <li>Selector de archivo de audio para cargar pista individualmente en cada deck.</li>
-                    </ul>
-                </li>
-                <li>**Ecualización por Deck:**
-                    <ul>
-                        <li>Control de **Graves, Medios y Agudos** con Ganancia (Gain).</li>
-                        <li>Filtros (pasa-alto/pasa-bajo) individuales.</li>
-                        <li>Opciones **Kill** para anulación inmediata de Graves, Medios o Agudos.</li>
-                    </ul>
-                </li>
-                <li>**Faders y Crossfader:**
-                    <ul>
-                        <li>Dos (2) faders de volumen totalmente funcionales por Deck.</li>
-                        <li>**Crossfader** funcional.</li>
-                    </ul>
-                </li>
-                <li>**Visualizadores de Onda:**
-                    <ul>
-                        <li>**Visualizador Superior (Recuadro Azul):** Muestra la superposición de las ondas de audio de ambos Decks, avanzando con el tiempo de reproducción.</li>
-                        <li>**Visualizadores Inferiores (Verde/Rojo):** Muestra el espectro de onda completo de las pistas cargadas en el Deck 1 y Deck 2, respectivamente.</li>
-                    </ul>
-                </li>
-                <li>**Master y Pitch:**
-                    <ul>
-                        <li>Módulo de ecualización **Master de 31 bandas** (funcionalidad base).</li>
-                        <li>Línea de control de **Pitch** para ajustar la velocidad (BPM) de la canción.</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FFA500; background-color: #2a2a2a;">
-            <h3 style="color: #FFA500; margin-top: 0;">⚠️ En Desarrollo y Mejora Continua</h3>
-            <ul style="list-style-type: '🚧 '; padding-left: 20px;">
-                <li>**Controles de Nudge (Avanzar/Retroceder):**
-                    <ul>
-                        <li>Funcionalidad implementada, pero requiere ajuste fino para asegurar una precisión de **4 tiempos** exactos.</li>
-                    </ul>
-                </li>
-                <li>**Controles de Loop:** Implementación de loops definidos ($\frac{1}{8}$, $\frac{1}{16}$, $\frac{1}{4}$, $\frac{2}{1}$, $\frac{2}{2}$ y 1 entero).</li>
-                <li>**Sincronización (SYNC):** Botón de sincronización. Requiere refinamiento para optimizar la precisión algorítmica.</li>
-                <li>**Hot Cues:** Configuración y funcionalidad de los botones **Hot Cue** para cada Deck (incluye botón para eliminar el Hot Cue).</li>
-                <li>**Opción de Grabación:** Funcionalidad en desarrollo y optimización (actualmente graba correctamente, pero requiere implementación de interfaz final).</li>
-                <li>**Rueda de Ajuste (Configuración):** Módulos de configuración pendientes de implementar/mejorar:
-                    <ul>
-                        <li>Salida de sonido, controlador **MIDI** y mapa MIDI.</li>
-                        <li>Puntos de grabación (Master/Micrófono).</li>
-                        <li>Personalización del Visualizador (Colores: Verde, Rojo, Azul, Naranja, Arcoíris, Monocromático, Degradado, Barras, Puntos y Contornos).</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FF0000; background-color: #2a2a2a;">
-            <h3 style="color: #FF0000; margin-top: 0;">❌ Por Implementar (Roadmap Futuro)</h3>
-            <ul style="list-style-type: '🛑 '; padding-left: 20px;">
-                <li>**Efectos Master/Deck:** Implementación de efectos de audio **Echo**, **Cut** y **Flanger**.</li>
-                <li>**Función de Reverse:** Botón de **Revés (Reverse)** para reproducción inversa de la pista en cada Deck.</li>
-            </ul>
-        </div>
-
-    </div>
-</section>
-
-
-<div id="dj" class="seccion" style="display:none;">
- <section id="dj-controller-desc" style="
-    background-color: #1a1a1a;
-    color: #00FF00;
-    padding: 20px;
-    margin-bottom: 30px;
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-    font-family: 'Arial', sans-serif;
-">
-    <h2 style="text-align: center; color: #00FF00; margin-top: 0; border-bottom: 1px solid #00FF00; padding-bottom: 10px;">
-        ⚙️ RTBS CREW DJ CONTROLLER MIX - Estado de Funcionalidades
-    </h2>
-
-    <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
-        Análisis técnico del desarrollo y estado actual de las características del controlador DJ.
-    </p>
-
-    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
-
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #00FF00; background-color: #2a2a2a;">
-            <h3 style="color: #00FF00; margin-top: 0;">✅ Funcionalidades Estables (Completas)</h3>
-            <ul style="list-style-type: '⚡ '; padding-left: 20px;">
-                <li>**Control de Decks (Plato 1 y Plato 2):**
-                    <ul>
-                        <li>Animación de plato giratorio que se detiene en **pausa** (con botón de **Play/Pausa**).</li>
-                        <li>Selector de archivo de audio para cargar pista individualmente en cada deck.</li>
-                    </ul>
-                </li>
-                <li>**Ecualización por Deck:**
-                    <ul>
-                        <li>Control de **Graves, Medios y Agudos** con Ganancia (Gain).</li>
-                        <li>Filtros (pasa-alto/pasa-bajo) individuales.</li>
-                        <li>Opciones **Kill** para anulación inmediata de Graves, Medios o Agudos.</li>
-                    </ul>
-                </li>
-                <li>**Faders y Crossfader:**
-                    <ul>
-                        <li>Dos (2) faders de volumen totalmente funcionales por Deck.</li>
-                        <li>**Crossfader** funcional.</li>
-                    </ul>
-                </li>
-                <li>**Visualizadores de Onda:**
-                    <ul>
-                        <li>**Visualizador Superior (Recuadro Azul):** Muestra la superposición de las ondas de audio de ambos Decks, avanzando con el tiempo de reproducción.</li>
-                        <li>**Visualizadores Inferiores (Verde/Rojo):** Muestra el espectro de onda completo de las pistas cargadas en el Deck 1 y Deck 2, respectivamente.</li>
-                    </ul>
-                </li>
-                <li>**Master y Pitch:**
-                    <ul>
-                        <li>Módulo de ecualización **Master de 31 bandas** (funcionalidad base).</li>
-                        <li>Línea de control de **Pitch** para ajustar la velocidad (BPM) de la canción.</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FFA500; background-color: #2a2a2a;">
-            <h3 style="color: #FFA500; margin-top: 0;">⚠️ En Desarrollo y Mejora Continua</h3>
-            <ul style="list-style-type: '🚧 '; padding-left: 20px;">
-                <li>**Controles de Nudge (Avanzar/Retroceder):**
-                    <ul>
-                        <li>Funcionalidad implementada, pero requiere ajuste fino para asegurar una precisión de **4 tiempos** exactos.</li>
-                    </ul>
-                </li>
-                <li>**Controles de Loop:** Implementación de loops definidos ($\frac{1}{8}$, $\frac{1}{16}$, $\frac{1}{4}$, $\frac{2}{1}$, $\frac{2}{2}$ y 1 entero).</li>
-                <li>**Sincronización (SYNC):** Botón de sincronización. Requiere refinamiento para optimizar la precisión algorítmica.</li>
-                <li>**Hot Cues:** Configuración y funcionalidad de los botones **Hot Cue** para cada Deck (incluye botón para eliminar el Hot Cue).</li>
-                <li>**Opción de Grabación:** Funcionalidad en desarrollo y optimización (actualmente graba correctamente, pero requiere implementación de interfaz final).</li>
-                <li>**Rueda de Ajuste (Configuración):** Módulos de configuración pendientes de implementar/mejorar:
-                    <ul>
-                        <li>Salida de sonido, controlador **MIDI** y mapa MIDI.</li>
-                        <li>Puntos de grabación (Master/Micrófono).</li>
-                        <li>Personalización del Visualizador (Colores: Verde, Rojo, Azul, Naranja, Arcoíris, Monocromático, Degradado, Barras, Puntos y Contornos).</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FF0000; background-color: #2a2a2a;">
-            <h3 style="color: #FF0000; margin-top: 0;">❌ Por Implementar (Roadmap Futuro)</h3>
-            <ul style="list-style-type: '🛑 '; padding-left: 20px;">
-                <li>**Efectos Master/Deck:** Implementación de efectos de audio **Echo**, **Cut** y **Flanger**.</li>
-                <li>**Función de Reverse:** Botón de **Revés (Reverse)** para reproducción inversa de la pista en cada Deck.</li>
-            </ul>
-        </div>
-
-    </div>
-</section>
-
-
-<div id="dj" class="seccion" style="display:none;">
     <section id="dj-controller-desc" style="
-    background-color: #1a1a1a;
-    color: #00FF00;
-    padding: 20px;
-    margin-bottom: 30px;
-    border: 2px solid #00FF00;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-    font-family: 'Arial', sans-serif;
-">
-    <h2 style="text-align: center; color: #00FF00; margin-top: 0; border-bottom: 1px solid #00FF00; padding-bottom: 10px;">
-        ⚙️ RTBS CREW DJ CONTROLLER MIX - Estado de Funcionalidades
-    </h2>
+        background-color: #1a1a1a;
+        color: #00FF00;
+        padding: 20px;
+        margin-bottom: 30px;
+        border: 2px solid #00FF00;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        font-family: 'Arial', sans-serif;
+    ">
+        <h2 style="text-align: center; color: #00FF00; margin-top: 0; border-bottom: 1px solid #00FF00; padding-bottom: 10px;">
+            ⚙️ RTBS CREW DJ CONTROLLER MIX - Estado de Funcionalidades
+        </h2>
 
-    <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
-        Análisis técnico del desarrollo y estado actual de las características del controlador DJ.
-    </p>
+        <p style="text-align: center; font-size: 1.1em; margin-bottom: 20px;">
+            Análisis técnico del desarrollo y estado actual de las características del controlador DJ.
+        </p>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between;">
 
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #00FF00; background-color: #2a2a2a;">
-            <h3 style="color: #00FF00; margin-top: 0;">✅ Funcionalidades Estables (Completas)</h3>
-            <ul style="list-style-type: '⚡ '; padding-left: 20px;">
-                <li>**Control de Decks (Plato 1 y Plato 2):**
-                    <ul>
-                        <li>Animación de plato giratorio que se detiene en **pausa** (con botón de **Play/Pausa**).</li>
-                        <li>Selector de archivo de audio para cargar pista individualmente en cada deck.</li>
-                    </ul>
-                </li>
-                <li>**Ecualización por Deck:**
-                    <ul>
-                        <li>Control de **Graves, Medios y Agudos** con Ganancia (Gain).</li>
-                        <li>Filtros (pasa-alto/pasa-bajo) individuales.</li>
-                        <li>Opciones **Kill** para anulación inmediata de Graves, Medios o Agudos.</li>
-                    </ul>
-                </li>
-                <li>**Faders y Crossfader:**
-                    <ul>
-                        <li>Dos (2) faders de volumen totalmente funcionales por Deck.</li>
-                        <li>**Crossfader** funcional.</li>
-                    </ul>
-                </li>
-                <li>**Visualizadores de Onda:**
-                    <ul>
-                        <li>**Visualizador Superior (Recuadro Azul):** Muestra la superposición de las ondas de audio de ambos Decks, avanzando con el tiempo de reproducción.</li>
-                        <li>**Visualizadores Inferiores (Verde/Rojo):** Muestra el espectro de onda completo de las pistas cargadas en el Deck 1 y Deck 2, respectivamente.</li>
-                    </ul>
-                </li>
-                <li>**Master y Pitch:**
-                    <ul>
-                        <li>Módulo de ecualización **Master de 31 bandas** (funcionalidad base).</li>
-                        <li>Línea de control de **Pitch** para ajustar la velocidad (BPM) de la canción.</li>
-                    </ul>
-                </li>
-            </ul>
+            <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #00FF00; background-color: #2a2a2a;">
+                <h3 style="color: #00FF00; margin-top: 0;">✅ Funcionalidades Estables (Completas)</h3>
+                <ul style="list-style-type: '⚡ '; padding-left: 20px;">
+                    <li>**Control de Decks (Plato 1 y Plato 2):**
+                        <ul>
+                            <li>Animación de plato giratorio que se detiene en **pausa** (con botón de **Play/Pausa**).</li>
+                            <li>Selector de archivo de audio para cargar pista individualmente en cada deck.</li>
+                        </ul>
+                    </li>
+                    <li>**Ecualización por Deck:**
+                        <ul>
+                            <li>Control de **Graves, Medios y Agudos** con Ganancia (Gain).</li>
+                            <li>Filtros (pasa-alto/pasa-bajo) individuales.</li>
+                            <li>Opciones **Kill** para anulación inmediata de Graves, Medios o Agudos.</li>
+                        </ul>
+                    </li>
+                    <li>**Faders y Crossfader:**
+                        <ul>
+                            <li>Dos (2) faders de volumen totalmente funcionales por Deck.</li>
+                            <li>**Crossfader** funcional.</li>
+                        </ul>
+                    </li>
+                    <li>**Visualizadores de Onda:**
+                        <ul>
+                            <li>**Visualizador Superior (Recuadro Azul):** Muestra la superposición de las ondas de audio de ambos Decks, avanzando con el tiempo de reproducción.</li>
+                            <li>**Visualizadores Inferiores (Verde/Rojo):** Muestra el espectro de onda completo de las pistas cargadas en el Deck 1 y Deck 2, respectivamente.</li>
+                        </ul>
+                    </li>
+                    <li>**Master y Pitch:**
+                        <ul>
+                            <li>Módulo de ecualización **Master de 31 bandas** (funcionalidad base).</li>
+                            <li>Línea de control de **Pitch** para ajustar la velocidad (BPM) de la canción.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FFA500; background-color: #2a2a2a;">
+                <h3 style="color: #FFA500; margin-top: 0;">⚠️ En Desarrollo y Mejora Continua</h3>
+                <ul style="list-style-type: '🚧 '; padding-left: 20px;">
+                    <li>**Controles de Nudge (Avanzar/Retroceder):**
+                        <ul>
+                            <li>Funcionalidad implementada, pero requiere ajuste fino para asegurar una precisión de **4 tiempos** exactos.</li>
+                        </ul>
+                    </li>
+                    <li>**Controles de Loop:** Implementación de loops definidos ($\frac{1}{8}$, $\frac{1}{16}$, $\frac{1}{4}$, $\frac{2}{1}$, $\frac{2}{2}$ y 1 entero).</li>
+                    <li>**Sincronización (SYNC):** Botón de sincronización. Requiere refinamiento para optimizar la precisión algorítmica.</li>
+                    <li>**Hot Cues:** Configuración y funcionalidad de los botones **Hot Cue** para cada Deck (incluye botón para eliminar el Hot Cue).</li>
+                    <li>**Opción de Grabación:** Funcionalidad en desarrollo y optimización (actualmente graba correctamente, pero requiere implementación de interfaz final).</li>
+                    <li>**Rueda de Ajuste (Configuración):** Módulos de configuración pendientes de implementar/mejorar:
+                        <ul>
+                            <li>Salida de sonido, controlador **MIDI** y mapa MIDI.</li>
+                            <li>Puntos de grabación (Master/Micrófono).</li>
+                            <li>Personalización del Visualizador (Colores: Verde, Rojo, Azul, Naranja, Arcoíris, Monocromático, Degradado, Barras, Puntos y Contornos).</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FF0000; background-color: #2a2a2a;">
+                <h3 style="color: #FF0000; margin-top: 0;">❌ Por Implementar (Roadmap Futuro)</h3>
+                <ul style="list-style-type: '🛑 '; padding-left: 20px;">
+                    <li>**Efectos Master/Deck:** Implementación de efectos de audio **Echo**, **Cut** y **Flanger**.</li>
+                    <li>**Función de Reverse:** Botón de **Revés (Reverse)** para reproducción inversa de la pista en cada Deck.</li>
+                </ul>
+            </div>
+
         </div>
-
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FFA500; background-color: #2a2a2a;">
-            <h3 style="color: #FFA500; margin-top: 0;">⚠️ En Desarrollo y Mejora Continua</h3>
-            <ul style="list-style-type: '🚧 '; padding-left: 20px;">
-                <li>**Controles de Nudge (Avanzar/Retroceder):**
-                    <ul>
-                        <li>Funcionalidad implementada, pero requiere ajuste fino para asegurar una precisión de **4 tiempos** exactos.</li>
-                    </ul>
-                </li>
-                <li>**Controles de Loop:** Implementación de loops definidos ($\frac{1}{8}$, $\frac{1}{16}$, $\frac{1}{4}$, $\frac{2}{1}$, $\frac{2}{2}$ y 1 entero).</li>
-                <li>**Sincronización (SYNC):** Botón de sincronización. Requiere refinamiento para optimizar la precisión algorítmica.</li>
-                <li>**Hot Cues:** Configuración y funcionalidad de los botones **Hot Cue** para cada Deck (incluye botón para eliminar el Hot Cue).</li>
-                <li>**Opción de Grabación:** Funcionalidad en desarrollo y optimización (actualmente graba correctamente, pero requiere implementación de interfaz final).</li>
-                <li>**Rueda de Ajuste (Configuración):** Módulos de configuración pendientes de implementar/mejorar:
-                    <ul>
-                        <li>Salida de sonido, controlador **MIDI** y mapa MIDI.</li>
-                        <li>Puntos de grabación (Master/Micrófono).</li>
-                        <li>Personalización del Visualizador (Colores: Verde, Rojo, Azul, Naranja, Arcoíris, Monocromático, Degradado, Barras, Puntos y Contornos).</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        
-        <div style="flex: 1; min-width: 300px; padding: 15px; border-left: 3px solid #FF0000; background-color: #2a2a2a;">
-            <h3 style="color: #FF0000; margin-top: 0;">❌ Por Implementar (Roadmap Futuro)</h3>
-            <ul style="list-style-type: '🛑 '; padding-left: 20px;">
-                <li>**Efectos Master/Deck:** Implementación de efectos de audio **Echo**, **Cut** y **Flanger**.</li>
-                <li>**Función de Reverse:** Botón de **Revés (Reverse)** para reproducción inversa de la pista en cada Deck.</li>
-            </ul>
-        </div>
-
-    </div>
-</section>
+    </section>
 
 
-<div id="dj" class="seccion" style="display:none;">
     <h2>🎚️ REPRODUCTOR DJ 🎚️</h2>
     
     <div style="text-align:right; margin-bottom:10px;">

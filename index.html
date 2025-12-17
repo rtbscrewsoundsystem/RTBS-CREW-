@@ -190,6 +190,40 @@ h1 span:nth-child(even){
     100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
 }
 
+    /* --- Efecto Contorno Azul Windows XP para textos verdes --- */
+
+/* Aplicar a todo el cuerpo para capturar textos por defecto */
+body {
+    text-shadow: 
+        -1px -1px 0 #0000FF,  
+         1px -1px 0 #0000FF,
+        -1px  1px 0 #0000FF,
+         1px  1px 0 #0000FF,
+         0px 0px 8px #0000FF; /* Resplandor extra tipo neón XP */
+}
+
+/* Modificar los elementos específicos que ya tenían efectos verdes */
+.loader-rtbs, h1, nav a, .vinyl-links a, .link-extra, .post-link a, footer {
+    color: #00FF00 !important; /* Aseguramos el verde chillón */
+    text-shadow: 
+        -2px -2px 0 #0000FF,  
+         2px -2px 0 #0000FF,
+        -2px  2px 0 #0000FF,
+         2px  2px 0 #0000FF !important;
+}
+
+/* Ajuste especial para el título H1 que tiene varios colores */
+h1 span:nth-child(odd) {
+    color: #00FF00;
+    text-shadow: 2px 2px 0 #0000FF !important;
+}
+
+/* Botones y enlaces al pasar el ratón */
+nav a:hover, .bandcamp-link:hover, .btn-volver:hover {
+    box-shadow: 0 0 15px #0000FF;
+    border-color: #0000FF !important;
+}
+
 /* --- Menú lateral tribal rave --- */
 nav { 
     width:220px; 

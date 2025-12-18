@@ -341,6 +341,34 @@ nav a:first-child {
     display: none;
 }
 
+    /* --- SISTEMA DE MODO CLARO (NEGATIVO) --- */
+
+/* Clase que se aplicará al body */
+body.light-mode {
+    filter: invert(1) hue-rotate(180deg); /* Invierte colores y ajusta el tono para mantener la coherencia */
+    background: #fff; /* Fondo blanco en modo claro */
+}
+
+/* Evitar que imágenes y vídeos se vean en negativo */
+body.light-mode img, 
+body.light-mode video, 
+body.light-mode iframe,
+body.light-mode .tribal-background,
+body.light-mode .vinyl-decoration,
+body.light-mode .dj-photo {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* Ajuste de contraste para el modo claro */
+body.light-mode .overlay {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+body.light-mode nav {
+    border-right: 3px solid #ff00ff; /* El verde invertido suele ser púrpura/rosa */
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+    
     /* --- Estilos para páginas detalladas de lanzamientos --- */
 .lanzamiento-detalle {
     display: none;
@@ -1361,6 +1389,8 @@ footer {
 </div>
 
 <nav>
+  <a href="#" onclick="toggleTheme()" id="theme-toggle" style="background: #00FF00; color: #000; font-weight: bold; border: 2px solid #fff; margin-bottom: 15px;">MODO CLARO 💡</a>
+
   <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
   <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
   <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
@@ -2776,6 +2806,23 @@ function showTab(tabId) {
     if (section) section.style.display = 'block';
 }
 
+    function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('theme-toggle');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        btn.innerHTML = "MODO OSCURO 🌙";
+        btn.style.background = "#000";
+        btn.style.color = "#00FF00";
+    } else {
+        btn.innerHTML = "MODO CLARO 💡";
+        btn.style.background = "#00FF00";
+        btn.style.color = "#000";
+    }
+}
+    
 // ----------------- Comentarios -----------------
 function addComment(){
   const name = document.getElementById('name').value;

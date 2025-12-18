@@ -335,40 +335,62 @@ nav a:first-child {
     border-left: 3px solid #00FF00;
     background: rgba(0, 40, 0, 0.3);
 }
+/* --- MODO CLARO MEJORADO (SIN DISTORSIÓN) --- */
 
+/* Cuando el modo claro está activo, cambiamos los colores base sin usar filtros globales */
+body.light-mode {
+    background-color: #e0e0e0 !important; /* Gris muy claro tipo Windows */
+    color: #000 !important; /* Texto negro para contraste */
+}
+
+/* Ajustamos la capa de fondo para que se aclare pero no se invierta */
+body.light-mode .overlay {
+    background: rgba(255, 255, 255, 0.85) !important; /* Capa blanca semi-transparente */
+}
+
+/* Ajustamos las cajas de contenido */
+body.light-mode #inicio, 
+body.light-mode .seccion, 
+body.light-mode .lanzamiento-detalle,
+body.light-mode .vinyl-item,
+body.light-mode .video-item {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #0000FF !important; /* Bordes azules para que resalten */
+    box-shadow: 5px 5px 0px #888 !important;
+    color: #000 !important;
+}
+
+/* Ajustamos los textos para que sean legibles en blanco */
+body.light-mode .descripcion p, 
+body.light-mode .vinyl-title,
+body.light-mode .video-title,
+body.light-mode footer {
+    color: #000 !important;
+    text-shadow: none !important; /* Quitamos sombras brillantes que molestan en modo claro */
+}
+
+/* El menú lateral en modo claro */
+body.light-mode nav {
+    background: #f0f0f0 !important;
+    border-right: 3px solid #0000FF !important;
+}
+
+body.light-mode nav a {
+    color: #000 !important;
+    text-shadow: none !important;
+    border-bottom: 1px solid #ccc !important;
+}
+
+body.light-mode nav a:hover {
+    background: #0000FF !important;
+    color: #fff !important;
+}
+    
 /* --- Sección NUESTRA MÚSICA --- */
 #musica {
     display: none;
 }
 
-    /* --- SISTEMA DE MODO CLARO (NEGATIVO) --- */
-
-/* Clase que se aplicará al body */
-body.light-mode {
-    filter: invert(1) hue-rotate(180deg); /* Invierte colores y ajusta el tono para mantener la coherencia */
-    background: #fff; /* Fondo blanco en modo claro */
-}
-
-/* Evitar que imágenes y vídeos se vean en negativo */
-body.light-mode img, 
-body.light-mode video, 
-body.light-mode iframe,
-body.light-mode .tribal-background,
-body.light-mode .vinyl-decoration,
-body.light-mode .dj-photo {
-    filter: invert(1) hue-rotate(180deg);
-}
-
-/* Ajuste de contraste para el modo claro */
-body.light-mode .overlay {
-    background: rgba(255, 255, 255, 0.8);
-}
-
-body.light-mode nav {
-    border-right: 3px solid #ff00ff; /* El verde invertido suele ser púrpura/rosa */
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
-    
     /* --- Estilos para páginas detalladas de lanzamientos --- */
 .lanzamiento-detalle {
     display: none;
@@ -2806,23 +2828,6 @@ function showTab(tabId) {
     if (section) section.style.display = 'block';
 }
 
-    function toggleTheme() {
-    const body = document.body;
-    const btn = document.getElementById('theme-toggle');
-    
-    body.classList.toggle('light-mode');
-    
-    if (body.classList.contains('light-mode')) {
-        btn.innerHTML = "MODO OSCURO 🌙";
-        btn.style.background = "#000";
-        btn.style.color = "#00FF00";
-    } else {
-        btn.innerHTML = "MODO CLARO 💡";
-        btn.style.background = "#00FF00";
-        btn.style.color = "#000";
-    }
-}
-    
 // ----------------- Comentarios -----------------
 function addComment(){
   const name = document.getElementById('name').value;
@@ -2912,6 +2917,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+    function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('theme-toggle');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        btn.innerText = "MODO OSCURO 🌙";
+        btn.style.background = "#000";
+        btn.style.color = "#00FF00";
+        // Opcional: bajar el brillo del fondo tribal un poco más
+        document.querySelector('.tribal-background').style.opacity = "0.4";
+    } else {
+        btn.innerText = "MODO CLARO 💡";
+        btn.style.background = "#00FF00";
+        btn.style.color = "#000";
+        document.querySelector('.tribal-background').style.opacity = "1";
+    }
+}
+    
 // ----------------- Efectos de texto con fallos/glitches aleatorios -----------------
 function addTextGlitches() {
     const titles = document.querySelectorAll('h1, h2, .vinyl-title, .video-title');

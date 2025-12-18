@@ -632,6 +632,89 @@ body.light-mode nav a:hover {
     color: #000;
 }
 
+    /* --- ESTILOS PRÓXIMO LANZAMIENTO --- */
+.proximo-lanzamiento-container {
+    margin-top: 40px;
+    padding: 20px;
+    border: 2px dashed #ff0000; /* Borde discontinuo para que parezca una alerta */
+    background: rgba(255, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.titulo-proximo {
+    color: #FF0000;
+    text-align: center;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+.lanzamiento-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00FF00;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.lanzamiento-info-flex {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap; /* Para que en móviles se ponga uno debajo de otro */
+}
+
+.lanzamiento-foto img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.lanzamiento-texto {
+    flex: 1;
+    min-width: 250px;
+}
+
+.lanzamiento-texto h3 {
+    color: #00FF00;
+    margin-top: 0;
+    font-size: 1.8rem;
+}
+
+.reproductor-bandcamp {
+    margin: 15px 0;
+    background: #111;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.countdown-aviso {
+    display: inline-block;
+    background: #ff0000;
+    color: #fff;
+    padding: 5px 15px;
+    font-weight: bold;
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
+
+/* Adaptación para el MODO CLARO que hicimos */
+body.light-mode .lanzamiento-card {
+    background: #fff;
+    color: #000;
+    border-color: #ff0000;
+}
+
+body.light-mode .lanzamiento-texto h3 {
+    color: #ff0000;
+}
+    
     /* --- CONFIGURACIÓN DE CONTORNOS ESPECÍFICOS --- */
 
 /* 1. Letras VERDES con contorno AZUL ELÉCTRICO (Estilo Windows XP RGB) */
@@ -1446,7 +1529,32 @@ footer {
       
       <p>💥 <strong>Solo ruido como el de antes.</strong> 💥</p>
     </div>
+
+      <div class="proximo-lanzamiento-container">
+    <h2 class="titulo-proximo">☢️ PRÓXIMO LANZAMIENTO: 22 DE DICIEMBRE ☢️</h2>
     
+    <div class="lanzamiento-card">
+        <div class="lanzamiento-info-flex">
+            <div class="lanzamiento-foto">
+                <img src="InShot_20251208_170102036.png" alt="SCHRANZ TERROR">
+            </div>
+            
+            <div class="lanzamiento-texto">
+                <h3>SCHRANZ TERROR</h3>
+                <p>Prepárate para la destrucción. El sonido más crudo de la RTBS CREW vuelve con este track de alto octanaje.</p>
+                
+                <div class="reproductor-bandcamp">
+                    <iframe style="border: 0; width: 100%; height: 42px;" src="https://bandcamp.com/EmbeddedPlayer/track=2503674613/size=small/bgcol=333333/linkcol=2ebd35/transparent=true/" seamless>
+                        <a href="https://rtbscrew.bandcamp.com/track/schranz-terror">SCHRANZ TERROR by DJ FLUGEL RTBS CREW</a>
+                    </iframe>
+                </div>
+                
+                <div class="countdown-aviso">DISPONIBLE EN 4 DÍAS</div>
+            </div>
+        </div>
+    </div>
+</div>
+      
     <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
   </div>
     

@@ -581,13 +581,7 @@ nav a:first-child {
     background: #00AA00;
     color: #000;
 }
-    
-/* Cambia esto en tu sección <style> */
-body, nav a, .windows-xp-button, .descripcion {
-    font-family: "MS Sans Serif", Tahoma, Verdana, Segoe UI, sans-serif;
-    image-rendering: pixelated; /* Esto ayuda a que los bordes se vean más 'afilados' */
-}
-    
+
     /* --- CONFIGURACIÓN DE CONTORNOS ESPECÍFICOS --- */
 
 /* 1. Letras VERDES con contorno AZUL ELÉCTRICO (Estilo Windows XP RGB) */
@@ -679,64 +673,6 @@ h1 span {
          0px 0px 8px #00FF00 !important; /* Resplandor Verde */
 }
 
-    /* --- MEJORA DE CONTRASTE Y TIPOGRAFÍA RETRO --- */
-
-body {
-    font-family: "MS Sans Serif", Tahoma, Arial, sans-serif;
-    letter-spacing: 0.5px; /* Las fuentes antiguas se leen mejor con un poco de aire */
-}
-
-/* 1. Texto VERDE con CONTORNO NEGRO (Máxima legibilidad) */
-/* He añadido un borde negro sólido antes del brillo azul para que la letra 'salte' del fondo */
-.loader-rtbs, 
-nav a, 
-.link-extra, 
-.vinyl-links a, 
-.descripcion,
-footer,
-.comment {
-    color: #00FF00 !important;
-    text-shadow: 
-        -1px -1px 0 #000,  
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000,
-         0px  0px 8px #0000FF !important; /* El azul queda como un aura exterior */
-}
-
-/* 2. Títulos y destacados en ROJO con CONTORNO NEGRO */
-.post-title-box, 
-.post-hashtags, 
-.dislike-btn,
-h1 span:nth-child(even) {
-    color: #FF0000 !important;
-    text-shadow: 
-        -1px -1px 0 #000,  
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000,
-         0px  0px 8px #00FF00 !important; /* Aura verde */
-}
-
-/* 3. Ajuste de cajas para que parezcan ventanas de Windows 98 */
-#inicio, .seccion, .lanzamiento-detalle {
-    background: #C0C0C0 !important; /* Gris clásico de Windows */
-    color: #000 !important;
-    border: 2px solid;
-    border-top-color: #FFF;
-    border-left-color: #FFF;
-    border-bottom-color: #404040;
-    border-right-color: #404040;
-    box-shadow: 2px 2px 0px #000;
-}
-
-/* Forzar que el texto dentro de las 'ventanas' sea negro para contraste total */
-.descripcion p, .descripcion strong, .info-lanzamiento p {
-    color: #000 !important;
-    text-shadow: none !important; /* Quitamos sombras dentro de las cajas grises para leer mejor */
-    border-left: 3px solid #000080; /* Azul marino clásico de barra de tareas */
-}
-    
 /* Ajuste para que las viñetas (dots) de la lista no se vean raras */
 #dj-controller-desc ul {
     list-style-position: inside;

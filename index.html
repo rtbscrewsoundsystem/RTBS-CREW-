@@ -79,6 +79,12 @@
     100% { transform: translate(0); }
 }
 
+    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+    
 /* --- Estilos generales --- */
 body { 
     margin:0; 
@@ -335,6 +341,67 @@ nav a:first-child {
     border-left: 3px solid #00FF00;
     background: rgba(0, 40, 0, 0.3);
 }
+    /* --- RESPONSIVE MENU --- */
+
+/* 1. Escondemos el botón en PC */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    cursor: pointer;
+    background: #00FF00;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: black;
+    margin: 5px 0;
+}
+
+/* 2. CONFIGURACIÓN PARA MÓVILES (Pantallas menores a 768px) */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block; /* Aparecen las 3 líneas */
+    }
+
+    nav {
+        left: -100%; /* Escondemos el menú a la izquierda fuera de la pantalla */
+        width: 250px;
+        transition: 0.4s;
+        background: rgba(0, 0, 0, 0.95) !important;
+        z-index: 1000;
+    }
+
+    /* Clase para mostrar el menú cuando hagamos clic */
+    nav.active {
+        left: 0;
+    }
+
+    /* Ajustamos el contenido principal para que no deje hueco a la izquierda en móvil */
+    main {
+        margin-left: 0 !important;
+        padding: 15px !important;
+    }
+}
+
+/* 3. CONFIGURACIÓN PARA PC (Menú fijo) */
+@media (min-width: 769px) {
+    nav {
+        left: 0;
+        width: 220px;
+        position: fixed;
+    }
+    main {
+        margin-left: 240px; /* Deja espacio para el menú lateral */
+    }
+}
+    
 /* --- MODO CLARO MEJORADO (SIN DISTORSIÓN) --- */
 
 /* Cuando el modo claro está activo, cambiamos los colores base sin usar filtros globales */
@@ -3164,9 +3231,22 @@ function volverALanzamientos() {
         detalle.classList.remove('active');
     });
 }
+    function toggleMobileMenu() {
+    const nav = document.querySelector('nav');
+    nav.classList.toggle('active');
+}
+
+// Opcional: Cerrar el menú automáticamente al hacer clic en una sección (solo en móvil)
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            document.querySelector('nav').classList.remove('active');
+        }
+    });
+});
     
 </script>
 
-    <script async src="https://www.tiktok.com/embed.js"></script> 
+    <script async src="https://www.tiktok.com/embed.js"></script>
 </body>
 </html>

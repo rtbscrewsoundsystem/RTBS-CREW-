@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - RUTA PERDIDA | RTBS CREW</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #00FF00; /* Verde Neón */
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .logo-404 {
+            width: 200px;
+            animation: glitch 1s infinite;
+        }
+
+        h1 { font-size: 3rem; margin: 20px 0; }
+        p { font-size: 1.2rem; color: #ff0000; font-weight: bold; }
+
+        .boton-volver {
+            margin-top: 30px;
+            padding: 15px 30px;
+            border: 2px solid #00FF00;
+            color: #00FF00;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .boton-volver:hover {
+            background: #00FF00;
+            color: #000;
+            box-shadow: 0 0 20px #00FF00;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="Proyecto_29.png" alt="RTBS Logo" class="logo-404">
+    
+    <h1>ERROR 404</h1>
+    <p>ESTA RUTA NO EXISTE EN EL SISTEMA.</p>
+    <p>ESTÁS FUERA DE LA RAVE.</p>
+
+    <a href="index.html" class="boton-volver">VOLVER AL INICIO</a>
+
+</body>
+</html>
+￼Enter

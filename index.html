@@ -1368,6 +1368,75 @@ footer {
   box-shadow: 0 0 15px #00FF00;
 }
 
+    /* Contenedor principal */
+.protesta-container {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 2px solid #ff0000;
+    border-bottom: 2px solid #ff0000;
+    margin: 20px 0;
+}
+
+/* Estilo base para los textos */
+.glitch-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 900;
+    text-transform: uppercase;
+    position: relative;
+    display: block;
+    animation: flash-colors 0.2s infinite, strobe 0.1s infinite;
+}
+
+/* El pequeño */
+.small {
+    font-size: 1.2rem;
+    color: #fff;
+    letter-spacing: 4px;
+    opacity: 0.8;
+}
+
+/* EL GRANDE Y CANTOSO */
+.big {
+    font-size: 2.5rem; /* Casi el doble de grande */
+    letter-spacing: 2px;
+    margin-top: 10px;
+    text-shadow: 3px 3px #ff0000, -3px -3px #0000ff;
+    animation: flash-colors 0.15s infinite, ultra-glitch 0.4s infinite;
+}
+
+/* Animación de colores estroboscópicos */
+@keyframes flash-colors {
+    0% { color: #ff0000; }
+    20% { color: #00ff00; }
+    40% { color: #ffff00; }
+    60% { color: #00ffff; }
+    80% { color: #ff00ff; }
+    100% { color: #ffffff; }
+}
+
+/* Efecto de vibración/glitch para el texto grande */
+@keyframes ultra-glitch {
+    0% { transform: translate(0); clip-path: inset(0% 0% 0% 0%); }
+    20% { transform: translate(-5px, 2px); clip-path: inset(10% 0% 40% 0%); }
+    40% { transform: translate(5px, -2px); clip-path: inset(50% 0% 5% 0%); }
+    60% { transform: translate(-2px, 5px); clip-path: inset(30% 0% 60% 0%); }
+    80% { transform: translate(2px, -5px); clip-path: inset(0% 0% 20% 0%); }
+    100% { transform: translate(0); }
+}
+
+/* Parpadeo de "luz de rave" (Strobe) */
+@keyframes strobe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+/* Adaptación para móviles */
+@media (max-width: 768px) {
+    .big { font-size: 1.5rem; }
+    .small { font-size: 0.8rem; }
+}
+    
 /* --- NUEVOS ESTILOS PARA DJs --- */
 .dj-grid {
     display: grid;
@@ -1655,6 +1724,11 @@ footer {
         box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         font-family: 'Arial', sans-serif;
     ">
+        <div class="protesta-container">
+    <div class="glitch-text small">FREE PARTY IS NOT A CRIME</div>
+    <div class="glitch-text big">FREE PROGRAM IS NOT A CRIME</div>
+</div>
+        
         <h2 style="text-align: center; color: #00FF00; margin-top: 0; border-bottom: 1px solid #00FF00; padding-bottom: 10px;">
             ⚙️ RTBS CREW DJ CONTROLLER MIX - Estado de Funcionalidades
         </h2>

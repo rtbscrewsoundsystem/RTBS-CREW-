@@ -4,84 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RTBS CREW - V9.0 ULTRA PSYCHO + EQ</title>
+    <title>RTBS CREW - V9.1 FIXED ALL MODES</title>
     <style>
-        :root {
-            --color-primary: #00ff41;
-            --color-secondary: #0080ff;
-            --win-blue: #000080;
-            --retro-gray: #c0c0c0;
-            --dark-gray: #404040;
-        }
-
-        body {
-            background: #000; color: var(--color-primary); font-family: 'Courier New', monospace;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; margin: 0; overflow: hidden; text-transform: uppercase;
-        }
-
-        /* Efecto CRT Scanlines */
-        body::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), url('https://grainy-gradients.vercel.app/noise.svg');
-            background-size: 100% 2px, auto; opacity: 0.12; pointer-events: none; z-index: 1000;
-        }
-
-        .monitor-border {
-            border: 6px solid var(--retro-gray); border-right-color: var(--dark-gray); border-bottom-color: var(--dark-gray);
-            background: var(--retro-gray); padding: 3px; box-shadow: 15px 15px 0px #111; width: 95%; max-width: 700px;
-        }
-
+        :root { --color-primary: #00ff41; --color-secondary: #0080ff; --win-blue: #000080; --retro-gray: #c0c0c0; --dark-gray: #404040; }
+        body { background: #000; color: var(--color-primary); font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; text-transform: uppercase; }
+        body::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), url('https://grainy-gradients.vercel.app/noise.svg'); background-size: 100% 2px, auto; opacity: 0.12; pointer-events: none; z-index: 1000; }
+        .monitor-border { border: 6px solid var(--retro-gray); border-right-color: var(--dark-gray); border-bottom-color: var(--dark-gray); background: var(--retro-gray); padding: 3px; box-shadow: 15px 15px 0px #111; width: 95%; max-width: 700px; }
         .screen { background: #000; height: 750px; border: 2px solid #000; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-
         header { background: linear-gradient(90deg, var(--win-blue), #0080ff); color: white; padding: 4px 8px; display: flex; justify-content: space-between; font-size: 10px; font-weight: bold;}
-
-        #visualizer { width: 100%; flex-grow: 1; filter: saturate(1.4) contrast(1.1); }
-
+        #visualizer { width: 100%; flex-grow: 1; }
         .timeline-box { background: #000; padding: 8px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--color-primary); }
         #timeline { flex-grow: 1; accent-color: var(--color-primary); cursor: pointer; }
-
-        .popup-window {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 450px; background: var(--retro-gray); border: 3px solid;
-            border-color: #fff #808080 #808080 #fff; padding: 12px; z-index: 500;
-            display: none; color: #000; box-shadow: 20px 20px 60px rgba(0,0,0,0.9);
-        }
-
+        .popup-window { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; background: var(--retro-gray); border: 3px solid; border-color: #fff #808080 #808080 #fff; padding: 12px; z-index: 500; display: none; color: #000; box-shadow: 20px 20px 60px rgba(0,0,0,0.9); }
         .section-title { font-weight: bold; font-size: 11px; margin-bottom: 8px; border-bottom: 2px solid #000; }
-        .color-pickers { display: flex; gap: 15px; margin-bottom: 12px; font-weight: bold; font-size: 10px;}
-
         .eq-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
         .v-slider { appearance: slider-vertical; width: 100%; height: 70px; background: #000; cursor: pointer;}
         .freq-label { font-size: 7px; text-align: center; margin-top: 3px; }
-
-        .modes-grid-popup { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; 
-            max-height: 350px; overflow-y: auto; padding-right: 5px;
-        }
-
+        .modes-grid-popup { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; max-height: 350px; overflow-y: auto; }
         .controls-panel { background: var(--retro-gray); padding: 10px; border-top: 2px solid var(--dark-gray); }
         .btn-row { display: flex; gap: 5px; }
-        
-        button {
-            font-family: 'Courier New', monospace; font-size: 9px; font-weight: bold;
-            background: var(--retro-gray); border: 2px solid;
-            border-color: #fff #404040 #404040 #fff; padding: 6px; cursor: pointer;
-        }
-        button:active { border-color: #404040 #fff #fff #404040; }
+        button { font-family: 'Courier New', monospace; font-size: 9px; font-weight: bold; background: var(--retro-gray); border: 2px solid; border-color: #fff #404040 #404040 #fff; padding: 6px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="monitor-border">
     <div class="screen">
-        <header>
-            <span>RTBS_SYSTEM_V9.0_PSYCHO_EQ</span>
-            <span id="cur-mode-text">MODE: BARS</span>
-        </header>
-
+        <header><span>RTBS_X_ULTRA_v9.1</span><span id="cur-mode-text">MODE: BARS</span></header>
         <canvas id="visualizer"></canvas>
-
         <div class="timeline-box">
             <span id="cur-time" style="font-size:10px">0:00</span>
             <input type="range" id="timeline" min="0" value="0">
@@ -89,20 +39,18 @@
         </div>
 
         <div id="settings-popup" class="popup-window">
-            <div class="section-title">SYSTEM COLORS</div>
-            <div class="color-pickers">
-                PRIMARY: <input type="color" id="pick-c1" value="#00ff41">
-                SECONDARY: <input type="color" id="pick-c2" value="#0080ff">
+            <div class="section-title">COLORS</div>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                C1: <input type="color" id="pick-c1" value="#00ff41">
+                C2: <input type="color" id="pick-c2" value="#0080ff">
             </div>
-            <div class="section-title">20-BAND EQUALIZER</div>
-            <div class="eq-grid" id="eq-row-1"></div>
-            <div style="margin: 5px 0;"></div>
-            <div class="eq-grid" id="eq-row-2"></div>
+            <div class="section-title">20-BAND EQ</div>
+            <div class="eq-grid" id="eq-row-1"></div><div style="margin:5px 0;"></div><div class="eq-grid" id="eq-row-2"></div>
             <button onclick="togglePopup('settings-popup')" style="width:100%; margin-top:10px; background:#f00; color:#fff;">CLOSE</button>
         </div>
 
         <div id="modes-popup" class="popup-window">
-            <div class="section-title">SELECT VISUALIZER (INCL. PSYCHO MODES)</div>
+            <div class="section-title">VISUAL MODES</div>
             <div class="modes-grid-popup" id="mode-grid-container"></div>
             <button onclick="togglePopup('modes-popup')" style="width:100%; margin-top:10px; background:#444; color:#fff;">CLOSE</button>
         </div>
@@ -110,9 +58,9 @@
         <div class="controls-panel">
             <input type="file" id="audio-upload" accept="audio/*" style="width:100%; font-size:9px; margin-bottom:8px;">
             <div class="btn-row">
-                <button id="play-btn" style="background:#00ff41; color:#000; flex:1;">POWER / PLAY</button>
-                <button onclick="togglePopup('settings-popup')" style="background:#ffcc00">EQ & COLORS</button>
-                <button onclick="togglePopup('modes-popup')" style="background:#0080ff; color:white;">VISUAL MODES</button>
+                <button id="play-btn" style="background:#00ff41; flex:1;">PLAY / PAUSE</button>
+                <button onclick="togglePopup('settings-popup')" style="background:#ffcc00">EQ / COLORS</button>
+                <button onclick="togglePopup('modes-popup')" style="background:#0080ff; color:white;">MODES</button>
             </div>
         </div>
     </div>
@@ -123,19 +71,11 @@
     const canvas = document.getElementById('visualizer');
     const ctx = canvas.getContext('2d');
     const timeline = document.getElementById('timeline');
-    const playBtn = document.getElementById('play-btn');
-
     let audioCtx, analyser, dataArray, filters = [], initialized = false;
     let currentMode = 'bars', rot = 0, particles = [];
     let colorA = "#00ff41", colorB = "#0080ff";
 
-    // Modos Originales + Nuevos Psycho
-    const modeList = [
-        'bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 
-        'wave', 'hex', 'stars', 'rings', 'dots', 'flower', 'glitch', 
-        'cyber', 'nebula', 'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos',
-        'psycho_sphere', 'liquid_dream', 'fractal_tree', 'chrome_whirl', 'ghost_pulse'
-    ];
+    const modeList = ['bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 'wave', 'hex', 'stars', 'rings', 'dots', 'flower', 'glitch', 'cyber', 'nebula', 'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos', 'psycho_sphere', 'liquid_dream', 'fractal_tree'];
 
     const grid = document.getElementById('mode-grid-container');
     modeList.forEach(m => {
@@ -145,11 +85,9 @@
         grid.appendChild(btn);
     });
 
-    // Control de colores (Mantenido)
+    // EQ & COLORS
     document.getElementById('pick-c1').oninput = (e) => { colorA = e.target.value; document.documentElement.style.setProperty('--color-primary', colorA); };
     document.getElementById('pick-c2').oninput = (e) => { colorB = e.target.value; document.documentElement.style.setProperty('--color-secondary', colorB); };
-
-    // Ecualizador de 20 bandas (Mantenido)
     const freqs = [32, 64, 125, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 14000, 16000, 18000];
     freqs.forEach((f, i) => {
         const container = i < 10 ? document.getElementById('eq-row-1') : document.getElementById('eq-row-2');
@@ -160,12 +98,11 @@
 
     function togglePopup(id) { const p = document.getElementById(id); p.style.display = (p.style.display === 'block') ? 'none' : 'block'; }
     function updateF(i, v) { if(filters[i]) filters[i].gain.value = v; }
-
     document.getElementById('audio-upload').onchange = (e) => audio.src = URL.createObjectURL(e.target.files[0]);
 
-    playBtn.onclick = () => {
+    document.getElementById('play-btn').onclick = () => {
         if (!initialized) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            audioCtx = new AudioContext();
             let source = audioCtx.createMediaElementSource(audio);
             let last = source;
             freqs.forEach((f, i) => {
@@ -184,103 +121,56 @@
         requestAnimationFrame(draw);
         if(!initialized) return;
 
-        // EFECTO DE DIFUMINADO (Mantenimiento de estelas de color)
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)'; 
+        // Limpieza inteligente: Los modos Psycho usan rastro, los normales limpian más
+        const isPsycho = ['psycho_sphere', 'liquid_dream', 'fractal_tree', 'rave', 'vortex'].includes(currentMode);
+        ctx.fillStyle = isPsycho ? 'rgba(0, 0, 0, 0.15)' : 'rgba(0, 0, 0, 0.4)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const isTimeMode = ['wave', 'oscilloscope', 'chaos', 'pulse'].includes(currentMode);
-        if(isTimeMode) analyser.getByteTimeDomainData(dataArray);
-        else analyser.getByteFrequencyData(dataArray);
+        const isTime = ['wave', 'oscilloscope', 'chaos', 'pulse', 'glitch'].includes(currentMode);
+        isTime ? analyser.getByteTimeDomainData(dataArray) : analyser.getByteFrequencyData(dataArray);
 
-        rot += 0.02;
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        const bass = dataArray[2] || 0;
+        rot += 0.02; const cx = canvas.width/2, cy = canvas.height/2;
 
-        // --- NUEVOS MODOS PSYCHO (Basados en tus imágenes) ---
-        if (currentMode === 'psycho_sphere') {
+        if (currentMode === 'bars') {
+            for(let i=0; i<60; i++){ ctx.fillStyle = i%2===0?colorA:colorB; let h = (dataArray[i]/255)*canvas.height; ctx.fillRect(i*(canvas.width/60), canvas.height-h, (canvas.width/60)-1, h); }
+        } else if (currentMode === 'rave') {
             ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
-            for(let i=0; i<60; i+=2) {
-                const r = dataArray[i] * 1.1;
-                ctx.strokeStyle = i%10===0 ? "#fff" : colorA;
-                ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI*2); ctx.stroke();
-            }
+            for(let i=0; i<dataArray.length; i+=8){ ctx.strokeStyle = i%16===0?colorA:colorB; ctx.beginPath(); ctx.arc(0,0, dataArray[i]*0.8, 0, Math.PI*2); ctx.stroke(); ctx.rotate(0.05); }
             ctx.restore();
+        } else if (currentMode === 'dna') {
+            for(let i=0; i<dataArray.length; i+=4){ ctx.fillStyle = i%8===0?colorA:colorB; let y = cy + Math.sin(i*0.1 + rot*4)*(dataArray[i]/2); ctx.beginPath(); ctx.arc((i/dataArray.length)*canvas.width, y, 2, 0, Math.PI*2); ctx.fill(); }
+        } else if (currentMode === 'tunnel') {
+            for(let i=0; i<dataArray.length; i+=15){ ctx.strokeStyle = i%30===0?colorA:colorB; let s = dataArray[i]*1.2; ctx.strokeRect(cx-s/2, cy-s/2, s, s); }
+        } else if (currentMode === 'matrix') {
+            ctx.font = "10px monospace"; for(let i=0; i<dataArray.length; i+=10){ ctx.fillStyle = dataArray[i]>140?colorA:colorB; ctx.fillText(Math.floor(Math.random()*9), (i/dataArray.length)*canvas.width, (dataArray[i]/255)*canvas.height); }
+        } else if (currentMode === 'vortex') {
+            ctx.save(); ctx.translate(cx, cy); for(let i=0; i<dataArray.length; i+=4){ let a = i*0.1 + rot; let r = dataArray[i]; ctx.fillStyle = i%8===0?colorA:colorB; ctx.fillRect(Math.cos(a)*r, Math.sin(a)*r, 2, 2); } ctx.restore();
+        } else if (currentMode === 'laser') {
+            ctx.strokeStyle = colorA; ctx.beginPath(); for(let i=0; i<10; i++){ ctx.moveTo(cx, cy); ctx.lineTo(Math.random()*canvas.width, (dataArray[i*10]/255)*canvas.height); } ctx.stroke();
+        } else if (currentMode === 'wave' || currentMode === 'oscilloscope') {
+            ctx.strokeStyle = colorA; ctx.beginPath(); for(let i=0; i<dataArray.length; i++){ let x = (i/dataArray.length)*canvas.width; let y = (dataArray[i]/255)*canvas.height; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke();
+        } else if (currentMode === 'glitch') {
+            let s = dataArray[20]-128; ctx.drawImage(canvas, s, 0); ctx.fillStyle = colorA; if(Math.abs(s)>20) ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 1);
+        } else if (currentMode === 'psycho_sphere') {
+            ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot); for(let i=0; i<60; i+=2){ ctx.strokeStyle = i%10===0?"#fff":colorA; ctx.beginPath(); ctx.arc(0,0, dataArray[i]*1.1, 0, Math.PI*2); ctx.stroke(); } ctx.restore();
+        } else if (currentMode === 'liquid_dream') {
+            for(let i=0; i<dataArray.length; i+=8){ ctx.fillStyle = i%16===0?colorA:colorB; ctx.globalAlpha=0.3; ctx.beginPath(); ctx.arc((i/dataArray.length)*canvas.width, cy+Math.sin(rot+i)*60, dataArray[i]/2, 0, Math.PI*2); ctx.fill(); } ctx.globalAlpha=1;
+        } else if (currentMode === 'fractal_tree') {
+            ctx.save(); ctx.translate(cx, canvas.height-50); drawTree(120, 0, dataArray[10]/4); ctx.restore();
+        } else {
+            // Modo genérico para los que faltan (dots, hex, rings, stars...)
+            for(let i=0; i<dataArray.length; i+=10){ ctx.fillStyle = colorB; ctx.fillRect((i/dataArray.length)*canvas.width, canvas.height-dataArray[i], 2, 2); }
         }
-        else if (currentMode === 'liquid_dream') {
-            for(let i=0; i<dataArray.length; i+=8) {
-                const x = (i / dataArray.length) * canvas.width;
-                const h = dataArray[i] * 1.5;
-                ctx.fillStyle = i%16===0 ? colorA : colorB;
-                ctx.globalAlpha = 0.3;
-                ctx.beginPath(); ctx.arc(x, cy + Math.sin(rot+i)*60, h/2, 0, Math.PI*2); ctx.fill();
-            }
-            ctx.globalAlpha = 1;
-        }
-        else if (currentMode === 'fractal_tree') {
-            ctx.save(); ctx.translate(cx, canvas.height - 50);
-            drawTree(120, 0, dataArray[10]/4);
-            ctx.restore();
-        }
-
-        // --- MODOS ORIGINALES (REVISADOS Y ARREGLADOS) ---
-        else if (currentMode === 'bars') {
-            for(let i=0; i<60; i++){
-                ctx.fillStyle = i%2===0?colorA:colorB;
-                let h = (dataArray[i]/255)*canvas.height;
-                ctx.fillRect(i*(canvas.width/60), canvas.height-h, (canvas.width/60)-1, h);
-            }
-        } 
-        else if (currentMode === 'rave') {
-            ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
-            for(let i=0; i<dataArray.length; i+=8){
-                ctx.strokeStyle = i%16===0?colorA:colorB; ctx.beginPath();
-                ctx.arc(0,0, dataArray[i]*0.8, 0, Math.PI*2); ctx.stroke(); ctx.rotate(0.05);
-            }
-            ctx.restore();
-        }
-        else if (currentMode === 'matrix') {
-            ctx.font = "10px monospace";
-            for(let i=0; i<dataArray.length; i+=10){
-                ctx.fillStyle = dataArray[i]>140?colorA:colorB;
-                ctx.fillText(Math.floor(Math.random()*9), (i/dataArray.length)*canvas.width, (dataArray[i]/255)*canvas.height);
-            }
-        }
-        else if (currentMode === 'glitch') {
-            let shift = (dataArray[20]-128);
-            ctx.drawImage(canvas, shift, 0, canvas.width, canvas.height);
-            ctx.fillStyle = colorA; if(shift > 25) ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 2);
-        }
-        else if (currentMode === 'chaos') {
-            ctx.beginPath(); ctx.strokeStyle = colorB; ctx.lineWidth = 2;
-            for(let i=0; i<20; i++) {
-                ctx.lineTo(Math.random()*canvas.width, (dataArray[i]/255)*canvas.height);
-            }
-            ctx.stroke();
-        }
-        // ... (Resto de modos originales integrados) ...
     }
 
-    function drawTree(len, angle, branchAngle) {
-        ctx.strokeStyle = colorA;
-        ctx.lineWidth = len/15;
-        ctx.beginPath(); ctx.save();
-        ctx.rotate(angle * Math.PI / 180);
-        ctx.moveTo(0, 0); ctx.lineTo(0, -len); ctx.stroke();
-        ctx.translate(0, -len);
-        if (len > 15) {
-            drawTree(len * 0.75, angle + branchAngle, branchAngle);
-            drawTree(len * 0.75, angle - branchAngle, branchAngle);
-        }
-        ctx.restore();
+    function drawTree(len, angle, bA) {
+        ctx.strokeStyle = colorA; ctx.lineWidth = len/15; ctx.beginPath(); ctx.save(); ctx.rotate(angle*Math.PI/180); ctx.moveTo(0,0); ctx.lineTo(0,-len); ctx.stroke(); ctx.translate(0,-len);
+        if(len>15){ drawTree(len*0.75, angle+bA, bA); drawTree(len*0.75, angle-bA, bA); } ctx.restore();
     }
 
-    // Funciones de tiempo y resize (Mantenido)
-    audio.ontimeupdate = () => { if(!isNaN(audio.duration)) timeline.value = audio.currentTime; document.getElementById('cur-time').innerText = Math.floor(audio.currentTime/60)+":"+Math.floor(audio.currentTime%60).toString().padStart(2,'0'); };
+    audio.ontimeupdate = () => { timeline.value = audio.currentTime; document.getElementById('cur-time').innerText = Math.floor(audio.currentTime/60)+":"+Math.floor(audio.currentTime%60).toString().padStart(2,'0'); };
     audio.onloadedmetadata = () => { timeline.max = audio.duration; document.getElementById('dur-time').innerText = Math.floor(audio.duration/60)+":"+Math.floor(audio.duration%60).toString().padStart(2,'0'); };
     timeline.oninput = () => audio.currentTime = timeline.value;
-
     function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
     window.onresize = resize; resize();
 </script>

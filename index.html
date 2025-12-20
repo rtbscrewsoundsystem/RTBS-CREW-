@@ -1659,7 +1659,7 @@ footer {
 
   <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
   <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
-  <a href="#" onclick="showTabWithTransition('rtbs-visualizer')">RTBS VISUALIZER 🚀</a> <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
+  <a href="#" onclick="showTabWithTransition('visualizer-tab')">RTBS VISUALIZER 🚀</a> <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
   <a href="#" onclick="showTabWithTransition('videos-cortos')">VÍDEOS CORTOS 🎬</a>
   <a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
   <a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
@@ -1871,59 +1871,21 @@ footer {
     </div>
 </div>
 
- <div id="visuales" class="tab-content">
-  <div class="post-content">
+    <section id="visualizer-section" class="post-content" style="margin-top: 50px;">
     <div class="post-title-box">
-        <h2 class="post-title">🎬 MÚSICA VISUALES 🎬</h2>
+        <h2 class="post-title">RTBS CREW VISUALIZER</h2>
     </div>
-    
-    <div class="videos-grid">
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/t1FxYs6qza0" frameborder="0" allowfullscreen></iframe>
-        <div class="video-title">DJ FLUGEL RTBS CREW - MINI IMPROMIX</div>
-      </div>
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/tBARcjoLgnE" frameborder="0" allowfullscreen></iframe>
-        <div class="video-title">TRAKS PSIKOTIK 001 - TOUXMAN DJ</div>
-      </div>
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/d9Pl4Otti6s" frameborder="0" allowfullscreen></iframe>
-        <div class="video-title">DJ FLUGEL RTBS CREW - MANIATIK SCHRANZ</div>
-      </div>
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/yweuGzOCv1U" frameborder="0" allowfullscreen></iframe>
-        <div class="video-title">HARDTEK KICK MASACRE 🦇HALLOWEEN🦇</div>
-      </div>
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/e2z0mRK_QAw" frameborder="0" allowfullscreen></iframe>
-        <div class="video-title">MAKINA VS HARDTEK // DJ FLUGEL</div>
-      </div>
-      <div class="video-item">
-        <div style="background: #002200; height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #00FF00;">
-          <div style="text-align: center; color: #FFFF00; font-size: 20px;">🚧 PRÓXIMAMENTE 🚧</div>
-        </div>
-      </div>
+
+    <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 1px solid #00FF00; background: rgba(0,0,0,0.8);">
+        <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor de música con visualizador ha sido desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de Inteligencia Artificial.</p>
+        <p>Se trata de un experimento técnico para demostrar hasta dónde puede llegar una persona sin conocimientos previos de programación utilizando herramientas de IA para materializar ideas complejas. El proyecto está en <strong>modificación constante</strong>, evolucionando día a día.</p>
+        <p><strong>SOFTWARE LIBRE:</strong> Es de código abierto y descarga gratuita. Atribución requerida a: <em>RTBS CREW</em>.</p>
     </div>
-  </div>
-</div>
 
-<div id="rtbs-visualizer" class="tab-content">
-    <div class="post-content">
-        <div class="post-title-box">
-            <h2 class="post-title">RTBS CREW VISUALIZER</h2>
-        </div>
-
-        <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 2px solid #0000FF; background: rgba(0,0,0,0.9);">
-            <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor con visualizador ha sido desarrollado por <strong>RTBS CREW</strong> con ayuda de IA.</p>
-            <p>Es un experimento para ver hasta dónde puede llegar una persona sin saber programar. Modificación constante.</p>
-            <p style="color:#FF0000 !important; text-shadow: 2px 2px 0 #00FF00 !important;">CÓDIGO LIBRE - ATRIBUCIÓN: RTBS CREW</p>
-        </div>
-
-        <div class="visualizer-container" style="width: 100%; height: 75vh; border: 3px solid #0000FF; background: #000; overflow: hidden;">
-            <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
+    <div class="visualizer-container" style="width: 100%; height: 80vh; border: 2px solid #0000FF; overflow: hidden; background: #000;">
+        <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;" title="RTBS Visualizer"></iframe>
     </div>
-</div>
+</section>
     
   <!-- SECCIÓN NUESTRA MÚSICA -->
 <div id="musica" style="display:none;">
@@ -2552,6 +2514,63 @@ footer {
     </div>
   </div>
 </div>
+
+    <!-- SECCIÓN VÍDEOS VISUALES -->
+  <div id="visuales" class="seccion" style="display:none;">
+    <h2>🎬 MÚSICA VISUALES 🎬</h2>
+    
+    <div class="videos-grid">
+      <!-- Video 1 -->
+      <div class="video-item">
+        <iframe class="video-player" src="https://www.youtube.com/embed/t1FxYs6qza0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-title">DJ FLUGEL RTBS CREW - MINI IMPROMIX //HARDTEK - SCHRANZ//</div>
+      </div>
+      
+      <!-- Video 2 -->
+      <div class="video-item">
+        <iframe class="video-player" src="https://www.youtube.com/embed/tBARcjoLgnE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-title">TRAKS PSIKOTIK 001 - TOUXMAN DJ</div>
+      </div>
+      
+      <!-- Video 3 -->
+      <div class="video-item">
+        <iframe class="video-player" src="https://www.youtube.com/embed/d9Pl4Otti6s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-title">DJ FLUGEL RTBS CREW - MANIATIK SCHRANZ SESION</div>
+      </div>
+
+        <!-- Video 4 --> 
+<div class="video-item">
+  <iframe class="video-player" width="100%" height="200" src="https://www.youtube.com/embed/yweuGzOCv1U" title="HARDTEK KICK MASACRE 🦇HALLOWEEN🦇 VERSIÓN [DJ SET] DJ FLUGEL RTBS CREW #hardtek #teuf #rave" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <div class="video-title">HARDTEK KICK MASACRE 🦇HALLOWEEN🦇 VERSIÓN [DJ SET] DJ FLUGEL RTBS CREW #hardtek #teuf #rave</div>
+</div>
+
+        <!-- Video 5 --> 
+        <div class="video-item">
+  <iframe class="video-player" width="100%" height="200" src="https://www.youtube.com/embed/e2z0mRK_QAw" title="MAKINA VS HARDTEK // DJ FLUGEL RTBS CREW [DJ SET VISUALES] #makina #hardtek" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <div class="video-title">MAKINA VS HARDTEK // DJ FLUGEL RTBS CREW [DJ SET VISUALES] #makina #hardtek</div>
+</div>
+        
+      <!-- Próximamente 1 -->
+      <div class="video-item">
+        <div style="background: #002200; height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #00FF00; border-radius: 5px;">
+          <div style="text-align: center; color: #FFFF00; font-size: 24px; text-shadow: 0 0 10px #FFFF00;">
+            🚧 PRÓXIMAMENTE 🚧
+          </div>
+        </div>
+        <div class="video-title">NUEVO CONTENIDO EN PREPARACIÓN</div>
+      </div>
+      
+      <!-- Próximamente 2 -->
+      <div class="video-item">
+        <div style="background: #002200; height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #00FF00; border-radius: 5px;">
+          <div style="text-align: center; color: #FFFF00; font-size: 24px; text-shadow: 0 0 10px #FFFF00;">
+            🚧 PRÓXIMAMENTE 🚧
+          </div>
+        </div>
+        <div class="video-title">NUEVO CONTENIDO EN PREPARACIÓN</div>
+      </div>
+    </div>
+  </div>
 
     <div id="videos-cortos" class="seccion" style="display:none;">
     <h2>📱 VÍDEOS CORTOS (TikToks & Reels) 📱</h2>

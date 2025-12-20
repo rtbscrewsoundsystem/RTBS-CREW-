@@ -131,7 +131,9 @@
     const modeList = [
         'bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 
         'wave', 'hex', 'stars', 'rings', 'dots', 'scope', 'flower', 'glitch', 
-        'cyber', 'nebula', 'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos'
+        'cyber', 'nebula', 'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos', 'plasma', 'acidwarp', 'bassquake', 'spiralcore', 'strobegrid',
+'fracture', 'raverays', 'subpulse', 'neuroflow', 'overdrive'
+
     ];
 
     const grid = document.getElementById('mode-grid-container');
@@ -342,6 +344,109 @@
             ctx.restore();
         }
     }
+else if (currentMode === 'plasma') {
+    ctx.save(); ctx.translate(cx, cy);
+    for(let i=0;i<120;i++){
+        let a = i*0.15 + rot;
+        let r = dataArray[i%dataArray.length]*1.2;
+        ctx.fillStyle = `hsla(${r*2},100%,50%,0.3)`;
+        ctx.beginPath();
+        ctx.arc(Math.cos(a)*r, Math.sin(a)*r, 4, 0, Math.PI*2);
+        ctx.fill();
+    }
+    ctx.restore();
+}
+else if (currentMode === 'acidwarp') {
+    ctx.save(); ctx.translate(cx, cy);
+    for(let i=0;i<dataArray.length;i+=6){
+        let s = dataArray[i]/2;
+        ctx.rotate(0.02);
+        ctx.strokeStyle = i%12?colorA:colorB;
+        ctx.strokeRect(-s/2,-s/2,s,s);
+    }
+    ctx.restore();
+}
+else if (currentMode === 'bassquake') {
+    let bass = dataArray[2];
+    ctx.save();
+    ctx.translate(
+        (Math.random()-0.5)*bass*0.2,
+        (Math.random()-0.5)*bass*0.2
+    );
+    ctx.strokeStyle = colorA;
+    ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
+    ctx.restore();
+}
+else if (currentMode === 'spiralcore') {
+    ctx.save(); ctx.translate(cx, cy);
+    for(let i=0;i<100;i++){
+        let a = i*0.3 + rot*4;
+        let r = i*3 + dataArray[i%50];
+        ctx.fillStyle = i%2?colorA:colorB;
+        ctx.fillRect(Math.cos(a)*r,Math.sin(a)*r,3,3);
+    }
+    ctx.restore();
+}
+else if (currentMode === 'strobegrid') {
+    let kick = dataArray[1];
+    if(kick>180){
+        ctx.fillStyle = colorA;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+    ctx.strokeStyle = colorB;
+    for(let x=0;x<canvas.width;x+=40){
+        for(let y=0;y<canvas.height;y+=40){
+            ctx.strokeRect(x,y,20,20);
+        }
+    }
+}
+else if (currentMode === 'fracture') {
+    for(let i=0;i<50;i++){
+        ctx.fillStyle = i%2?colorA:colorB;
+        ctx.fillRect(
+            Math.random()*canvas.width,
+            Math.random()*canvas.height,
+            dataArray[i]*0.3,
+            4
+        );
+    }
+}
+else if (currentMode === 'raverays') {
+    ctx.save(); ctx.translate(cx, cy);
+    for(let i=0;i<60;i++){
+        ctx.rotate(Math.PI/30);
+        ctx.strokeStyle = i%2?colorA:colorB;
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineTo(200+dataArray[i],0);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+else if (currentMode === 'subpulse') {
+    let b = dataArray[0]*2;
+    ctx.beginPath();
+    ctx.strokeStyle = colorA;
+    ctx.arc(cx,cy,b,0,Math.PI*2);
+    ctx.stroke();
+}
+else if (currentMode === 'neuroflow') {
+    ctx.strokeStyle = colorB;
+    ctx.beginPath();
+    for(let i=0;i<dataArray.length;i++){
+        ctx.lineTo(
+            (i/dataArray.length)*canvas.width,
+            cy + Math.sin(i*0.1+rot*3)*dataArray[i]
+        );
+    }
+    ctx.stroke();
+}
+else if (currentMode === 'overdrive') {
+    let o = dataArray[5];
+    ctx.globalAlpha = 0.3;
+    ctx.drawImage(canvas,o-50,0);
+    ctx.globalAlpha = 1;
+}
 
     audio.ontimeupdate = () => { if(!isNaN(audio.duration)) timeline.value = audio.currentTime; document.getElementById('cur-time').innerText = Math.floor(audio.currentTime/60)+":"+Math.floor(audio.currentTime%60).toString().padStart(2,'0'); };
     audio.onloadedmetadata = () => { timeline.max = audio.duration; document.getElementById('dur-time').innerText = Math.floor(audio.duration/60)+":"+Math.floor(audio.duration%60).toString().padStart(2,'0'); };
@@ -351,4 +456,5 @@
     window.onresize = resize; resize();
 </script>
 </body>
+
 </html>

@@ -1660,9 +1660,7 @@ footer {
   <a href="#" onclick="showTabWithTransition('inicio')">INICIO ☢️</a>
   <a href="#" onclick="showTabWithTransition('musica')">NUESTRA MÚSICA</a>
   <a href="#" onclick="showTabWithTransition('visuales')">MÚSICA VISUALES</a>
-  
   <a href="#" onclick="showTabWithTransition('rtbs-visualizer')">RTBS VISUALIZER 🚀</a>
-  
   <a href="#" onclick="showTabWithTransition('videos-cortos')">VÍDEOS CORTOS 🎬</a>
   <a href="#" onclick="showTabWithTransition('redes')">REDES SOCIALES</a>
   <a href="#" onclick="showTabWithTransition('comentarios')">COMENTARIOS</a>
@@ -1874,7 +1872,7 @@ footer {
     </div>
 </div>
 
-    <section id="rtbs-visualizer" class="tab-content" style="display: none; margin-top: 50px;">
+   <section id="rtbs-visualizer" class="forzar-oculto" style="display: none;">
     <div class="post-content">
         <div class="post-title-box">
             <h2 class="post-title">RTBS CREW VISUALIZER</h2>
@@ -3096,31 +3094,28 @@ function showTabWithTransition(tab){
     }, 600);
 }
 
-// ----------------- Tabs -----------------
-// --- Función para mostrar pestañas (Corregida) ---
-function showTab(tabId) {
-    // CORRECCIÓN: Ocultar todas las secciones. Ahora incluye #videos-cortos.
-    document.querySelectorAll('#inicio, #musica, #visuales, #videos-cortos, #redes, #comentarios, #altavoces, #dj, #rtbs-visualizer') 
-        .forEach(section => section.style.display = 'none');
+function showTabWithTransition(tabId) {
+    // 1. FUERZA BRUTA: Escondemos todo lo que tenga la clase de pestaña
+    // y específicamente nuestro visualizador rebelde
+    const elementosParaEsconder = document.querySelectorAll('.tab-content, .seccion, .forzar-oculto');
     
-    // Si hay detalles de lanzamientos abiertos, cerrarlos
-    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
-        detalle.classList.remove('active');
+    elementosParaEsconder.forEach(el => {
+        el.style.setProperty('display', 'none', 'important'); // El 'important' lo fuerza por encima de todo
+        el.classList.remove('active');
     });
 
-    // Si se está mostrando la música, volver a la vista principal (ocultar lanzamientos de DJ)
-    if (tabId !== 'musica') {
-         // Esto evita que se quede solo un detalle de lanzamiento abierto si cambias de pestaña
-         const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
-         if (lanzamientosFlugel) lanzamientosFlugel.classList.remove('active');
-         const lanzamientosTouxman = document.getElementById('lanzamientos-touxman');
-         if (lanzamientosTouxman) lanzamientosTouxman.classList.remove('active');
-         // Restablecer el DJ activo para la próxima vez que se vuelva a 'musica'
-         djActivo = null; 
+    // 2. Encendemos la que toca
+    const activeTab = document.getElementById(tabId);
+    if (activeTab) {
+        activeTab.style.setProperty('display', 'block', 'important');
+        setTimeout(() => {
+            activeTab.classList.add('active');
+        }, 50);
     }
-    
-    const section = document.getElementById(tabId);
-    if (section) section.style.display = 'block';
+
+    // 3. Cerramos menú si estamos en móvil
+    const nav = document.querySelector('nav');
+    if (nav) nav.classList.remove('active');
 }
 
 // ----------------- Comentarios -----------------

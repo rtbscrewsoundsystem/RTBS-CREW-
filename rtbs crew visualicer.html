@@ -103,7 +103,9 @@
       'frequency_blades', 'audio_tentacles', 'broken_signal', 'sonic_orbitals',
       'liquid_mirror', 'vector_storm', 'bass_blackhole', 'neural_pulse', 'data_flow',
       'audio_fabric', 'spectral_sun', 'cyber_fog', 'harmonic_shell', 'bass_inferno',
-      'echo_particles', 'time_rings', 'audio_prism', 'glow_maze', 'cosmic_noise'
+      'echo_particles', 'time_rings', 'audio_prism', 'glow_maze', 'cosmic_noise',
+      // Más nuevos modos
+      'milkdrop', 'kaleidorave', 'feedbackwarp', 'oscillo3d', 'winampclassic', 'rtbs_finalboss'
     ];
 
     // Variables para navegación de modos
@@ -770,6 +772,172 @@
                     ctx.fillStyle = colorA;
                     ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1, 1);
                 }
+                break;
+
+            // Más nuevos modos adicionales
+            case 'milkdrop':
+                let bass = dataArray[1] / 255;
+                let zoom = 1 + bass * 0.08;
+
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.scale(zoom, zoom);
+                ctx.rotate((bass - 0.5) * 0.2);
+                ctx.drawImage(canvas, -cx, -cy);
+                ctx.restore();
+
+                ctx.globalAlpha = 0.6;
+                ctx.strokeStyle = colorA;
+                ctx.beginPath();
+                for (let i = 0; i < dataArray.length; i++) {
+                    let x = (i / dataArray.length) * canvas.width;
+                    let y = cy + Math.sin(i * 0.15 + rot * 4) * dataArray[i] * 0.6;
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+                break;
+                
+            case 'kaleidorave':
+                ctx.save(); 
+                ctx.translate(cx, cy);
+                let slices = 12;
+                for (let s = 0; s < slices; s++) {
+                    ctx.rotate((Math.PI * 2) / slices);
+                    ctx.strokeStyle = s % 2 ? colorA : colorB;
+                    ctx.beginPath();
+                    for (let i = 0; i < 80; i++) {
+                        let r = dataArray[i] * 1.3;
+                        ctx.lineTo(r, Math.sin(i * 0.3 + rot) * r);
+                    }
+                    ctx.stroke();
+                }
+                ctx.restore();
+                break;
+                
+            case 'feedbackwarp':
+                let kick = dataArray[2];
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate((kick - 128) * 0.002);
+                ctx.scale(1.01 + kick * 0.0005, 1.01);
+                ctx.drawImage(canvas, -cx, -cy);
+                ctx.restore();
+
+                ctx.fillStyle = `rgba(0,0,0,0.05)`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                break;
+                
+            case 'oscillo3d':
+                ctx.save(); 
+                ctx.translate(cx, cy);
+                ctx.strokeStyle = colorA;
+                for (let z = 0; z < 8; z++) {
+                    ctx.beginPath();
+                    for (let i = 0; i < dataArray.length; i++) {
+                        let x = (i / dataArray.length) * canvas.width - cx;
+                        let y = Math.sin(i * 0.12 + rot + z) * dataArray[i];
+                        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                    }
+                    ctx.stroke();
+                    ctx.scale(0.9, 0.9);
+                }
+                ctx.restore();
+                break;
+                
+            case 'winampclassic':
+                ctx.save();
+                ctx.globalAlpha = 0.9;
+                ctx.drawImage(canvas, 1, 0);
+                ctx.restore();
+
+                ctx.strokeStyle = colorB;
+                ctx.beginPath();
+                for (let i = 0; i < dataArray.length; i++) {
+                    let x = (i / dataArray.length) * canvas.width;
+                    let y = cy + Math.cos(i * 0.2 + rot * 3) * dataArray[i];
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                break;
+                
+            case 'rtbs_finalboss':
+                // ===== ANALISIS BESTIA =====
+                let sub = dataArray[0] / 255;
+                let kick2 = dataArray[2] / 255;
+                let mid = dataArray[12] / 255;
+                let high = dataArray[40] / 255;
+
+                // ===== FEEDBACK PRINCIPAL (WINAMP PURO) =====
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate((sub - 0.5) * 0.15);
+                ctx.scale(1.01 + kick2 * 0.12, 1.01 + kick2 * 0.12);
+                ctx.drawImage(canvas, -cx, -cy);
+                ctx.restore();
+
+                // ===== OSCURECIDO SUCIO CRT =====
+                ctx.fillStyle = 'rgba(0,0,0,0.08)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // ===== KALEIDOSCOPIO CENTRAL =====
+                ctx.save();
+                ctx.translate(cx, cy);
+                let slices2 = 16;
+                for(let s=0; s<slices2; s++){
+                    ctx.rotate((Math.PI*2)/slices2);
+                    ctx.strokeStyle = s%2 ? colorA : colorB;
+                    ctx.beginPath();
+                    for(let i=0;i<80;i++){
+                        let r = dataArray[i] * (1 + mid*2);
+                        ctx.lineTo(r, Math.sin(i*0.25 + rot*4) * r);
+                    }
+                    ctx.stroke();
+                }
+                ctx.restore();
+
+                // ===== OSCILOSCOPIO VIVO =====
+                ctx.strokeStyle = colorA;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for(let i=0;i<dataArray.length;i++){
+                    let x = (i/dataArray.length)*canvas.width;
+                    let y = cy + Math.sin(i*0.12 + rot*6) * dataArray[i] * 0.7;
+                    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+                }
+                ctx.stroke();
+
+                // ===== RAYOS RAVEROS =====
+                ctx.save();
+                ctx.translate(cx, cy);
+                for(let i=0;i<40;i++){
+                    ctx.rotate(Math.PI/20);
+                    ctx.strokeStyle = i%2 ? colorA : colorB;
+                    ctx.beginPath();
+                    ctx.moveTo(0,0);
+                    ctx.lineTo(200 + kick2*600, 0);
+                    ctx.stroke();
+                }
+                ctx.restore();
+
+                // ===== GLITCH FINAL (CUANDO PEGA FUERTE) =====
+                if(kick2 > 0.75){
+                    let g = (Math.random()-0.5)*kick2*120;
+                    ctx.drawImage(canvas, g, 0);
+                    ctx.fillStyle = colorB;
+                    ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 2);
+                }
+
+                // ===== SCANLINES CRT =====
+                ctx.globalAlpha = 0.15;
+                ctx.strokeStyle = '#000';
+                for(let y=0;y<canvas.height;y+=3){
+                    ctx.beginPath();
+                    ctx.moveTo(0,y);
+                    ctx.lineTo(canvas.width,y);
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
                 break;
                 
             default:

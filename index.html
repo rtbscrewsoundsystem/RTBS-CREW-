@@ -470,6 +470,13 @@ body.light-mode nav a:hover {
     background: #0000FF !important;
     color: #fff !important;
 }
+
+    /* Añade #visualizer-section a tu regla de letras verdes */
+#visualizer-section p, 
+#visualizer-section strong {
+    color: #00FF00 !important;
+    text-shadow: -2px -2px 0 #0000FF, 2px -2px 0 #0000FF, -2px 2px 0 #0000FF, 2px 2px 0 #0000FF !important;
+}
     
 /* --- Sección NUESTRA MÚSICA --- */
 #musica {
@@ -1260,27 +1267,6 @@ iframe {
     border-radius: 5px;
 }
 
-    /* Estilo específico para la descripción del Visualizador */
-#visualizer-tab .descripcion p {
-    color: #00FF00 !important; /* Verde */
-    text-shadow: 
-        -2px -2px 0 #0000FF,  
-         2px -2px 0 #0000FF,
-        -2px  2px 0 #0000FF,
-         2px  2px 0 #0000FF !important; /* Contorno Azul */
-    font-size: 1.1em;
-    line-height: 1.4;
-}
-
-#visualizer-tab .post-title {
-    color: #FF0000 !important; /* Rojo */
-    text-shadow: 
-        -2px -2px 0 #00FF00,  
-         2px -2px 0 #00FF00,
-        -2px  2px 0 #00FF00,
-         2px  2px 0 #00FF00 !important; /* Contorno Verde */
-}
-    
 /* Redes Sociales */
 .redes { 
     display: flex;
@@ -1885,21 +1871,19 @@ footer {
     </div>
 </div>
 
-    <section id="visualizer-tab" class="tab-content">
-    <div class="post-content">
-        <div class="post-title-box">
-            <h2 class="post-title">RTBS CREW VISUALIZER</h2>
-        </div>
+    <section id="visualizer-section" class="post-content" style="margin-top: 50px;">
+    <div class="post-title-box">
+        <h2 class="post-title">RTBS CREW VISUALIZER</h2>
+    </div>
 
-        <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 2px solid #0000FF; background: rgba(0,0,0,0.9);">
-            <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor de música con visualizador ha sido desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de Inteligencia Artificial.</p>
-            <p>Es un experimento técnico para demostrar hasta dónde puede llegar una persona sin conocimientos previos de programación utilizando herramientas de IA para materializar ideas complejas. El proyecto está en <strong>modificación constante</strong>, evolucionando día a día.</p>
-            <p style="color: #FF0000 !important; text-shadow: 2px 2px 0 #00FF00 !important;"><strong>CÓDIGO LIBRE:</strong> Descarga gratuita y modificación permitida. Atribución requerida a: <em>RTBS CREW</em>.</p>
-        </div>
+    <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 1px solid #00FF00; background: rgba(0,0,0,0.8);">
+        <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor de música con visualizador ha sido desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de Inteligencia Artificial.</p>
+        <p>Se trata de un experimento técnico para demostrar hasta dónde puede llegar una persona sin conocimientos previos de programación utilizando herramientas de IA para materializar ideas complejas. El proyecto está en <strong>modificación constante</strong>, evolucionando día a día.</p>
+        <p><strong>SOFTWARE LIBRE:</strong> Es de código abierto y descarga gratuita. Atribución requerida a: <em>RTBS CREW</em>.</p>
+    </div>
 
-        <div style="width: 100%; height: 75vh; border: 3px solid #0000FF; box-shadow: 0 0 20px #0000FF; background: #000; overflow: hidden;">
-            <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;" title="RTBS Visualizer"></iframe>
-        </div>
+    <div class="visualizer-container" style="width: 100%; height: 80vh; border: 2px solid #0000FF; overflow: hidden; background: #000;">
+        <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;" title="RTBS Visualizer"></iframe>
     </div>
 </section>
     

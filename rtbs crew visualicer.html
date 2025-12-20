@@ -22,158 +22,307 @@
         body::after {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), url('https://grainy-gradients.vercel.app/noise.svg');
-            background-size: 100% 2px, auto; opacity: 0.05; pointer-events: none;
+            background-size: 100% 2px, auto; opacity: 0.12; pointer-events: none; z-index: 1000;
         }
 
-        #ui-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 20px; box-sizing: border-box; z-index: 10;
+        .monitor-border {
+            border: 6px solid var(--retro-gray); border-right-color: var(--dark-gray); border-bottom-color: var(--dark-gray);
+            background: var(--retro-gray); padding: 3px; box-shadow: 15px 15px 0px #111; width: 95%; max-width: 600px;
         }
 
-        .win-panel {
-            background: var(--retro-gray); border: 3px solid;
-            border-color: #fff #808080 #808080 #fff;
-            padding: 10px; color: #000; box-shadow: 5px 5px 0 rgba(0,0,0,0.5);
+        .screen { background: #000; height: 750px; border: 2px solid #000; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+
+        header { background: linear-gradient(90deg, var(--win-blue), #0080ff); color: white; padding: 4px 8px; display: flex; justify-content: space-between; font-size: 10px; }
+
+        #visualizer { width: 100%; flex-grow: 1; }
+
+        .timeline-box { background: #000; padding: 8px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--color-primary); }
+        #timeline { flex-grow: 1; accent-color: var(--color-primary); cursor: pointer; }
+
+        .popup-window {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 420px; background: var(--retro-gray); border: 3px solid;
+            border-color: #fff #808080 #808080 #fff; padding: 12px; z-index: 500;
+            display: none; color: #000; box-shadow: 20px 20px 60px rgba(0,0,0,0.9);
         }
 
-        .win-title {
-            background: var(--win-blue); color: #fff; padding: 3px 8px;
-            font-weight: bold; margin-bottom: 10px; display: flex; justify-content: space-between;
+        .section-title { font-weight: bold; font-size: 11px; margin-bottom: 8px; border-bottom: 2px solid #000; }
+        .color-pickers { display: flex; gap: 15px; margin-bottom: 12px; font-weight: bold; font-size: 10px;}
+
+        .eq-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+        .v-slider { appearance: slider-vertical; width: 100%; height: 70px; background: #000; cursor: pointer;}
+        .freq-label { font-size: 7px; text-align: center; margin-top: 3px; }
+
+        .modes-grid-popup { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; 
+            max-height: 350px; overflow-y: auto; padding-right: 5px;
         }
 
-        .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-        button {
-            background: var(--retro-gray); border: 2px solid;
-            border-color: #fff #808080 #808080 #fff;
-            padding: 5px 15px; cursor: pointer; font-family: 'Courier New', monospace;
-            font-weight: bold; transition: 0.1s;
-        }
-
-        button:active { border-color: #808080 #fff #fff #808080; transform: translate(1px, 1px); }
-
-        #visual-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        input[type="range"] { accent-color: var(--win-blue); cursor: pointer; }
-
-        .stat-box { font-size: 12px; border: 2px inset #fff; padding: 5px; background: #eee; }
+        .controls-panel { background: var(--retro-gray); padding: 10px; border-top: 2px solid var(--dark-gray); }
+        .btn-row { display: flex; gap: 5px; }
         
-        #song-info { font-weight: bold; font-size: 18px; color: var(--win-blue); }
+        button {
+            font-family: 'Courier New', monospace; font-size: 9px; font-weight: bold;
+            background: var(--retro-gray); border: 2px solid;
+            border-color: #fff #404040 #404040 #fff; padding: 6px; cursor: pointer;
+        }
+        button:active { border-color: #404040 #fff #fff #404040; }
+        .active-btn { background: var(--color-primary) !important; color: #000 !important; }
     </style>
 </head>
 <body>
 
-    <canvas id="visual-canvas"></canvas>
+<div class="monitor-border">
+    <div class="screen">
+        <header>
+            <span>RTBS_X_ULTRA_v6.0</span>
+            <span id="cur-mode-text">MODE: BARS</span>
+        </header>
 
-    <div id="ui-layer">
-        <div class="win-panel" style="width: fit-content;">
-            <div class="win-title"><span>SYSTEM_INFO.EXE</span><span>[X]</span></div>
-            <div id="song-info">RTBS_CREW_READY...</div>
-            <div id="time-info" class="stat-box">TIME: <span id="cur-time">0:00</span> / <span id="dur-time">0:00</span></div>
+        <canvas id="visualizer"></canvas>
+
+        <div class="timeline-box">
+            <span id="cur-time" style="font-size:10px">0:00</span>
+            <input type="range" id="timeline" min="0" value="0">
+            <span id="dur-time" style="font-size:10px">0:00</span>
         </div>
 
-        <div class="win-panel">
-            <div class="win-title"><span>MEDIA_PLAYER_CONTROLS</span><span>[_]</span></div>
-            <div class="controls">
-                <input type="file" id="audio-upload" accept="audio/*" style="display:none">
-                <button onclick="document.getElementById('audio-upload').click()">[LOAD_FILE]</button>
-                <button id="play-btn">[PLAY]</button>
-                <button id="mode-btn">[MODE]</button>
-                <button id="color-btn">[PALETTE]</button>
-                <input type="range" id="timeline" value="0" style="flex-grow:1">
+        <div id="settings-popup" class="popup-window">
+            <div class="section-title">SYSTEM COLORS</div>
+            <div class="color-pickers">
+                PRIMARY: <input type="color" id="pick-c1" value="#00ff41">
+                SECONDARY: <input type="color" id="pick-c2" value="#0080ff">
+            </div>
+            <div class="section-title">20-BAND EQUALIZER</div>
+            <div class="eq-grid" id="eq-row-1"></div>
+            <div style="margin: 5px 0;"></div>
+            <div class="eq-grid" id="eq-row-2"></div>
+            <button onclick="togglePopup('settings-popup')" style="width:100%; margin-top:10px; background:#f00; color:#fff;">CLOSE</button>
+        </div>
+
+        <div id="modes-popup" class="popup-window">
+            <div class="section-title">SELECT VISUALIZER (24 MODES)</div>
+            <div class="modes-grid-popup" id="mode-grid-container"></div>
+            <button onclick="togglePopup('modes-popup')" style="width:100%; margin-top:10px; background:#444; color:#fff;">CLOSE</button>
+        </div>
+
+        <div class="controls-panel">
+            <input type="file" id="audio-upload" accept="audio/*" style="width:100%; font-size:9px; margin-bottom:8px;">
+            <div class="btn-row">
+                <button id="play-btn" style="background:#00ff41; color:#000; flex:1;">POWER / PLAY</button>
+                <button onclick="togglePopup('settings-popup')" style="background:#ffcc00">SETTINGS</button>
+                <button onclick="togglePopup('modes-popup')" style="background:#0080ff; color:white;">VISUAL MODES</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-    const canvas = document.getElementById('visual-canvas');
-    const ctx = canvas.getContext('2d');
+<script>
     const audio = new Audio();
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    let source, analyser, dataArray;
+    const canvas = document.getElementById('visualizer');
+    const ctx = canvas.getContext('2d');
+    const timeline = document.getElementById('timeline');
+    const playBtn = document.getElementById('play-btn');
 
-    // LISTA DE MODOS CORREGIDA
-    const modes = ['bars', 'wave', 'cyber', 'radial', 'plasma', 'acidwarp', 'bassquake', 'spiralcore', 'strobegrid', 'fracture', 'raverays', 'subpulse', 'neuroflow', 'overdrive'];
-    let currentMode = 'bars';
-    
-    let colorA = '#00ff41', colorB = '#0080ff';
-    const palettes = [
-        ['#00ff41', '#0080ff'], ['#ff0000', '#ffff00'], 
-        ['#ff00ff', '#00ffff'], ['#ffffff', '#444444']
+    let audioCtx, analyser, dataArray, filters = [], initialized = false;
+    let currentMode = 'bars', rot = 0, particles = [];
+    let colorA = "#00ff41", colorB = "#0080ff";
+
+    const modeList = [
+        'bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 
+        'wave', 'hex', 'stars', 'rings', 'dots', 'scope', 'flower', 'glitch', 
+        'cyber', 'nebula', 'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos'
     ];
-    let currentPalette = 0;
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.onresize = resize;
-    resize();
+    const grid = document.getElementById('mode-grid-container');
+    modeList.forEach(m => {
+        const btn = document.createElement('button');
+        btn.innerText = m.toUpperCase();
+        btn.onclick = () => { changeMode(m); togglePopup('modes-popup'); };
+        grid.appendChild(btn);
+    });
 
-    document.getElementById('audio-upload').onchange = function(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-        document.getElementById('song-info').innerText = file.name.toUpperCase();
-        audio.src = URL.createObjectURL(file);
-        setupAudio();
-    };
+    document.getElementById('pick-c1').oninput = (e) => { colorA = e.target.value; document.documentElement.style.setProperty('--color-primary', colorA); };
+    document.getElementById('pick-c2').oninput = (e) => { colorB = e.target.value; document.documentElement.style.setProperty('--color-secondary', colorB); };
 
-    function setupAudio() {
-        if(!source) {
-            source = audioCtx.createMediaElementSource(audio);
-            analyser = audioCtx.createAnalyser();
-            source.connect(analyser);
-            analyser.connect(audioCtx.destination);
-            analyser.fftSize = 256;
+    const freqs = [32, 64, 125, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 14000, 16000, 18000];
+    freqs.forEach((f, i) => {
+        const container = i < 10 ? document.getElementById('eq-row-1') : document.getElementById('eq-row-2');
+        const box = document.createElement('div');
+        box.innerHTML = `<input type="range" class="v-slider" min="-20" max="20" value="0" oninput="updateF(${i}, this.value)"><div class="freq-label">${f<1000?f:f/1000+'k'}</div>`;
+        container.appendChild(box);
+    });
+
+    function togglePopup(id) { const p = document.getElementById(id); p.style.display = (p.style.display === 'block') ? 'none' : 'block'; }
+    function updateF(i, v) { if(filters[i]) filters[i].gain.value = v; }
+    function changeMode(m) { currentMode = m; document.getElementById('cur-mode-text').innerText = "MODE: " + m.toUpperCase(); }
+
+    document.getElementById('audio-upload').onchange = (e) => audio.src = URL.createObjectURL(e.target.files[0]);
+
+    playBtn.onclick = () => {
+        if (!initialized) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let source = audioCtx.createMediaElementSource(audio);
+            let last = source;
+            freqs.forEach((f, i) => {
+                const flt = audioCtx.createBiquadFilter(); flt.type = "peaking"; flt.frequency.value = f;
+                filters.push(flt); last.connect(flt); last = flt;
+            });
+            analyser = audioCtx.createAnalyser(); analyser.fftSize = 512;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
-            draw();
+            last.connect(analyser); analyser.connect(audioCtx.destination);
+            initialized = true; draw();
         }
-    }
-
-    document.getElementById('play-btn').onclick = () => {
-        if(audioCtx.state === 'suspended') audioCtx.resume();
         audio.paused ? audio.play() : audio.pause();
-        document.getElementById('play-btn').innerText = audio.paused ? '[PLAY]' : '[PAUSE]';
     };
 
-    document.getElementById('mode-btn').onclick = () => {
-        let idx = (modes.indexOf(currentMode) + 1) % modes.length;
-        currentMode = modes[idx];
-    };
-
-    document.getElementById('color-btn').onclick = () => {
-        currentPalette = (currentPalette + 1) % palettes.length;
-        colorA = palettes[currentPalette][0];
-        colorB = palettes[currentPalette][1];
-    };
-
-    let rot = 0;
     function draw() {
         requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
+        if(!initialized) return;
 
         ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        const isTimeMode = ['wave', 'scope', 'glitch', 'oscilloscope', 'chaos', 'pulse'].includes(currentMode);
+        if(isTimeMode) analyser.getByteTimeDomainData(dataArray);
+        else analyser.getByteFrequencyData(dataArray);
+
+        rot += 0.01;
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
-        rot += 0.01;
 
         if (currentMode === 'bars') {
-            const barWidth = canvas.width / dataArray.length;
-            for(let i=0; i<dataArray.length; i++) {
-                let h = dataArray[i] * 1.5;
-                ctx.fillStyle = i%2 ? colorA : colorB;
-                ctx.fillRect(i*barWidth, canvas.height - h, barWidth-1, h);
+            for(let i=0; i<60; i++){
+                ctx.fillStyle = i%2===0?colorA:colorB;
+                let h = (dataArray[i]/255)*canvas.height;
+                ctx.fillRect(i*(canvas.width/60), canvas.height-h, (canvas.width/60)-1, h);
             }
         } 
-        else if (currentMode === 'wave') {
-            ctx.beginPath();
-            ctx.strokeStyle = colorA;
-            ctx.lineWidth = 3;
+        else if (currentMode === 'rave') {
+            ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+            for(let i=0; i<dataArray.length; i+=8){
+                ctx.strokeStyle = i%16===0?colorA:colorB; ctx.beginPath();
+                ctx.arc(0,0, dataArray[i]*0.8, 0, Math.PI*2); ctx.stroke(); ctx.rotate(0.05);
+            }
+            ctx.restore();
+        }
+        else if (currentMode === 'dna') {
+            for(let i=0; i<dataArray.length; i+=4){
+                ctx.fillStyle = i%8===0?colorA:colorB;
+                let y = cy + Math.sin(i*0.1 + rot*4)*(dataArray[i]/2);
+                ctx.beginPath(); ctx.arc((i/dataArray.length)*canvas.width, y, 2, 0, Math.PI*2); ctx.fill();
+            }
+        }
+        else if (currentMode === 'tunnel') {
+            for(let i=0; i<dataArray.length; i+=15){
+                ctx.strokeStyle = i%30===0?colorA:colorB;
+                let s = dataArray[i]*1.2; ctx.strokeRect(cx-s/2, cy-s/2, s, s);
+            }
+        }
+        else if (currentMode === 'matrix') {
+            ctx.font = "10px monospace";
+            for(let i=0; i<dataArray.length; i+=10){
+                ctx.fillStyle = dataArray[i]>140?colorA:colorB;
+                ctx.fillText(Math.floor(Math.random()*9), (i/dataArray.length)*canvas.width, (dataArray[i]/255)*canvas.height);
+            }
+        }
+        else if (currentMode === 'vortex') {
+            ctx.save(); ctx.translate(cx, cy);
+            for(let i=0; i<dataArray.length; i+=4){
+                let a = i*0.1 + rot; let r = dataArray[i];
+                ctx.fillStyle = i%8===0?colorA:colorB;
+                ctx.fillRect(Math.cos(a)*r, Math.sin(a)*r, 2, 2);
+            }
+            ctx.restore();
+        }
+        else if (currentMode === 'laser') {
+            ctx.strokeStyle = colorA; ctx.beginPath();
+            for(let i=0; i<10; i++){
+                ctx.moveTo(cx, cy); ctx.lineTo(Math.random()*canvas.width, (dataArray[i*10]/255)*canvas.height);
+            }
+            ctx.stroke();
+        }
+        else if (currentMode === 'flower') {
+            ctx.save(); ctx.translate(cx, cy);
+            for(let i=0; i<32; i++){
+                ctx.rotate(Math.PI/16); ctx.fillStyle = colorB;
+                ctx.fillRect(20, 0, dataArray[i], 2);
+            }
+            ctx.restore();
+        }
+        else if (currentMode === 'glitch') {
+            let shift = (dataArray[20]-128);
+            ctx.drawImage(canvas, shift, 0, canvas.width, canvas.height);
+            ctx.fillStyle = colorA; if(shift > 20) ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 1);
+        }
+        else if (currentMode === 'stars') {
+            if(dataArray[10]>180) particles.push({x:Math.random()*canvas.width, y:canvas.height, v:Math.random()*5+2});
+            particles.forEach((p,i) => {
+                p.y -= p.v; ctx.fillStyle = colorA; ctx.fillRect(p.x, p.y, 2, 2);
+                if(p.y<0) particles.splice(i,1);
+            });
+        }
+        else if (currentMode === 'nebula') {
+            let avg = dataArray[10]; ctx.fillStyle = colorB; ctx.globalAlpha = 0.1;
+            ctx.beginPath(); ctx.arc(cx, cy, avg*1.5, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1;
+        }
+        else if (currentMode === 'oscilloscope' || currentMode === 'wave') {
+            ctx.strokeStyle = colorA; ctx.beginPath();
             for(let i=0; i<dataArray.length; i++) {
-                ctx.lineTo(i * (canvas.width/dataArray.length), cy + (dataArray[i]-128));
+                let x = (i/dataArray.length)*canvas.width;
+                let y = (dataArray[i]/255)*canvas.height;
+                i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+            }
+            ctx.stroke();
+        }
+        else if (currentMode === 'spectrum') {
+            for(let i=0; i<dataArray.length; i+=5) {
+                ctx.fillStyle = colorB;
+                ctx.fillRect((i/dataArray.length)*canvas.width, canvas.height-dataArray[i], 3, 3);
+            }
+        }
+        else if (currentMode === 'rings') {
+            for(let i=0; i<5; i++){
+                ctx.strokeStyle = colorA; ctx.beginPath();
+                ctx.arc(cx, cy, dataArray[i*20], 0, Math.PI*2); ctx.stroke();
+            }
+        }
+        else if (currentMode === 'dots') {
+            for(let i=0; i<dataArray.length; i+=10){
+                ctx.fillStyle = colorA; ctx.beginPath();
+                ctx.arc((i/dataArray.length)*canvas.width, canvas.height-dataArray[i], 2, 0, Math.PI*2); ctx.fill();
+            }
+        }
+        else if (currentMode === 'hex') {
+            ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot); ctx.strokeStyle = colorB;
+            ctx.beginPath(); for(let i=0; i<6; i++){
+                let r = dataArray[i*10]+50; ctx.lineTo(Math.cos(i*Math.PI/3)*r, Math.sin(i*Math.PI/3)*r);
+            }
+            ctx.closePath(); ctx.stroke(); ctx.restore();
+        }
+        else if (currentMode === 'grid') {
+            ctx.strokeStyle = colorB; ctx.globalAlpha = 0.3;
+            for(let i=0; i<canvas.width; i+=40) {
+                let h = dataArray[i%50]; ctx.strokeRect(i, cy-h, 20, h*2);
+            }
+            ctx.globalAlpha = 1;
+        }
+        else if (currentMode === 'pulse') {
+            let s = dataArray[10]/100; ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s);
+            ctx.strokeStyle = colorA; ctx.strokeRect(-50, -50, 100, 100); ctx.restore();
+        }
+        else if (currentMode === 'orbit') {
+            ctx.save(); ctx.translate(cx, cy);
+            for(let i=0; i<4; i++) {
+                ctx.rotate(rot + i); ctx.fillStyle = colorA;
+                ctx.beginPath(); ctx.arc(dataArray[i*10], 0, 5, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.restore();
+        }
+        else if (currentMode === 'chaos') {
+            ctx.beginPath(); ctx.strokeStyle = colorB;
+            for(let i=0; i<20; i++) {
+                ctx.lineTo(Math.random()*canvas.width, (dataArray[i]/255)*canvas.height);
             }
             ctx.stroke();
         }
@@ -192,110 +341,14 @@
             }
             ctx.restore();
         }
-        else if (currentMode === 'plasma') {
-            ctx.save(); ctx.translate(cx, cy);
-            for(let i=0; i<120; i++){
-                let a = i*0.15 + rot;
-                let r = dataArray[i%dataArray.length]*1.2;
-                ctx.fillStyle = `hsla(${r*2},100%,50%,0.3)`;
-                ctx.beginPath();
-                ctx.arc(Math.cos(a)*r, Math.sin(a)*r, 4, 0, Math.PI*2);
-                ctx.fill();
-            }
-            ctx.restore();
-        }
-        else if (currentMode === 'acidwarp') {
-            ctx.save(); ctx.translate(cx, cy);
-            for(let i=0;i<dataArray.length;i+=6){
-                let s = dataArray[i]/2;
-                ctx.rotate(0.02);
-                ctx.strokeStyle = i%12?colorA:colorB;
-                ctx.strokeRect(-s/2,-s/2,s,s);
-            }
-            ctx.restore();
-        }
-        else if (currentMode === 'bassquake') {
-            let bass = dataArray[2];
-            ctx.save();
-            ctx.translate((Math.random()-0.5)*bass*0.2, (Math.random()-0.5)*bass*0.2);
-            ctx.strokeStyle = colorA;
-            ctx.strokeRect(50,50,canvas.width-100,canvas.height-100);
-            ctx.restore();
-        }
-        else if (currentMode === 'spiralcore') {
-            ctx.save(); ctx.translate(cx, cy);
-            for(let i=0;i<100;i++){
-                let a = i*0.3 + rot*4;
-                let r = i*3 + dataArray[i%50];
-                ctx.fillStyle = i%2?colorA:colorB;
-                ctx.fillRect(Math.cos(a)*r,Math.sin(a)*r,3,3);
-            }
-            ctx.restore();
-        }
-        else if (currentMode === 'strobegrid') {
-            let kick = dataArray[1];
-            if(kick>180){
-                ctx.fillStyle = colorA;
-                ctx.fillRect(0,0,canvas.width,canvas.height);
-            }
-            ctx.strokeStyle = colorB;
-            for(let x=0;x<canvas.width;x+=40){
-                for(let y=0;y<canvas.height;y+=40){
-                    ctx.strokeRect(x,y,20,20);
-                }
-            }
-        }
-        else if (currentMode === 'fracture') {
-            for(let i=0;i<50;i++){
-                ctx.fillStyle = i%2?colorA:colorB;
-                ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, dataArray[i]*0.3, 4);
-            }
-        }
-        else if (currentMode === 'raverays') {
-            ctx.save(); ctx.translate(cx, cy);
-            for(let i=0;i<60;i++){
-                ctx.rotate(Math.PI/30);
-                ctx.strokeStyle = i%2?colorA:colorB;
-                ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(200+dataArray[i],0); ctx.stroke();
-            }
-            ctx.restore();
-        }
-        else if (currentMode === 'subpulse') {
-            let b = dataArray[0]*2;
-            ctx.beginPath();
-            ctx.strokeStyle = colorA;
-            ctx.arc(cx,cy,b,0,Math.PI*2);
-            ctx.stroke();
-        }
-        else if (currentMode === 'neuroflow') {
-            ctx.strokeStyle = colorB;
-            ctx.beginPath();
-            for(let i=0;i<dataArray.length;i++){
-                ctx.lineTo((i/dataArray.length)*canvas.width, cy + Math.sin(i*0.1+rot*3)*dataArray[i]);
-            }
-            ctx.stroke();
-        }
-        else if (currentMode === 'overdrive') {
-            let o = dataArray[5];
-            ctx.save();
-            ctx.globalAlpha = 0.3;
-            ctx.drawImage(canvas, o - 50, 0);
-            ctx.globalAlpha = 1;
-            ctx.restore();
-        }
     }
 
-    audio.ontimeupdate = () => { 
-        if(!isNaN(audio.duration)) {
-            document.getElementById('timeline').value = audio.currentTime; 
-            document.getElementById('cur-time').innerText = Math.floor(audio.currentTime/60)+":"+Math.floor(audio.currentTime%60).toString().padStart(2,'0'); 
-        }
-    };
-    audio.onloadedmetadata = () => { 
-        document.getElementById('timeline').max = audio.duration; 
-        document.getElementById('dur-time').innerText = Math.floor(audio.duration/60)+":"+Math.floor(audio.duration%60).toString().padStart(2,'0'); 
-    };
-    document.getElementById('timeline').oninput = (e) => audio.currentTime = e.target.value;
-    </script>
+    audio.ontimeupdate = () => { if(!isNaN(audio.duration)) timeline.value = audio.currentTime; document.getElementById('cur-time').innerText = Math.floor(audio.currentTime/60)+":"+Math.floor(audio.currentTime%60).toString().padStart(2,'0'); };
+    audio.onloadedmetadata = () => { timeline.max = audio.duration; document.getElementById('dur-time').innerText = Math.floor(audio.duration/60)+":"+Math.floor(audio.duration%60).toString().padStart(2,'0'); };
+    timeline.oninput = () => audio.currentTime = timeline.value;
+
+    function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+    window.onresize = resize; resize();
+</script>
 </body>
 </html>

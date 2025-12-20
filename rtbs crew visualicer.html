@@ -1,209 +1,201 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>RTBS CREW - V11.0 TOTAL COLOR CONTROL</title>
-<style>
-:root { --color-primary:#00ff41; --color-secondary:#0080ff; --win-blue:#000080; --retro-gray:#c0c0c0; }
-body{background:#000;color:var(--color-primary);font-family:'Courier New',monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;overflow:hidden}
-.monitor-border{border:6px solid var(--retro-gray);background:var(--retro-gray);padding:3px;box-shadow:15px 15px 0 #111;width:95%;max-width:800px}
-.screen{background:#000;height:700px;border:2px solid #000;display:flex;flex-direction:column;position:relative}
-header{background:linear-gradient(90deg,var(--win-blue),#0080ff);color:#fff;padding:4px;font-size:10px;font-weight:bold;display:flex;justify-content:space-between}
-#visualizer{width:100%;flex-grow:1}
-.popup-window{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;background:var(--retro-gray);border:3px solid #fff;padding:15px;z-index:500;display:none;color:#000;box-shadow:0 0 50px #000}
-.section-title{font-weight:bold;border-bottom:2px solid #000;margin-bottom:10px}
-.eq-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
-.v-slider{appearance:slider-vertical;width:100%;height:80px;background:#000}
-.modes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-height:300px;overflow-y:auto}
-.controls{background:var(--retro-gray);padding:10px;display:flex;gap:10px;border-top:2px solid #404040}
-button{font-family:'Courier New';font-weight:bold;font-size:10px;padding:6px;cursor:pointer;background:var(--retro-gray);border:2px solid;border-color:#fff #404040 #404040 #fff}
-</style>
+    <meta charset="UTF-8">
+    <title>RTBS CREW - V12.0 FINAL REPAIR</title>
+    <style>
+        :root { --p: #00ff41; --s: #0080ff; --bg: #c0c0c0; --win: #000080; }
+        body { background: #000; color: var(--p); font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .monitor { border: 4px solid var(--bg); background: var(--bg); padding: 2px; box-shadow: 10px 10px 0 #000; width: 90vw; max-width: 800px; }
+        .screen { background: #000; height: 600px; display: flex; flex-direction: column; position: relative; border: 2px solid #000; }
+        header { background: linear-gradient(90deg, var(--win), #0080ff); color: #fff; padding: 4px; font-size: 11px; display: flex; justify-content: space-between; font-weight: bold; }
+        canvas { width: 100%; flex-grow: 1; cursor: crosshair; }
+        
+        /* Línea de Tiempo */
+        .timeline-container { background: #000; padding: 10px; border-top: 1px solid var(--p); display: flex; align-items: center; gap: 10px; }
+        #timeline { flex: 1; cursor: pointer; accent-color: var(--p); }
+
+        .popup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; background: var(--bg); border: 3px solid #fff; padding: 15px; z-index: 100; display: none; color: #000; box-shadow: 0 0 40px #000; }
+        .eq-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin: 10px 0; }
+        .v-slider { appearance: slider-vertical; width: 100%; height: 80px; background: #000; }
+        
+        .controls { background: var(--bg); padding: 10px; display: flex; gap: 8px; border-top: 2px solid #404040; }
+        button { font-family: 'Courier New'; font-weight: bold; font-size: 10px; padding: 6px; cursor: pointer; background: var(--bg); border: 2px solid; border-color: #fff #404040 #404040 #fff; }
+        button:active { border-color: #404040 #fff #fff #404040; }
+        .modes-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; max-height: 300px; overflow-y: auto; }
+    </style>
 </head>
-
 <body>
-<div class="monitor-border">
-<div class="screen">
-<header>
-<span>RTBS_X_COLOR_ENGINE_V11</span>
-<span id="cur-mode-text">MODE: BARS</span>
-</header>
 
-<canvas id="visualizer"></canvas>
+<div class="monitor">
+    <div class="screen">
+        <header><span>RTBS_SYSTEM_V12.0_STABLE</span><span id="cur-mode-txt">MODE: BARS</span></header>
+        <canvas id="v"></canvas>
 
-<div id="settings-popup" class="popup-window">
-<div class="section-title">COLOR CUSTOMIZATION</div>
-<div style="display:flex;justify-content:space-around;margin-bottom:15px;background:#888;padding:10px;border:2px inset #fff">
-<div><label>PRIMARY</label><br><input type="color" id="pick-c1" value="#00ff41"></div>
-<div><label>SECONDARY</label><br><input type="color" id="pick-c2" value="#0080ff"></div>
-</div>
-<div class="section-title">20-BAND EQUALIZER</div>
-<div class="eq-grid" id="eq-row-1"></div>
-<div style="margin:5px"></div>
-<div class="eq-grid" id="eq-row-2"></div>
-<button onclick="togglePopup('settings-popup')" style="width:100%;margin-top:10px;background:#f00;color:#fff">APPLY</button>
-</div>
+        <div class="timeline-container">
+            <span id="time-curr" style="font-size:10px">0:00</span>
+            <input type="range" id="timeline" value="0" min="0" step="0.1">
+            <span id="time-total" style="font-size:10px">0:00</span>
+        </div>
 
-<div id="modes-popup" class="popup-window">
-<div class="section-title">SELECT VISUAL MODE</div>
-<div class="modes-grid" id="mode-grid-container"></div>
-<button onclick="togglePopup('modes-popup')" style="width:100%;margin-top:10px">CLOSE</button>
-</div>
+        <div id="pop-settings" class="popup">
+            <b style="font-size:12px">COLOR CONFIG</b>
+            <div style="margin: 10px 0; display: flex; gap: 20px;">
+                C1: <input type="color" id="c1" value="#00ff41">
+                C2: <input type="color" id="c2" value="#0080ff">
+            </div>
+            <b style="font-size:12px">20-BAND EQUALIZER</b>
+            <div class="eq-grid" id="eq-1"></div>
+            <div class="eq-grid" id="eq-2"></div>
+            <div style="display: flex; gap: 5px;">
+                <button onclick="resetEQ()" style="flex:1; background:#ffeb3b">RESET EQ (0dB)</button>
+                <button onclick="togglePop('pop-settings')" style="flex:1; background:#f44336; color:#fff">CLOSE</button>
+            </div>
+        </div>
 
-<div class="controls">
-<input type="file" id="audio-upload" accept="audio/*" style="font-size:10px;flex:1">
-<button id="play-btn" style="background:#00ff41">PLAY / PAUSE</button>
-<button onclick="togglePopup('settings-popup')" style="background:#ffcc00">COLORS & EQ</button>
-<button onclick="togglePopup('modes-popup')" style="background:#0080ff;color:#fff">MODES</button>
-</div>
-</div>
+        <div id="pop-modes" class="popup">
+            <b style="font-size:12px">SELECT VISUALIZER</b>
+            <div class="modes-list" id="modes-grid"></div>
+            <button onclick="togglePop('pop-modes')" style="width:100%; margin-top:10px;">CERRAR</button>
+        </div>
+
+        <div class="controls">
+            <input type="file" id="file" accept="audio/*" style="font-size:9px; flex:1">
+            <button id="btn-play" style="background:var(--p)">POWER/PLAY</button>
+            <button onclick="togglePop('pop-settings')" style="background:#ffcc00">EQ/COLOR</button>
+            <button onclick="togglePop('pop-modes')" style="background:var(--s); color:#fff">MODES</button>
+        </div>
+    </div>
 </div>
 
 <script>
-const audio=new Audio();
-const canvas=document.getElementById('visualizer');
-const ctx=canvas.getContext('2d');
-let audioCtx,analyser,dataArray,filters=[],initialized=false;
-let currentMode='bars',rot=0;
-let colorA="#00ff41",colorB="#0080ff";
+    const audio = new Audio();
+    const canvas = document.getElementById('v'), ctx = canvas.getContext('2d');
+    const timeline = document.getElementById('timeline');
+    let audioCtx, analyser, dataArray, filters = [], initialized = false;
+    let mode = 'bars', colorA = "#00ff41", colorB = "#0080ff", rot = 0;
 
-const modeList=['bars','rave','dna','tunnel','matrix','vortex','radial','laser','wave','hex','stars','rings','dots','flower','glitch','cyber','nebula','oscilloscope','spectrum','grid','pulse','orbit','chaos','psycho_sphere','liquid_dream','fractal_tree','chrome_whirl','ghost_pulse'];
+    const modes = ['bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 'wave', 'hex', 'stars', 'rings', 'dots', 'flower', 'glitch', 'cyber', 'nebula', 'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos', 'psycho_sphere', 'liquid_dream', 'fractal_tree', 'chrome_whirl', 'ghost_pulse'];
 
-const grid=document.getElementById('mode-grid-container');
-modeList.forEach(m=>{
-const b=document.createElement('button');
-b.innerText=m.toUpperCase();
-b.onclick=()=>{currentMode=m;document.getElementById('cur-mode-text').innerText="MODE: "+m.toUpperCase();togglePopup('modes-popup')};
-grid.appendChild(b);
-});
+    // UI: Botones de modos
+    const mGrid = document.getElementById('modes-grid');
+    modes.forEach(m => {
+        const b = document.createElement('button'); b.innerText = m.toUpperCase();
+        b.onclick = () => { mode = m; document.getElementById('cur-mode-txt').innerText = "MODE: "+m.toUpperCase(); togglePop('pop-modes'); };
+        mGrid.appendChild(b);
+    });
 
-document.getElementById('pick-c1').oninput=e=>{colorA=e.target.value;document.documentElement.style.setProperty('--color-primary',colorA)};
-document.getElementById('pick-c2').oninput=e=>{colorB=e.target.value;document.documentElement.style.setProperty('--color-secondary',colorB)};
+    // EQ: 20 Bandas
+    const fVals = [32, 64, 125, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 14000, 16000, 18000];
+    fVals.forEach((f, i) => {
+        const target = i < 10 ? 'eq-1' : 'eq-2';
+        const d = document.createElement('div');
+        d.innerHTML = `<input type="range" class="v-slider" id="f-${i}" min="-20" max="20" value="0" oninput="changeF(${i}, this.value)"><div style="font-size:6px;text-align:center">${f<1000?f:f/1000+'k'}</div>`;
+        document.getElementById(target).appendChild(d);
+    });
 
-const freqs=[32,64,125,250,500,750,1000,1500,2000,2500,3000,4000,5000,6000,8000,10000,12000,14000,16000,18000];
-freqs.forEach((f,i)=>{
-const c=i<10?eq-row-1:eq-row-2;
-const d=document.createElement('div');
-d.innerHTML=`<input type="range" class="v-slider" min="-20" max="20" value="0" oninput="updateF(${i},this.value)"><div style="font-size:7px;text-align:center">${f<1000?f:f/1000+'k'}</div>`;
-c.appendChild(d);
-});
+    function togglePop(id) { const p = document.getElementById(id); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
+    function changeF(i, v) { if(filters[i]) filters[i].gain.value = v; }
+    function resetEQ() { filters.forEach((f, i) => { f.gain.value = 0; document.getElementById(`f-${i}`).value = 0; }); }
 
-function togglePopup(id){const p=document.getElementById(id);p.style.display=p.style.display==='block'?'none':'block'}
-function updateF(i,v){if(filters[i])filters[i].gain.value=v}
-document.getElementById('audio-upload').onchange=e=>audio.src=URL.createObjectURL(e.target.files[0]);
+    // Colores
+    document.getElementById('c1').oninput = (e) => colorA = e.target.value;
+    document.getElementById('c2').oninput = (e) => colorB = e.target.value;
 
-/* ========= TIMELINE ========= */
-const timeline=[
-{t:0,mode:'bars'},
-{t:10,mode:'wave'},
-{t:20,mode:'psycho_sphere',fx:['zoomPulse']},
-{t:30,mode:'liquid_dream',fx:['invert']},
-{t:45,mode:'matrix',fx:['shake']},
-{t:60,mode:'fractal_tree',fx:['rgbSplit']},
-{t:75,mode:'chaos',fx:['flash']}
-];
-let activeFX=new Set(),lastTimelineIndex=-1;
+    // Audio & Timeline
+    document.getElementById('file').onchange = (e) => audio.src = URL.createObjectURL(e.target.files[0]);
+    
+    // FUNCIONALIDAD DE LA LÍNEA DE TIEMPO
+    audio.onloadedmetadata = () => { timeline.max = audio.duration; document.getElementById('time-total').innerText = formatT(audio.duration); };
+    audio.ontimeupdate = () => { if(!dragging) { timeline.value = audio.currentTime; document.getElementById('time-curr').innerText = formatT(audio.currentTime); } };
+    let dragging = false;
+    timeline.onmousedown = () => dragging = true;
+    timeline.onmouseup = () => { audio.currentTime = timeline.value; dragging = false; };
+    function formatT(s) { let m = Math.floor(s/60); s = Math.floor(s%60); return m + ":" + (s<10?'0':'')+s; }
 
-function updateTimeline(){
-if(!audio.duration)return;
-for(let i=timeline.length-1;i>=0;i--){
-if(audio.currentTime>=timeline[i].t && i!==lastTimelineIndex){
-lastTimelineIndex=i;
-currentMode=timeline[i].mode;
-document.getElementById('cur-mode-text').innerText="MODE: "+currentMode.toUpperCase();
-activeFX.clear();
-(timeline[i].fx||[]).forEach(f=>activeFX.add(f));
-break;
-}}
-}
+    document.getElementById('btn-play').onclick = () => {
+        if (!initialized) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let src = audioCtx.createMediaElementSource(audio);
+            let prev = src;
+            fVals.forEach((f, i) => {
+                const flt = audioCtx.createBiquadFilter(); flt.type = "peaking"; flt.frequency.value = f;
+                filters.push(flt); prev.connect(flt); prev = flt;
+            });
+            analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            prev.connect(analyser); analyser.connect(audioCtx.destination);
+            initialized = true; loop();
+        }
+        audio.paused ? audio.play() : audio.pause();
+    };
 
-document.getElementById('play-btn').onclick=()=>{
-if(!initialized){
-audioCtx=new AudioContext();
-let source=audioCtx.createMediaElementSource(audio);
-let last=source;
-freqs.forEach(f=>{
-const flt=audioCtx.createBiquadFilter();
-flt.type="peaking";flt.frequency.value=f;
-filters.push(flt);last.connect(flt);last=flt;
-});
-analyser=audioCtx.createAnalyser();
-analyser.fftSize=512;
-dataArray=new Uint8Array(analyser.frequencyBinCount);
-last.connect(analyser);
-analyser.connect(audioCtx.destination);
-initialized=true;draw();
-}
-audio.paused?audio.play():audio.pause();
-};
+    function loop() {
+        requestAnimationFrame(loop);
+        const trail = ['psycho_sphere', 'liquid_dream', 'rave', 'vortex', 'chrome_whirl'].includes(mode) ? 0.15 : 0.8;
+        ctx.fillStyle = `rgba(0,0,0,${trail})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function draw(){
-requestAnimationFrame(draw);
-if(!initialized)return;
-updateTimeline();
+        const isT = ['wave', 'oscilloscope', 'chaos', 'pulse', 'glitch'].includes(mode);
+        isT ? analyser.getByteTimeDomainData(dataArray) : analyser.getByteFrequencyData(dataArray);
 
-ctx.fillStyle=['psycho_sphere','liquid_dream','rave','vortex','chrome_whirl'].includes(currentMode)?'rgba(0,0,0,.15)':'rgba(0,0,0,.5)';
-ctx.fillRect(0,0,canvas.width,canvas.height);
+        const cx = canvas.width/2, cy = canvas.height/2; rot += 0.02;
 
-(['wave','oscilloscope','chaos','pulse','glitch'].includes(currentMode)?analyser.getByteTimeDomainData:dataArray=>analyser.getByteFrequencyData(dataArray))(dataArray);
+        ctx.lineWidth = 2; ctx.strokeStyle = colorA; ctx.fillStyle = colorA;
 
-const cx=canvas.width/2,cy=canvas.height/2;
-rot+=0.02;
+        switch(mode) {
+            case 'bars':
+                for(let i=0; i<80; i++){ ctx.fillStyle = i%2?colorA:colorB; let h = (dataArray[i]/255)*canvas.height; ctx.fillRect(i*(canvas.width/80), canvas.height-h, (canvas.width/80)-1, h); }
+                break;
+            case 'wave':
+            case 'oscilloscope':
+                ctx.beginPath(); for(let i=0; i<dataArray.length; i++){ let x = (i/dataArray.length)*canvas.width, y = (dataArray[i]/255)*canvas.height; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke();
+                break;
+            case 'rave':
+                ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot); for(let i=0; i<dataArray.length; i+=10){ ctx.strokeStyle = i%20?colorA:colorB; ctx.beginPath(); ctx.arc(0,0,dataArray[i]*0.8,0,Math.PI*2); ctx.stroke(); ctx.rotate(0.02); } ctx.restore();
+                break;
+            case 'psycho_sphere':
+                ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot); for(let i=0; i<100; i+=2){ ctx.strokeStyle = i%10===0?"#fff":colorA; ctx.beginPath(); ctx.arc(0,0,dataArray[i]*1.2,0,Math.PI*2); ctx.stroke(); if(i%20===0){ ctx.strokeStyle=colorB; ctx.strokeRect(-dataArray[i],-dataArray[i],dataArray[i]*2,dataArray[i]*2); }} ctx.restore();
+                break;
+            case 'liquid_dream':
+                for(let i=0; i<dataArray.length; i+=10){ ctx.fillStyle = i%20?colorA:colorB; ctx.globalAlpha=0.3; ctx.beginPath(); ctx.arc((i/dataArray.length)*canvas.width, cy+Math.sin(rot+i)*80, dataArray[i]/1.5, 0, Math.PI*2); ctx.fill(); } ctx.globalAlpha=1;
+                break;
+            case 'matrix':
+                ctx.font = "10px monospace"; for(let i=0; i<dataArray.length; i+=15){ ctx.fillStyle = dataArray[i]>150?colorA:colorB; ctx.fillText(Math.floor(Math.random()*9), (i/dataArray.length)*canvas.width, (dataArray[i]/255)*canvas.height); }
+                break;
+            case 'dna':
+                for(let i=0; i<dataArray.length; i+=6){ ctx.fillStyle = i%12?colorA:colorB; let y = cy + Math.sin(i*0.1+rot*4)*(dataArray[i]/2); ctx.fillRect((i/dataArray.length)*canvas.width, y, 4, 4); }
+                break;
+            case 'fractal_tree':
+                ctx.save(); ctx.translate(cx, canvas.height-50); drawTree(120, 0, dataArray[10]/4); ctx.restore();
+                break;
+            case 'glitch':
+                let s = dataArray[10]-128; ctx.drawImage(canvas, s*2, 0); if(Math.abs(s)>30) { ctx.fillStyle = colorA; ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 1); }
+                break;
+            case 'cyber':
+                for(let i=0; i<dataArray.length; i+=20){ ctx.fillStyle = colorA; ctx.fillRect((i/dataArray.length)*canvas.width, cy, 8, -dataArray[i]); ctx.fillRect((i/dataArray.length)*canvas.width, cy, 8, dataArray[i]); }
+                break;
+            case 'radial':
+                ctx.save(); ctx.translate(cx, cy); for(let i=0; i<80; i++){ ctx.rotate((Math.PI*2)/80); ctx.fillStyle = colorA; ctx.fillRect(80, 0, dataArray[i%50]/2, 2); } ctx.restore();
+                break;
+            case 'stars':
+                for(let i=0; i<50; i++){ ctx.fillStyle = "#fff"; ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, dataArray[i]/50, dataArray[i]/50); }
+                break;
+            case 'chaos':
+                ctx.beginPath(); ctx.strokeStyle = colorB; for(let i=0; i<15; i++){ ctx.lineTo(Math.random()*canvas.width, Math.random()*canvas.height); } ctx.stroke();
+                break;
+            default:
+                ctx.fillRect(0, cy, canvas.width, 2);
+        }
+    }
 
-/* ===== GLOBAL FX ===== */
-if(activeFX.has('invert')){
-ctx.globalCompositeOperation='difference';
-ctx.fillStyle='#fff';
-ctx.fillRect(0,0,canvas.width,canvas.height);
-ctx.globalCompositeOperation='source-over';
-}
-if(activeFX.has('shake')){ctx.save();ctx.translate((Math.random()-.5)*20,(Math.random()-.5)*20)}
-if(activeFX.has('zoomPulse')){ctx.save();let z=1+Math.sin(audio.currentTime*6)*.05;ctx.translate(cx,cy);ctx.scale(z,z);ctx.translate(-cx,-cy)}
-if(activeFX.has('rgbSplit')){ctx.drawImage(canvas,2,0);ctx.drawImage(canvas,-2,0)}
-if(activeFX.has('flash')){ctx.fillStyle=`rgba(255,255,255,${Math.random()*.3})`;ctx.fillRect(0,0,canvas.width,canvas.height)}
+    function drawTree(len, angle, bA) {
+        ctx.strokeStyle = colorA; ctx.lineWidth = len/15; ctx.beginPath(); ctx.save(); ctx.rotate(angle*Math.PI/180); ctx.moveTo(0,0); ctx.lineTo(0,-len); ctx.stroke(); ctx.translate(0,-len);
+        if(len > 15){ drawTree(len*0.75, angle+bA, bA); drawTree(len*0.75, angle-bA, bA); } ctx.restore();
+    }
 
-/* ===== MODES ===== */
-switch(currentMode){
-case'bars':
-for(let i=0;i<60;i++){ctx.fillStyle=i%2?colorB:colorA;let h=(dataArray[i]/255)*canvas.height;ctx.fillRect(i*(canvas.width/60),canvas.height-h,(canvas.width/60)-1,h)}
-break;
-case'wave':
-case'oscilloscope':
-ctx.strokeStyle=colorA;ctx.lineWidth=3;ctx.beginPath();
-for(let i=0;i<dataArray.length;i++){let x=i/dataArray.length*canvas.width;let y=dataArray[i]/255*canvas.height;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();
-break;
-case'matrix':
-ctx.font="12px monospace";
-for(let i=0;i<dataArray.length;i+=12){ctx.fillStyle=dataArray[i]>150?colorA:colorB;ctx.fillText(Math.floor(Math.random()*9),i/dataArray.length*canvas.width,dataArray[i]/255*canvas.height)}
-break;
-case'psycho_sphere':
-ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);
-for(let i=0;i<80;i+=2){ctx.strokeStyle=i%10===0?'#fff':colorA;ctx.beginPath();ctx.arc(0,0,dataArray[i]*1.2,0,Math.PI*2);ctx.stroke()}
-ctx.restore();
-break;
-case'liquid_dream':
-for(let i=0;i<dataArray.length;i+=10){ctx.fillStyle=i%20?colorB:colorA;ctx.globalAlpha=.3;ctx.beginPath();ctx.arc(i/dataArray.length*canvas.width,cy+Math.sin(rot+i)*80,dataArray[i]/1.5,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
-break;
-case'fractal_tree':
-ctx.save();ctx.translate(cx,canvas.height-50);drawTree(120,0,dataArray[10]/4);ctx.restore();
-break;
-default:
-for(let i=0;i<dataArray.length;i+=20){ctx.fillStyle=colorB;ctx.fillRect(i/dataArray.length*canvas.width,canvas.height-dataArray[i],5,5)}
-}
-
-if(activeFX.has('shake')||activeFX.has('zoomPulse'))ctx.restore();
-}
-
-function drawTree(len,a,b){
-ctx.strokeStyle=colorA;ctx.lineWidth=len/15;
-ctx.beginPath();ctx.save();ctx.rotate(a*Math.PI/180);
-ctx.moveTo(0,0);ctx.lineTo(0,-len);ctx.stroke();
-ctx.translate(0,-len);
-if(len>15){drawTree(len*.75,a+b,b);drawTree(len*.75,a-b,b)}
-ctx.restore();
-}
-
-function resize(){canvas.width=canvas.clientWidth;canvas.height=canvas.clientHeight}
-window.onresize=resize;resize();
+    function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+    window.onresize = resize; resize();
 </script>
 </body>
 </html>

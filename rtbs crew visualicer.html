@@ -965,7 +965,7 @@
                 ctx.globalAlpha = 1;
                 break;
                 
-            // MODOS ADICIONALES NUEVOS
+            // MODOS ADICIONALES NUEVOS - CORREGIDOS
             case 'milknebula':
                 ctx.save(); ctx.translate(cx, cy);
                 ctx.scale(1.01,1.01);
@@ -1216,7 +1216,12 @@
                 break;
                 
             default:
-                ctx.fillRect(0, cy, canvas.width, 2);
+                // Esto se ejecuta cuando el modo no está implementado
+                ctx.fillStyle = colorA;
+                ctx.font = "20px monospace";
+                ctx.textAlign = "center";
+                ctx.fillText("MODO NO IMPLEMENTADO: " + mode, cx, cy);
+                ctx.fillText("FALTA AÑADIR AL SWITCH", cx, cy + 30);
         }
     }
 

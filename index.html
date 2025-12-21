@@ -1872,23 +1872,24 @@ footer {
     </div>
 </div>
 
-   <section id="rtbs-visualizer" class="forzar-oculto" style="display: none;">
-    <div class="post-content">
-        <div class="post-title-box">
-            <h2 class="post-title">RTBS CREW VISUALIZER</h2>
-        </div>
-
-        <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 1px solid #00FF00; background: rgba(0,0,0,0.8);">
-            <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor de música con visualizador ha sido desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de Inteligencia Artificial.</p>
-            <p>Se trata de un experimento técnico para demostrar hasta dónde puede llegar una persona sin conocimientos previos de programación utilizando herramientas de IA para materializar ideas complejas. El proyecto está en <strong>modificación constante</strong>, evolucionando día a día.</p>
-            <p><strong>SOFTWARE LIBRE:</strong> Es de código abierto y descarga gratuita. Atribución requerida a: <em>RTBS CREW</em>.</p>
-        </div>
-
-        <div class="visualizer-container" style="width: 100%; height: 80vh; border: 2px solid #0000FF; overflow: hidden; background: #000;">
-            <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;" title="RTBS Visualizer"></iframe>
-        </div>
+  <!-- SECCIÓN RTBS VISUALIZER -->
+<div id="rtbs-visualizer" class="seccion" style="display:none;">
+  <div class="post-content">
+    <div class="post-title-box">
+      <h2 class="post-title">RTBS CREW VISUALIZER</h2>
     </div>
-</section>
+
+    <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 1px solid #00FF00; background: rgba(0,0,0,0.8);">
+      <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor de música con visualizador ha sido desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de Inteligencia Artificial.</p>
+      <p>Se trata de un experimento técnico para demostrar hasta dónde puede llegar una persona sin conocimientos previos de programación utilizando herramientas de IA para materializar ideas complejas. El proyecto está en <strong>modificación constante</strong>, evolucionando día a día.</p>
+      <p><strong>SOFTWARE LIBRE:</strong> Es de código abierto y descarga gratuita. Atribución requerida a: <em>RTBS CREW</em>.</p>
+    </div>
+
+    <div class="visualizer-container" style="width: 100%; height: 80vh; border: 2px solid #0000FF; overflow: hidden; background: #000;">
+      <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;" title="RTBS Visualizer"></iframe>
+    </div>
+  </div>
+</div>
     
   <!-- SECCIÓN NUESTRA MÚSICA -->
 <div id="musica" style="display:none;">
@@ -3074,48 +3075,94 @@ setTimeout(() => {
     document.getElementById("loader").style.display = "none"; 
 }, 2000);
 
-// ----------------- Transición entre secciones -----------------
-function showTabWithTransition(tab){
-    const overlay = document.getElementById('transition-overlay');
-    
-    // Mostrar transición
+// ----------------- Función única y mejorada para cambiar entre secciones -----------------
+function showTabWithTransition(tabId) {
+  // 1. Mostrar transición de disco vinilo
+  const overlay = document.getElementById('transition-overlay');
+  if (overlay) {
     overlay.style.opacity = '1';
     overlay.style.pointerEvents = 'all';
+  }
+  
+  setTimeout(() => {
+    // 2. Ocultar todas las secciones posibles
+    const seccionesParaOcultar = [
+      'inicio', 'musica', 'visuales', 'rtbs-visualizer', 
+      'videos-cortos', 'redes', 'comentarios', 'dj', 'altavoces'
+    ];
     
-    setTimeout(() => {
-        // Cambiar de sección
-        showTab(tab);
-        
-        // Ocultar transición
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            overlay.style.pointerEvents = 'none';
-        }, 500);
-    }, 600);
-}
-
-function showTabWithTransition(tabId) {
-    // 1. FUERZA BRUTA: Escondemos todo lo que tenga la clase de pestaña
-    // y específicamente nuestro visualizador rebelde
-    const elementosParaEsconder = document.querySelectorAll('.tab-content, .seccion, .forzar-oculto');
-    
-    elementosParaEsconder.forEach(el => {
-        el.style.setProperty('display', 'none', 'important'); // El 'important' lo fuerza por encima de todo
-        el.classList.remove('active');
+    // Ocultar todas las secciones principales
+    seccionesParaOcultar.forEach(id => {
+      const elemento = document.getElementById(id);
+      if (elemento) {
+        elemento.style.display = 'none';
+        elemento.classList.remove('active');
+      }
     });
-
-    // 2. Encendemos la que toca
-    const activeTab = document.getElementById(tabId);
-    if (activeTab) {
-        activeTab.style.setProperty('display', 'block', 'important');
+    
+    // Ocultar contenedores de lanzamientos de DJs
+    document.querySelectorAll('.lanzamientos-container').forEach(container => {
+      container.classList.remove('active');
+    });
+    
+    // Ocultar detalles de lanzamientos
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+      detalle.classList.remove('active');
+    });
+    
+    // Quitar clase "active" de los items de DJ
+    document.querySelectorAll('.dj-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    // 3. Mostrar la sección seleccionada
+    const seccionActiva = document.getElementById(tabId);
+    if (seccionActiva) {
+      // Asegurar que tenga la clase "seccion" si es necesario
+      if (tabId !== 'inicio' && !seccionActiva.classList.contains('seccion')) {
+        seccionActiva.classList.add('seccion');
+      }
+      
+      seccionActiva.style.display = 'block';
+      setTimeout(() => {
+        seccionActiva.classList.add('active');
+      }, 50);
+      
+      // 4. Si es RTBS VISUALIZER, recargar el iframe
+      if (tabId === 'rtbs-visualizer') {
         setTimeout(() => {
-            activeTab.classList.add('active');
-        }, 50);
+          const visualizadorIframe = document.querySelector('#rtbs-visualizer iframe');
+          if (visualizadorIframe) {
+            const srcActual = visualizadorIframe.src;
+            visualizadorIframe.src = '';
+            setTimeout(() => {
+              visualizadorIframe.src = srcActual;
+            }, 100);
+          }
+        }, 200);
+      }
+      
+      // 5. Si es la sección de música, resetear DJ activo
+      if (tabId === 'musica') {
+        djActivo = null;
+      }
     }
-
-    // 3. Cerramos menú si estamos en móvil
-    const nav = document.querySelector('nav');
-    if (nav) nav.classList.remove('active');
+    
+    // 6. Cerrar menú móvil si está abierto
+    if (window.innerWidth <= 768) {
+      const nav = document.querySelector('nav');
+      if (nav) nav.classList.remove('active');
+    }
+    
+    // 7. Ocultar transición de disco vinilo
+    setTimeout(() => {
+      if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+      }
+    }, 500);
+    
+  }, 600); // Tiempo de la animación del disco
 }
 
 // ----------------- Comentarios -----------------

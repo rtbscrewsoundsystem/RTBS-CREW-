@@ -30,8 +30,8 @@
         .modes-nav button { width: 30px; height: 30px; padding: 0; font-size: 16px; display: flex; align-items: center; justify-content: center; }
         .modes-nav button:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Estilo para modo seleccionado - VERSIÓN FORZADA */
-        .mode-selected { 
+        /* Estilo para modo seleccionado */
+        .selected-mode { 
             background: #00ff41 !important; 
             color: #000 !important; 
             font-weight: bold !important;
@@ -137,29 +137,22 @@
             const b = document.createElement('button'); 
             b.innerText = m.toUpperCase();
             
-            // Crear una copia local de m para el closure
-            b.onclick = (function(modeName) {
-                return function() {
-                    mode = modeName;
-                    selectedModeGlobal = modeName;
-                    document.getElementById('cur-mode-txt').innerText = "MODE: " + modeName.toUpperCase();
-                    // Cerrar el popup inmediatamente
-                    document.getElementById('pop-modes').style.display = 'none';
-                    // Forzar un re-render la próxima vez que se abra
-                };
-            })(m);
+            // Asignar el evento click
+            b.onclick = function() {
+                mode = m;
+                selectedModeGlobal = m;
+                document.getElementById('cur-mode-txt').innerText = "MODE: " + m.toUpperCase();
+                togglePop('pop-modes');
+                // Volver a renderizar para mostrar el nuevo modo seleccionado
+                setTimeout(() => {
+                    currentPage = Math.floor(modes.indexOf(selectedModeGlobal) / MODES_PER_PAGE);
+                    renderModesPage();
+                }, 50);
+            };
             
-            // Aplicar estilo INLINE si es el modo seleccionado
+            // Si este modo es el actualmente seleccionado, aplicar clase especial
             if (selectedModeGlobal === m) {
-                b.style.background = '#00ff41';
-                b.style.color = '#000';
-                b.style.fontWeight = 'bold';
-                b.style.borderColor = '#000';
-            } else {
-                b.style.background = '';
-                b.style.color = '';
-                b.style.fontWeight = '';
-                b.style.borderColor = '';
+                b.className = 'selected-mode';
             }
             
             mGrid.appendChild(b);
@@ -204,6 +197,8 @@
                 const selectedIndex = modes.indexOf(selectedModeGlobal);
                 if (selectedIndex >= 0) {
                     currentPage = Math.floor(selectedIndex / MODES_PER_PAGE);
+                } else {
+                    currentPage = 0;
                 }
                 renderModesPage();
             }

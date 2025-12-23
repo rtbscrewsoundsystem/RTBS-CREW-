@@ -29,6 +29,14 @@
         .modes-nav { display: flex; flex-direction: column; gap: 5px; }
         .modes-nav button { width: 30px; height: 30px; padding: 0; font-size: 16px; display: flex; align-items: center; justify-content: center; }
         .modes-nav button:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Estilo para modo seleccionado - VERSIÓN FORZADA */
+        .mode-selected { 
+            background: #00ff41 !important; 
+            color: #000 !important; 
+            font-weight: bold !important;
+            border-color: #000 !important;
+        }
     </style>
 </head>
 <body>
@@ -90,6 +98,7 @@
     const timeline = document.getElementById('timeline');
     let audioCtx, analyser, dataArray, filters = [], initialized = false;
     let mode = 'bars', colorA = "#00ff41", colorB = "#0080ff", rot = 0;
+    let selectedModeGlobal = 'bars'; // Variable global para el modo seleccionado
 
     const modes = [
       'bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 'wave', 
@@ -105,7 +114,10 @@
       'audio_fabric', 'spectral_sun', 'cyber_fog', 'harmonic_shell', 'bass_inferno',
       'echo_particles', 'time_rings', 'audio_prism', 'glow_maze', 'cosmic_noise',
       // Más nuevos modos
-      'milkdrop', 'kaleidorave', 'feedbackwarp', 'oscillo3d', 'winampclassic', 'rtbs_finalboss'
+      'milkdrop', 'kaleidorave', 'feedbackwarp', 'oscillo3d', 'winampclassic', 'rtbs_finalboss',
+      // Nuevos modos adicionales
+      'milknebula', 'kaleidofeedback', 'bassgod', 'crt_void', 'spiralstorm',
+      'neurokaleido', 'warpdrive', 'subdimension', 'hallucinate', 'rtbs_omega', 'dual_vinyl_chaos'
     ];
 
     // Variables para navegación de modos
@@ -124,11 +136,32 @@
             const m = modes[i];
             const b = document.createElement('button'); 
             b.innerText = m.toUpperCase();
-            b.onclick = () => { 
-                mode = m; 
-                document.getElementById('cur-mode-txt').innerText = "MODE: "+m.toUpperCase(); 
-                togglePop('pop-modes'); 
-            };
+            
+            // Crear una copia local de m para el closure
+            b.onclick = (function(modeName) {
+                return function() {
+                    mode = modeName;
+                    selectedModeGlobal = modeName;
+                    document.getElementById('cur-mode-txt').innerText = "MODE: " + modeName.toUpperCase();
+                    // Cerrar el popup inmediatamente
+                    document.getElementById('pop-modes').style.display = 'none';
+                    // Forzar un re-render la próxima vez que se abra
+                };
+            })(m);
+            
+            // Aplicar estilo INLINE si es el modo seleccionado
+            if (selectedModeGlobal === m) {
+                b.style.background = '#00ff41';
+                b.style.color = '#000';
+                b.style.fontWeight = 'bold';
+                b.style.borderColor = '#000';
+            } else {
+                b.style.background = '';
+                b.style.color = '';
+                b.style.fontWeight = '';
+                b.style.borderColor = '';
+            }
+            
             mGrid.appendChild(b);
         }
         
@@ -162,13 +195,21 @@
 
     function togglePop(id) { 
         const p = document.getElementById(id); 
-        p.style.display = p.style.display === 'block' ? 'none' : 'block'; 
-        if (id === 'pop-modes') {
-            // Reiniciar a la primera página cuando se abre el popup
-            currentPage = 0;
-            renderModesPage();
+        if (p.style.display === 'block') {
+            p.style.display = 'none';
+        } else {
+            p.style.display = 'block';
+            if (id === 'pop-modes') {
+                // Ir a la página que contiene el modo actualmente seleccionado
+                const selectedIndex = modes.indexOf(selectedModeGlobal);
+                if (selectedIndex >= 0) {
+                    currentPage = Math.floor(selectedIndex / MODES_PER_PAGE);
+                }
+                renderModesPage();
+            }
         }
     }
+    
     function changeF(i, v) { if(filters[i]) filters[i].gain.value = v; }
     function resetEQ() { filters.forEach((f, i) => { f.gain.value = 0; document.getElementById(`f-${i}`).value = 0; }); }
 
@@ -938,6 +979,261 @@
                     ctx.stroke();
                 }
                 ctx.globalAlpha = 1;
+                break;
+                
+            // NUEVOS MODOS ADICIONALES
+            case 'milknebula':
+                ctx.save(); 
+                ctx.translate(cx, cy);
+                ctx.scale(1.01,1.01);
+                ctx.rotate(rot*0.2);
+                ctx.drawImage(canvas,-cx,-cy);
+                ctx.restore();
+
+                ctx.globalAlpha = 0.4;
+                for(let i=0;i<120;i++){
+                    let a = i*0.15+rot;
+                    let r = dataArray[i]*1.3;
+                    ctx.fillStyle = `hsla(${r+rot*80},100%,50%,0.4)`;
+                    ctx.beginPath();
+                    ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+                break;
+                
+            case 'kaleidofeedback':
+                ctx.save(); 
+                ctx.translate(cx,cy);
+                ctx.rotate(rot*0.5);
+                ctx.scale(1.02,1.02);
+                ctx.drawImage(canvas,-cx,-cy);
+                ctx.restore();
+
+                ctx.save(); 
+                ctx.translate(cx,cy);
+                for(let i=0;i<12;i++){
+                    ctx.rotate(Math.PI/6);
+                    ctx.strokeStyle = i%2?colorA:colorB;
+                    ctx.beginPath();
+                    for(let j=0;j<60;j++){
+                        let r = dataArray[j]*1.4;
+                        ctx.lineTo(r,Math.sin(j*0.3+rot)*r);
+                    }
+                    ctx.stroke();
+                }
+                ctx.restore();
+                break;
+                
+            case 'bassgod':
+                let b = dataArray[1]/255;
+                ctx.save();
+                ctx.translate(cx,cy);
+                ctx.scale(1+b*0.4,1+b*0.4);
+                ctx.rotate(b*0.3);
+                ctx.drawImage(canvas,-cx,-cy);
+                ctx.restore();
+
+                ctx.strokeStyle = colorA;
+                ctx.lineWidth = 3;
+                ctx.strokeRect(
+                    cx-200*b,cy-200*b,
+                    400*b,400*b
+                );
+                break;
+                
+            case 'crt_void':
+                ctx.drawImage(canvas,1,0);
+
+                ctx.globalAlpha = 0.1;
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.globalAlpha = 1;
+
+                ctx.strokeStyle = colorB;
+                for(let y=0;y<canvas.height;y+=4){
+                    ctx.beginPath();
+                    ctx.moveTo(0,y);
+                    ctx.lineTo(canvas.width,y);
+                    ctx.stroke();
+                }
+                break;
+                
+            case 'spiralstorm':
+                ctx.save(); 
+                ctx.translate(cx,cy);
+                for(let i=0;i<160;i++){
+                    let a=i*0.2+rot*3;
+                    let r=i*2+dataArray[i%60];
+                    ctx.fillStyle=i%2?colorA:colorB;
+                    ctx.fillRect(
+                        Math.cos(a)*r,
+                        Math.sin(a)*r,
+                        3,3
+                    );
+                }
+                ctx.restore();
+                break;
+                
+            case 'neurokaleido':
+                ctx.save(); 
+                ctx.translate(cx,cy);
+                for(let s=0;s<10;s++){
+                    ctx.rotate(Math.PI/5);
+                    ctx.strokeStyle=s%2?colorA:colorB;
+                    ctx.beginPath();
+                    for(let i=0;i<80;i++){
+                        let x = dataArray[i];
+                        let y = Math.sin(i*0.2+rot*2)*x;
+                        ctx.lineTo(x,y);
+                    }
+                    ctx.stroke();
+                }
+                ctx.restore();
+                break;
+                
+            case 'warpdrive':
+                let k=dataArray[2]/255;
+                ctx.save();
+                ctx.translate(cx,cy);
+                ctx.rotate((k-0.5)*0.4);
+                ctx.scale(1+k*0.3,1+k*0.3);
+                ctx.drawImage(canvas,-cx,-cy);
+                ctx.restore();
+                break;
+                
+            case 'subdimension':
+                let s=dataArray[0]*2;
+                ctx.strokeStyle=colorA;
+                ctx.beginPath();
+                ctx.arc(cx,cy,s,0,Math.PI*2);
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate((Math.random()-0.5)*s*0.05,(Math.random()-0.5)*s*0.05);
+                ctx.drawImage(canvas,0,0);
+                ctx.restore();
+                break;
+                
+            case 'hallucinate':
+                ctx.drawImage(canvas,Math.sin(rot)*5,Math.cos(rot)*5);
+
+                ctx.globalAlpha=0.2;
+                ctx.fillStyle=colorB;
+                ctx.fillRect(
+                    0,
+                    Math.random()*canvas.height,
+                    canvas.width,
+                    3
+                );
+                ctx.globalAlpha=1;
+                break;
+                
+            case 'rtbs_omega':
+                let sub_o=dataArray[0]/255;
+                let kick_o=dataArray[2]/255;
+
+                ctx.save();
+                ctx.translate(cx,cy);
+                ctx.rotate((sub_o-0.5)*0.2);
+                ctx.scale(1+kick_o*0.5,1+kick_o*0.5);
+                ctx.drawImage(canvas,-cx,-cy);
+                ctx.restore();
+
+                ctx.strokeStyle=colorA;
+                ctx.lineWidth=2;
+                ctx.beginPath();
+                for(let i=0;i<dataArray.length;i++){
+                    let x=(i/dataArray.length)*canvas.width;
+                    let y=cy+Math.sin(i*0.15+rot*5)*dataArray[i];
+                    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+                }
+                ctx.stroke();
+
+                if(kick_o>0.8){
+                    ctx.fillStyle=colorB;
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+                }
+                break;
+                
+            case 'dual_vinyl_chaos':
+                // ==== ANALISIS ====
+                let sub_v  = dataArray[0] / 255;
+                let kick_v = dataArray[2] / 255;
+                let mid_v  = dataArray[10] / 255;
+
+                let platterSize = Math.min(canvas.width, canvas.height) * 0.22;
+
+                // posiciones de los dos platos
+                let leftX  = cx - platterSize * 1.3;
+                let rightX = cx + platterSize * 1.3;
+
+                // rotaciones caóticas (sin sentido, rave total)
+                let rotL = rot * (1 + sub_v * 6) + Math.sin(rot * 4) * kick_v * 3;
+                let rotR = -rot * (1 + mid_v * 5) + Math.cos(rot * 3) * kick_v * 3;
+
+                // ===== FONDO SUCIO =====
+                ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+
+                function drawVinyl(x, rotation, mainColor, accentColor) {
+                    ctx.save();
+                    ctx.translate(x, cy);
+                    ctx.rotate(rotation);
+
+                    // plato base
+                    ctx.fillStyle = '#111';
+                    ctx.beginPath();
+                    ctx.arc(0,0,platterSize,0,Math.PI*2);
+                    ctx.fill();
+
+                    // surcos del vinilo
+                    for(let i=0;i<25;i++){
+                        ctx.strokeStyle = `rgba(255,255,255,${0.02 + mid_v*0.08})`;
+                        ctx.beginPath();
+                        ctx.arc(0,0,platterSize - i*6,0,Math.PI*2);
+                        ctx.stroke();
+                    }
+
+                    // label central
+                    ctx.fillStyle = mainColor;
+                    ctx.beginPath();
+                    ctx.arc(0,0,platterSize*0.25,0,Math.PI*2);
+                    ctx.fill();
+
+                    // agujero central
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(0,0,4,0,Math.PI*2);
+                    ctx.fill();
+
+                    // marcador tipo scratch
+                    ctx.strokeStyle = accentColor;
+                    ctx.lineWidth = 2 + kick_v*4;
+                    ctx.beginPath();
+                    ctx.moveTo(0,0);
+                    ctx.lineTo(platterSize,0);
+                    ctx.stroke();
+
+                    ctx.restore();
+                }
+
+                // ===== PLATO IZQUIERDO =====
+                drawVinyl(leftX, rotL, colorA, colorB);
+
+                // ===== PLATO DERECHO =====
+                drawVinyl(rightX, rotR, colorB, colorA);
+
+                // ===== TEMBLOR CUANDO PEGA EL KICK =====
+                if(kick_v > 0.6){
+                    ctx.save();
+                    ctx.translate(
+                        (Math.random()-0.5)*kick_v*20,
+                        (Math.random()-0.5)*kick_v*20
+                    );
+                    ctx.drawImage(canvas,0,0);
+                    ctx.restore();
+                }
                 break;
                 
             default:

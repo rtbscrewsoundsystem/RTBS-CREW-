@@ -25,10 +25,16 @@
         .modes-container { display: flex; gap: 10px; height: 300px; }
         .modes-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; max-height: 300px; overflow-y: auto; flex: 1; }
         .modes-nav { display: flex; flex-direction: column; gap: 5px; }
-        .modes-nav button { width: 35px; height: 35px; padding: 0; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .modes-nav button { width: 30px; height: 30px; padding: 0; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .modes-nav button:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        /* Estilo para el botón del modo que está sonando/activo */
-        .mode-selected { background: #ffeb3b !important; color: #000 !important; border: 2px inset #000 !important; }
+        /* Estilo para el modo seleccionado */
+        .mode-selected { background: #ffeb3b !important; color: #000 !important; border-color: #000 !important; }
+        
+        /* Botón de cambio automático */
+        .auto-change-btn { margin-top: 10px; background: linear-gradient(45deg, #ff00ff, #00ffff); color: #000; font-weight: bold; }
+        .auto-change-btn.active { background: linear-gradient(45deg, #00ff00, #ffff00); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -60,16 +66,19 @@
         </div>
 
         <div id="pop-modes" class="popup">
-            <b style="font-size:12px">MODOS DE VISUALIZACIÓN</b>
+            <b style="font-size:12px">SELECT VISUALIZER</b>
             <div class="modes-container">
                 <div class="modes-nav">
-                    <button id="nav-prev" onclick="navigateModes(-1)">▲</button>
-                    <div style="flex: 1; text-align: center;"><span id="page-indicator" style="font-size: 10px;">1/1</span></div>
-                    <button id="nav-next" onclick="navigateModes(1)">▼</button>
+                    <button id="nav-prev" onclick="navigateModes(-1)">◀</button>
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                        <span id="page-indicator" style="font-size: 10px;">1/1</span>
+                    </div>
+                    <button id="nav-next" onclick="navigateModes(1)">▶</button>
                 </div>
                 <div class="modes-list" id="modes-grid"></div>
             </div>
-            <button onclick="togglePop('pop-modes')" style="width:100%; margin-top:10px; background:#4CAF50; color:white;">OK / VOLVER</button>
+            <button id="auto-change-btn" class="auto-change-btn" onclick="toggleAutoChange()" style="width:100%; margin-top:10px;">🔀 AUTO CHANGE MODES (OFF)</button>
+            <button onclick="togglePop('pop-modes')" style="width:100%; margin-top:5px;">CERRAR</button>
         </div>
 
         <div class="controls">
@@ -77,6 +86,7 @@
             <button id="btn-play" style="background:var(--p)">POWER/PLAY</button>
             <button onclick="togglePop('pop-settings')" style="background:#ffcc00">EQ/COLOR</button>
             <button onclick="togglePop('pop-modes')" style="background:var(--s); color:#fff">MODES</button>
+            <button onclick="resetEQ()" style="background:#ff9800">RESET EQ</button>
         </div>
     </div>
 </div>
@@ -85,12 +95,26 @@
     const audio = new Audio();
     const canvas = document.getElementById('v'), ctx = canvas.getContext('2d');
     const timeline = document.getElementById('timeline');
+    
+    // Buffer canvas para efectos de feedback
+    const bufferCanvas = document.createElement('canvas');
+    const bufferCtx = bufferCanvas.getContext('2d');
+    
+    // Cargar imágenes para los nuevos modos
+    const rtbsLogo = new Image();
+    rtbsLogo.src = 'Proyecto_29.png';
+    
+    const flugelAvatar = new Image();
+    flugelAvatar.src = 'Proyecto_43_112957.png';
+    
     let audioCtx, analyser, dataArray, filters = [], initialized = false;
-    let currentMode = 'bars', colorA = "#00ff41", colorB = "#0080ff", rot = 0;
+    let mode = 'bars', colorA = "#00ff41", colorB = "#0080ff", rot = 0;
+    let feedbackActive = false; // Controlar si estamos en modo con feedback
+    let autoChangeInterval = null; // Intervalo para cambio automático
+    let autoChangeActive = false; // Estado del cambio automático
 
-    // Lista de todos los modos unificados
     const modes = [
-      'bars', 'rave', 'dna', 'tunnel', 'matrix', 'vortex', 'radial', 'laser', 'wave', 
+      'bars', 'rave', 'dna', 'tunnel', 'vortex', 'radial', 'laser', 'wave', 
       'hex', 'stars', 'rings', 'dots', 'flower', 'glitch', 'cyber', 'nebula', 
       'oscilloscope', 'spectrum', 'grid', 'pulse', 'orbit', 'chaos', 'psycho_sphere', 
       'liquid_dream', 'fractal_tree', 'chrome_whirl', 'ghost_pulse',
@@ -98,56 +122,128 @@
       'sound_mandala', 'bit_crusher', 'holo_wave', 'spectral_rain', 'audio_constellation',
       'energy_core', 'mirror_bass', 'time_fracture', 'digital_smoke', 'pulse_grid',
       'frequency_blades', 'audio_tentacles', 'broken_signal', 'sonic_orbitals',
-      'liquid_mirror', 'vector_storm', 'bass_blackhole', 'neural_pulse', 'data_flow',
-      'audio_fabric', 'spectral_sun', 'cyber_fog', 'harmonic_shell', 'bass_inferno',
-      'echo_particles', 'time_rings', 'audio_prism', 'glow_maze', 'cosmic_noise',
+      'vector_storm', 'bass_blackhole', 'neural_pulse', 'data_flow',
+      'audio_fabric', 'spectral_sun', 'harmonic_shell', 'bass_inferno',
+      'echo_particles', 'time_rings', 'audio_prism', 'cosmic_noise',
       'milkdrop', 'kaleidorave', 'feedbackwarp', 'oscillo3d', 'winampclassic', 'rtbs_finalboss',
-      'milknebula','kaleidofeedback','bassgod','crt_void','spiralstorm',
-      'neurokaleido','warpdrive','subdimension','hallucinate','rtbs_omega','dual_vinyl_chaos'
+      'milknebula','kaleidofeedback','bassgod','spiralstorm',
+      'neurokaleido','warpdrive','hallucinate','rtbs_omega',
+      // Nuevos modos con imágenes
+      'rtbs_wave_logo', 'rtbs_wave_logo_v2', 'flugel_avatar_ritual',
+      // NUEVOS MODOS RAVEROS
+      'winamp_psycore', 'projectm_rave', 'underground_glow', 'teuf_strobe', 'acid_vision', 
+      'vj_culture', 'warehouse_rave', 'rave_o_matic', 'goa_trance', 'psytrance_grid', 
+      'neon_underground', 'dark_teknival', 'hardcore_glitch', 'tribal_ritual', 'shamanic_beat',
+      // Modos originales que sí funcionan
+      'plasma_dream','liquid_mind','acid_worms','neuro_fluid',
+      'spectral_pulse','lava_brain','dream_spiral','bio_energy',
+      'psy_ink','subconscious','soft_fracture'
     ];
 
     let currentPage = 0;
-    const MODES_PER_PAGE = 12;
-
+    const MODES_PER_PAGE = 15;
+    const mGrid = document.getElementById('modes-grid');
+    
     function renderModesPage() {
-        const mGrid = document.getElementById('modes-grid');
         mGrid.innerHTML = '';
         const start = currentPage * MODES_PER_PAGE;
         const end = Math.min(start + MODES_PER_PAGE, modes.length);
         
         for (let i = start; i < end; i++) {
             const m = modes[i];
-            const btn = document.createElement('button');
-            btn.innerText = m.toUpperCase();
-            
-            // Si es el modo activo, añadir la clase de color especial
-            if (m === currentMode) {
-                btn.classList.add('mode-selected');
-            }
-
-            btn.onclick = () => {
-                currentMode = m;
-                document.getElementById('cur-mode-txt').innerText = "MODE: " + m.toUpperCase();
-                renderModesPage(); // Re-renderizar para actualizar el color del botón seleccionado
+            const b = document.createElement('button'); 
+            b.innerText = m.toUpperCase();
+            if (mode === m) b.classList.add('mode-selected');
+            b.onclick = () => { 
+                mode = m; 
+                document.getElementById('cur-mode-txt').innerText = "MODE: "+m.toUpperCase(); 
+                // Limpiar buffer cuando cambiamos de modo
+                if (feedbackActive) {
+                    bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
+                    feedbackActive = false;
+                }
+                renderModesPage();
+                togglePop('pop-modes'); 
             };
-            mGrid.appendChild(btn);
+            mGrid.appendChild(b);
         }
         
         const totalPages = Math.ceil(modes.length / MODES_PER_PAGE);
-        document.getElementById('page-indicator').innerText = `PAG ${currentPage + 1}/${totalPages}`;
+        document.getElementById('page-indicator').innerText = `${currentPage + 1}/${totalPages}`;
         document.getElementById('nav-prev').disabled = currentPage === 0;
         document.getElementById('nav-next').disabled = currentPage >= totalPages - 1;
     }
-
-    function navigateModes(dir) {
+    
+    function navigateModes(direction) {
         const totalPages = Math.ceil(modes.length / MODES_PER_PAGE);
-        currentPage += dir;
+        currentPage += direction;
         if (currentPage < 0) currentPage = 0;
         if (currentPage >= totalPages) currentPage = totalPages - 1;
         renderModesPage();
     }
 
-    // --- Inicialización EQ ---
+    // Función para cambiar automáticamente los modos
+    function toggleAutoChange() {
+        autoChangeActive = !autoChangeActive;
+        const btn = document.getElementById('auto-change-btn');
+        
+        if (autoChangeActive) {
+            btn.innerText = '🔀 AUTO CHANGE MODES (ON)';
+            btn.classList.add('active');
+            startAutoChange();
+        } else {
+            btn.innerText = '🔀 AUTO CHANGE MODES (OFF)';
+            btn.classList.remove('active');
+            stopAutoChange();
+        }
+    }
+    
+    function startAutoChange() {
+        if (autoChangeInterval) clearInterval(autoChangeInterval);
+        
+        autoChangeInterval = setInterval(() => {
+            // Cambiar a un modo aleatorio
+            const randomIndex = Math.floor(Math.random() * modes.length);
+            mode = modes[randomIndex];
+            document.getElementById('cur-mode-txt').innerText = "MODE: "+mode.toUpperCase();
+            
+            // Limpiar buffer si es necesario
+            if (feedbackActive) {
+                bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
+                feedbackActive = false;
+            }
+            
+            // Cambiar colores aleatorios
+            colorA = getRandomColor();
+            colorB = getRandomColor();
+            
+            // Actualizar inputs de color
+            document.getElementById('c1').value = colorA;
+            document.getElementById('c2').value = colorB;
+            
+            // Actualizar la página de modos si está abierta
+            if (document.getElementById('pop-modes').style.display === 'block') {
+                renderModesPage();
+            }
+        }, 5000); // 5 segundos
+    }
+    
+    function stopAutoChange() {
+        if (autoChangeInterval) {
+            clearInterval(autoChangeInterval);
+            autoChangeInterval = null;
+        }
+    }
+    
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     const fVals = [32, 64, 125, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 8000, 10000, 12000, 14000, 16000, 18000];
     fVals.forEach((f, i) => {
         const target = i < 10 ? 'eq-1' : 'eq-2';
@@ -156,24 +252,26 @@
         document.getElementById(target).appendChild(d);
     });
 
-    function togglePop(id) {
-        const p = document.getElementById(id);
-        const isOpen = p.style.display === 'block';
-        p.style.display = isOpen ? 'none' : 'block';
-        if (id === 'pop-modes' && !isOpen) {
-            renderModesPage(); // Renderizar solo al abrir para mantener la página
+    function togglePop(id) { 
+        const p = document.getElementById(id); 
+        p.style.display = p.style.display === 'block' ? 'none' : 'block'; 
+        if (id === 'pop-modes') {
+            renderModesPage();
         }
     }
-
     function changeF(i, v) { if(filters[i]) filters[i].gain.value = v; }
     function resetEQ() { filters.forEach((f, i) => { f.gain.value = 0; document.getElementById(`f-${i}`).value = 0; }); }
 
     document.getElementById('c1').oninput = (e) => colorA = e.target.value;
     document.getElementById('c2').oninput = (e) => colorB = e.target.value;
     document.getElementById('file').onchange = (e) => {
-        if(e.target.files[0]) audio.src = URL.createObjectURL(e.target.files[0]);
+        audio.src = URL.createObjectURL(e.target.files[0]);
+        // Limpiar buffer cuando carga nueva canción
+        if (feedbackActive) {
+            bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
+        }
     };
-
+    
     audio.onloadedmetadata = () => { 
         timeline.max = audio.duration; 
         document.getElementById('time-total').innerText = formatT(audio.duration); 
@@ -184,11 +282,13 @@
             document.getElementById('time-curr').innerText = formatT(audio.currentTime); 
         } 
     };
-
+    
     let dragging = false;
     timeline.oninput = () => { dragging = true; document.getElementById('time-curr').innerText = formatT(timeline.value); };
     timeline.onchange = () => { audio.currentTime = timeline.value; dragging = false; };
-
+    timeline.onmousedown = () => dragging = true;
+    timeline.onmouseup = () => { audio.currentTime = timeline.value; dragging = false; };
+    
     function formatT(s) { 
         let m = Math.floor(s/60); 
         s = Math.floor(s%60); 
@@ -199,101 +299,2122 @@
         if (!initialized) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let src = audioCtx.createMediaElementSource(audio);
-            let prev = src;
-            fVals.forEach((f, i) => {
-                const flt = audioCtx.createBiquadFilter(); flt.type = "peaking"; flt.frequency.value = f;
-                filters.push(flt); prev.connect(flt); prev = flt;
-            });
-            analyser = audioCtx.createAnalyser(); analyser.fftSize = 1024;
+            
+            // Crear analizador primero
+            analyser = audioCtx.createAnalyser(); 
+            analyser.fftSize = 1024;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
-            prev.connect(analyser); analyser.connect(audioCtx.destination);
-            initialized = true; loop();
+            
+            // Conectar audio directamente al destino (sin EQ por defecto)
+            src.connect(audioCtx.destination);
+            
+            // Crear cadena de EQ paralela para análisis visual
+            fVals.forEach((f, i) => {
+                const flt = audioCtx.createBiquadFilter(); 
+                flt.type = "peaking"; 
+                flt.frequency.value = f;
+                flt.gain.value = 0;
+                filters.push(flt);
+            });
+            
+            // Conectar cadena de EQ para análisis visual
+            let prev = src;
+            filters.forEach(flt => {
+                prev.connect(flt);
+                prev = flt;
+            });
+            prev.connect(analyser);
+            
+            // Añadir ganancia para controlar si el EQ afecta al audio
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0; // Inicialmente el EQ no afecta al audio
+            prev.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            // Variable para controlar si el EQ está activo
+            window.eqActive = false;
+            window.toggleEQ = function(active) {
+                if (gainNode) {
+                    gainNode.gain.value = active ? 1 : 0;
+                    window.eqActive = active;
+                }
+            };
+            
+            initialized = true; 
+            loop();
         }
         audio.paused ? audio.play() : audio.pause();
     };
 
+    // Función softFade para los nuevos modos
+    function softFade(alpha){
+        ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+
     function loop() {
         requestAnimationFrame(loop);
-        const trail = ['psycho_sphere', 'liquid_dream', 'rave', 'vortex', 'milknebula', 'kaleidofeedback', 'warpdrive'].includes(currentMode) ? 0.15 : 0.8;
+        
+        // Asegurar que el buffer canvas tenga el tamaño correcto
+        if (feedbackActive) {
+            bufferCanvas.width = canvas.width;
+            bufferCanvas.height = canvas.height;
+        }
+        
+        const trail = ['psycho_sphere', 'liquid_dream', 'rave', 'vortex', 'chrome_whirl', 'milknebula', 'kaleidofeedback', 'warpdrive'].includes(mode) ? 0.15 : 0.8;
         ctx.fillStyle = `rgba(0,0,0,${trail})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const isTimeDomain = ['wave', 'oscilloscope', 'chaos', 'pulse', 'glitch'].includes(currentMode);
-        isTimeDomain ? analyser.getByteTimeDomainData(dataArray) : analyser.getByteFrequencyData(dataArray);
+        const isT = ['wave', 'oscilloscope', 'chaos', 'pulse', 'glitch'].includes(mode);
+        isT ? analyser.getByteTimeDomainData(dataArray) : analyser.getByteFrequencyData(dataArray);
 
         const cx = canvas.width/2, cy = canvas.height/2; rot += 0.02;
         ctx.lineWidth = 2; ctx.strokeStyle = colorA; ctx.fillStyle = colorA;
 
-        // LÓGICA DE MODOS
-        if (currentMode === 'bars') {
-            for(let i=0; i<80; i++){ ctx.fillStyle = i%2?colorA:colorB; let h = (dataArray[i]/255)*canvas.height; ctx.fillRect(i*(canvas.width/80), canvas.height-h, (canvas.width/80)-1, h); }
+        // Verificar si es un modo con feedback
+        const feedbackModes = [
+            'milkdrop', 'kaleidorave', 'feedbackwarp', 'oscillo3d', 'winampclassic', 
+            'rtbs_finalboss', 'milknebula', 'kaleidofeedback', 'bassgod',
+            'warpdrive', 'hallucinate', 'rtbs_omega', 'broken_signal',
+            // Nuevos modos con feedback
+            'winamp_psycore', 'projectm_rave', 'vj_culture', 'rave_o_matic', 'hardcore_glitch'
+        ];
+        
+        if (feedbackModes.includes(mode) && !feedbackActive) {
+            feedbackActive = true;
+            bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
+        } else if (!feedbackModes.includes(mode) && feedbackActive) {
+            feedbackActive = false;
+            bufferCtx.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
         }
-        else if (currentMode === 'wave' || currentMode === 'oscilloscope') {
-            ctx.beginPath(); for(let i=0; i<dataArray.length; i++){ let x = (i/dataArray.length)*canvas.width, y = (dataArray[i]/255)*canvas.height; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke();
-        }
-        else if (currentMode === 'rave') {
-            ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot); for(let i=0; i<dataArray.length; i+=10){ ctx.strokeStyle = i%20?colorA:colorB; ctx.beginPath(); ctx.arc(0,0,dataArray[i]*0.8,0,Math.PI*2); ctx.stroke(); ctx.rotate(0.02); } ctx.restore();
-        }
-        else if (currentMode === 'milknebula') {
-            ctx.save(); ctx.translate(cx, cy); ctx.scale(1.01,1.01); ctx.rotate(rot*0.2); ctx.drawImage(canvas,-cx,-cy); ctx.restore();
-            ctx.globalAlpha = 0.4; for(let i=0;i<120;i++){ let a = i*0.15+rot; let r = dataArray[i]*1.3; ctx.fillStyle = `hsla(${r+rot*80},100%,50%,0.4)`; ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2); ctx.fill(); } ctx.globalAlpha = 1;
-        }
-        else if (currentMode === 'kaleidofeedback') {
-            ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot*0.5); ctx.scale(1.02,1.02); ctx.drawImage(canvas,-cx,-cy); ctx.restore();
-            ctx.save(); ctx.translate(cx,cy); for(let i=0;i<12;i++){ ctx.rotate(Math.PI/6); ctx.strokeStyle = i%2?colorA:colorB; ctx.beginPath(); for(let j=0;j<60;j++){ let r = dataArray[j]*1.4; ctx.lineTo(r,Math.sin(j*0.3+rot)*r); } ctx.stroke(); } ctx.restore();
-        }
-        else if (currentMode === 'bassgod') {
-            let b = dataArray[1]/255; ctx.save(); ctx.translate(cx,cy); ctx.scale(1+b*0.4,1+b*0.4); ctx.rotate(b*0.3); ctx.drawImage(canvas,-cx,-cy); ctx.restore();
-            ctx.strokeStyle = colorA; ctx.lineWidth = 3; ctx.strokeRect(cx-200*b,cy-200*b,400*b,400*b);
-        }
-        else if (currentMode === 'crt_void') {
-            ctx.drawImage(canvas,1,0); ctx.globalAlpha = 0.1; ctx.fillStyle = '#000'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.globalAlpha = 1;
-            ctx.strokeStyle = colorB; for(let y=0;y<canvas.height;y+=4){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
-        }
-        else if (currentMode === 'spiralstorm') {
-            ctx.save(); ctx.translate(cx,cy); for(let i=0;i<160;i++){ let a=i*0.2+rot*3; let r=i*2+dataArray[i%60]; ctx.fillStyle=i%2?colorA:colorB; ctx.fillRect(Math.cos(a)*r,Math.sin(a)*r,3,3); } ctx.restore();
-        }
-        else if (currentMode === 'neurokaleido') {
-            ctx.save(); ctx.translate(cx,cy); for(let s=0;s<10;s++){ ctx.rotate(Math.PI/5); ctx.strokeStyle=s%2?colorA:colorB; ctx.beginPath(); for(let i=0;i<80;i++){ let x = dataArray[i]; let y = Math.sin(i*0.2+rot*2)*x; ctx.lineTo(x,y); } ctx.stroke(); } ctx.restore();
-        }
-        else if (currentMode === 'warpdrive') {
-            let k=dataArray[2]/255; ctx.save(); ctx.translate(cx,cy); ctx.rotate((k-0.5)*0.4); ctx.scale(1+k*0.3,1+k*0.3); ctx.drawImage(canvas,-cx,-cy); ctx.restore();
-        }
-        else if (currentMode === 'subdimension') {
-            let s=dataArray[0]*2; ctx.strokeStyle=colorA; ctx.beginPath(); ctx.arc(cx,cy,s,0,Math.PI*2); ctx.stroke();
-            ctx.save(); ctx.translate((Math.random()-0.5)*s*0.05,(Math.random()-0.5)*s*0.05); ctx.drawImage(canvas,0,0); ctx.restore();
-        }
-        else if (currentMode === 'hallucinate') {
-            ctx.drawImage(canvas,Math.sin(rot)*5,Math.cos(rot)*5); ctx.globalAlpha=0.2; ctx.fillStyle=colorB; ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 3); ctx.globalAlpha=1;
-        }
-        else if (currentMode === 'rtbs_omega') {
-            let sub=dataArray[0]/255; let kick=dataArray[2]/255; ctx.save(); ctx.translate(cx,cy); ctx.rotate((sub-0.5)*0.2); ctx.scale(1+kick*0.5,1+kick*0.5); ctx.drawImage(canvas,-cx,-cy); ctx.restore();
-            ctx.strokeStyle=colorA; ctx.lineWidth=2; ctx.beginPath(); for(let i=0;i<dataArray.length;i++){ let x=(i/dataArray.length)*canvas.width; let y=cy+Math.sin(i*0.15+rot*5)*dataArray[i]; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); if(kick>0.8){ ctx.fillStyle=colorB; ctx.fillRect(0,0,canvas.width,canvas.height); }
-        }
-        else if (currentMode === 'dual_vinyl_chaos') {
-            let sub = dataArray[0] / 255; let kick = dataArray[2] / 255; let mid = dataArray[10] / 255; let platterSize = Math.min(canvas.width, canvas.height) * 0.22; let leftX = cx - platterSize * 1.3; let rightX = cx + platterSize * 1.3; let rotL = rot * (1 + sub * 6) + Math.sin(rot * 4) * kick * 3; let rotR = -rot * (1 + mid * 5) + Math.cos(rot * 3) * kick * 3;
-            ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            function drawVinyl(x, rotation, mainColor, accentColor) { ctx.save(); ctx.translate(x, cy); ctx.rotate(rotation); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(0,0,platterSize,0,Math.PI*2); ctx.fill(); for(let i=0;i<25;i++){ ctx.strokeStyle = `rgba(255,255,255,${0.02 + mid*0.08})`; ctx.beginPath(); ctx.arc(0,0,platterSize - i*6,0,Math.PI*2); ctx.stroke(); } ctx.fillStyle = mainColor; ctx.beginPath(); ctx.arc(0,0,platterSize*0.25,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(0,0,4,0,Math.PI*2); ctx.fill(); ctx.strokeStyle = accentColor; ctx.lineWidth = 2 + kick*4; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(platterSize,0); ctx.stroke(); ctx.restore(); }
-            drawVinyl(leftX, rotL, colorA, colorB); drawVinyl(rightX, rotR, colorB, colorA); if(kick > 0.6){ ctx.save(); ctx.translate((Math.random()-0.5)*kick*20,(Math.random()-0.5)*kick*20); ctx.drawImage(canvas,0,0); ctx.restore(); }
-        }
-        else if (currentMode === 'dna') {
-            for(let i=0; i<dataArray.length; i+=6){ ctx.fillStyle = i%12?colorA:colorB; let y = cy + Math.sin(i*0.1+rot*4)*(dataArray[i]/2); ctx.fillRect((i/dataArray.length)*canvas.width, y, 4, 4); }
-        }
-        else if (currentMode === 'matrix') {
-            ctx.font = "10px monospace"; for(let i=0; i<dataArray.length; i+=15){ ctx.fillStyle = dataArray[i]>150?colorA:colorB; ctx.fillText(Math.floor(Math.random()*9), (i/dataArray.length)*canvas.width, (dataArray[i]/255)*canvas.height); }
-        }
-        else if (currentMode === 'vortex') {
-            ctx.save(); ctx.translate(cx, cy); for(let i = 0; i < 80; i += 2) { ctx.strokeStyle = i % 4 === 0 ? colorA : colorB; ctx.beginPath(); ctx.arc(0, 0, 30 + i * 2, rot + i * 0.1, rot + i * 0.1 + Math.PI/2); ctx.stroke(); } ctx.restore();
-        }
-        // ... El resto de los 70+ modos siguen aquí por defecto si no están definidos arriba ...
-        else {
-            // Un renderizado genérico para los modos que faltan por definir individualmente
-            ctx.beginPath(); for(let i=0; i<dataArray.length; i+=2){ let x = (i/dataArray.length)*canvas.width, y = cy - (dataArray[i]/2); ctx.lineTo(x,y); } ctx.stroke();
+
+        switch(mode) {
+            case 'bars':
+                for(let i=0; i<80; i++){ 
+                    ctx.fillStyle = i%2?colorA:colorB; 
+                    let h = (dataArray[i%dataArray.length]/255)*canvas.height; 
+                    ctx.fillRect(i*(canvas.width/80), canvas.height-h, (canvas.width/80)-1, h); 
+                }
+                break;
+            case 'wave':
+            case 'oscilloscope':
+                ctx.beginPath(); 
+                for(let i=0; i<dataArray.length; i++){ 
+                    let x = (i/dataArray.length)*canvas.width; 
+                    let y = (dataArray[i]/255)*canvas.height; 
+                    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); 
+                } 
+                ctx.stroke();
+                break;
+            case 'rave':
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                ctx.rotate(rot); 
+                for(let i=0; i<dataArray.length; i+=10){ 
+                    ctx.strokeStyle = i%20?colorA:colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(0,0,dataArray[i%dataArray.length]*0.8,0,Math.PI*2); 
+                    ctx.stroke(); 
+                    ctx.rotate(0.02); 
+                } 
+                ctx.restore();
+                break;
+            case 'psycho_sphere':
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                ctx.rotate(rot); 
+                for(let i=0; i<100; i+=2){ 
+                    ctx.strokeStyle = i%10===0?"#fff":colorA; 
+                    ctx.beginPath(); 
+                    ctx.arc(0,0,dataArray[i%dataArray.length]*1.2,0,Math.PI*2); 
+                    ctx.stroke(); 
+                    if(i%20===0){ 
+                        ctx.strokeStyle=colorB; 
+                        let size = dataArray[i%dataArray.length];
+                        ctx.strokeRect(-size,-size,size*2,size*2); 
+                    }
+                } 
+                ctx.restore();
+                break;
+            case 'liquid_dream':
+                for(let i=0; i<dataArray.length; i+=10){ 
+                    ctx.fillStyle = i%20?colorA:colorB; 
+                    ctx.globalAlpha=0.3; 
+                    ctx.beginPath(); 
+                    ctx.arc((i/dataArray.length)*canvas.width, cy+Math.sin(rot+i)*80, dataArray[i%dataArray.length]/1.5, 0, Math.PI*2); 
+                    ctx.fill(); 
+                } 
+                ctx.globalAlpha=1;
+                break;
+            case 'matrix':
+                ctx.font = "10px monospace"; 
+                for(let i=0; i<dataArray.length; i+=15){ 
+                    ctx.fillStyle = dataArray[i%dataArray.length]>150?colorA:colorB; 
+                    ctx.fillText(Math.floor(Math.random()*9), (i/dataArray.length)*canvas.width, (dataArray[i%dataArray.length]/255)*canvas.height); 
+                }
+                break;
+            case 'dna':
+                for(let i=0; i<dataArray.length; i+=6){ 
+                    ctx.fillStyle = i%12?colorA:colorB; 
+                    let y = cy + Math.sin(i*0.1+rot*4)*(dataArray[i%dataArray.length]/2); 
+                    ctx.fillRect((i/dataArray.length)*canvas.width, y, 4, 4); 
+                }
+                break;
+            case 'fractal_tree':
+                ctx.save(); 
+                ctx.translate(cx, canvas.height-50); 
+                drawTree(120, 0, dataArray[10%dataArray.length]/4); 
+                ctx.restore();
+                break;
+            case 'glitch':
+                let s_glitch = dataArray[10%dataArray.length]-128; 
+                if(Math.abs(s_glitch)>30) { 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 1); 
+                }
+                break;
+            case 'cyber':
+                for(let i=0; i<dataArray.length; i+=20){ 
+                    ctx.fillStyle = colorA; 
+                    let value = dataArray[i%dataArray.length];
+                    ctx.fillRect((i/dataArray.length)*canvas.width, cy, 8, -value); 
+                    ctx.fillRect((i/dataArray.length)*canvas.width, cy, 8, value); 
+                }
+                break;
+            case 'radial':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0; i<80; i++){ 
+                    ctx.rotate((Math.PI*2)/80); 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(80, 0, dataArray[i%50]/2, 2); 
+                } 
+                ctx.restore();
+                break;
+            case 'stars':
+                for(let i=0; i<50; i++){ 
+                    ctx.fillStyle = "#fff"; 
+                    let size = dataArray[i%dataArray.length]/50;
+                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, size, size); 
+                }
+                break;
+            case 'chaos':
+                ctx.beginPath(); 
+                ctx.strokeStyle = colorB; 
+                for(let i=0; i<15; i++){ 
+                    ctx.lineTo(Math.random()*canvas.width, Math.random()*canvas.height); 
+                } 
+                ctx.stroke();
+                break;
+            case 'tunnel':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i = 0; i < 50; i++) { 
+                    ctx.strokeStyle = i % 2 === 0 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(0, 0, 20 + (dataArray[i%dataArray.length] * 0.5), 0, Math.PI * 2); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+            case 'vortex':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i = 0; i < 80; i += 2) { 
+                    ctx.strokeStyle = i % 4 === 0 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(0, 0, 30 + i * 2, rot + i * 0.1, rot + i * 0.1 + Math.PI/2); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+            case 'laser':
+                for(let i = 0; i < 10; i++) { 
+                    ctx.strokeStyle = colorA; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0, i * 50); 
+                    ctx.lineTo(dataArray[(i * 5)%dataArray.length] * 2, i * 50); 
+                    ctx.stroke(); 
+                }
+                break;
+            case 'hex':
+                const h_size = 20; 
+                for(let y = 0; y < canvas.height; y += h_size * 1.5) { 
+                    for(let x = 0; x < canvas.width; x += h_size * 1.732) { 
+                        ctx.fillStyle = (x + y) % 2 === 0 ? colorA : colorB; 
+                        drawHexagon(ctx, x + ((y / h_size) % 2) * h_size * 0.866, y, h_size, dataArray[(x + y) % dataArray.length] / 30); 
+                    } 
+                }
+                break;
+            case 'rings':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i = 0; i < 5; i++) { 
+                    ctx.strokeStyle = i % 2 === 0 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(0, 0, 50 + i * 30 + (dataArray[(i * 10)%dataArray.length] / 5), 0, Math.PI * 2); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+            case 'dots':
+                for(let i = 0; i < 200; i++) { 
+                    const idx = i % dataArray.length; 
+                    ctx.fillStyle = idx % 20 === 0 ? colorB : colorA; 
+                    ctx.beginPath(); 
+                    ctx.arc((i * 10) % canvas.width, (Math.floor(i / 20) * 30) % canvas.height, dataArray[idx] / 40, 0, Math.PI * 2); 
+                    ctx.fill(); 
+                }
+                break;
+            case 'flower':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                const petals = 8; 
+                for(let i = 0; i < petals; i++) { 
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB; 
+                    ctx.save(); 
+                    ctx.rotate((i * Math.PI * 2) / petals + rot); 
+                    ctx.beginPath(); 
+                    ctx.ellipse(40 + dataArray[(i * 5)%dataArray.length] / 10, 0, 30 + dataArray[(i * 5)%dataArray.length] / 20, 10, 0, 0, Math.PI * 2); 
+                    ctx.fill(); 
+                    ctx.restore(); 
+                } 
+                ctx.restore();
+                break;
+            case 'nebula':
+                for(let i = 0; i < 30; i++) { 
+                    const alpha = dataArray[(i * 3)%dataArray.length] / 255; 
+                    const r = parseInt(colorA.slice(1,3), 16);
+                    const g = parseInt(colorA.slice(3,5), 16);
+                    const b = parseInt(colorA.slice(5,7), 16);
+                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha * 0.7})`; 
+                    ctx.beginPath(); 
+                    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 10 + dataArray[(i * 3)%dataArray.length] / 20, 0, Math.PI * 2); 
+                    ctx.fill(); 
+                }
+                break;
+            case 'spectrum':
+                const specWidth = canvas.width / 64; 
+                for(let i = 0; i < 64; i++) { 
+                    const h = (dataArray[i%dataArray.length] / 255) * canvas.height; 
+                    ctx.fillStyle = `hsl(${i * 5}, 100%, 50%)`; 
+                    ctx.fillRect(i * specWidth, canvas.height - h, specWidth - 1, h); 
+                }
+                break;
+            case 'grid':
+                const cSize = 30; 
+                for(let x = 0; x < canvas.width; x += cSize) { 
+                    for(let y = 0; y < canvas.height; y += cSize) { 
+                        const idx = ((x + y) * 2) % dataArray.length; 
+                        ctx.strokeStyle = dataArray[idx] > 128 ? colorA : colorB; 
+                        ctx.strokeRect(x + (dataArray[idx] / 50), y + (dataArray[(idx + 10) % dataArray.length] / 50), cSize - 5, cSize - 5); 
+                    } 
+                }
+                break;
+            case 'pulse':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.fillStyle = colorA; 
+                ctx.beginPath(); 
+                const pSize = 100 + (dataArray[10%dataArray.length] / 255) * 150; 
+                ctx.arc(0, 0, pSize, 0, Math.PI * 2); 
+                ctx.fill(); 
+                ctx.restore();
+                break;
+            case 'orbit':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i = 0; i < 5; i++) { 
+                    const angle = rot * (i + 1); 
+                    const radius = 50 + i * 30; 
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(Math.cos(angle) * radius, Math.sin(angle) * radius, 10 + dataArray[(i * 10)%dataArray.length] / 30, 0, Math.PI * 2); 
+                    ctx.fill(); 
+                } 
+                ctx.restore();
+                break;
+            case 'chrome_whirl':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.rotate(rot * 2); 
+                for(let i = 0; i < 60; i += 3) { 
+                    ctx.strokeStyle = `hsl(${i * 6}, 100%, 50%)`; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0, 0); 
+                    ctx.lineTo(dataArray[i%dataArray.length] * 2, 0); 
+                    ctx.stroke(); 
+                    ctx.rotate(0.1); 
+                } 
+                ctx.restore();
+                break;
+            case 'ghost_pulse':
+                ctx.save(); 
+                ctx.globalAlpha = 0.3; 
+                ctx.fillStyle = colorA; 
+                ctx.beginPath(); 
+                ctx.arc(cx + Math.sin(rot) * 50, cy + Math.cos(rot) * 50, 80 + dataArray[20%dataArray.length] / 4, 0, Math.PI * 2); 
+                    ctx.fill(); 
+                ctx.globalAlpha = 1; 
+                ctx.restore();
+                break;
+            case 'quantum_lines':
+                for(let i=0; i<dataArray.length; i+=4) { 
+                    ctx.strokeStyle = i%8 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0, i*3); 
+                    ctx.lineTo(canvas.width, (dataArray[i%dataArray.length]/255)*canvas.height); 
+                    ctx.stroke(); 
+                }
+                break;
+            case 'echo_ribbons':
+                for(let i=0; i<50; i++) { 
+                    ctx.strokeStyle = colorA; 
+                    ctx.beginPath(); 
+                    ctx.arc(cx, cy, i*8 + Math.sin(rot+i)*dataArray[i%dataArray.length], 0, Math.PI*2); 
+                    ctx.stroke(); 
+                }
+                break;
+            case 'void_spiral':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.rotate(rot); 
+                for(let i=0; i<dataArray.length; i+=8) { 
+                    ctx.fillStyle = colorB; 
+                    ctx.fillRect(i, 0, 4, dataArray[i%dataArray.length]); 
+                } 
+                ctx.restore();
+                break;
+            case 'neon_cage':
+                ctx.strokeStyle = colorA; 
+                for(let x=0; x<canvas.width; x+=40) { 
+                    for(let y=0; y<canvas.height; y+=40) { 
+                        ctx.strokeRect(x, y, 30+dataArray[(x+y)%dataArray.length]/4, 30); 
+                    } 
+                }
+                break;
+            case 'plasma_cells':
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.fillStyle = i%2 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, dataArray[i%dataArray.length]/8, 0, Math.PI*2); 
+                    ctx.fill(); 
+                }
+                break;
+            case 'sound_mandala':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0; i<dataArray.length; i+=6) { 
+                    ctx.rotate(Math.PI/32); 
+                    ctx.strokeStyle = colorA; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0, 0); 
+                    ctx.lineTo(0, dataArray[i%dataArray.length]); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+            case 'bit_crusher':
+                for(let i=0; i<100; i++) { 
+                    let s = dataArray[i%dataArray.length]/4; 
+                    ctx.fillStyle = colorB; 
+                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, s, s); 
+                }
+                break;
+            case 'holo_wave':
+                ctx.strokeStyle = colorA; 
+                ctx.beginPath(); 
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.lineTo(i/dataArray.length*canvas.width, cy+Math.sin(i*0.1+rot)*dataArray[i%dataArray.length]); 
+                } 
+                ctx.stroke();
+                break;
+            case 'spectral_rain':
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(i*6, Math.random()*canvas.height, 4, dataArray[i%dataArray.length]); 
+                }
+                break;
+            case 'audio_constellation':
+                for(let i=0; i<dataArray.length; i+=10) { 
+                    for(let j=i+10; j<dataArray.length; j+=10) { 
+                        if(Math.abs(dataArray[i%dataArray.length]-dataArray[j%dataArray.length]) < 10) { 
+                            ctx.strokeStyle = colorB; 
+                            ctx.beginPath(); 
+                            ctx.moveTo(i*4, dataArray[i%dataArray.length]); 
+                            ctx.lineTo(j*4, dataArray[j%dataArray.length]); 
+                            ctx.stroke(); 
+                        } 
+                    } 
+                }
+                break;
+            case 'energy_core':
+                ctx.fillStyle = colorA; 
+                ctx.beginPath(); 
+                ctx.arc(cx, cy, dataArray[10%dataArray.length]*2, 0, Math.PI*2); 
+                ctx.fill();
+                break;
+            case 'mirror_bass':
+                for(let i=0; i<50; i++) { 
+                    let h = dataArray[i%dataArray.length]*2; 
+                    ctx.fillStyle = colorB; 
+                    ctx.fillRect(cx-i*6, cy-h/2, 5, h); 
+                    ctx.fillRect(cx+i*6, cy-h/2, 5, h); 
+                }
+                break;
+            case 'time_fracture':
+                if(dataArray[0] > 200) { 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(0, 0, canvas.width, canvas.height); 
+                }
+                break;
+            case 'digital_smoke':
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.fillStyle = `rgba(0,255,0,0.05)`; 
+                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, dataArray[i%dataArray.length]/5, dataArray[i%dataArray.length]/5); 
+                }
+                break;
+            case 'pulse_grid':
+                for(let x=0; x<canvas.width; x+=50) { 
+                    for(let y=0; y<canvas.height; y+=50) { 
+                        let s = dataArray[(x+y)%dataArray.length]/6; 
+                        ctx.strokeStyle = colorA; 
+                        ctx.strokeRect(x, y, s, s); 
+                    } 
+                }
+                break;
+            case 'frequency_blades':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0; i<dataArray.length; i+=10) { 
+                    ctx.rotate(0.1); 
+                    ctx.fillStyle = colorB; 
+                    ctx.fillRect(0, 0, dataArray[i%dataArray.length], 4); 
+                } 
+                ctx.restore();
+                break;
+            case 'audio_tentacles':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0; i<dataArray.length; i+=8) { 
+                    ctx.strokeStyle = colorA; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0, 0); 
+                    ctx.lineTo(Math.cos(i)*dataArray[i%dataArray.length], Math.sin(i)*dataArray[i%dataArray.length]); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+            case 'broken_signal':
+                // Guardar frame anterior
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                // Limpiar canvas
+                ctx.fillStyle = 'rgba(0,0,0,0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Dibujar buffer con offset aleatorio
+                let offsetX = (Math.random() - 0.5) * 20;
+                let offsetY = (Math.random() - 0.5) * 20;
+                ctx.globalAlpha = 0.8;
+                ctx.drawImage(bufferCanvas, offsetX, offsetY);
+                ctx.globalAlpha = 1;
+                
+                // Añadir líneas de interferencia
+                if (Math.random() > 0.7) {
+                    ctx.strokeStyle = colorA;
+                    ctx.lineWidth = 1;
+                    let y = Math.random() * canvas.height;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+                break;
+            case 'sonic_orbitals':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0; i<dataArray.length; i+=12) { 
+                    ctx.fillStyle = colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(Math.cos(i+rot)*dataArray[i%dataArray.length], Math.sin(i+rot)*dataArray[i%dataArray.length], 4, 0, Math.PI*2); 
+                    ctx.fill(); 
+                } 
+                ctx.restore();
+                break;
+            case 'vector_storm':
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.strokeStyle = colorA; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(cx, cy); 
+                    ctx.lineTo(cx+Math.random()*dataArray[i%dataArray.length], cy+Math.random()*dataArray[i%dataArray.length]); 
+                    ctx.stroke(); 
+                }
+                break;
+            case 'bass_blackhole':
+                ctx.strokeStyle = colorB;
+                ctx.beginPath();
+                ctx.arc(cx, cy, (dataArray[0]/255)*200, 0, Math.PI*2);
+                ctx.stroke();
+                break;
+            case 'neural_pulse':
+                for(let i=0; i<dataArray.length; i+=5) { 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(i*4, dataArray[i%dataArray.length], 3, 3); 
+                }
+                break;
+            case 'data_flow':
+                ctx.font = "10px monospace"; 
+                for(let i=0; i<dataArray.length; i+=8) { 
+                    ctx.fillStyle = colorB; 
+                    ctx.fillText("01", (i/dataArray.length)*canvas.width, dataArray[i%dataArray.length]); 
+                }
+                break;
+            case 'audio_fabric':
+                ctx.strokeStyle = colorA; 
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.beginPath(); 
+                    ctx.moveTo(i*4, 0); 
+                    ctx.lineTo(i*4, dataArray[i%dataArray.length]*2); 
+                    ctx.stroke(); 
+                }
+                break;
+            case 'spectral_sun':
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.strokeStyle = colorA; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0, 0); 
+                    ctx.lineTo(Math.cos(i)*dataArray[i%dataArray.length], Math.sin(i)*dataArray[i%dataArray.length]); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+            case 'harmonic_shell':
+                for(let i=0; i<dataArray.length; i+=6) { 
+                    ctx.strokeStyle = colorB; 
+                    ctx.beginPath(); 
+                    ctx.arc(cx, cy, dataArray[i%dataArray.length]*2, 0, Math.PI*2); 
+                    ctx.stroke(); 
+                }
+                break;
+            case 'bass_inferno':
+                if(dataArray[0] > 180) { 
+                    ctx.fillStyle = 'red'; 
+                    ctx.fillRect(0, 0, canvas.width, canvas.height); 
+                }
+                break;
+            case 'echo_particles':
+                for(let i=0; i<dataArray.length; i++) { 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 2, 2); 
+                }
+                break;
+            case 'time_rings':
+                ctx.strokeStyle = colorB; 
+                ctx.beginPath(); 
+                ctx.arc(cx, cy, (audio.currentTime%5)*100, 0, Math.PI*2); 
+                ctx.stroke();
+                break;
+            case 'audio_prism':
+                ctx.fillStyle = colorA; 
+                ctx.fillRect(cx-dataArray[0%dataArray.length], cy-dataArray[1%dataArray.length], dataArray[2%dataArray.length], dataArray[3%dataArray.length]);
+                break;
+            case 'cosmic_noise':
+                for(let i=0; i<500; i++) { 
+                    ctx.fillStyle = colorA; 
+                    ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1, 1); 
+                }
+                break;
+                
+            // MODOS CON FEEDBACK - CORREGIDOS
+            case 'milkdrop':
+                // Copiar frame actual al buffer
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                let bass_m = dataArray[1] / 255; 
+                let zoom_m = 1 + bass_m * 0.08; 
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.scale(zoom_m, zoom_m); 
+                ctx.rotate((bass_m - 0.5) * 0.2); 
+                ctx.drawImage(bufferCanvas, -cx, -cy); 
+                ctx.restore(); 
+                ctx.globalAlpha = 0.6; 
+                ctx.strokeStyle = colorA; 
+                ctx.beginPath(); 
+                for (let i = 0; i < dataArray.length; i++) { 
+                    let x = (i / dataArray.length) * canvas.width; 
+                    let y = cy + Math.sin(i * 0.15 + rot * 4) * dataArray[i%dataArray.length] * 0.6; 
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); 
+                } 
+                ctx.stroke(); 
+                ctx.globalAlpha = 1;
+                break;
+                
+            case 'kaleidorave':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                let slices_k = 12; 
+                for (let s = 0; s < slices_k; s++) { 
+                    ctx.rotate((Math.PI * 2) / slices_k); 
+                    ctx.strokeStyle = s % 2 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    for (let i = 0; i < 80; i++) { 
+                        let r = dataArray[i%dataArray.length] * 1.3; 
+                        ctx.lineTo(r, Math.sin(i * 0.3 + rot) * r); 
+                    } 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+                
+            case 'feedbackwarp':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                let kick_f = dataArray[2%dataArray.length]; 
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.rotate((kick_f - 128) * 0.002); 
+                ctx.scale(1.01 + kick_f * 0.0005, 1.01); 
+                ctx.drawImage(bufferCanvas, -cx, -cy); 
+                ctx.restore(); 
+                ctx.fillStyle = `rgba(0,0,0,0.05)`; 
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                break;
+                
+            case 'oscillo3d':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.strokeStyle = colorA; 
+                for (let z = 0; z < 8; z++) { 
+                    ctx.beginPath(); 
+                    for (let i = 0; i < dataArray.length; i++) { 
+                        let x = (i / dataArray.length) * canvas.width - cx; 
+                        let y = Math.sin(i * 0.12 + rot + z) * dataArray[i%dataArray.length]; 
+                        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); 
+                    } 
+                    ctx.stroke(); 
+                    ctx.scale(0.9, 0.9); 
+                } 
+                ctx.restore();
+                break;
+                
+            case 'winampclassic':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                ctx.save(); 
+                ctx.globalAlpha = 0.9; 
+                ctx.drawImage(bufferCanvas, 1, 0); 
+                ctx.restore(); 
+                ctx.strokeStyle = colorB; 
+                ctx.beginPath(); 
+                for (let i = 0; i < dataArray.length; i++) { 
+                    let x = (i / dataArray.length) * canvas.width; 
+                    let y = cy + Math.cos(i * 0.2 + rot * 3) * dataArray[i%dataArray.length]; 
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); 
+                } 
+                ctx.stroke();
+                break;
+                
+            case 'rtbs_finalboss':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                let sub_f = dataArray[0] / 255; 
+                let kick2_f = dataArray[2] / 255; 
+                let mid_f = dataArray[12] / 255; 
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.rotate((sub_f - 0.5) * 0.15); 
+                ctx.scale(1.01 + kick2_f * 0.12, 1.01 + kick2_f * 0.12); 
+                ctx.drawImage(bufferCanvas, -cx, -cy); 
+                ctx.restore(); 
+                ctx.fillStyle = 'rgba(0,0,0,0.08)'; 
+                ctx.fillRect(0, 0, canvas.width, canvas.height); 
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                let slices2_f = 16; 
+                for(let s=0; s<slices2_f; s++){ 
+                    ctx.rotate((Math.PI*2)/slices2_f); 
+                    ctx.strokeStyle = s%2 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    for(let i=0;i<80;i++){ 
+                        let r = dataArray[i%dataArray.length] * (1 + mid_f*2); 
+                        ctx.lineTo(r, Math.sin(i*0.25 + rot*4) * r); 
+                    } 
+                    ctx.stroke(); 
+                } 
+                ctx.restore(); 
+                ctx.strokeStyle = colorA; 
+                ctx.beginPath(); 
+                for(let i=0;i<dataArray.length;i++){ 
+                    let x = (i/dataArray.length)*canvas.width; 
+                    let y = cy + Math.sin(i*0.12 + rot*6) * dataArray[i%dataArray.length] * 0.7; 
+                    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y); 
+                } 
+                ctx.stroke(); 
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                for(let i=0;i<40;i++){ 
+                    ctx.rotate(Math.PI/20); 
+                    ctx.strokeStyle = i%2 ? colorA : colorB; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0,0); 
+                    ctx.lineTo(200 + kick2_f*600, 0); 
+                    ctx.stroke(); 
+                } 
+                ctx.restore(); 
+                if(kick2_f > 0.75){ 
+                    let g = (Math.random()-0.5)*kick2_f*120; 
+                    ctx.save();
+                    ctx.translate(g, 0);
+                    ctx.drawImage(bufferCanvas, 0, 0);
+                    ctx.restore();
+                    ctx.fillStyle = colorB; 
+                    ctx.fillRect(0, Math.random()*canvas.height, canvas.width, 2); 
+                } 
+                ctx.globalAlpha = 0.15; 
+                ctx.strokeStyle = '#000'; 
+                for(let y=0;y<canvas.height;y+=3){ 
+                    ctx.beginPath(); 
+                    ctx.moveTo(0,y); 
+                    ctx.lineTo(canvas.width,y); 
+                    ctx.stroke(); 
+                } 
+                ctx.globalAlpha = 1;
+                break;
+
+            // NUEVOS MODOS SOLICITADOS - CORREGIDOS
+            case 'milknebula':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                ctx.save(); 
+                ctx.translate(cx, cy); 
+                ctx.scale(1.01,1.01); 
+                ctx.rotate(rot*0.2); 
+                ctx.drawImage(bufferCanvas,-cx,-cy); 
+                ctx.restore();
+                ctx.globalAlpha = 0.4; 
+                for(let i=0;i<120;i++){ 
+                    let a = i*0.15+rot; 
+                    let r = dataArray[i%dataArray.length]*1.3; 
+                    ctx.fillStyle = `hsla(${r+rot*80},100%,50%,0.4)`; 
+                    ctx.beginPath(); 
+                    ctx.arc(cx+Math.cos(a)*r,cy+Math.sin(a)*r,3,0,Math.PI*2); 
+                    ctx.fill(); 
+                } 
+                ctx.globalAlpha = 1;
+                break;
+                
+            case 'kaleidofeedback':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                ctx.rotate(rot*0.5); 
+                ctx.scale(1.02,1.02); 
+                ctx.drawImage(bufferCanvas,-cx,-cy); 
+                ctx.restore();
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                for(let i=0;i<12;i++){ 
+                    ctx.rotate(Math.PI/6); 
+                    ctx.strokeStyle = i%2?colorA:colorB; 
+                    ctx.beginPath(); 
+                    for(let j=0;j<60;j++){ 
+                        let r = dataArray[j%dataArray.length]*1.4; 
+                        ctx.lineTo(r,Math.sin(j*0.3+rot)*r); 
+                    } 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+                
+            case 'bassgod':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                let b_god = dataArray[1]/255; 
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                ctx.scale(1+b_god*0.4,1+b_god*0.4); 
+                ctx.rotate(b_god*0.3); 
+                ctx.drawImage(bufferCanvas,-cx,-cy); 
+                ctx.restore();
+                ctx.strokeStyle = colorA; 
+                ctx.lineWidth = 3; 
+                ctx.strokeRect(cx-200*b_god,cy-200*b_god,400*b_god,400*b_god);
+                break;
+                
+            case 'spiralstorm':
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                for(let i=0;i<160;i++){ 
+                    let a=i*0.2+rot*3; 
+                    let r=i*2+dataArray[i%60]; 
+                    ctx.fillStyle=i%2?colorA:colorB; 
+                    ctx.fillRect(Math.cos(a)*r,Math.sin(a)*r,3,3); 
+                } 
+                ctx.restore();
+                break;
+                
+            case 'neurokaleido':
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                for(let s=0;s<10;s++){ 
+                    ctx.rotate(Math.PI/5); 
+                    ctx.strokeStyle=s%2?colorA:colorB; 
+                    ctx.beginPath(); 
+                    for(let i=0;i<80;i++){ 
+                        let x = dataArray[i%dataArray.length]; 
+                        let y = Math.sin(i*0.2+rot*2)*x; 
+                        ctx.lineTo(x,y); 
+                    } 
+                    ctx.stroke(); 
+                } 
+                ctx.restore();
+                break;
+                
+            case 'warpdrive':
+                // Guardar frame anterior
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                let k_warp = dataArray[2]/255;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate((k_warp - 0.5) * 0.4);
+                ctx.scale(1 + k_warp * 0.3, 1 + k_warp * 0.3);
+                ctx.drawImage(bufferCanvas, -cx, -cy);
+                ctx.restore();
+                
+                // Añadir efecto de velocidad
+                ctx.strokeStyle = colorA;
+                for(let i = 0; i < 50; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(
+                        cx + Math.cos(rot + i * 0.1) * (100 + dataArray[i%dataArray.length]),
+                        cy + Math.sin(rot + i * 0.1) * (100 + dataArray[i%dataArray.length])
+                    );
+                    ctx.stroke();
+                }
+                break;
+                
+            case 'hallucinate':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                ctx.save();
+                ctx.translate(Math.sin(rot)*5, Math.cos(rot)*5);
+                ctx.drawImage(bufferCanvas,0,0); 
+                ctx.restore();
+                ctx.globalAlpha=0.2; 
+                ctx.fillStyle=colorB; 
+                ctx.fillRect(0,Math.random()*canvas.height,canvas.width,3); 
+                ctx.globalAlpha=1;
+                break;
+                
+            case 'rtbs_omega':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                let sub_o=dataArray[0]/255; 
+                let kick_o=dataArray[2]/255; 
+                ctx.save(); 
+                ctx.translate(cx,cy); 
+                ctx.rotate((sub_o-0.5)*0.2); 
+                ctx.scale(1+kick_o*0.5,1+kick_o*0.5); 
+                ctx.drawImage(bufferCanvas,-cx,-cy); 
+                ctx.restore(); 
+                ctx.strokeStyle=colorA; 
+                ctx.lineWidth=2; 
+                ctx.beginPath(); 
+                for(let i=0;i<dataArray.length;i++){ 
+                    let x=(i/dataArray.length)*canvas.width; 
+                    let y=cy+Math.sin(i*0.15+rot*5)*dataArray[i%dataArray.length]; 
+                    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); 
+                } 
+                ctx.stroke(); 
+                if(kick_o>0.8){ 
+                    ctx.fillStyle=colorB; 
+                    ctx.fillRect(0,0,canvas.width,canvas.height); 
+                }
+                break;
+                
+            // NUEVOS MODOS CON IMÁGENES
+            case 'rtbs_wave_logo':
+                if (rtbsLogo.complete) {
+                    // ===== ANALISIS =====
+                    let sub  = dataArray[0] / 255;
+                    let kick = dataArray[2] / 255;
+                    let mid  = dataArray[12] / 255;
+                    let high = dataArray[40] / 255;
+
+                    // ===== FEEDBACK WINAMP =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate((sub - 0.5) * 0.25);
+                    ctx.scale(1.01 + kick * 0.15, 1.01 + kick * 0.15);
+                    ctx.drawImage(canvas, -cx, -cy);
+                    ctx.restore();
+
+                    // ===== OSCURECIDO SUCIO =====
+                    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+                    // ===== LOGO GIRATORIO =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(rot * (1 + sub * 4));
+
+                    let logoSize = Math.min(canvas.width, canvas.height) * (0.35 + kick * 0.15);
+                    ctx.globalAlpha = 0.85;
+
+                    // tinte color A
+                    ctx.drawImage(
+                        rtbsLogo,
+                        -logoSize / 2,
+                        -logoSize / 2,
+                        logoSize,
+                        logoSize
+                    );
+
+                    ctx.restore();
+
+                    // ===== ONDA DE SONIDO ALREDEDOR DEL LOGO =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(-rot * 0.8);
+                    ctx.strokeStyle = colorA;
+                    ctx.lineWidth = 2 + mid * 4;
+                    ctx.beginPath();
+
+                    for (let i = 0; i < dataArray.length; i++) {
+                        let angle = (i / dataArray.length) * Math.PI * 2;
+                        let radius = logoSize * 0.55 + dataArray[i] * (0.4 + high);
+                        let x = Math.cos(angle) * radius;
+                        let y = Math.sin(angle) * radius;
+                        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // ===== DESTELLOS RAVEROS =====
+                    if (kick > 0.65) {
+                        ctx.fillStyle = colorB;
+                        ctx.globalAlpha = 0.25;
+                        ctx.fillRect(0,0,canvas.width,canvas.height);
+                        ctx.globalAlpha = 1;
+                    }
+
+                    // ===== GLITCH RARO =====
+                    if (high > 0.6) {
+                        let g = (Math.random() - 0.5) * high * 120;
+                        ctx.drawImage(canvas, g, 0);
+                        ctx.fillStyle = colorA;
+                        ctx.fillRect(
+                            0,
+                            Math.random() * canvas.height,
+                            canvas.width,
+                            2
+                        );
+                    }
+
+                    // ===== SCANLINES CRT =====
+                    ctx.globalAlpha = 0.12;
+                    ctx.strokeStyle = '#000';
+                    for (let y = 0; y < canvas.height; y += 3) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(canvas.width, y);
+                        ctx.stroke();
+                    }
+                    ctx.globalAlpha = 1;
+                }
+                break;
+                
+            case 'rtbs_wave_logo_v2':
+                if (rtbsLogo.complete) {
+                    // ===== ANALISIS MULTIBANDA =====
+                    let sub  = dataArray[0] / 255;
+                    let kick = dataArray[2] / 255;
+                    let mid  = dataArray[14] / 255;
+                    let high = dataArray[48] / 255;
+
+                    // ===== FEEDBACK MÁS AGRESIVO =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate((sub - 0.5) * 0.35 + Math.sin(rot*3)*kick*0.3);
+                    ctx.scale(
+                        1.015 + kick * 0.25,
+                        1.015 + kick * 0.25
+                    );
+                    ctx.drawImage(canvas, -cx, -cy);
+                    ctx.restore();
+
+                    // ===== OSCURECIDO PULSANTE =====
+                    ctx.fillStyle = `rgba(0,0,0,${0.08 + sub*0.15})`;
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+                    // ===== LOGO RTBS DISTORSIONADO =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(rot * (1 + mid * 6));
+
+                    let baseSize = Math.min(canvas.width, canvas.height) * 0.33;
+                    let logoSize = baseSize * (1 + Math.sin(rot*4)*0.1 + kick*0.25);
+
+                    // glitch por capas del logo
+                    for(let i=0;i<3;i++){
+                        ctx.globalAlpha = 0.35;
+                        ctx.drawImage(
+                            rtbsLogo,
+                            -logoSize/2 + (Math.random()-0.5)*kick*30,
+                            -logoSize/2 + (Math.random()-0.5)*kick*30,
+                            logoSize,
+                            logoSize
+                        );
+                    }
+                    ctx.globalAlpha = 1;
+                    ctx.restore();
+
+                    // ===== ONDA DOBLE (INTERIOR + EXTERIOR) =====
+                    function drawWave(radius, col, phase){
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.rotate(rot*phase);
+                        ctx.strokeStyle = col;
+                        ctx.lineWidth = 2 + mid*5;
+                        ctx.beginPath();
+                        for(let i=0;i<dataArray.length;i++){
+                            let ang = (i/dataArray.length)*Math.PI*2;
+                            let r = radius + dataArray[i]*(0.4 + high*1.5);
+                            ctx.lineTo(Math.cos(ang)*r, Math.sin(ang)*r);
+                        }
+                        ctx.closePath();
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+
+                    drawWave(logoSize*0.55, colorA, 1);
+                    drawWave(logoSize*0.75, colorB, -1);
+
+                    // ===== DESTELLOS CAÓTICOS =====
+                    if(kick > 0.55){
+                        ctx.fillStyle = colorA;
+                        ctx.globalAlpha = 0.18;
+                        ctx.fillRect(0,0,canvas.width,canvas.height);
+                        ctx.globalAlpha = 1;
+                    }
+
+                    // ===== GLITCH HORIZONTAL RARO =====
+                    if(high > 0.6){
+                        for(let i=0;i<5;i++){
+                            let y = Math.random()*canvas.height;
+                            let h = Math.random()*6+2;
+                            let xShift = (Math.random()-0.5)*high*200;
+                            ctx.drawImage(
+                                canvas,
+                                0,y,canvas.width,h,
+                                xShift,y,canvas.width,h
+                            );
+                        }
+                    }
+
+                    // ===== SCANLINES CRT MÁS MARCADAS =====
+                    ctx.globalAlpha = 0.18;
+                    ctx.strokeStyle = '#000';
+                    for(let y=0;y<canvas.height;y+=2){
+                        ctx.beginPath();
+                        ctx.moveTo(0,y);
+                        ctx.lineTo(canvas.width,y);
+                        ctx.stroke();
+                    }
+                    ctx.globalAlpha = 1;
+                }
+                break;
+                
+            case 'flugel_avatar_ritual':
+                if (flugelAvatar.complete) {
+                    // ===== ANALISIS =====
+                    let sub  = dataArray[0] / 255;
+                    let kick = dataArray[2] / 255;
+                    let mid  = dataArray[16] / 255;
+                    let high = dataArray[52] / 255;
+
+                    // ===== FEEDBACK RAVE =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate((sub - 0.5) * 0.3 + Math.sin(rot*2)*kick*0.4);
+                    ctx.scale(1.012 + kick*0.22, 1.012 + kick*0.22);
+                    ctx.drawImage(canvas, -cx, -cy);
+                    ctx.restore();
+
+                    // ===== OSCURECIDO ORGÁNICO =====
+                    ctx.fillStyle = `rgba(0,0,0,${0.09 + sub*0.14})`;
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+                    // ===== AVATAR GIRATORIO =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(rot * (1 + mid * 5));
+
+                    let baseSize = Math.min(canvas.width, canvas.height) * 0.34;
+                    let avatarSize = baseSize * (1 + Math.sin(rot*3)*0.12 + kick*0.28);
+
+                    // capas glitch del avatar
+                    for(let i=0;i<4;i++){
+                        ctx.globalAlpha = 0.25;
+                        ctx.drawImage(
+                            flugelAvatar,
+                            -avatarSize/2 + (Math.random()-0.5)*kick*35,
+                            -avatarSize/2 + (Math.random()-0.5)*kick*35,
+                            avatarSize,
+                            avatarSize
+                        );
+                    }
+                    ctx.globalAlpha = 1;
+                    ctx.restore();
+
+                    // ===== AURA ONDULADA =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(-rot*0.7);
+                    ctx.strokeStyle = colorA;
+                    ctx.lineWidth = 2 + mid*6;
+                    ctx.beginPath();
+                    for(let i=0;i<dataArray.length;i++){
+                        let ang = (i/dataArray.length)*Math.PI*2;
+                        let r = avatarSize*0.6 + dataArray[i]*(0.35 + high*1.3);
+                        ctx.lineTo(Math.cos(ang)*r, Math.sin(ang)*r);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // ===== SEGUNDA ONDA (DESFASE) =====
+                    ctx.save();
+                    ctx.translate(cx, cy);
+                    ctx.rotate(rot*0.9);
+                    ctx.strokeStyle = colorB;
+                    ctx.lineWidth = 1 + high*4;
+                    ctx.beginPath();
+                    for(let i=0;i<dataArray.length;i+=2){
+                        let ang = (i/dataArray.length)*Math.PI*2;
+                        let r = avatarSize*0.8 + dataArray[i]*(0.2 + mid);
+                        ctx.lineTo(Math.cos(ang)*r, Math.sin(ang)*r);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                    ctx.restore();
+
+                    // ===== DESTELLO BESTIA =====
+                    if(kick > 0.6){
+                        ctx.fillStyle = colorB;
+                        ctx.globalAlpha = 0.2;
+                        ctx.fillRect(0,0,canvas.width,canvas.height);
+                        ctx.globalAlpha = 1;
+                    }
+
+                    // ===== GLITCH DE BARRIDO =====
+                    if(high > 0.65){
+                        let slices = 6;
+                        for(let i=0;i<slices;i++){
+                            let y = Math.random()*canvas.height;
+                            let h = Math.random()*8+2;
+                            let shift = (Math.random()-0.5)*high*180;
+                            ctx.drawImage(
+                                canvas,
+                                0,y,canvas.width,h,
+                                shift,y,canvas.width,h
+                            );
+                        }
+                    }
+
+                    // ===== SCANLINES CRT =====
+                    ctx.globalAlpha = 0.15;
+                    ctx.strokeStyle = '#000';
+                    for(let y=0;y<canvas.height;y+=3){
+                        ctx.beginPath();
+                        ctx.moveTo(0,y);
+                        ctx.lineTo(canvas.width,y);
+                        ctx.stroke();
+                    }
+                    ctx.globalAlpha = 1;
+                }
+                break;
+                
+            // MODOS ORIGINALES QUE SÍ FUNCIONAN
+            case 'plasma_dream':
+                softFade(0.08);
+                for(let i=0;i<120;i++){
+                    let a=i*0.2+rot;
+                    let r=dataArray[i%64]*2;
+                    ctx.fillStyle=`hsla(${a*40},100%,60%,0.4)`;
+                    ctx.beginPath();
+                    ctx.arc(cx+Math.sin(a)*r,cy+Math.cos(a*1.3)*r,6,0,Math.PI*2);
+                    ctx.fill();
+                }
+                break;
+                
+            case 'liquid_mind':
+                softFade(0.06);
+                ctx.strokeStyle=colorA;
+                ctx.beginPath();
+                for(let i=0;i<dataArray.length;i++){
+                    let x=(i/dataArray.length)*canvas.width;
+                    let y=cy+Math.sin(i*0.1+rot)*dataArray[i];
+                    ctx.lineTo(x,y);
+                }
+                ctx.stroke();
+                break;
+                
+            case 'acid_worms':
+                softFade(0.07);
+                for(let i=0;i<40;i++){
+                    ctx.strokeStyle=i%2?colorA:colorB;
+                    ctx.beginPath();
+                    for(let j=0;j<80;j++){
+                        ctx.lineTo(
+                            cx+Math.sin(j*0.2+rot+i)*j*4,
+                            cy+Math.cos(j*0.3+rot)*j*3
+                        );
+                    }
+                    ctx.stroke();
+                }
+                break;
+                
+            case 'neuro_fluid':
+                softFade(0.09);
+                ctx.fillStyle=colorB;
+                for(let i=0;i<90;i++){
+                    ctx.fillRect(
+                        cx+Math.sin(i+rot)*dataArray[i%64],
+                        cy+Math.cos(i*0.5+rot)*dataArray[i%32],
+                        4,4
+                    );
+                }
+                break;
+                
+            case 'spectral_pulse':
+                softFade(0.05);
+                ctx.strokeStyle=colorA;
+                ctx.beginPath();
+                for(let i=0;i<dataArray.length;i++){
+                    let a=i*0.15;
+                    let r=dataArray[i];
+                    ctx.lineTo(cx+Math.cos(a+rot)*r,cy+Math.sin(a)*r);
+                }
+                ctx.stroke();
+                break;
+                
+            case 'lava_brain':
+                softFade(0.1);
+                for(let i=0;i<100;i++){
+                    ctx.fillStyle=`rgba(255,80,0,0.3)`;
+                    ctx.beginPath();
+                    ctx.arc(
+                        cx+Math.sin(rot+i)*i*2,
+                        cy+Math.cos(rot*0.7+i)*i,
+                        5,0,Math.PI*2
+                    );
+                    ctx.fill();
+                }
+                break;
+                
+            case 'dream_spiral':
+                softFade(0.07);
+                ctx.strokeStyle=colorB;
+                ctx.beginPath();
+                for(let i=0;i<200;i++){
+                    let r=i*2;
+                    ctx.lineTo(
+                        cx+Math.cos(i*0.15+rot)*r,
+                        cy+Math.sin(i*0.18+rot)*r
+                    );
+                }
+                ctx.stroke();
+                break;
+                
+            case 'bio_energy':
+                softFade(0.06);
+                for(let i=0;i<80;i++){
+                    ctx.strokeStyle=i%2?colorA:colorB;
+                    ctx.beginPath();
+                    ctx.moveTo(cx,cy);
+                    ctx.lineTo(
+                        cx+Math.sin(i+rot)*dataArray[i%32],
+                        cy+Math.cos(i-rot)*dataArray[i%32]
+                    );
+                    ctx.stroke();
+                }
+                break;
+                
+            case 'psy_ink':
+                softFade(0.1);
+                ctx.strokeRect(Math.sin(rot)*200,0,canvas.width,canvas.height);
+                break;
+                
+            case 'subconscious':
+                softFade(0.07);
+                ctx.rotate(rot*0.01);
+                break;
+                
+            case 'soft_fracture':
+                softFade(0.11);
+                ctx.drawImage(canvas,5,-5);
+                break;
+                
+            // NUEVOS MODOS RAVEROS
+            case 'winamp_psycore':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                // Efecto de feedback winamp clásico
+                ctx.save();
+                ctx.globalAlpha = 0.85;
+                ctx.drawImage(bufferCanvas, 2, 0);
+                ctx.restore();
+                
+                // Visualizador estilo Winamp
+                ctx.strokeStyle = colorA;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for(let i = 0; i < dataArray.length; i += 2) {
+                    let x = (i / dataArray.length) * canvas.width;
+                    let y = cy + Math.sin(i * 0.1 + rot) * dataArray[i % dataArray.length];
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                
+                // Partículas raveras
+                for(let i = 0; i < 20; i++) {
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.beginPath();
+                    ctx.arc(
+                        Math.random() * canvas.width,
+                        Math.random() * canvas.height,
+                        dataArray[i % dataArray.length] / 50,
+                        0, Math.PI * 2
+                    );
+                    ctx.fill();
+                }
+                break;
+
+            case 'projectm_rave':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                // Rotación y zoom al estilo Project M
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rot * 0.3);
+                ctx.scale(1.02, 1.02);
+                ctx.drawImage(bufferCanvas, -cx, -cy);
+                ctx.restore();
+                
+                // Grid psicodélico
+                const gridSize = 40;
+                for(let x = 0; x < canvas.width; x += gridSize) {
+                    for(let y = 0; y < canvas.height; y += gridSize) {
+                        const idx = (x + y) % dataArray.length;
+                        ctx.strokeStyle = `hsla(${(x + y) * 0.5}, 100%, 50%, 0.8)`;
+                        ctx.strokeRect(
+                            x + dataArray[idx] / 30,
+                            y + dataArray[(idx + 10) % dataArray.length] / 30,
+                            gridSize - 10,
+                            gridSize - 10
+                        );
+                    }
+                }
+                
+                // Líneas de conexión
+                ctx.strokeStyle = colorB;
+                ctx.lineWidth = 1;
+                for(let i = 0; i < 10; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                    ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                    ctx.stroke();
+                }
+                break;
+
+            case 'underground_glow':
+                // Desvanecimiento suave
+                ctx.fillStyle = 'rgba(0,0,0,0.15)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Glow underground
+                ctx.save();
+                ctx.translate(cx, cy);
+                
+                for(let i = 0; i < 64; i += 2) {
+                    const angle = (i / 64) * Math.PI * 2 + rot;
+                    const radius = 100 + dataArray[i % dataArray.length] * 0.8;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+                    
+                    // Efecto glow con gradiente
+                    const gradient = ctx.createLinearGradient(0, 0, 
+                        Math.cos(angle) * radius, Math.sin(angle) * radius);
+                    gradient.addColorStop(0, colorA);
+                    gradient.addColorStop(1, colorB);
+                    
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
+                ctx.restore();
+                break;
+
+            case 'teuf_strobe':
+                // Efecto strobe teuf
+                if(dataArray[5] > 200) {
+                    ctx.fillStyle = colorA;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Flash blanco en beats fuertes
+                    if(dataArray[2] > 220) {
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.globalAlpha = 0.7;
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.globalAlpha = 1;
+                    }
+                } else {
+                    ctx.fillStyle = 'rgba(0,0,0,0.9)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+                
+                // Formas geométricas
+                ctx.strokeStyle = colorB;
+                ctx.lineWidth = 2;
+                
+                // Triángulos rotantes
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rot * 2);
+                
+                for(let i = 0; i < 6; i++) {
+                    ctx.rotate(Math.PI / 3);
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(0, 100 + dataArray[i * 10 % dataArray.length] * 0.5);
+                    ctx.lineTo(50 + dataArray[(i * 10 + 5) % dataArray.length] * 0.3, 0);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+                ctx.restore();
+                break;
+
+            case 'acid_vision':
+                // Desvanecimiento tipo ácido
+                ctx.fillStyle = 'rgba(0,0,0,0.12)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Olas psicodélicas
+                for(let wave = 0; wave < 3; wave++) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = wave === 0 ? colorA : wave === 1 ? colorB : '#FF00FF';
+                    ctx.lineWidth = 2;
+                    
+                    for(let i = 0; i < canvas.width; i++) {
+                        const y = cy + 
+                                 Math.sin(i * 0.03 + rot + wave * 2) * 50 +
+                                 Math.sin(i * 0.01 + rot * 2) * 30 +
+                                 (dataArray[Math.floor(i / 10) % dataArray.length] - 128) * 0.5;
+                        
+                        i === 0 ? ctx.moveTo(i, y) : ctx.lineTo(i, y);
+                    }
+                    ctx.stroke();
+                }
+                
+                // Puntos de conexión
+                for(let i = 0; i < 30; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const size = dataArray[i % dataArray.length] / 40;
+                    
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                break;
+
+            case 'vj_culture':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                // Efecto VJ con capas
+                ctx.globalAlpha = 0.6;
+                ctx.drawImage(bufferCanvas, 1, 1);
+                ctx.globalAlpha = 0.4;
+                ctx.drawImage(bufferCanvas, -1, -1);
+                ctx.globalAlpha = 1;
+                
+                // Visualizador de barras VJ
+                const barCount = 32;
+                const barWidth = canvas.width / barCount;
+                
+                for(let i = 0; i < barCount; i++) {
+                    const value = dataArray[Math.floor(i * 2)];
+                    const height = (value / 255) * canvas.height * 0.8;
+                    
+                    // Gradiente para cada barra
+                    const gradient = ctx.createLinearGradient(
+                        i * barWidth, canvas.height - height,
+                        i * barWidth, canvas.height
+                    );
+                    gradient.addColorStop(0, colorA);
+                    gradient.addColorStop(1, colorB);
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(i * barWidth, canvas.height - height, barWidth - 2, height);
+                }
+                
+                // Líneas de conexión superiores
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for(let i = 0; i < barCount; i += 2) {
+                    const value = dataArray[Math.floor(i * 2)];
+                    const height = (value / 255) * canvas.height * 0.8;
+                    const x = i * barWidth + barWidth / 2;
+                    const y = canvas.height - height;
+                    
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                break;
+
+            case 'warehouse_rave':
+                // Fondo oscuro tipo warehouse
+                ctx.fillStyle = '#111111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Luces estroboscópicas de warehouse
+                const lightCount = 8;
+                for(let i = 0; i < lightCount; i++) {
+                    const angle = (i / lightCount) * Math.PI * 2;
+                    const radius = 150 + Math.sin(rot * 3 + i) * 50;
+                    const x = cx + Math.cos(angle) * radius;
+                    const y = cy + Math.sin(angle) * radius;
+                    
+                    // Brillo basado en el audio
+                    const brightness = dataArray[i * 8 % dataArray.length] / 255;
+                    
+                    // Luz principal
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.globalAlpha = brightness * 0.8;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 20 + brightness * 30, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Halo
+                    const gradient = ctx.createRadialGradient(x, y, 0, x, y, 50);
+                    gradient.addColorStop(0, i % 2 === 0 ? colorA : colorB);
+                    gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.globalAlpha = brightness * 0.3;
+                    ctx.fillRect(x - 50, y - 50, 100, 100);
+                }
+                ctx.globalAlpha = 1;
+                
+                // Rayos de luz entre las luces
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 1;
+                for(let i = 0; i < lightCount; i++) {
+                    const angle1 = (i / lightCount) * Math.PI * 2;
+                    const angle2 = ((i + 1) % lightCount / lightCount) * Math.PI * 2;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(
+                        cx + Math.cos(angle1) * 150,
+                        cy + Math.sin(angle1) * 150
+                    );
+                    ctx.lineTo(
+                        cx + Math.cos(angle2) * 150,
+                        cy + Math.sin(angle2) * 150
+                    );
+                    ctx.stroke();
+                }
+                break;
+
+            case 'rave_o_matic':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                // Efecto de distorsión rave
+                ctx.save();
+                ctx.translate(cx, cy);
+                
+                // Distorsión basada en el bajo
+                const bass = dataArray[0] / 255;
+                ctx.rotate(bass * 0.1);
+                ctx.scale(1 + bass * 0.05, 1 + bass * 0.05);
+                
+                ctx.drawImage(bufferCanvas, -cx, -cy);
+                ctx.restore();
+                
+                // Círculos concéntricos raveros
+                ctx.save();
+                ctx.translate(cx, cy);
+                
+                for(let i = 0; i < 8; i++) {
+                    ctx.strokeStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.lineWidth = 2;
+                    
+                    const radius = 30 + i * 25 + Math.sin(rot * 2 + i) * 20;
+                    const pulse = dataArray[i * 5 % dataArray.length] / 30;
+                    
+                    ctx.beginPath();
+                    ctx.arc(0, 0, radius + pulse, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // Puntos en el círculo
+                    for(let j = 0; j < 12; j++) {
+                        const angle = (j / 12) * Math.PI * 2;
+                        ctx.fillStyle = j % 2 === 0 ? colorA : colorB;
+                        ctx.beginPath();
+                        ctx.arc(
+                            Math.cos(angle) * (radius + pulse),
+                            Math.sin(angle) * (radius + pulse),
+                            3, 0, Math.PI * 2
+                        );
+                        ctx.fill();
+                    }
+                }
+                ctx.restore();
+                break;
+
+            case 'goa_trance':
+                // Fondo psicodélico
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Mandala Goa
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(rot * 0.5);
+                
+                const layers = 6;
+                for(let layer = 0; layer < layers; layer++) {
+                    ctx.rotate(Math.PI / 12);
+                    
+                    const points = 16 + layer * 4;
+                    const baseRadius = 40 + layer * 30;
+                    
+                    for(let i = 0; i < points; i++) {
+                        const angle = (i / points) * Math.PI * 2;
+                        const audioValue = dataArray[(layer * 10 + i * 3) % dataArray.length];
+                        const radius = baseRadius + (audioValue / 255) * 80;
+                        
+                        // Líneas al centro
+                        ctx.strokeStyle = `hsla(${layer * 60 + i * 20}, 100%, 60%, 0.7)`;
+                        ctx.lineWidth = 1.5;
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+                        ctx.stroke();
+                        
+                        // Nodos
+                        ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                        ctx.beginPath();
+                        ctx.arc(
+                            Math.cos(angle) * radius,
+                            Math.sin(angle) * radius,
+                            4 + (audioValue / 255) * 6,
+                            0, Math.PI * 2
+                        );
+                        ctx.fill();
+                    }
+                }
+                ctx.restore();
+                break;
+
+            case 'psytrance_grid':
+                // Grid psicodélico
+                const cellSize = 35;
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 1;
+                
+                // Grid base
+                for(let x = 0; x < canvas.width; x += cellSize) {
+                    for(let y = 0; y < canvas.height; y += cellSize) {
+                        ctx.strokeRect(x, y, cellSize, cellSize);
+                    }
+                }
+                
+                // Células activas basadas en audio
+                for(let x = 0; x < canvas.width; x += cellSize) {
+                    for(let y = 0; y < canvas.height; y += cellSize) {
+                        const idx = ((x / cellSize) + (y / cellSize)) % dataArray.length;
+                        const value = dataArray[idx];
+                        
+                        if(value > 180) {
+                            ctx.fillStyle = `hsla(${(x + y) % 360}, 100%, 50%, 0.6)`;
+                            ctx.fillRect(
+                                x + 2, y + 2,
+                                cellSize - 4, cellSize - 4
+                            );
+                            
+                            // Conectar células activas
+                            ctx.strokeStyle = colorA;
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(x + cellSize / 2, y + cellSize / 2);
+                            ctx.lineTo(cx, cy);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                break;
+
+            case 'neon_underground':
+                // Efecto de neón underground
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Letras/palabras psicodélicas
+                const words = ['RAVE', 'TEKNO', 'UNDERGROUND', 'PSYCHO', 'BEAT', 'ACID', 'TRANCE', 'GOA'];
+                ctx.font = 'bold 40px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                for(let i = 0; i < words.length; i++) {
+                    const x = cx + Math.sin(rot + i * 0.5) * 200;
+                    const y = cy + Math.cos(rot + i * 0.5) * 150;
+                    
+                    // Efecto neon glow
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = i % 2 === 0 ? colorA : colorB;
+                    
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.globalAlpha = 0.7;
+                    ctx.fillText(words[i], x, y);
+                    
+                    // Contorno
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 1;
+                    ctx.strokeText(words[i], x, y);
+                    
+                    ctx.globalAlpha = 1;
+                    ctx.shadowBlur = 0;
+                }
+                
+                // Partículas de neón
+                for(let i = 0; i < 50; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const size = dataArray[i % dataArray.length] / 30;
+                    
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = i % 2 === 0 ? colorA : colorB;
+                    
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.shadowBlur = 0;
+                break;
+
+            case 'dark_teknival':
+                // Estilo teknival oscuro
+                ctx.fillStyle = '#050505';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Luces estroboscópicas teknival
+                const strobeCount = 12;
+                for(let i = 0; i < strobeCount; i++) {
+                    const angle = (i / strobeCount) * Math.PI * 2 + rot;
+                    const distance = 180 + Math.sin(rot * 4 + i) * 50;
+                    
+                    const x = cx + Math.cos(angle) * distance;
+                    const y = cy + Math.sin(angle) * distance;
+                    
+                    // Intensidad basada en frecuencias altas
+                    const intensity = dataArray[Math.min(i * 8, dataArray.length - 1)] / 255;
+                    
+                    if(intensity > 0.3) {
+                        // Haz de luz
+                        ctx.save();
+                        ctx.translate(cx, cy);
+                        ctx.rotate(angle);
+                        
+                        const gradient = ctx.createLinearGradient(0, 0, 300, 0);
+                        gradient.addColorStop(0, 'rgba(255,255,255,0.9)');
+                        gradient.addColorStop(0.3, i % 2 === 0 ? colorA : colorB);
+                        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                        
+                        ctx.fillStyle = gradient;
+                        ctx.globalAlpha = intensity;
+                        ctx.fillRect(0, -10, 300, 20);
+                        
+                        ctx.restore();
+                    }
+                    
+                    // Foco de luz
+                    ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                    ctx.globalAlpha = intensity * 0.8;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 15 + intensity * 20, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+                break;
+
+            case 'hardcore_glitch':
+                bufferCtx.drawImage(canvas, 0, 0);
+                
+                // Glitch hardcore
+                if(dataArray[10] > 200) {
+                    // Desplazamiento aleatorio
+                    const shiftX = (Math.random() - 0.5) * 50;
+                    const shiftY = (Math.random() - 0.5) * 30;
+                    
+                    ctx.drawImage(bufferCanvas, shiftX, shiftY);
+                    
+                    // Líneas de glitch
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 1;
+                    for(let i = 0; i < 5; i++) {
+                        const y = Math.random() * canvas.height;
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(canvas.width, y);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Barras de distorsión
+                const barCountGlitch = 48;
+                const glitchBarWidth = canvas.width / barCountGlitch;
+                
+                for(let i = 0; i < barCountGlitch; i++) {
+                    const value = dataArray[Math.floor(i * 1.5)];
+                    const height = (value / 255) * canvas.height;
+                    
+                    // Distorsión aleatoria
+                    const distortion = Math.random() > 0.7 ? (Math.random() - 0.5) * 40 : 0;
+                    
+                    ctx.fillStyle = i % 3 === 0 ? colorA : i % 3 === 1 ? colorB : '#FF00FF';
+                    ctx.fillRect(
+                        i * glitchBarWidth + distortion,
+                        canvas.height - height,
+                        glitchBarWidth - 1,
+                        height
+                    );
+                }
+                break;
+
+            case 'tribal_ritual':
+                // Patrones tribales
+                ctx.fillStyle = '#111111';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.save();
+                ctx.translate(cx, cy);
+                
+                // Círculos concéntricos tribales
+                const tribalCircles = 5;
+                for(let circle = 0; circle < tribalCircles; circle++) {
+                    const radius = 60 + circle * 40;
+                    const pulse = dataArray[circle * 12 % dataArray.length] / 20;
+                    
+                    // Círculo base
+                    ctx.strokeStyle = circle % 2 === 0 ? colorA : colorB;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, radius + pulse, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // Símbolos tribales
+                    const symbols = 8 + circle * 2;
+                    for(let i = 0; i < symbols; i++) {
+                        const angle = (i / symbols) * Math.PI * 2;
+                        const symbolSize = 10 + circle * 3;
+                        
+                        ctx.save();
+                        ctx.translate(
+                            Math.cos(angle) * (radius + pulse),
+                            Math.sin(angle) * (radius + pulse)
+                        );
+                        ctx.rotate(angle);
+                        
+                        // Dibujar símbolo tribal
+                        ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                        ctx.beginPath();
+                        
+                        // Forma tribal simple
+                        ctx.moveTo(0, -symbolSize);
+                        ctx.lineTo(symbolSize, 0);
+                        ctx.lineTo(0, symbolSize);
+                        ctx.lineTo(-symbolSize, 0);
+                        ctx.closePath();
+                        
+                        ctx.fill();
+                        ctx.restore();
+                    }
+                }
+                
+                // Líneas de conexión
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.lineWidth = 1;
+                const connectionPoints = 16;
+                for(let i = 0; i < connectionPoints; i++) {
+                    for(let j = i + 1; j < connectionPoints; j++) {
+                        if(Math.random() > 0.7) {
+                            const angle1 = (i / connectionPoints) * Math.PI * 2;
+                            const angle2 = (j / connectionPoints) * Math.PI * 2;
+                            const radius1 = 200 + Math.sin(rot + i) * 30;
+                            const radius2 = 200 + Math.sin(rot + j) * 30;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(
+                                Math.cos(angle1) * radius1,
+                                Math.sin(angle1) * radius1
+                            );
+                            ctx.lineTo(
+                                Math.cos(angle2) * radius2,
+                                Math.sin(angle2) * radius2
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
+                
+                ctx.restore();
+                break;
+
+            case 'shamanic_beat':
+                // Ritmo chamánico
+                ctx.fillStyle = '#0A0A1A';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Tambor central
+                ctx.save();
+                ctx.translate(cx, cy);
+                
+                // Círculo del tambor
+                const drumSize = 80 + (dataArray[0] / 255) * 50;
+                ctx.fillStyle = '#8B4513';
+                ctx.beginPath();
+                ctx.arc(0, 0, drumSize, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Diseño del tambor
+                ctx.strokeStyle = '#DEB887';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(0, 0, drumSize - 5, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // Líneas de tensión
+                for(let i = 0; i < 8; i++) {
+                    const angle = (i / 8) * Math.PI * 2;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(
+                        Math.cos(angle) * drumSize,
+                        Math.sin(angle) * drumSize
+                    );
+                    ctx.stroke();
+                }
+                
+                // Ondas de sonido
+                const waveCount = 4;
+                for(let wave = 0; wave < waveCount; wave++) {
+                    const waveRadius = drumSize + 30 + wave * 40;
+                    const wavePulse = dataArray[wave * 10 % dataArray.length] / 10;
+                    
+                    ctx.strokeStyle = `hsla(${wave * 90}, 70%, 50%, 0.7)`;
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, waveRadius + wavePulse, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    // Puntos en la onda
+                    for(let i = 0; i < 12; i++) {
+                        const angle = (i / 12) * Math.PI * 2 + rot;
+                        ctx.fillStyle = i % 2 === 0 ? colorA : colorB;
+                        ctx.beginPath();
+                        ctx.arc(
+                            Math.cos(angle) * (waveRadius + wavePulse),
+                            Math.sin(angle) * (waveRadius + wavePulse),
+                            3, 0, Math.PI * 2
+                        );
+                        ctx.fill();
+                    }
+                }
+                
+                ctx.restore();
+                
+                // Partículas de energía
+                for(let i = 0; i < 30; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 100 + Math.random() * 200;
+                    const x = cx + Math.cos(angle) * distance;
+                    const y = cy + Math.sin(angle) * distance;
+                    const size = dataArray[i % dataArray.length] / 40;
+                    
+                    // Movimiento orbital
+                    const orbitX = Math.cos(rot * 2 + i) * 20;
+                    const orbitY = Math.sin(rot * 2 + i) * 20;
+                    
+                    ctx.fillStyle = `hsla(${i * 12}, 100%, 60%, 0.8)`;
+                    ctx.beginPath();
+                    ctx.arc(x + orbitX, y + orbitY, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                break;
+                
+            default:
+                ctx.fillRect(0, cy, canvas.width, 2);
         }
     }
 
-    function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
-    window.onresize = resize; resize();
+    function drawTree(len, angle, bA) {
+        ctx.strokeStyle = colorA; 
+        ctx.lineWidth = len/15; 
+        ctx.beginPath(); 
+        ctx.save(); 
+        ctx.rotate(angle*Math.PI/180); 
+        ctx.moveTo(0,0); 
+        ctx.lineTo(0,-len); 
+        ctx.stroke(); 
+        ctx.translate(0,-len);
+        if(len > 15){ 
+            drawTree(len*0.75, angle+bA, bA); 
+            drawTree(len*0.75, angle-bA, bA); 
+        } 
+        ctx.restore();
+    }
+
+    function drawHexagon(ctx, x, y, size, scale = 1) {
+        ctx.beginPath();
+        for(let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i;
+            const px = x + Math.cos(angle) * size * scale;
+            const py = y + Math.sin(angle) * size * scale;
+            if(i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function resize() { 
+        canvas.width = canvas.clientWidth; 
+        canvas.height = canvas.clientHeight; 
+        bufferCanvas.width = canvas.width;
+        bufferCanvas.height = canvas.height;
+    }
+    
+    window.onresize = resize; 
+    resize();
     renderModesPage();
 </script>
 </body>

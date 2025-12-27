@@ -2943,7 +2943,9 @@ setTimeout(() => {
     document.getElementById("loader").style.display = "none"; 
 }, 2000);
 
+// ----------------- Función única y mejorada para cambiar entre secciones -----------------
 function showTabWithTransition(tabId) {
+  // 1. Mostrar transición de disco vinilo
   const overlay = document.getElementById('transition-overlay');
   if (overlay) {
     overlay.style.opacity = '1';
@@ -2951,11 +2953,13 @@ function showTabWithTransition(tabId) {
   }
   
   setTimeout(() => {
+    // 2. Ocultar todas las secciones posibles
     const seccionesParaOcultar = [
       'inicio', 'musica', 'visuales', 'rtbs-visualizer', 
       'videos-cortos', 'redes', 'comentarios', 'dj', 'altavoces'
     ];
     
+    // Ocultar todas las secciones principales
     seccionesParaOcultar.forEach(id => {
       const elemento = document.getElementById(id);
       if (elemento) {
@@ -2964,16 +2968,25 @@ function showTabWithTransition(tabId) {
       }
     });
     
+    // Ocultar contenedores de lanzamientos de DJs
     document.querySelectorAll('.lanzamientos-container').forEach(container => {
       container.classList.remove('active');
     });
     
+    // Ocultar detalles de lanzamientos
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+      detalle.classList.remove('active');
+    });
+    
+    // Quitar clase "active" de los items de DJ
     document.querySelectorAll('.dj-item').forEach(item => {
       item.classList.remove('active');
     });
     
+    // 3. Mostrar la sección seleccionada
     const seccionActiva = document.getElementById(tabId);
     if (seccionActiva) {
+      // Asegurar que tenga la clase "seccion" si es necesario
       if (tabId !== 'inicio' && !seccionActiva.classList.contains('seccion')) {
         seccionActiva.classList.add('seccion');
       }
@@ -2983,6 +2996,7 @@ function showTabWithTransition(tabId) {
         seccionActiva.classList.add('active');
       }, 50);
       
+      // 4. Si es RTBS VISUALIZER, recargar el iframe
       if (tabId === 'rtbs-visualizer') {
         setTimeout(() => {
           const visualizadorIframe = document.querySelector('#rtbs-visualizer iframe');
@@ -2996,16 +3010,19 @@ function showTabWithTransition(tabId) {
         }, 200);
       }
       
+      // 5. Si es la sección de música, resetear DJ activo
       if (tabId === 'musica') {
         djActivo = null;
       }
     }
     
+    // 6. Cerrar menú móvil si está abierto
     if (window.innerWidth <= 768) {
       const nav = document.querySelector('nav');
       if (nav) nav.classList.remove('active');
     }
     
+    // 7. Ocultar transición de disco vinilo
     setTimeout(() => {
       if (overlay) {
         overlay.style.opacity = '0';
@@ -3013,7 +3030,7 @@ function showTabWithTransition(tabId) {
       }
     }, 500);
     
-  }, 600);
+  }, 600); // Tiempo de la animación del disco
 }
 
 // ----------------- Comentarios -----------------

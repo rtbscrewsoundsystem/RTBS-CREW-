@@ -3238,11 +3238,35 @@ function toggleDJ(dj) {
     }
   }
 }
-   function toggleMobileMenu() {
+   // --- Sistema de páginas detalladas de lanzamientos ---
+function mostrarLanzamientoDetalle(lanzamientoId) {
+    // Ocultar todos los detalles primero
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
+    });
+    
+    // Mostrar el detalle seleccionado
+    const detalle = document.getElementById('detalle-' + lanzamientoId);
+    if (detalle) {
+        detalle.classList.add('active');
+        // Desplazar suavemente al detalle
+        setTimeout(() => {
+            detalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+    }
+}
+
+function volverALanzamientos() {
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
+    });
+}
+    function toggleMobileMenu() {
     const nav = document.querySelector('nav');
     nav.classList.toggle('active');
 }
 
+// Opcional: Cerrar el menú automáticamente al hacer clic en una sección (solo en móvil)
 document.querySelectorAll('nav a').forEach(link => {
     link.addEventListener('click', () => {
         if (window.innerWidth <= 768) {
@@ -3250,6 +3274,8 @@ document.querySelectorAll('nav a').forEach(link => {
         }
     });
 });
+    
+</script>
 
     <script async src="https://www.tiktok.com/embed.js"></script>
 </body>

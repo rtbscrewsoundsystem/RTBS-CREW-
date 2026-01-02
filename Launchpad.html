@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro Launchpad Web - Control MIDI Avanzado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --panel-bg: #1a1a1a;
+            --pad-off: #2a2a2a;
+            --pad-on: #00ffcc;
+            --pad-loop: #ff00ff;
+            --pad-sample: #ffaa00;
+            --pad-effect: #9d4edd;
+            --text-primary: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent-color: #00ccff;
+            --danger-color: #ff3366;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body { 
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+            color: var(--text-primary); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(10, 10, 10, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h1 { 
+            margin: 0; 
+            font-weight: 700; 
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, var(--pad-on), var(--pad-loop));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+        }
+
+        h2 { 
+            margin: 10px 0; 
+            font-weight: 400; 
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        h3 {
+            margin: 0 0 15px 0;
+            font-weight: 500;
+            color: var(--accent-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .status-bar { 
+            font-size: 14px; 
+            margin: 15px 0;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-connected {
+            color: var(--pad-on);
+        }
+
+        .status-disconnected {
+            color: var(--danger-color);
+        }
+
+        .status-icon {
+            margin-right: 10px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .launchpad-section {
+            flex: 1;
+            min-width: 500px;
+            background: var(--panel-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .controls-section {
+            flex: 1;
+            min-width: 300px;
+            background: var(--panel-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Contenedor del Launchpad */
+        .launchpad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+
+        /* Estilo de cada Pad */
+        .pad {
+            width: 80px;
+            height: 80px;
+            background: var(--pad-off);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            text-transform: uppercase;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pad:hover {
+            transform: scale(1.03);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .pad-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .pad-type {
+            font-size: 9px;
+            opacity: 0.7;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animación cuando está activo */
+        .pad.active {
+            transform: scale(0.95);
+            background: var(--pad-on);
+            box-shadow: 0 0 30px var(--pad-on);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Color diferente para Loops activos */
+        .pad.looping {
+            background: var(--pad-loop);
+            box-shadow: 0 0 35px var(--pad-loop);
+            border-color: rgba(255, 255, 255, 0.8);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Color para samples */
+        .pad.sample {
+            border-color: rgba(255, 170, 0, 0.3);
+        }
+
+        .pad.sample.active {
+            background: var(--pad-sample);
+            box-shadow: 0 0 30px var(--pad-sample);
+        }
+
+        @keyframes pulse {
+            0% { 
+                box-shadow: 0 0 20px var(--pad-loop), 0 0 40px var(--pad-loop);
+            }
+            50% { 
+                box-shadow: 0 0 30px var(--pad-loop), 0 0 60px var(--pad-loop);
+            }
+            100% { 
+                box-shadow: 0 0 20px var(--pad-loop), 0 0 40px var(--pad-loop);
+            }
+        }
+
+        @keyframes active-glow {
+            0% { 
+                box-shadow: 0 0 15px var(--pad-on);
+            }
+            50% { 
+                box-shadow: 0 0 25px var(--pad-on);
+            }
+            100% { 
+                box-shadow: 0 0 15px var(--pad-on);
+            }
+        }
+
+        /* Controles de efectos */
+        .effects-panel {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .effect-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .effect-group {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .slider-container {
+            margin-bottom: 15px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider-value {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
+        }
+
+        .effect-btn {
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid var(--pad-effect);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .effect-btn:hover {
+            background: rgba(157, 78, 221, 0.4);
+        }
+
+        .effect-btn.active {
+            background: var(--pad-effect);
+            box-shadow: 0 0 15px var(--pad-effect);
+        }
+
+        /* Controles generales */
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: black;
+        }
+
+        .btn-primary:hover {
+            background: #00ddff;
+            box-shadow: 0 0 20px rgba(0, 204, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: rgba(255, 51, 102, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 51, 102, 0.4);
+        }
+
+        /* Instrucciones */
+        .instructions {
+            margin-top: 25px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .instruction-icon {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .launchpad-section, .controls-section {
+                min-width: 100%;
+            }
+            
+            .launchpad {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+            
+            .pad {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .launchpad {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .pad {
+                width: 100%;
+                height: 80px;
+            }
+            
+            .effect-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Indicador visual de presión en móvil */
+        .pad:active {
+            transform: scale(0.92);
+        }
+
+        /* Modo oscuro adicional */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1><i class="fas fa-sliders-h"></i> LAUNCHPAD PRO WEB</h1>
+            <h2>Controlador MIDI completo con efectos en tiempo real</h2>
+            
+            <div class="status-bar" id="midi-status">
+                <div>
+                    <i class="fas fa-plug status-icon"></i>
+                    <span id="midi-text">Esperando conexión MIDI...</span>
+                </div>
+                <div id="audio-status">
+                    <i class="fas fa-volume-up"></i>
+                    <span>Audio activo</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="launchpad-section">
+                <h3><i class="fas fa-th-large"></i> PADS DE CONTROL</h3>
+                
+                <div class="launchpad" id="grid">
+                    <!-- Los pads se generarán dinámicamente con JavaScript -->
+                </div>
+                
+                <div class="control-buttons">
+                    <button class="btn btn-primary" id="play-all">
+                        <i class="fas fa-play"></i> Play All
+                    </button>
+                    <button class="btn btn-secondary" id="stop-all">
+                        <i class="fas fa-stop"></i> Stop All
+                    </button>
+                    <button class="btn btn-danger" id="clear-all">
+                        <i class="fas fa-ban"></i> Clear
+                    </button>
+                </div>
+            </div>
+            
+            <div class="controls-section">
+                <h3><i class="fas fa-sliders-h"></i> PANEL DE EFECTOS</h3>
+                
+                <div class="effect-controls">
+                    <div class="effect-group">
+                        <h4><i class="fas fa-wave-square"></i> Filtros</h4>
+                        
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Filtro Low-Pass</span>
+                                <span class="slider-value" id="lowpass-value">50%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="50" class="slider" id="lowpass-slider">
+                        </div>
+                        
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Filtro High-Pass</span>
+                                <span class="slider-value" id="highpass-value">0%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="slider" id="highpass-slider">
+                        </div>
+                    </div>
+                    
+                    <div class="effect-group">
+                        <h4><i class="fas fa-volume-up"></i> Modulación</h4>
+                        
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Reverb</span>
+                                <span class="slider-value" id="reverb-value">30%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="30" class="slider" id="reverb-slider">
+                        </div>
+                        
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>Delay</span>
+                                <span class="slider-value" id="delay-value">0%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="0" class="slider" id="delay-slider">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="effects-panel">
+                    <h4><i class="fas fa-magic"></i> Efectos Rápidos</h4>
+                    <div>
+                        <button class="effect-btn" id="distortion-btn">Distorsión</button>
+                        <button class="effect-btn" id="chorus-btn">Chorus</button>
+                        <button class="effect-btn" id="flanger-btn">Flanger</button>
+                        <button class="effect-btn" id="bitcrusher-btn">Bit Crusher</button>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h4><i class="fas fa-info-circle"></i> Instrucciones</h4>
+                    <div class="instruction-item">
+                        <i class="fas fa-mouse-pointer instruction-icon"></i>
+                        <span>Toca un pad para reproducir el sonido</span>
+                    </div>
+                    <div class="instruction-item">
+                        <i class="fas fa-redo instruction-icon"></i>
+                        <span>Toca de nuevo un loop para detenerlo</span>
+                    </div>
+                    <div class="instruction-item">
+                        <i class="fas fa-mobile-alt instruction-icon"></i>
+                        <span>Usa los controles deslizantes para ajustar efectos en tiempo real</span>
+                    </div>
+                    <div class="instruction-item">
+                        <i class="fas fa-sliders-h instruction-icon"></i>
+                        <span>Conecta tu Launchpad físico para controlar los pads</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context y configuración inicial
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const activeSources = {}; // Para guardar lo que está sonando
+        let globalEffects = {
+            lowpass: null,
+            highpass: null,
+            reverb: null,
+            delay: null,
+            distortion: null,
+            chorus: null,
+            flanger: null,
+            bitcrusher: null
+        };
+        
+        // Configuración de los pads
+        const padSettings = [
+            { id: 0, name: "Loop Beat", url: "https://actions.google.com/sounds/v1/science_fiction/glitch_low_power_off.ogg", isLoop: true, type: "loop", color: "loop" },
+            { id: 1, name: "Kick", url: "https://actions.google.com/sounds/v1/drums/bass_drum_double_kick.ogg", isLoop: false, type: "drum", color: "sample" },
+            { id: 2, name: "Snare", url: "https://actions.google.com/sounds/v1/drums/snare_drum.ogg", isLoop: false, type: "drum", color: "sample" },
+            { id: 3, name: "HiHat", url: "https://actions.google.com/sounds/v1/drums/percussion_hit.ogg", isLoop: false, type: "drum", color: "sample" },
+            { id: 4, name: "Synth Loop", url: "https://actions.google.com/sounds/v1/science_fiction/loading_low_power.ogg", isLoop: true, type: "loop", color: "loop" },
+            { id: 5, name: "Clap", url: "https://actions.google.com/sounds/v1/drums/wood_block.ogg", isLoop: false, type: "drum", color: "sample" },
+            { id: 6, name: "Crash", url: "https://actions.google.com/sounds/v1/drums/string_hit.ogg", isLoop: false, type: "cymbal", color: "sample" },
+            { id: 7, name: "Bass", url: "https://actions.google.com/sounds/v1/foley/camera_shutter.ogg", isLoop: false, type: "bass", color: "sample" },
+            { id: 8, name: "Riser", url: "https://actions.google.com/sounds/v1/science_fiction/futuristic_rise.ogg", isLoop: false, type: "fx", color: "effect" },
+            { id: 9, name: "Sweep", url: "https://actions.google.com/sounds/v1/science_fiction/futuristic_whoosh.ogg", isLoop: false, type: "fx", color: "effect" },
+            { id: 10, name: "Stab", url: "https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg", isLoop: false, type: "synth", color: "effect" },
+            { id: 11, name: "Ambient", url: "https://actions.google.com/sounds/v1/weather/rain_light.ogg", isLoop: true, type: "ambient", color: "loop" },
+        ];
+
+        // Crear la interfaz visual de pads
+        const grid = document.getElementById('grid'

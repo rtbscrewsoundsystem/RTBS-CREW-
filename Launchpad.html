@@ -2,14 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launchpad Pro Web - Editor & MIDI</title>
+    <title>Launchpad Pro Web - Lightshow & Sampler</title>
     <style>
         :root {
-            --bg: #0b0b0b;
-            --chassis: #1e1e1e;
-            --pad-off: #333;
-            --accent: #00ffcc;
+            --bg: #050505;
+            --chassis: #1a1a1b;
+            --pad-empty: #313131;
+            --accent: #00ff55;
         }
 
         body {
@@ -21,246 +20,289 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            gap: 30px;
+            overflow: hidden;
+            gap: 20px;
         }
 
-        /* --- Launchpad Layout --- */
+        /* --- Launchpad Visual --- */
         .lp-chassis {
             background: var(--chassis);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             display: grid;
             grid-template-columns: repeat(8, 45px) 50px;
             grid-template-rows: 50px repeat(8, 45px);
-            gap: 8px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.7);
+            gap: 6px;
+            border: 4px solid #000;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
 
         .cell {
-            background: var(--pad-off);
-            border-radius: 4px;
+            background: var(--pad-empty);
+            border-radius: 3px;
             cursor: pointer;
-            transition: 0.1s;
+            transition: background 0.1s, box-shadow 0.1s;
         }
-
-        .cell.active-ui { background: #00ff55; box-shadow: 0 0 15px #00ff55; }
-        .cell.looping-ui { background: #ff2255; box-shadow: 0 0 15px #ff2255; }
-        .cell.selected { border: 2px solid white; scale: 0.95; }
 
         .round-btn { border-radius: 50%; background: #444; width: 35px; height: 35px; align-self: center; justify-self: center; }
 
-        /* --- Panel de Edición --- */
-        #editor-panel {
-            background: #252525;
+        /* Estados de Luz Especiales */
+        .hit-flash { background: white !important; box-shadow: 0 0 20px white !important; }
+        .looping { animation: pulse 1s infinite alternate; }
+        @keyframes pulse { from { opacity: 1; } to { opacity: 0.5; } }
+
+        /* --- Panel de Control --- */
+        .side-panel {
+            background: #1e1e22;
             padding: 20px;
-            border-radius: 10px;
-            width: 250px;
-            border: 1px solid #444;
+            border-radius: 12px;
+            width: 320px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #333;
         }
 
-        .control-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
-        input[type="range"] { width: 100%; accent-color: var(--accent); }
-        select, button { width: 100%; padding: 8px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; }
-        button { background: var(--accent); color: black; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .pad-grid-mini {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+            background: #000;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .mini-pad {
+            aspect-ratio: 1;
+            background: #444;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .mini-pad.selected { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .mini-pad.has-audio { border: 1px solid #ff2255; }
+
+        .control-group { margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        label { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        input, select, button { width: 100%; padding: 8px; background: #2a2a2e; color: white; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; }
+        button { background: var(--accent); color: black; font-weight: bold; border: none; cursor: pointer; margin-top: 5px; }
         
-        .hidden { display: none; }
+        .lightshow-btn { background: #2255ff; color: white; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="lp-chassis" id="launchpad">
-        <div style="grid-column: 1/8; font-size: 14px; font-weight: bold; color: #666;">LP SERIES S CONTROL</div>
+        <div style="grid-column: 1/5; color: #444; font-size: 10px; font-weight: bold;">WEB PAD PRO v2</div>
         </div>
 
-    <div id="editor-panel">
-        <h3 id="pad-label">Selecciona un Pad</h3>
+    <div class="side-panel">
+        <h3>CONFIGURADOR</h3>
         
         <div class="control-group">
-            <label>Archivo de Audio</label>
-            <input type="file" id="audio-file" accept="audio/*">
+            <label>1. Toca un pad en la rejilla o aquí:</label>
+            <div class="pad-grid-mini" id="miniGrid"></div>
+            <div id="selInfo" style="font-size: 12px; color: var(--accent);">Pad seleccionado: Ninguno</div>
         </div>
 
         <div class="control-group">
-            <label>Modo de Reproducción</label>
-            <select id="play-mode">
-                <option value="sample">Sampler (One-shot)</option>
-                <option value="loop">Loop (Repetir)</option>
+            <label>2. Cargar Audio</label>
+            <input type="file" id="audioInput" accept="audio/*">
+            <select id="playMode" style="margin-top:5px;">
+                <option value="sample">Sampler (Un disparo)</option>
+                <option value="loop">Loop (Repetitivo)</option>
             </select>
         </div>
 
         <div class="control-group">
-            <label>Ganancia (Volumen)</label>
-            <input type="range" id="gain-ctrl" min="0" max="2" step="0.1" value="1">
-        </div>
-
-        <div class="control-group">
-            <label>Filtro (Agudos/Graves)</label>
-            <input type="range" id="filter-ctrl" min="-100" max="100" step="1" value="0">
-            <div style="display: flex; justify-content: space-between; font-size: 10px;">
-                <span>Grave</span><span>Flat</span><span>Agudo</span>
+            <label>3. Efectos de Sonido</label>
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1">
+                    <label>Volumen</label>
+                    <input type="range" id="gainSlider" min="0" max="2" step="0.1" value="1">
+                </div>
+                <div style="flex:1">
+                    <label>Filtro</label>
+                    <input type="range" id="filterSlider" min="100" max="5000" value="5000">
+                </div>
             </div>
         </div>
 
         <div class="control-group">
-            <label>Patrón de Luces (Idle)</label>
-            <select id="light-pattern">
-                <option value="0">Apagado</option>
-                <option value="1">Respiración Verde</option>
-                <option value="2">Ondas Rojas</option>
-            </select>
+            <label>4. Animaciones de Luz</label>
+            <button class="lightshow-btn" onclick="triggerLightshow('explote')">Efecto Explosión</button>
+            <button class="lightshow-btn" onclick="triggerLightshow('wave')">Onda Cruzada</button>
         </div>
     </div>
 
 <script>
     const lp = document.getElementById('launchpad');
+    const miniGrid = document.getElementById('miniGrid');
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    const padSettings = {}; // Almacena config de cada pad
-    const activeSources = {}; // Sonidos sonando
-    let selectedPadId = null;
+    const pads = {}; // Datos de cada pad
+    let selectedId = null;
     let midiOut = null;
 
-    // Inicializar Pads
+    // --- INICIALIZACIÓN ---
     for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
             const id = `p-${r}-${c}`;
-            const note = (r * 16) + c;
-            
-            // Config default
-            padSettings[id] = {
-                buffer: null,
-                mode: 'sample',
-                gain: 1.0,
-                filter: 0, // 0 = bypass
-                note: note
-            };
+            pads[id] = { buffer: null, mode: 'sample', gain: 1, filter: 5000, note: (r*16)+c, r, c };
 
+            // Pad Principal
             const div = document.createElement('div');
             div.className = 'cell';
             div.id = id;
-            div.onclick = () => selectPad(id);
-            div.onmousedown = (e) => { if(e.button === 0) triggerPad(id); };
+            div.onclick = () => handlePadClick(id);
             lp.appendChild(div);
+
+            // Pad Miniatura
+            const mini = document.createElement('div');
+            mini.className = 'mini-pad';
+            mini.id = `mini-${id}`;
+            mini.onclick = () => handlePadClick(id);
+            miniGrid.appendChild(mini);
         }
-        const btn = document.createElement('div');
-        btn.className = 'cell round-btn';
-        lp.appendChild(btn);
+        const rb = document.createElement('div');
+        rb.className = 'cell round-btn';
+        lp.appendChild(rb);
     }
 
-    function selectPad(id) {
-        if(selectedPadId) document.getElementById(selectedPadId).classList.remove('selected');
-        selectedPadId = id;
-        document.getElementById(id).classList.add('selected');
-        document.getElementById('pad-label').innerText = `Editando Pad ${id}`;
+    function handlePadClick(id) {
+        // Actualizar UI de selección
+        if(selectedId) {
+            document.getElementById(selectedId).classList.remove('selected');
+            document.getElementById(`mini-${selectedId}`).classList.remove('selected');
+        }
+        selectedId = id;
+        document.getElementById(`mini-${id}`).classList.add('selected');
+        document.getElementById('selInfo').innerText = `Pad: ${id} seleccionado`;
         
         // Cargar valores al panel
-        document.getElementById('play-mode').value = padSettings[id].mode;
-        document.getElementById('gain-ctrl').value = padSettings[id].gain;
-        document.getElementById('filter-ctrl').value = padSettings[id].filter;
+        document.getElementById('playMode').value = pads[id].mode;
+        document.getElementById('gainSlider').value = pads[id].gain;
+        document.getElementById('filterSlider').value = pads[id].filter;
+        
+        // Disparar sonido
+        triggerPad(id);
     }
 
-    // --- Lógica de Audio con Filtros ---
-    async function triggerPad(id) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const settings = padSettings[id];
-        const element = document.getElementById(id);
+    // --- AUDIO ---
+    document.getElementById('audioInput').onchange = async (e) => {
+        if(!selectedId) return alert("Selecciona un pad primero");
+        const file = e.target.files[0];
+        const buffer = await audioCtx.decodeAudioData(await file.arrayBuffer());
+        pads[selectedId].buffer = buffer;
+        document.getElementById(`mini-${selectedId}`).classList.add('has-audio');
+    };
 
-        if (activeSources[id]) {
-            activeSources[id].stop();
-            delete activeSources[id];
-            element.classList.remove('looping-ui');
-            sendMidi(settings.note, 0); 
+    async function triggerPad(id, fromMidi = false) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const p = pads[id];
+        const el = document.getElementById(id);
+
+        // Animación visual inmediata (Flash)
+        el.classList.add('hit-flash');
+        setTimeout(() => el.classList.remove('hit-flash'), 100);
+        sendMidi(p.note, 60); // Luz verde en hardware
+
+        if (!p.buffer) return;
+
+        // Si es loop y ya suena, parar
+        if(p.activeSource) {
+            p.activeSource.stop();
+            p.activeSource = null;
+            el.classList.remove('looping');
+            sendMidi(p.note, 0);
             return;
         }
 
-        if (!settings.buffer) return; // No hay audio cargado
-
         const source = audioCtx.createBufferSource();
-        source.buffer = settings.buffer;
+        source.buffer = p.buffer;
         
-        // Nodo de Ganancia
-        const gainNode = audioCtx.createGain();
-        gainNode.gain.value = settings.gain;
+        const gain = audioCtx.createGain();
+        gain.gain.value = p.gain;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = p.filter;
 
-        // Nodo de Filtro
-        const filterNode = audioCtx.createBiquadFilter();
-        if (settings.filter > 10) {
-            filterNode.type = 'highpass';
-            filterNode.frequency.value = settings.filter * 50;
-        } else if (settings.filter < -10) {
-            filterNode.type = 'lowpass';
-            filterNode.frequency.value = Math.abs(settings.filter) * 20;
-        } else {
-            filterNode.type = 'allpass';
-        }
-
-        source.connect(filterNode);
-        filterNode.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        if (settings.mode === 'loop') {
+        source.connect(filter).connect(gain).connect(audioCtx.destination);
+        
+        if(p.mode === 'loop') {
             source.loop = true;
-            activeSources[id] = source;
-            element.classList.add('looping-ui');
-            sendMidi(settings.note, 15); // Rojo Launchpad
-        } else {
-            element.classList.add('active-ui');
-            sendMidi(settings.note, 60); // Verde Launchpad
-            source.onended = () => {
-                element.classList.remove('active-ui');
-                sendMidi(settings.note, 0);
-            };
+            p.activeSource = source;
+            el.classList.add('looping');
+            sendMidi(p.note, 15); // Rojo para loops
         }
+        
         source.start();
+        if(p.mode !== 'loop') {
+            source.onended = () => sendMidi(p.note, 0);
+        }
     }
 
-    // --- Manejo de Controles del Panel ---
-    document.getElementById('audio-file').onchange = async (e) => {
-        if (!selectedPadId) return;
-        const file = e.target.files[0];
-        const arrayBuffer = await file.arrayBuffer();
-        padSettings[selectedPadId].buffer = await audioCtx.decodeAudioData(arrayBuffer);
-    };
-
-    document.getElementById('play-mode').onchange = (e) => padSettings[selectedPadId].mode = e.target.value;
-    document.getElementById('gain-ctrl').oninput = (e) => padSettings[selectedPadId].gain = parseFloat(e.target.value);
-    document.getElementById('filter-ctrl').oninput = (e) => padSettings[selectedPadId].filter = parseInt(e.target.value);
-
-    // --- MIDI y Patrones de Luces ---
-    navigator.requestMIDIAccess().then(midi => {
-        for (let input of midi.inputs.values()) {
-            input.onmidimessage = (m) => {
-                const [status, note, vel] = m.data;
-                if (status === 144 && vel > 0) {
-                    const r = Math.floor(note / 16);
-                    const c = note % 16;
-                    if (r < 8 && c < 8) triggerPad(`p-${r}-${c}`);
-                }
-            };
+    // --- LIGHTSHOW (ANIMACIONES DE LUCES) ---
+    function triggerLightshow(type) {
+        if(type === 'explote') {
+            // Animación de expansión desde el centro
+            for(let id in pads) {
+                const p = pads[id];
+                const dist = Math.abs(p.r - 3.5) + Math.abs(p.c - 3.5);
+                setTimeout(() => {
+                    visualFlash(id, 'blue');
+                }, dist * 100);
+            }
+        } else if(type === 'wave') {
+            // Onda de izquierda a derecha
+            for(let id in pads) {
+                const p = pads[id];
+                setTimeout(() => {
+                    visualFlash(id, 'purple');
+                }, p.c * 100);
+            }
         }
-        midiOut = Array.from(midi.outputs.values())[0];
-        startLightPattern();
-    });
+    }
+
+    function visualFlash(id, color) {
+        const el = document.getElementById(id);
+        const original = el.style.background;
+        el.style.background = color;
+        sendMidi(pads[id].note, 45); // Color naranja/púrpura en HW
+        setTimeout(() => {
+            el.style.background = original;
+            sendMidi(pads[id].note, 0);
+        }, 200);
+    }
+
+    // --- MIDI ---
+    if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then(midi => {
+            midiOut = Array.from(midi.outputs.values())[0];
+            for (let input of midi.inputs.values()) {
+                input.onmidimessage = (m) => {
+                    const [status, note, vel] = m.data;
+                    if (status === 144 && vel > 0) {
+                        // Encontrar pad por nota MIDI
+                        for(let id in pads) {
+                            if(pads[id].note === note) triggerPad(id, true);
+                        }
+                    }
+                };
+            }
+        });
+    }
 
     function sendMidi(note, color) {
         if (midiOut) midiOut.send([144, note, color]);
     }
 
-    function startLightPattern() {
-        setInterval(() => {
-            const mode = document.getElementById('light-pattern').value;
-            if (mode == 0 || !midiOut) return;
+    // Actualizar settings en tiempo real
+    document.getElementById('playMode').onchange = (e) => pads[selectedId].mode = e.target.value;
+    document.getElementById('gainSlider').oninput = (e) => pads[selectedId].gain = e.target.value;
+    document.getElementById('filterSlider').oninput = (e) => pads[selectedId].filter = e.target.value;
 
-            const time = Date.now() / 500;
-            for (let i = 0; i < 8; i++) {
-                // Solo enviamos a una columna por ciclo para no saturar el MIDI
-                const note = (i * 16) + Math.floor(Math.random() * 8);
-                if (mode == 1) sendMidi(note, 28); // Pulso suave ambar/verde
-                if (mode == 2) sendMidi(note, (Math.sin(time) > 0) ? 13 : 0); // Flash rojo
-            }
-        }, 300);
-    }
 </script>
 </body>
 </html>

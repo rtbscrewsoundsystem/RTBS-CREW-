@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Novation Launchpad Clone</title>
+    <title>RTBS CREW LOOPER BETA</title>
     <style>
         :root {
             --chassis: #1a1a1b;
@@ -12,35 +12,54 @@
             --btn-circular: #444;
             --led-on: #00ff55;
             --led-loop: #ff2255;
+            --accent: #00ff55;
         }
 
         body {
             background: #050505;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             overflow: hidden;
         }
 
-        /* El cuerpo del Launchpad */
+        /* TÍTULO RTBS CREW */
+        .main-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-header h1 {
+            color: var(--accent);
+            font-size: 28px;
+            margin: 0;
+            text-shadow: 0 0 15px var(--accent);
+            letter-spacing: 3px;
+            font-weight: 900;
+        }
+        .main-header span {
+            color: #555;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
         .lp-chassis {
             background: var(--chassis);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
             display: grid;
-            grid-template-columns: repeat(8, 45px) 50px; /* 8 pads + botones redondos */
-            grid-template-rows: 50px repeat(8, 45px);   /* Botones superiores + 8 pads */
+            grid-template-columns: repeat(8, 45px) 50px;
+            grid-template-rows: 50px repeat(8, 45px);
             gap: 6px;
             border: 4px solid #000;
             position: relative;
             z-index: 1;
         }
 
-        /* Estilo general de botones */
         .cell {
             display: flex;
             align-items: center;
@@ -50,15 +69,20 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Pads cuadrados centrales */
         .pad {
             background: var(--pad-empty);
             border-radius: 3px;
             box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
-            transition: all 0.05s;
+            transition: background 0.1s, box-shadow 0.1s, transform 0.05s;
         }
 
-        /* Botones redondos (arriba y derecha) */
+        /* EFECTO DE EXPANSIÓN (RIPPLE) */
+        .pad.ripple-effect {
+            background: rgba(0, 255, 85, 0.4) !important;
+            box-shadow: 0 0 15px var(--accent) !important;
+            transform: scale(0.95);
+        }
+
         .round-btn {
             background: var(--btn-circular);
             border-radius: 50%;
@@ -68,84 +92,44 @@
             align-self: center;
         }
 
-        /* Estados de iluminación */
         .pad.active {
             background: var(--led-on);
-            box-shadow: 0 0 15px var(--led-on);
+            box-shadow: 0 0 20px var(--led-on);
         }
 
         .pad.looping {
             background: var(--led-loop);
-            box-shadow: 0 0 20px var(--led-loop);
+            box-shadow: 0 0 25px var(--led-loop);
             animation: pulse 1s infinite alternate;
         }
 
         .pad.has-sample {
-            border: 1px solid #00ff55;
+            border: 1px solid var(--accent);
         }
 
-        @keyframes pulse {
-            from { opacity: 1; }
-            to { opacity: 0.6; }
+        @keyframes pulse { from { opacity: 1; } to { opacity: 0.6; } }
+
+        /* Panel de control lateral */
+        .control-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background: rgba(30, 30, 35, 0.98);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            display: none;
+            z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #444;
         }
 
-        /* Nuevas animaciones para efectos de luces */
-        @keyframes rainbowWave {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
-        }
-
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        @keyframes spiral {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes scanline {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
-        }
-
-        /* Nuevas animaciones para efectos expansivos */
-        @keyframes waveOut {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 0; }
-        }
-
-        @keyframes ripple {
-            0% { transform: scale(0.3); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
-        }
-
-        @keyframes spiralOut {
-            0% { transform: rotate(0deg) scale(0.3); opacity: 1; }
-            100% { transform: rotate(360deg) scale(3); opacity: 0; }
-        }
-
-        @keyframes crossExpand {
-            0% { transform: scaleX(0.1) scaleY(0.1); opacity: 1; }
-            100% { transform: scaleX(2) scaleY(2); opacity: 0; }
-        }
-
-        @keyframes diamondWave {
-            0% { transform: scale(0.5) rotate(45deg); opacity: 1; }
-            100% { transform: scale(2) rotate(45deg); opacity: 0; }
-        }
-
-        /* Logo o texto */
         .brand {
             grid-column: 1 / 5;
-            color: #555;
+            color: #444;
             font-size: 10px;
             font-weight: bold;
             display: flex;
@@ -153,243 +137,36 @@
             padding-left: 5px;
         }
 
-        /* Panel de control lateral */
-        .control-panel {
-            position: fixed;
-            right: 20px;
-            top: 20px;
-            background: rgba(30, 30, 35, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            width: 320px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            display: none;
-            z-index: 1000;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .control-panel h3 {
-            margin-top: 0;
-            color: #00ff55;
-        }
-
-        .control-section {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #444;
-        }
-
-        .control-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        .control-label {
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        .slider {
-            width: 60%;
-            -webkit-appearance: none;
-            height: 6px;
-            background: #444;
-            border-radius: 3px;
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #00ff55;
-            cursor: pointer;
-        }
-
-        select, button, input[type="file"] {
-            background: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button:hover {
-            background: #444;
-        }
-
-        .export-btn {
-            background: #ff2255;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .export-btn:hover {
-            background: #ff4477;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* Cuadrícula pequeña para seleccionar pads */
-        .pad-selector-grid {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            grid-template-rows: repeat(8, 1fr);
-            gap: 3px;
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 5px;
-        }
-
-        .pad-selector {
-            width: 20px;
-            height: 20px;
-            background: #313131;
-            border-radius: 2px;
-            cursor: pointer;
-            border: 1px solid #555;
-            transition: all 0.2s;
-        }
-
-        .pad-selector:hover {
-            background: #444;
-            transform: scale(1.1);
-        }
-
-        .pad-selector.selected {
-            background: #00ff55;
-            border-color: #00ff55;
-            box-shadow: 0 0 8px #00ff55;
-        }
-
-        .pad-selector.has-audio {
-            background: #ff2255;
-            border-color: #ff2255;
-        }
-
-        .pad-selector.is-sampler {
-            background: #2255ff;
-            border-color: #2255ff;
-        }
-
-        .pad-selector.is-loop {
-            background: #ff22ff;
-            border-color: #ff22ff;
-        }
-
-        .audio-info {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 5px;
-            padding: 5px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 3px;
-        }
-
-        .delete-btn {
-            background: #ff5555;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .delete-btn:hover {
-            background: #ff7777;
-        }
-
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        select, button, input[type="file"], input[type="range"] {
+            background: #222; color: white; border: 1px solid #444;
+            padding: 8px; border-radius: 4px; cursor: pointer; width: 100%;
             margin-bottom: 10px;
         }
 
-        .clear-all-btn {
-            background: transparent;
-            border: 1px solid #ff5555;
-            color: #ff5555;
-            padding: 4px 8px;
-            font-size: 12px;
-            border-radius: 3px;
-            cursor: pointer;
+        .pad-selector-grid {
+            display: grid; grid-template-columns: repeat(8, 1fr);
+            gap: 2px; background: #000; padding: 5px; border-radius: 5px;
         }
 
-        .clear-all-btn:hover {
-            background: rgba(255,85,85,0.1);
+        .pad-selector {
+            width: 20px; height: 20px; background: #333; border-radius: 2px; cursor: pointer;
         }
 
-        .audio-type-selector {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .type-btn {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            border: 2px solid #555;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .type-btn.selected {
-            border-color: #00ff55;
-            background: rgba(0, 255, 85, 0.1);
-            color: #00ff55;
-        }
-
-        .type-btn:hover {
-            background: rgba(0, 255, 85, 0.2);
-        }
-
-        .wave-effect-btn {
-            background: #2255ff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .wave-effect-btn:hover {
-            background: #4477ff;
-        }
+        .pad-selector.selected { background: var(--accent); }
+        .pad-selector.has-audio { background: var(--led-loop); }
+        
+        .audio-info { font-size: 11px; color: #888; margin: 10px 0; }
     </style>
 </head>
 <body>
 
+    <div class="main-header">
+        <h1>RTBS CREW LOOPER</h1>
+        <span>SISTEMA DE PERFORMANCE BETA v1.0</span>
+    </div>
+
     <div class="lp-chassis" id="launchpad">
-        <div class="brand">WEB PAD</div>
+        <div class="brand">RTBS-01 PRO</div>
         <div class="cell round-btn"></div>
         <div class="cell round-btn"></div>
         <div class="cell round-btn"></div>
@@ -397,163 +174,40 @@
         <div class="cell round-btn"></div>
     </div>
 
-    <!-- Botón para abrir panel de control -->
-    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; z-index:100;">
-        ⚙️ Control Panel
+    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; width:auto; padding: 10px 20px; background: var(--accent); color: black; font-weight: bold; border:none;">
+        ⚙️ PANEL DE CONTROL
     </button>
 
-    <!-- Panel de control -->
     <div class="control-panel" id="controlPanel">
-        <button class="close-btn" id="closePanel">×</button>
-        <h3>Control de Audio</h3>
+        <button id="closePanel" style="background:none; border:none; color:white; float:right; font-size:20px;">×</button>
+        <h3 style="color:var(--accent)">Ajustes de RTBS Crew</h3>
         
-        <div class="control-section">
-            <h4>Efectos de Luces</h4>
-            <select id="lightPattern">
-                <option value="default">Por defecto</option>
-                <option value="rainbow">Arcoíris</option>
-                <option value="flash">Flash</option>
-                <option value="bounce">Rebote</option>
-                <option value="spiral">Espiral</option>
-                <option value="scanline">Línea de escaneo</option>
-                <option value="matrix">Efecto Matrix</option>
-                <option value="fire">Fuego</option>
-            </select>
-            
-            <div style="margin-top: 15px;">
-                <strong>Efectos Expansivos:</strong>
-                <select id="waveEffect" style="margin-top: 5px;">
-                    <option value="none">Sin efecto expansivo</option>
-                    <option value="wave">Onda expansiva</option>
-                    <option value="ripple">Efecto ripple</option>
-                    <option value="spiral">Espiral expansiva</option>
-                    <option value="cross">Cruz expansiva</option>
-                    <option value="diamond">Diamante expansivo</option>
-                    <option value="random">Aleatorio expansivo</option>
-                </select>
-            </div>
-            
-            <button id="applyPattern" style="margin-top:10px; width:100%;">
-                🔥 Aplicar Efectos a Loops
-            </button>
-        </div>
-
-        <div class="control-section">
-            <div class="section-title">
-                <h4>Cargar Archivo de Audio</h4>
-                <button class="clear-all-btn" id="clearAllAudio">Limpiar Todo</button>
-            </div>
-            
+        <div style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
+            <label>Cargar Sonido (.mp3 / .wav):</label>
             <input type="file" id="audioUpload" accept="audio/*">
-            <div id="audioInfo" class="audio-info">Selecciona un archivo de audio</div>
-            
-            <div style="margin: 15px 0;">
-                <strong>Tipo de Audio:</strong>
-                <div class="audio-type-selector">
-                    <div class="type-btn" id="samplerBtn" data-type="sampler">🎵 Sampler</div>
-                    <div class="type-btn" id="loopBtn" data-type="loop">🔄 Loop</div>
-                </div>
-                <div id="audioTypeInfo" class="audio-info">Selecciona Sampler o Loop</div>
-            </div>
-            
-            <div style="margin: 15px 0;">
-                <strong>Seleccionar Pad Destino:</strong>
-                <div class="pad-selector-grid" id="padSelector">
-                    <!-- Los selectores de pad se generarán dinámicamente -->
-                </div>
-                <div id="selectedPadInfo" class="audio-info">Ningún pad seleccionado</div>
-            </div>
-            
-            <button id="loadToSelectedPad" style="width:100%; margin-top:10px;" disabled>
-                🔊 Cargar en Pad Seleccionado
-            </button>
+            <div id="audioInfo" class="audio-info">Selecciona un archivo</div>
+            <div class="pad-selector-grid" id="padSelector"></div>
+            <button id="loadToSelectedPad" disabled>Cargar en Pad</button>
         </div>
 
-        <div class="control-section">
-            <div class="section-title">
-                <h4>Eliminar Sonido de PAD</h4>
-            </div>
-            <div class="pad-selector-grid" id="deletePadSelector">
-                <!-- Los selectores para eliminar se generarán dinámicamente -->
-            </div>
-            <div id="padToDeleteInfo" class="audio-info">Selecciona un pad para eliminar su sonido</div>
-            <button class="delete-btn" id="deletePadAudio" disabled>
-                ✖ Eliminar Sonido del Pad Seleccionado
-            </button>
-        </div>
-
-        <div class="control-section">
-            <h4>Edición de Sonido</h4>
-            <div class="control-row">
-                <span class="control-label">Ganancia:</span>
-                <input type="range" class="slider" id="gainControl" min="0" max="200" value="100">
-                <span id="gainValue">100%</span>
-            </div>
-            <div class="control-row">
-                <span class="control-label">Filtro Grave:</span>
-                <input type="range" class="slider" id="lowpassControl" min="20" max="2000" value="1000">
-                <span id="lowpassValue">1000Hz</span>
-            </div>
-            <div class="control-row">
-                <span class="control-label">Filtro Agudo:</span>
-                <input type="range" class="slider" id="highpassControl" min="20" max="5000" value="20">
-                <span id="highpassValue">20Hz</span>
-            </div>
-        </div>
-
-        <div class="control-section">
-            <h4>Exportar Configuración</h4>
-            <button class="export-btn" id="exportConfig">📥 Exportar Proyecto</button>
-            <div style="font-size:11px; color:#888; margin-top:5px;">
-                Exporta la configuración actual de loops y efectos
-            </div>
+        <div>
+            <label>Ganancia Global:</label>
+            <input type="range" id="gainControl" min="0" max="200" value="100">
+            <button id="clearAllAudio" style="background:#552222;">Borrar todos los sonidos</button>
+            <button id="exportConfig">Exportar Proyecto</button>
         </div>
     </div>
 
     <script>
         const lp = document.getElementById('launchpad');
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const loops = {}; // Almacena sonidos activos (solo loops)
-        const samples = {}; // Almacena samples (no loops)
-        const audioBuffers = {}; // Almacena buffers de audio cargados
-        const audioTypes = {}; // Almacena el tipo de cada audio (sampler/loop)
-        let currentLightPattern = 'default';
-        let currentWaveEffect = 'none';
+        const loops = {};
+        const audioBuffers = {};
         let selectedPadId = null;
-        let padToDeleteId = null;
         let currentAudioFile = null;
-        let currentAudioType = 'sampler'; // 'sampler' o 'loop'
-        
-        // Elementos del panel de control
-        const controlBtn = document.getElementById('control-btn');
-        const controlPanel = document.getElementById('controlPanel');
-        const closePanel = document.getElementById('closePanel');
-        const audioUpload = document.getElementById('audioUpload');
-        const lightPattern = document.getElementById('lightPattern');
-        const waveEffect = document.getElementById('waveEffect');
-        const applyPattern = document.getElementById('applyPattern');
-        const gainControl = document.getElementById('gainControl');
-        const gainValue = document.getElementById('gainValue');
-        const lowpassControl = document.getElementById('lowpassControl');
-        const lowpassValue = document.getElementById('lowpassValue');
-        const highpassControl = document.getElementById('highpassControl');
-        const highpassValue = document.getElementById('highpassValue');
-        const exportConfig = document.getElementById('exportConfig');
-        const padSelector = document.getElementById('padSelector');
-        const deletePadSelector = document.getElementById('deletePadSelector');
-        const loadToSelectedPad = document.getElementById('loadToSelectedPad');
-        const deletePadAudio = document.getElementById('deletePadAudio');
-        const selectedPadInfo = document.getElementById('selectedPadInfo');
-        const padToDeleteInfo = document.getElementById('padToDeleteInfo');
-        const audioInfo = document.getElementById('audioInfo');
-        const audioTypeInfo = document.getElementById('audioTypeInfo');
-        const clearAllAudio = document.getElementById('clearAllAudio');
-        const samplerBtn = document.getElementById('samplerBtn');
-        const loopBtn = document.getElementById('loopBtn');
 
-        // Generar la rejilla de 8x8 + botones laterales
+        // --- CREACIÓN DE LA REJILLA ---
         for (let row = 0; row < 8; row++) {
-            // 8 Pads cuadrados
             for (let col = 0; col < 8; col++) {
                 const pad = document.createElement('div');
                 pad.className = 'cell pad';
@@ -562,714 +216,147 @@
                 pad.dataset.row = row;
                 pad.dataset.col = col;
                 
-                pad.addEventListener('pointerdown', () => triggerPad(padId, row, col));
+                pad.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();
+                    triggerPad(padId, row, col);
+                    triggerExpansionEffect(row, col); // <--- NUEVA FUNCIÓN DE LUCES
+                });
                 lp.appendChild(pad);
             }
-            // 1 Botón redondo lateral derecho
             const rBtn = document.createElement('div');
             rBtn.className = 'cell round-btn';
             lp.appendChild(rBtn);
         }
 
-        // Generar selectores de pad para cargar audio
-        function generatePadSelectors() {
-            padSelector.innerHTML = '';
-            deletePadSelector.innerHTML = '';
-            
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
-                    const padId = `p-${row}-${col}`;
-                    
-                    // Selector para cargar
-                    const selector = document.createElement('div');
-                    selector.className = 'pad-selector';
-                    selector.dataset.padId = padId;
-                    selector.dataset.row = row;
-                    selector.dataset.col = col;
-                    
-                    if (audioBuffers[padId]) {
-                        if (audioTypes[padId] === 'loop') {
-                            selector.classList.add('is-loop');
-                        } else {
-                            selector.classList.add('is-sampler');
-                        }
-                    }
-                    
-                    selector.addEventListener('click', function() {
-                        // Quitar selección anterior solo en este grid
-                        const allSelectors = padSelector.querySelectorAll('.pad-selector');
-                        allSelectors.forEach(s => {
-                            s.classList.remove('selected');
-                        });
-                        
-                        // Seleccionar este
-                        this.classList.add('selected');
-                        selectedPadId = padId;
-                        
-                        let infoText = `Pad seleccionado: ${padId} (Fila ${row+1}, Columna ${col+1})`;
-                        
-                        if (audioBuffers[padId]) {
-                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
-                            infoText += ` - ${type} cargado (se sobrescribirá)`;
-                        }
-                        
-                        selectedPadInfo.textContent = infoText;
-                        loadToSelectedPad.disabled = !currentAudioFile;
-                        updatePadVisuals();
-                    });
-                    
-                    padSelector.appendChild(selector);
-                    
-                    // Selector para eliminar
-                    const deleteSelector = document.createElement('div');
-                    deleteSelector.className = 'pad-selector';
-                    deleteSelector.dataset.padId = padId;
-                    deleteSelector.dataset.row = row;
-                    deleteSelector.dataset.col = col;
-                    
-                    if (audioBuffers[padId]) {
-                        if (audioTypes[padId] === 'loop') {
-                            deleteSelector.classList.add('is-loop');
-                        } else {
-                            deleteSelector.classList.add('is-sampler');
-                        }
-                    }
-                    
-                    deleteSelector.addEventListener('click', function() {
-                        // Quitar selección anterior solo en este grid
-                        const allDeleteSelectors = deletePadSelector.querySelectorAll('.pad-selector');
-                        allDeleteSelectors.forEach(s => {
-                            s.classList.remove('selected');
-                        });
-                        
-                        // Seleccionar este
-                        this.classList.add('selected');
-                        padToDeleteId = padId;
-                        
-                        if (audioBuffers[padId]) {
-                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
-                            padToDeleteInfo.textContent = `Pad para eliminar: ${padId} - ${type}`;
-                            deletePadAudio.disabled = false;
-                        } else {
-                            padToDeleteInfo.textContent = `Pad seleccionado: ${padId} - SIN SONIDO`;
-                            deletePadAudio.disabled = true;
-                        }
-                    });
-                    
-                    deletePadSelector.appendChild(deleteSelector);
-                }
-            }
-        }
-
-        // Actualizar visualización de pads con samples
-        function updatePadVisuals() {
-            const pads = document.querySelectorAll('.pad');
-            pads.forEach(pad => {
-                const padId = pad.id;
-                if (audioBuffers[padId]) {
-                    pad.classList.add('has-sample');
-                } else {
-                    pad.classList.remove('has-sample');
-                }
-            });
-            
-            // Actualizar selectores
-            generatePadSelectors();
-        }
-
-        // Cargar un sample de audio
-        async function loadAudioSample(file, padId, type) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    const arrayBuffer = e.target.result;
-                    try {
-                        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                        audioBuffers[padId] = {
-                            buffer: audioBuffer,
-                            name: file.name,
-                            size: file.size,
-                            duration: audioBuffer.duration.toFixed(2)
-                        };
-                        audioTypes[padId] = type;
-                        
-                        const typeText = type === 'loop' ? '🔄 LOOP' : '🎵 SAMPLER';
-                        audioInfo.textContent = 
-                            `✅ ${typeText} cargado: ${file.name} (${Math.round(file.size/1024)}KB, ${audioBuffer.duration.toFixed(1)}s)`;
-                        
-                        updatePadVisuals();
-                        resolve(padId);
-                    } catch (err) {
-                        audioInfo.textContent = `❌ Error cargando archivo: ${err.message}`;
-                        reject(err);
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
-        // Eliminar sample de un pad
-        function deleteAudioFromPad(padId) {
-            if (audioBuffers[padId]) {
-                // Detener si está activo
-                if (audioTypes[padId] === 'loop' && loops[padId]) {
-                    loops[padId].source.stop();
-                    delete loops[padId];
-                } else if (audioTypes[padId] === 'sampler' && samples[padId]) {
-                    delete samples[padId];
-                }
-                
-                // Apagar luz del pad
-                const padElement = document.getElementById(padId);
-                if (padElement) {
-                    padElement.classList.remove('looping', 'active');
-                    clearPadEffects(padElement);
-                }
-                
-                delete audioBuffers[padId];
-                delete audioTypes[padId];
-                updatePadVisuals();
-                
-                // Resetear selección
-                padToDeleteId = null;
-                deletePadAudio.disabled = true;
-                padToDeleteInfo.textContent = '✅ Sonido eliminado. Selecciona otro pad si quieres eliminar más.';
-                
-                return true;
-            }
-            return false;
-        }
-
-        // Reproducir sample de audio con efectos
-        async function playSample(padId, type) {
-            if (!audioBuffers[padId] || !audioBuffers[padId].buffer) return null;
-            
-            const source = audioCtx.createBufferSource();
-            source.buffer = audioBuffers[padId].buffer;
-            
-            // Crear cadena de efectos
-            const gainNode = audioCtx.createGain();
-            gainNode.gain.value = gainControl.value / 100;
-            
-            const lowpass = audioCtx.createBiquadFilter();
-            lowpass.type = 'lowpass';
-            lowpass.frequency.value = lowpassControl.value;
-            
-            const highpass = audioCtx.createBiquadFilter();
-            highpass.type = 'highpass';
-            highpass.frequency.value = highpassControl.value;
-            
-            // Conectar nodos
-            source.connect(lowpass);
-            lowpass.connect(highpass);
-            highpass.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            source.start();
-            
-            if (type === 'loop') {
-                source.loop = true;
-            } else {
-                source.stop(audioCtx.currentTime + source.buffer.duration);
-            }
-            
-            return {
-                source: source,
-                gain: gainNode,
-                lowpass: lowpass,
-                highpass: highpass
-            };
-        }
-
-        // Aplicar efecto de onda expansiva
-        function applyWaveEffect(element, row, col) {
-            if (currentWaveEffect === 'none') return;
-            
-            const r = parseInt(row);
-            const c = parseInt(col);
-            
-            // Definir patrones de expansión
-            const patterns = {
-                wave: [
-                    [0,0], [-1,0], [1,0], [0,-1], [0,1],
-                    [-1,-1], [-1,1], [1,-1], [1,1],
-                    [-2,0], [2,0], [0,-2], [0,2]
-                ],
-                ripple: [
-                    [-1,-1], [-1,0], [-1,1],
-                    [0,-1], [0,0], [0,1],
-                    [1,-1], [1,0], [1,1],
-                    [-2,-2], [-2,2], [2,-2], [2,2]
-                ],
-                spiral: [
-                    [0,0], [-1,0], [0,1], [1,0], [0,-1],
-                    [-2,0], [0,2], [2,0], [0,-2],
-                    [-1,-1], [-1,1], [1,-1], [1,1]
-                ],
-                cross: [
-                    [0,0], [-1,0], [1,0], [0,-1], [0,1],
-                    [-2,0], [2,0], [0,-2], [0,2],
-                    [-3,0], [3,0], [0,-3], [0,3]
-                ],
-                diamond: [
-                    [0,0], [-1,0], [1,0], [0,-1], [0,1],
-                    [-1,-1], [-1,1], [1,-1], [1,1],
-                    [-2,0], [2,0], [0,-2], [0,2],
-                    [-1,-2], [-2,-1], [1,-2], [2,-1],
-                    [-1,2], [-2,1], [1,2], [2,1]
-                ],
-                random: Array.from({length: 15}, () => [
-                    Math.floor(Math.random() * 5) - 2,
-                    Math.floor(Math.random() * 5) - 2
-                ])
-            };
-            
-            const pattern = patterns[currentWaveEffect] || patterns.wave;
-            
-            // Aplicar efecto a cada posición del patrón
-            pattern.forEach(([dr, dc], index) => {
-                const targetRow = r + dr;
-                const targetCol = c + dc;
-                
-                // Verificar límites
-                if (targetRow >= 0 && targetRow < 8 && targetCol >= 0 && targetCol < 8) {
-                    const targetId = `p-${targetRow}-${targetCol}`;
-                    const targetElement = document.getElementById(targetId);
-                    
-                    if (targetElement) {
-                        setTimeout(() => {
-                            // Efecto visual
-                            targetElement.style.transition = 'all 0.2s';
-                            
-                            // Colores basados en el efecto
-                            let color, animation;
-                            switch(currentWaveEffect) {
-                                case 'wave':
-                                    color = `hsl(${(index * 30) % 360}, 100%, 50%)`;
-                                    animation = 'waveOut 0.8s forwards';
-                                    break;
-                                case 'ripple':
-                                    color = `hsl(${(index * 20) % 360}, 100%, 60%)`;
-                                    animation = 'ripple 1s forwards';
-                                    break;
-                                case 'spiral':
-                                    color = `hsl(${(index * 45) % 360}, 100%, 50%)`;
-                                    animation = 'spiralOut 1.2s forwards';
-                                    break;
-                                case 'cross':
-                                    color = index % 2 === 0 ? '#00ff55' : '#ff2255';
-                                    animation = 'crossExpand 1s forwards';
-                                    break;
-                                case 'diamond':
-                                    color = `hsl(${(index * 15) % 360}, 100%, 50%)`;
-                                    animation = 'diamondWave 1s forwards';
-                                    break;
-                                case 'random':
-                                    const colors = ['#00ff55', '#ff2255', '#2255ff', '#ffff00', '#ff8800'];
-                                    color = colors[Math.floor(Math.random() * colors.length)];
-                                    animation = `waveOut ${0.5 + Math.random() * 0.5}s forwards`;
-                                    break;
-                            }
-                            
-                            targetElement.style.background = color;
-                            targetElement.style.boxShadow = `0 0 20px ${color}`;
-                            targetElement.style.animation = animation;
-                            
-                            // Restaurar después de la animación
-                            setTimeout(() => {
-                                if (targetElement.classList.contains('looping')) {
-                                    // Mantener efecto de loop
-                                    applyLightEffect(targetElement, targetRow, targetCol);
-                                } else if (targetElement.classList.contains('active')) {
-                                    // Mantener efecto activo
-                                    targetElement.style.background = 'var(--led-on)';
-                                    targetElement.style.boxShadow = '0 0 15px var(--led-on)';
-                                } else if (audioBuffers[targetId]) {
-                                    // Restaurar borde si tiene audio
-                                    targetElement.style.background = 'var(--pad-empty)';
-                                    targetElement.style.boxShadow = 'inset 0 0 5px rgba(0,0,0,0.5)';
-                                } else {
-                                    // Restaurar completamente
-                                    targetElement.style.background = '';
-                                    targetElement.style.boxShadow = '';
-                                    targetElement.style.animation = '';
+        // --- EFECTO DE EXPANSIÓN DE LUCES (ESTILO LAUNCHPAD MK2/PRO) ---
+        function triggerExpansionEffect(originRow, originCol) {
+            const maxDistance = 3; // Distancia de la onda
+            for (let d = 1; d <= maxDistance; d++) {
+                setTimeout(() => {
+                    // Obtener pads a distancia 'd'
+                    for (let r = originRow - d; r <= originRow + d; r++) {
+                        for (let c = originCol - d; c <= originCol + d; c++) {
+                            // Solo iluminar el perímetro del cuadrado de distancia d
+                            if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
+                                const targetPad = document.getElementById(`p-${r}-${c}`);
+                                if (targetPad && !targetPad.classList.contains('looping')) {
+                                    targetPad.classList.add('ripple-effect');
+                                    setTimeout(() => targetPad.classList.remove('ripple-effect'), 150);
                                 }
-                            }, 1000);
-                            
-                        }, index * 50); // Retraso escalonado
+                            }
+                        }
                     }
-                }
-            });
+                }, d * 60); // Velocidad de la onda (60ms entre pasos)
+            }
         }
 
+        // --- LÓGICA DE AUDIO (TU CÓDIGO MEJORADO) ---
         async function triggerPad(id, r, c) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            
             const element = document.getElementById(id);
-            
-            // Aplicar efecto expansivo
-            applyWaveEffect(element, r, c);
-            
-            // Si no hay audio cargado, usar oscilador por defecto
-            if (!audioBuffers[id]) {
-                const source = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                source.type = r % 2 === 0 ? 'sine' : 'square';
-                source.frequency.setValueAtTime(100 + (c * 50) + (r * 20), audioCtx.currentTime);
-                
-                source.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                source.start();
-                source.stop(audioCtx.currentTime + 0.2);
-                
-                element.classList.add('active');
-                setTimeout(() => element.classList.remove('active'), 200);
-                return;
-            }
-            
-            const type = audioTypes[id];
-            
-            // Si es un loop y ya está activo, detenerlo
-            if (type === 'loop' && loops[id]) {
+            const isLoopType = (r === 0);
+
+            if (loops[id]) {
                 loops[id].source.stop();
                 delete loops[id];
                 element.classList.remove('looping');
-                clearPadEffects(element);
                 return;
             }
-            
-            // Reproducir el audio
-            const audioNodes = await playSample(id, type);
-            
-            if (type === 'loop' && audioNodes) {
-                loops[id] = audioNodes;
-                element.classList.add('looping');
-                applyLightEffect(element, r, c);
+
+            if (audioBuffers[id]) {
+                const source = audioCtx.createBufferSource();
+                source.buffer = audioBuffers[id].buffer;
+                const gain = audioCtx.createGain();
+                gain.gain.value = document.getElementById('gainControl').value / 100;
+                source.connect(gain).connect(audioCtx.destination);
+                
+                source.loop = isLoopType;
+                source.start();
+
+                if (isLoopType) {
+                    loops[id] = { source };
+                    element.classList.add('looping');
+                } else {
+                    element.classList.add('active');
+                    setTimeout(() => element.classList.remove('active'), 200);
+                }
             } else {
+                // Sonido por defecto si está vacío
+                const osc = audioCtx.createOscillator();
+                osc.frequency.value = 150 + (c * 30);
+                const g = audioCtx.createGain();
+                osc.connect(g).connect(audioCtx.destination);
+                g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
                 element.classList.add('active');
-                setTimeout(() => element.classList.remove('active'), 300);
-                samples[id] = audioNodes;
+                setTimeout(() => element.classList.remove('active'), 100);
             }
         }
 
-        // Aplicar efectos de luces
-        function applyLightEffect(element, row, col) {
-            const r = parseInt(row);
-            const c = parseInt(col);
-            
-            element.style.transition = 'all 0.3s ease';
-            clearPadEffects(element);
-            
-            setTimeout(() => {
-                switch(currentLightPattern) {
-                    case 'rainbow':
-                        const hue = (r * 45 + c * 15 + Date.now()/100) % 360;
-                        element.style.background = `hsl(${hue}, 100%, 50%)`;
-                        element.style.boxShadow = `0 0 25px hsl(${hue}, 100%, 50%)`;
-                        element.style.animation = 'rainbowWave 3s infinite linear';
-                        break;
-                        
-                    case 'flash':
-                        element.style.background = '#ff5500';
-                        element.style.boxShadow = '0 0 30px #ff5500';
-                        element.style.animation = 'flash 0.5s infinite alternate';
-                        break;
-                        
-                    case 'bounce':
-                        element.style.background = '#00aaff';
-                        element.style.boxShadow = '0 0 25px #00aaff';
-                        element.style.animation = 'bounce 0.8s infinite alternate';
-                        break;
-                        
-                    case 'spiral':
-                        element.style.background = `linear-gradient(45deg, #ff00ff, #00ffff)`;
-                        element.style.boxShadow = '0 0 30px #ff00ff';
-                        element.style.animation = 'spiral 2s infinite linear';
-                        break;
-                        
-                    case 'scanline':
-                        element.style.background = `linear-gradient(90deg, transparent 0%, #00ff00 50%, transparent 100%)`;
-                        element.style.backgroundSize = '200% 200%';
-                        element.style.animation = 'scanline 1s infinite linear';
-                        break;
-                        
-                    case 'matrix':
-                        element.style.background = '#00ff00';
-                        element.style.boxShadow = '0 0 20px #00ff00';
-                        const matrixInterval = setInterval(() => {
-                            element.style.opacity = Math.random() > 0.5 ? '1' : '0.3';
-                        }, 100);
-                        element.dataset.matrixInterval = matrixInterval;
-                        break;
-                        
-                    case 'fire':
-                        const fireColors = ['#ff3300', '#ff6600', '#ff9900'];
-                        const fireColor = fireColors[Math.floor(Math.random() * fireColors.length)];
-                        element.style.background = fireColor;
-                        element.style.boxShadow = `0 0 35px ${fireColor}`;
-                        const fireInterval = setInterval(() => {
-                            const intensity = 0.7 + Math.random() * 0.3;
-                            element.style.opacity = intensity.toString();
-                        }, 150);
-                        element.dataset.fireInterval = fireInterval;
-                        break;
-                        
-                    default:
-                        element.style.background = 'var(--led-loop)';
-                        element.style.boxShadow = '0 0 20px var(--led-loop)';
-                        element.style.animation = 'pulse 1s infinite alternate';
-                        break;
-                }
-            }, 10);
-        }
-
-        // Limpiar efectos de un pad
-        function clearPadEffects(element) {
-            if (!element) return;
-            
-            if (element.dataset.matrixInterval) {
-                clearInterval(parseInt(element.dataset.matrixInterval));
-                delete element.dataset.matrixInterval;
-            }
-            if (element.dataset.fireInterval) {
-                clearInterval(parseInt(element.dataset.fireInterval));
-                delete element.dataset.fireInterval;
-            }
-            
-            element.style.animation = '';
-            element.style.background = '';
-            element.style.boxShadow = '';
-            element.style.filter = '';
-            element.style.opacity = '1';
-        }
-
-        // Inicializar selectores
-        generatePadSelectors();
-
-        // Control del panel
-        controlBtn.addEventListener('click', () => {
-            controlPanel.style.display = 'block';
-            generatePadSelectors();
-        });
-
-        closePanel.addEventListener('click', () => {
-            controlPanel.style.display = 'none';
-        });
-
-        // Selector de tipo de audio
-        samplerBtn.addEventListener('click', () => {
-            samplerBtn.classList.add('selected');
-            loopBtn.classList.remove('selected');
-            currentAudioType = 'sampler';
-            audioTypeInfo.textContent = '🎵 SAMPLER seleccionado (se reproduce una vez)';
-        });
-
-        loopBtn.addEventListener('click', () => {
-            loopBtn.classList.add('selected');
-            samplerBtn.classList.remove('selected');
-            currentAudioType = 'loop';
-            audioTypeInfo.textContent = '🔄 LOOP seleccionado (se reproduce continuamente)';
-        });
-
-        // Cargar archivo de audio
-        audioUpload.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            currentAudioFile = file;
-            const typeText = currentAudioType === 'loop' ? '🔄 LOOP' : '🎵 SAMPLER';
-            audioInfo.textContent = `📁 ${file.name} - ${typeText} - Ahora elige un pad destino`;
-            loadToSelectedPad.disabled = !selectedPadId;
-            loadToSelectedPad.textContent = selectedPadId 
-                ? `${currentAudioType === 'loop' ? '🔄' : '🎵'} Cargar en ${selectedPadId}` 
-                : 'Cargar en Pad Seleccionado';
-        });
-
-        // Cargar audio al pad seleccionado
-        loadToSelectedPad.addEventListener('click', async () => {
-            if (!currentAudioFile || !selectedPadId) {
-                alert('Por favor, primero selecciona un archivo Y un pad destino');
-                return;
-            }
-            
-            try {
-                await loadAudioSample(currentAudioFile, selectedPadId, currentAudioType);
-                
-                // Resetear
-                selectedPadId = null;
-                currentAudioFile = null;
-                audioUpload.value = '';
-                loadToSelectedPad.disabled = true;
-                loadToSelectedPad.textContent = 'Cargar en Pad Seleccionado';
-                selectedPadInfo.textContent = '✅ Audio cargado. Selecciona otro pad si quieres cargar más.';
-                
-                // Resetear selector
-                const selectedElement = padSelector.querySelector('.selected');
-                if (selectedElement) {
-                    selectedElement.classList.remove('selected');
-                }
-                
-            } catch (err) {
-                alert(`Error cargando audio: ${err.message}`);
-            }
-        });
-
-        // Eliminar audio de pad seleccionado
-        deletePadAudio.addEventListener('click', () => {
-            if (!padToDeleteId) return;
-            
-            if (deleteAudioFromPad(padToDeleteId)) {
-                // Resetear selección
-                const selectedElement = deletePadSelector.querySelector('.selected');
-                if (selectedElement) {
-                    selectedElement.classList.remove('selected');
-                }
-            }
-        });
-
-        // Limpiar todo el audio
-        clearAllAudio.addEventListener('click', () => {
-            if (confirm('¿Estás seguro de que quieres eliminar TODOS los sonidos de TODOS los pads?')) {
-                // Detener todos los loops y limpiar efectos
-                Object.keys(loops).forEach(padId => {
-                    if (loops[padId]) {
-                        loops[padId].source.stop();
-                        const element = document.getElementById(padId);
-                        if (element) clearPadEffects(element);
-                    }
-                });
-                
-                // Limpiar buffers
-                Object.keys(audioBuffers).forEach(padId => {
-                    delete audioBuffers[padId];
-                });
-                Object.keys(audioTypes).forEach(padId => {
-                    delete audioTypes[padId];
-                });
-                
-                // Resetear
-                loops = {};
-                samples = {};
-                
-                // Actualizar visuales
-                updatePadVisuals();
-                
-                // Resetear todo
-                selectedPadId = null;
-                padToDeleteId = null;
-                currentAudioFile = null;
-                audioUpload.value = '';
-                loadToSelectedPad.disabled = true;
-                loadToSelectedPad.textContent = 'Cargar en Pad Seleccionado';
-                deletePadAudio.disabled = true;
-                selectedPadInfo.textContent = '✅ Todos los sonidos eliminados';
-                padToDeleteInfo.textContent = 'Selecciona un pad para eliminar su sonido';
-                audioInfo.textContent = 'Selecciona un archivo de audio';
-                audioTypeInfo.textContent = 'Selecciona Sampler o Loop';
-                
-                alert('✅ Todos los sonidos han sido eliminados');
-            }
-        });
-
-        // Aplicar patrón de luces a loops activos
-        applyPattern.addEventListener('click', () => {
-            currentLightPattern = lightPattern.value;
-            currentWaveEffect = waveEffect.value;
-            
-            // Aplicar nuevo efecto a todos los loops activos
-            Object.keys(loops).forEach(padId => {
-                const element = document.getElementById(padId);
-                if (element) {
-                    const row = element.dataset.row;
-                    const col = element.dataset.col;
-                    applyLightEffect(element, row, col);
-                }
-            });
-            
-            alert(`🎨 Efectos aplicados: ${lightPattern.options[lightPattern.selectedIndex].text} + ${waveEffect.options[waveEffect.selectedIndex].text}`);
-        });
-
-        // Controles de efectos de audio
-        gainControl.addEventListener('input', () => {
-            gainValue.textContent = `${gainControl.value}%`;
-            Object.values(loops).forEach(loop => {
-                if (loop.gain) {
-                    loop.gain.gain.value = gainControl.value / 100;
-                }
-            });
-        });
-
-        lowpassControl.addEventListener('input', () => {
-            lowpassValue.textContent = `${lowpassControl.value}Hz`;
-            Object.values(loops).forEach(loop => {
-                if (loop.lowpass) {
-                    loop.lowpass.frequency.value = lowpassControl.value;
-                }
-            });
-        });
-
-        highpassControl.addEventListener('input', () => {
-            highpassValue.textContent = `${highpassControl.value}Hz`;
-            Object.values(loops).forEach(loop => {
-                if (loop.highpass) {
-                    loop.highpass.frequency.value = highpassControl.value;
-                }
-            });
-        });
-
-        // Exportar configuración
-        exportConfig.addEventListener('click', () => {
-            const project = {
-                metadata: {
-                    name: "Launchpad Project",
-                    date: new Date().toISOString(),
-                    version: "1.0",
-                    lightPattern: currentLightPattern,
-                    waveEffect: currentWaveEffect
-                },
-                settings: {
-                    gain: gainControl.value,
-                    lowpass: lowpassControl.value,
-                    highpass: highpassControl.value
-                },
-                audioFiles: Object.keys(audioBuffers).map(id => ({
-                    padId: id,
-                    fileName: audioBuffers[id].name,
-                    fileSize: audioBuffers[id].size,
-                    duration: audioBuffers[id].duration,
-                    type: audioTypes[id]
-                })),
-                activeLoops: Object.keys(loops)
-            };
-            
-            const dataStr = JSON.stringify(project, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(dataBlob);
-            downloadLink.download = `launchpad-project-${new Date().getTime()}.json`;
-            downloadLink.click();
-            
-            alert('📁 Configuración exportada como archivo JSON');
-        });
-
-        // Conexión MIDI para que el Launchpad físico controle esta skin
-        if (navigator.requestMIDIAccess) {
-            navigator.requestMIDIAccess().then(midi => {
-                for (let input of midi.inputs.values()) {
-                    input.onmidimessage = (msg) => {
-                        const [status, note, vel] = msg.data;
-                        if (status === 144 && vel > 0) {
-                            const r = Math.floor(note / 16);
-                            const c = note % 8;
-                            triggerPad(`p-${r}-${c}`, r, c);
-                        }
+        // --- INTERFAZ DE CARGA ---
+        function updateSelectors() {
+            const grid = document.getElementById('padSelector');
+            grid.innerHTML = '';
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const id = `p-${r}-${c}`;
+                    const d = document.createElement('div');
+                    d.className = 'pad-selector' + (audioBuffers[id] ? ' has-audio' : '');
+                    if (selectedPadId === id) d.classList.add('selected');
+                    d.onclick = () => {
+                        selectedPadId = id;
+                        document.getElementById('loadToSelectedPad').disabled = !currentAudioFile;
+                        updateSelectors();
                     };
+                    grid.appendChild(d);
                 }
-            });
+            }
         }
+
+        document.getElementById('audioUpload').onchange = (e) => {
+            currentAudioFile = e.target.files[0];
+            document.getElementById('audioInfo').innerText = currentAudioFile.name;
+            if (selectedPadId) document.getElementById('loadToSelectedPad').disabled = false;
+        };
+
+        document.getElementById('loadToSelectedPad').onclick = async () => {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const buffer = await audioCtx.decodeAudioData(e.target.result);
+                audioBuffers[selectedPadId] = { buffer };
+                document.getElementById(selectedPadId).classList.add('has-sample');
+                updateSelectors();
+                alert('Pad configurado con éxito');
+            };
+            reader.readAsArrayBuffer(currentAudioFile);
+        };
+
+        document.getElementById('control-btn').onclick = () => {
+            document.getElementById('controlPanel').style.display = 'block';
+            updateSelectors();
+        };
+        document.getElementById('closePanel').onclick = () => document.getElementById('controlPanel').style.display = 'none';
+        
+        document.getElementById('clearAllAudio').onclick = () => {
+            if(confirm('¿Borrar todos los sonidos cargados?')) {
+                Object.keys(audioBuffers).forEach(k => delete audioBuffers[k]);
+                document.querySelectorAll('.pad').forEach(p => p.classList.remove('has-sample', 'looping'));
+                updateSelectors();
+            }
+        };
+
+        // Exportar proyecto simple
+        document.getElementById('exportConfig').onclick = () => {
+            const data = { pads: Object.keys(audioBuffers), date: new Date() };
+            const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'rtbs-project.json';
+            a.click();
+        };
+
     </script>
 </body>
 </html>
+

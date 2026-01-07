@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RTBS CREW LOOPER BETA</title>
+    <title>RTBS CREW LOOPER PRO</title>
     <style>
         :root {
             --chassis: #1a1a1b;
@@ -12,7 +12,7 @@
             --btn-circular: #444;
             --led-on: #00ff55;
             --led-loop: #ff2255;
-            --accent: #00ff55;
+            --accent: #00ff55; /* Color por defecto de la expansión */
         }
 
         body {
@@ -27,7 +27,6 @@
             overflow: hidden;
         }
 
-        /* TÍTULO RTBS CREW */
         .main-header {
             text-align: center;
             margin-bottom: 20px;
@@ -76,10 +75,11 @@
             transition: background 0.1s, box-shadow 0.1s, transform 0.05s;
         }
 
-        /* EFECTO DE EXPANSIÓN (RIPPLE) */
+        /* EFECTO DE LUZ PERSONALIZABLE */
         .pad.ripple-effect {
-            background: rgba(0, 255, 85, 0.4) !important;
-            box-shadow: 0 0 15px var(--accent) !important;
+            background: var(--accent) !important;
+            box-shadow: 0 0 20px var(--accent) !important;
+            opacity: 0.8;
             transform: scale(0.95);
         }
 
@@ -109,12 +109,11 @@
 
         @keyframes pulse { from { opacity: 1; } to { opacity: 0.6; } }
 
-        /* Panel de control lateral */
         .control-panel {
             position: fixed;
             right: 20px;
             top: 20px;
-            background: rgba(30, 30, 35, 0.98);
+            background: rgba(20, 20, 25, 0.95);
             padding: 20px;
             border-radius: 10px;
             color: white;
@@ -137,7 +136,7 @@
             padding-left: 5px;
         }
 
-        select, button, input[type="file"], input[type="range"] {
+        select, button, input[type="file"], input[type="range"], input[type="color"] {
             background: #222; color: white; border: 1px solid #444;
             padding: 8px; border-radius: 4px; cursor: pointer; width: 100%;
             margin-bottom: 10px;
@@ -156,6 +155,8 @@
         .pad-selector.has-audio { background: var(--led-loop); }
         
         .audio-info { font-size: 11px; color: #888; margin: 10px 0; }
+
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: #aaa; }
     </style>
 </head>
 <body>
@@ -174,27 +175,39 @@
         <div class="cell round-btn"></div>
     </div>
 
-    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; width:auto; padding: 10px 20px; background: var(--accent); color: black; font-weight: bold; border:none;">
+    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; width:auto; padding: 10px 20px; background: var(--accent); color: black; font-weight: bold; border:none; border-radius: 5px; cursor: pointer;">
         ⚙️ PANEL DE CONTROL
     </button>
 
     <div class="control-panel" id="controlPanel">
         <button id="closePanel" style="background:none; border:none; color:white; float:right; font-size:20px;">×</button>
-        <h3 style="color:var(--accent)">Ajustes de RTBS Crew</h3>
+        <h3 style="color:var(--accent)">Configuración Visual</h3>
         
-        <div style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
-            <label>Cargar Sonido (.mp3 / .wav):</label>
+        <label>Modo de Animación:</label>
+        <select id="lightPattern">
+            <option value="ripple">Onda Expansiva (Cuadrada)</option>
+            <option value="cross">Cruz (MK2 Style)</option>
+            <option value="diamond">Diamante</option>
+            <option value="horizontal">Ráfaga Horizontal</option>
+            <option value="vertical">Ráfaga Vertical</option>
+            <option value="none">Sin animación</option>
+        </select>
+
+        <label>Color de Luces:</label>
+        <input type="color" id="accentColor" value="#00ff55">
+
+        <div style="border-top: 1px solid #333; margin-top: 15px; padding-top: 15px;">
+            <label>Cargar Sonido en Pad:</label>
             <input type="file" id="audioUpload" accept="audio/*">
-            <div id="audioInfo" class="audio-info">Selecciona un archivo</div>
+            <div id="audioInfo" class="audio-info">Selecciona un pad abajo</div>
             <div class="pad-selector-grid" id="padSelector"></div>
-            <button id="loadToSelectedPad" disabled>Cargar en Pad</button>
+            <button id="loadToSelectedPad" disabled>Cargar Sonido</button>
         </div>
 
-        <div>
+        <div style="margin-top: 15px;">
             <label>Ganancia Global:</label>
             <input type="range" id="gainControl" min="0" max="200" value="100">
-            <button id="clearAllAudio" style="background:#552222;">Borrar todos los sonidos</button>
-            <button id="exportConfig">Exportar Proyecto</button>
+            <button id="clearAllAudio" style="background:#552222;">Limpiar Todo</button>
         </div>
     </div>
 
@@ -206,7 +219,7 @@
         let selectedPadId = null;
         let currentAudioFile = null;
 
-        // --- CREACIÓN DE LA REJILLA ---
+        // Iniciar rejilla
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
                 const pad = document.createElement('div');
@@ -219,7 +232,7 @@
                 pad.addEventListener('pointerdown', (e) => {
                     e.preventDefault();
                     triggerPad(padId, row, col);
-                    triggerExpansionEffect(row, col); // <--- NUEVA FUNCIÓN DE LUCES
+                    handleLightEffect(row, col);
                 });
                 lp.appendChild(pad);
             }
@@ -228,29 +241,53 @@
             lp.appendChild(rBtn);
         }
 
-        // --- EFECTO DE EXPANSIÓN DE LUCES (ESTILO LAUNCHPAD MK2/PRO) ---
-        function triggerExpansionEffect(originRow, originCol) {
-            const maxDistance = 3; // Distancia de la onda
+        // --- SISTEMA DE PATRONES DE LUZ ---
+        function handleLightEffect(r, c) {
+            const pattern = document.getElementById('lightPattern').value;
+            if (pattern === 'none') return;
+
+            const maxDistance = 4;
             for (let d = 1; d <= maxDistance; d++) {
                 setTimeout(() => {
-                    // Obtener pads a distancia 'd'
-                    for (let r = originRow - d; r <= originRow + d; r++) {
-                        for (let c = originCol - d; c <= originCol + d; c++) {
-                            // Solo iluminar el perímetro del cuadrado de distancia d
-                            if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
-                                const targetPad = document.getElementById(`p-${r}-${c}`);
-                                if (targetPad && !targetPad.classList.contains('looping')) {
-                                    targetPad.classList.add('ripple-effect');
-                                    setTimeout(() => targetPad.classList.remove('ripple-effect'), 150);
-                                }
+                    let targets = [];
+                    
+                    if (pattern === 'ripple') {
+                        for (let i = r - d; i <= r + d; i++) {
+                            for (let j = c - d; j <= c + d; j++) {
+                                if (Math.abs(i - r) === d || Math.abs(j - c) === d) targets.push([i, j]);
                             }
                         }
+                    } else if (pattern === 'cross') {
+                        targets = [[r-d, c], [r+d, c], [r, c-d], [r, c+d]];
+                    } else if (pattern === 'diamond') {
+                        // Geometría de diamante: |dr| + |dc| = d
+                        for (let i = -d; i <= d; i++) {
+                            let j = d - Math.abs(i);
+                            targets.push([r + i, c + j], [r + i, c - j]);
+                        }
+                    } else if (pattern === 'horizontal') {
+                        targets = [[r, c-d], [r, c+d]];
+                    } else if (pattern === 'vertical') {
+                        targets = [[r-d, c], [r+d, c]];
                     }
-                }, d * 60); // Velocidad de la onda (60ms entre pasos)
+
+                    targets.forEach(([tr, tc]) => {
+                        const targetPad = document.getElementById(`p-${tr}-${tc}`);
+                        if (targetPad && !targetPad.classList.contains('looping')) {
+                            targetPad.classList.add('ripple-effect');
+                            setTimeout(() => targetPad.classList.remove('ripple-effect'), 180);
+                        }
+                    });
+                }, d * 55); 
             }
         }
 
-        // --- LÓGICA DE AUDIO (TU CÓDIGO MEJORADO) ---
+        // --- CAMBIO DE COLOR PERSONALIZADO ---
+        document.getElementById('accentColor').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--accent', e.target.value);
+        });
+
+        // --- LÓGICA DE AUDIO ---
         async function triggerPad(id, r, c) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const element = document.getElementById(id);
@@ -281,9 +318,8 @@
                     setTimeout(() => element.classList.remove('active'), 200);
                 }
             } else {
-                // Sonido por defecto si está vacío
                 const osc = audioCtx.createOscillator();
-                osc.frequency.value = 150 + (c * 30);
+                osc.frequency.value = 100 + (c * 40) + (r * 10);
                 const g = audioCtx.createGain();
                 osc.connect(g).connect(audioCtx.destination);
                 g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
@@ -294,7 +330,7 @@
             }
         }
 
-        // --- INTERFAZ DE CARGA ---
+        // --- INTERFAZ Y CARGA ---
         function updateSelectors() {
             const grid = document.getElementById('padSelector');
             grid.innerHTML = '';
@@ -316,18 +352,18 @@
 
         document.getElementById('audioUpload').onchange = (e) => {
             currentAudioFile = e.target.files[0];
-            document.getElementById('audioInfo').innerText = currentAudioFile.name;
+            document.getElementById('audioInfo').innerText = "Archivo: " + currentAudioFile.name;
             if (selectedPadId) document.getElementById('loadToSelectedPad').disabled = false;
         };
 
         document.getElementById('loadToSelectedPad').onclick = async () => {
+            if (!selectedPadId || !currentAudioFile) return;
             const reader = new FileReader();
             reader.onload = async (e) => {
                 const buffer = await audioCtx.decodeAudioData(e.target.result);
                 audioBuffers[selectedPadId] = { buffer };
                 document.getElementById(selectedPadId).classList.add('has-sample');
                 updateSelectors();
-                alert('Pad configurado con éxito');
             };
             reader.readAsArrayBuffer(currentAudioFile);
         };
@@ -339,23 +375,12 @@
         document.getElementById('closePanel').onclick = () => document.getElementById('controlPanel').style.display = 'none';
         
         document.getElementById('clearAllAudio').onclick = () => {
-            if(confirm('¿Borrar todos los sonidos cargados?')) {
+            if(confirm('¿Borrar sonidos?')) {
                 Object.keys(audioBuffers).forEach(k => delete audioBuffers[k]);
                 document.querySelectorAll('.pad').forEach(p => p.classList.remove('has-sample', 'looping'));
                 updateSelectors();
             }
         };
-
-        // Exportar proyecto simple
-        document.getElementById('exportConfig').onclick = () => {
-            const data = { pads: Object.keys(audioBuffers), date: new Date() };
-            const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'rtbs-project.json';
-            a.click();
-        };
-
     </script>
 </body>
 </html>

@@ -115,6 +115,33 @@
             100% { background-position: 100% 100%; }
         }
 
+        /* Nuevas animaciones para efectos expansivos */
+        @keyframes waveOut {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        @keyframes spiralOut {
+            0% { transform: rotate(0deg) scale(0.3); opacity: 1; }
+            100% { transform: rotate(360deg) scale(3); opacity: 0; }
+        }
+
+        @keyframes crossExpand {
+            0% { transform: scaleX(0.1) scaleY(0.1); opacity: 1; }
+            100% { transform: scaleX(2) scaleY(2); opacity: 0; }
+        }
+
+        @keyframes diamondWave {
+            0% { transform: scale(0.5) rotate(45deg); opacity: 1; }
+            100% { transform: scale(2) rotate(45deg); opacity: 0; }
+        }
+
         /* Logo o texto */
         .brand {
             grid-column: 1 / 5;
@@ -135,7 +162,7 @@
             padding: 20px;
             border-radius: 10px;
             color: white;
-            width: 300px;
+            width: 320px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             display: none;
             z-index: 1000;
@@ -262,6 +289,16 @@
             border-color: #ff2255;
         }
 
+        .pad-selector.is-sampler {
+            background: #2255ff;
+            border-color: #2255ff;
+        }
+
+        .pad-selector.is-loop {
+            background: #ff22ff;
+            border-color: #ff22ff;
+        }
+
         .audio-info {
             font-size: 12px;
             color: #aaa;
@@ -306,6 +343,47 @@
         .clear-all-btn:hover {
             background: rgba(255,85,85,0.1);
         }
+
+        .audio-type-selector {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .type-btn {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            border: 2px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .type-btn.selected {
+            border-color: #00ff55;
+            background: rgba(0, 255, 85, 0.1);
+            color: #00ff55;
+        }
+
+        .type-btn:hover {
+            background: rgba(0, 255, 85, 0.2);
+        }
+
+        .wave-effect-btn {
+            background: #2255ff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .wave-effect-btn:hover {
+            background: #4477ff;
+        }
     </style>
 </head>
 <body>
@@ -341,7 +419,23 @@
                 <option value="matrix">Efecto Matrix</option>
                 <option value="fire">Fuego</option>
             </select>
-            <button id="applyPattern" style="margin-left:10px; margin-top:10px;">Aplicar a Loops</button>
+            
+            <div style="margin-top: 15px;">
+                <strong>Efectos Expansivos:</strong>
+                <select id="waveEffect" style="margin-top: 5px;">
+                    <option value="none">Sin efecto expansivo</option>
+                    <option value="wave">Onda expansiva</option>
+                    <option value="ripple">Efecto ripple</option>
+                    <option value="spiral">Espiral expansiva</option>
+                    <option value="cross">Cruz expansiva</option>
+                    <option value="diamond">Diamante expansivo</option>
+                    <option value="random">Aleatorio expansivo</option>
+                </select>
+            </div>
+            
+            <button id="applyPattern" style="margin-top:10px; width:100%;">
+                🔥 Aplicar Efectos a Loops
+            </button>
         </div>
 
         <div class="control-section">
@@ -349,8 +443,18 @@
                 <h4>Cargar Archivo de Audio</h4>
                 <button class="clear-all-btn" id="clearAllAudio">Limpiar Todo</button>
             </div>
+            
             <input type="file" id="audioUpload" accept="audio/*">
             <div id="audioInfo" class="audio-info">Selecciona un archivo de audio</div>
+            
+            <div style="margin: 15px 0;">
+                <strong>Tipo de Audio:</strong>
+                <div class="audio-type-selector">
+                    <div class="type-btn" id="samplerBtn" data-type="sampler">🎵 Sampler</div>
+                    <div class="type-btn" id="loopBtn" data-type="loop">🔄 Loop</div>
+                </div>
+                <div id="audioTypeInfo" class="audio-info">Selecciona Sampler o Loop</div>
+            </div>
             
             <div style="margin: 15px 0;">
                 <strong>Seleccionar Pad Destino:</strong>
@@ -409,12 +513,16 @@
     <script>
         const lp = document.getElementById('launchpad');
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const loops = {}; // Almacena sonidos activos
+        const loops = {}; // Almacena sonidos activos (solo loops)
+        const samples = {}; // Almacena samples (no loops)
         const audioBuffers = {}; // Almacena buffers de audio cargados
+        const audioTypes = {}; // Almacena el tipo de cada audio (sampler/loop)
         let currentLightPattern = 'default';
+        let currentWaveEffect = 'none';
         let selectedPadId = null;
         let padToDeleteId = null;
         let currentAudioFile = null;
+        let currentAudioType = 'sampler'; // 'sampler' o 'loop'
         
         // Elementos del panel de control
         const controlBtn = document.getElementById('control-btn');
@@ -422,6 +530,7 @@
         const closePanel = document.getElementById('closePanel');
         const audioUpload = document.getElementById('audioUpload');
         const lightPattern = document.getElementById('lightPattern');
+        const waveEffect = document.getElementById('waveEffect');
         const applyPattern = document.getElementById('applyPattern');
         const gainControl = document.getElementById('gainControl');
         const gainValue = document.getElementById('gainValue');
@@ -437,7 +546,10 @@
         const selectedPadInfo = document.getElementById('selectedPadInfo');
         const padToDeleteInfo = document.getElementById('padToDeleteInfo');
         const audioInfo = document.getElementById('audioInfo');
+        const audioTypeInfo = document.getElementById('audioTypeInfo');
         const clearAllAudio = document.getElementById('clearAllAudio');
+        const samplerBtn = document.getElementById('samplerBtn');
+        const loopBtn = document.getElementById('loopBtn');
 
         // Generar la rejilla de 8x8 + botones laterales
         for (let row = 0; row < 8; row++) {
@@ -459,7 +571,7 @@
             lp.appendChild(rBtn);
         }
 
-        // Generar selectores de pad para cargar audio (CORREGIDO)
+        // Generar selectores de pad para cargar audio
         function generatePadSelectors() {
             padSelector.innerHTML = '';
             deletePadSelector.innerHTML = '';
@@ -468,7 +580,7 @@
                 for (let col = 0; col < 8; col++) {
                     const padId = `p-${row}-${col}`;
                     
-                    // Selector para cargar - NO usar cloneNode
+                    // Selector para cargar
                     const selector = document.createElement('div');
                     selector.className = 'pad-selector';
                     selector.dataset.padId = padId;
@@ -476,7 +588,11 @@
                     selector.dataset.col = col;
                     
                     if (audioBuffers[padId]) {
-                        selector.classList.add('has-audio');
+                        if (audioTypes[padId] === 'loop') {
+                            selector.classList.add('is-loop');
+                        } else {
+                            selector.classList.add('is-sampler');
+                        }
                     }
                     
                     selector.addEventListener('click', function() {
@@ -489,19 +605,22 @@
                         // Seleccionar este
                         this.classList.add('selected');
                         selectedPadId = padId;
-                        selectedPadInfo.textContent = `Pad seleccionado: ${padId} (Fila ${row+1}, Columna ${col+1})`;
+                        
+                        let infoText = `Pad seleccionado: ${padId} (Fila ${row+1}, Columna ${col+1})`;
                         
                         if (audioBuffers[padId]) {
-                            selectedPadInfo.textContent += ' - YA TIENE SONIDO (se sobrescribirá)';
+                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
+                            infoText += ` - ${type} cargado (se sobrescribirá)`;
                         }
                         
+                        selectedPadInfo.textContent = infoText;
                         loadToSelectedPad.disabled = !currentAudioFile;
                         updatePadVisuals();
                     });
                     
                     padSelector.appendChild(selector);
                     
-                    // Selector para eliminar - crear uno nuevo separado
+                    // Selector para eliminar
                     const deleteSelector = document.createElement('div');
                     deleteSelector.className = 'pad-selector';
                     deleteSelector.dataset.padId = padId;
@@ -509,7 +628,11 @@
                     deleteSelector.dataset.col = col;
                     
                     if (audioBuffers[padId]) {
-                        deleteSelector.classList.add('has-audio');
+                        if (audioTypes[padId] === 'loop') {
+                            deleteSelector.classList.add('is-loop');
+                        } else {
+                            deleteSelector.classList.add('is-sampler');
+                        }
                     }
                     
                     deleteSelector.addEventListener('click', function() {
@@ -524,10 +647,11 @@
                         padToDeleteId = padId;
                         
                         if (audioBuffers[padId]) {
-                            padToDeleteInfo.textContent = `Pad seleccionado para eliminar: ${padId} - TIENE SONIDO`;
+                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
+                            padToDeleteInfo.textContent = `Pad para eliminar: ${padId} - ${type}`;
                             deletePadAudio.disabled = false;
                         } else {
-                            padToDeleteInfo.textContent = `Pad seleccionado: ${padId} - NO TIENE SONIDO`;
+                            padToDeleteInfo.textContent = `Pad seleccionado: ${padId} - SIN SONIDO`;
                             deletePadAudio.disabled = true;
                         }
                     });
@@ -554,7 +678,7 @@
         }
 
         // Cargar un sample de audio
-        async function loadAudioSample(file, padId) {
+        async function loadAudioSample(file, padId, type) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
@@ -567,9 +691,11 @@
                             size: file.size,
                             duration: audioBuffer.duration.toFixed(2)
                         };
+                        audioTypes[padId] = type;
                         
+                        const typeText = type === 'loop' ? '🔄 LOOP' : '🎵 SAMPLER';
                         audioInfo.textContent = 
-                            `✅ Archivo cargado: ${file.name} (${Math.round(file.size/1024)}KB, ${audioBuffer.duration.toFixed(1)}s)`;
+                            `✅ ${typeText} cargado: ${file.name} (${Math.round(file.size/1024)}KB, ${audioBuffer.duration.toFixed(1)}s)`;
                         
                         updatePadVisuals();
                         resolve(padId);
@@ -585,25 +711,26 @@
         // Eliminar sample de un pad
         function deleteAudioFromPad(padId) {
             if (audioBuffers[padId]) {
-                // Detener loop si está activo
-                if (loops[padId]) {
+                // Detener si está activo
+                if (audioTypes[padId] === 'loop' && loops[padId]) {
                     loops[padId].source.stop();
                     delete loops[padId];
-                    
-                    // Apagar luz del pad
-                    const padElement = document.getElementById(padId);
-                    if (padElement) {
-                        padElement.classList.remove('looping');
-                        padElement.style.background = '';
-                        padElement.style.boxShadow = '';
-                        padElement.style.animation = '';
-                    }
+                } else if (audioTypes[padId] === 'sampler' && samples[padId]) {
+                    delete samples[padId];
+                }
+                
+                // Apagar luz del pad
+                const padElement = document.getElementById(padId);
+                if (padElement) {
+                    padElement.classList.remove('looping', 'active');
+                    clearPadEffects(padElement);
                 }
                 
                 delete audioBuffers[padId];
+                delete audioTypes[padId];
                 updatePadVisuals();
                 
-                // Resetear selección de eliminación
+                // Resetear selección
                 padToDeleteId = null;
                 deletePadAudio.disabled = true;
                 padToDeleteInfo.textContent = '✅ Sonido eliminado. Selecciona otro pad si quieres eliminar más.';
@@ -614,7 +741,7 @@
         }
 
         // Reproducir sample de audio con efectos
-        async function playSample(padId, isLoop = false) {
+        async function playSample(padId, type) {
             if (!audioBuffers[padId] || !audioBuffers[padId].buffer) return null;
             
             const source = audioCtx.createBufferSource();
@@ -640,7 +767,7 @@
             
             source.start();
             
-            if (isLoop) {
+            if (type === 'loop') {
                 source.loop = true;
             } else {
                 source.stop(audioCtx.currentTime + source.buffer.duration);
@@ -654,37 +781,137 @@
             };
         }
 
+        // Aplicar efecto de onda expansiva
+        function applyWaveEffect(element, row, col) {
+            if (currentWaveEffect === 'none') return;
+            
+            const r = parseInt(row);
+            const c = parseInt(col);
+            
+            // Definir patrones de expansión
+            const patterns = {
+                wave: [
+                    [0,0], [-1,0], [1,0], [0,-1], [0,1],
+                    [-1,-1], [-1,1], [1,-1], [1,1],
+                    [-2,0], [2,0], [0,-2], [0,2]
+                ],
+                ripple: [
+                    [-1,-1], [-1,0], [-1,1],
+                    [0,-1], [0,0], [0,1],
+                    [1,-1], [1,0], [1,1],
+                    [-2,-2], [-2,2], [2,-2], [2,2]
+                ],
+                spiral: [
+                    [0,0], [-1,0], [0,1], [1,0], [0,-1],
+                    [-2,0], [0,2], [2,0], [0,-2],
+                    [-1,-1], [-1,1], [1,-1], [1,1]
+                ],
+                cross: [
+                    [0,0], [-1,0], [1,0], [0,-1], [0,1],
+                    [-2,0], [2,0], [0,-2], [0,2],
+                    [-3,0], [3,0], [0,-3], [0,3]
+                ],
+                diamond: [
+                    [0,0], [-1,0], [1,0], [0,-1], [0,1],
+                    [-1,-1], [-1,1], [1,-1], [1,1],
+                    [-2,0], [2,0], [0,-2], [0,2],
+                    [-1,-2], [-2,-1], [1,-2], [2,-1],
+                    [-1,2], [-2,1], [1,2], [2,1]
+                ],
+                random: Array.from({length: 15}, () => [
+                    Math.floor(Math.random() * 5) - 2,
+                    Math.floor(Math.random() * 5) - 2
+                ])
+            };
+            
+            const pattern = patterns[currentWaveEffect] || patterns.wave;
+            
+            // Aplicar efecto a cada posición del patrón
+            pattern.forEach(([dr, dc], index) => {
+                const targetRow = r + dr;
+                const targetCol = c + dc;
+                
+                // Verificar límites
+                if (targetRow >= 0 && targetRow < 8 && targetCol >= 0 && targetCol < 8) {
+                    const targetId = `p-${targetRow}-${targetCol}`;
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        setTimeout(() => {
+                            // Efecto visual
+                            targetElement.style.transition = 'all 0.2s';
+                            
+                            // Colores basados en el efecto
+                            let color, animation;
+                            switch(currentWaveEffect) {
+                                case 'wave':
+                                    color = `hsl(${(index * 30) % 360}, 100%, 50%)`;
+                                    animation = 'waveOut 0.8s forwards';
+                                    break;
+                                case 'ripple':
+                                    color = `hsl(${(index * 20) % 360}, 100%, 60%)`;
+                                    animation = 'ripple 1s forwards';
+                                    break;
+                                case 'spiral':
+                                    color = `hsl(${(index * 45) % 360}, 100%, 50%)`;
+                                    animation = 'spiralOut 1.2s forwards';
+                                    break;
+                                case 'cross':
+                                    color = index % 2 === 0 ? '#00ff55' : '#ff2255';
+                                    animation = 'crossExpand 1s forwards';
+                                    break;
+                                case 'diamond':
+                                    color = `hsl(${(index * 15) % 360}, 100%, 50%)`;
+                                    animation = 'diamondWave 1s forwards';
+                                    break;
+                                case 'random':
+                                    const colors = ['#00ff55', '#ff2255', '#2255ff', '#ffff00', '#ff8800'];
+                                    color = colors[Math.floor(Math.random() * colors.length)];
+                                    animation = `waveOut ${0.5 + Math.random() * 0.5}s forwards`;
+                                    break;
+                            }
+                            
+                            targetElement.style.background = color;
+                            targetElement.style.boxShadow = `0 0 20px ${color}`;
+                            targetElement.style.animation = animation;
+                            
+                            // Restaurar después de la animación
+                            setTimeout(() => {
+                                if (targetElement.classList.contains('looping')) {
+                                    // Mantener efecto de loop
+                                    applyLightEffect(targetElement, targetRow, targetCol);
+                                } else if (targetElement.classList.contains('active')) {
+                                    // Mantener efecto activo
+                                    targetElement.style.background = 'var(--led-on)';
+                                    targetElement.style.boxShadow = '0 0 15px var(--led-on)';
+                                } else if (audioBuffers[targetId]) {
+                                    // Restaurar borde si tiene audio
+                                    targetElement.style.background = 'var(--pad-empty)';
+                                    targetElement.style.boxShadow = 'inset 0 0 5px rgba(0,0,0,0.5)';
+                                } else {
+                                    // Restaurar completamente
+                                    targetElement.style.background = '';
+                                    targetElement.style.boxShadow = '';
+                                    targetElement.style.animation = '';
+                                }
+                            }, 1000);
+                            
+                        }, index * 50); // Retraso escalonado
+                    }
+                }
+            });
+        }
+
         async function triggerPad(id, r, c) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             
             const element = document.getElementById(id);
-            const isLoopType = (r === 0);
-
-            // Si ya hay un loop activo, detenerlo
-            if (loops[id]) {
-                loops[id].source.stop();
-                delete loops[id];
-                element.classList.remove('looping');
-                element.style.animation = '';
-                element.style.background = '';
-                element.style.boxShadow = '';
-                return;
-            }
-
-            // Si hay un sample cargado para este pad, usarlo
-            if (audioBuffers[id]) {
-                const audioNodes = await playSample(id, isLoopType);
-                
-                if (isLoopType && audioNodes) {
-                    loops[id] = audioNodes;
-                    element.classList.add('looping');
-                    applyLightEffect(element, r, c);
-                } else {
-                    element.classList.add('active');
-                    setTimeout(() => element.classList.remove('active'), 300);
-                }
-            } else {
-                // Usar oscilador por defecto si no hay sample
+            
+            // Aplicar efecto expansivo
+            applyWaveEffect(element, r, c);
+            
+            // Si no hay audio cargado, usar oscilador por defecto
+            if (!audioBuffers[id]) {
                 const source = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 
@@ -695,32 +922,45 @@
                 gain.connect(audioCtx.destination);
                 
                 source.start();
-
-                if (isLoopType) {
-                    loops[id] = { source: source };
-                    source.loop = false;
-                    element.classList.add('looping');
-                    applyLightEffect(element, r, c);
-                } else {
-                    element.classList.add('active');
-                    source.stop(audioCtx.currentTime + 0.2);
-                    setTimeout(() => element.classList.remove('active'), 150);
-                }
+                source.stop(audioCtx.currentTime + 0.2);
+                
+                element.classList.add('active');
+                setTimeout(() => element.classList.remove('active'), 200);
+                return;
+            }
+            
+            const type = audioTypes[id];
+            
+            // Si es un loop y ya está activo, detenerlo
+            if (type === 'loop' && loops[id]) {
+                loops[id].source.stop();
+                delete loops[id];
+                element.classList.remove('looping');
+                clearPadEffects(element);
+                return;
+            }
+            
+            // Reproducir el audio
+            const audioNodes = await playSample(id, type);
+            
+            if (type === 'loop' && audioNodes) {
+                loops[id] = audioNodes;
+                element.classList.add('looping');
+                applyLightEffect(element, r, c);
+            } else {
+                element.classList.add('active');
+                setTimeout(() => element.classList.remove('active'), 300);
+                samples[id] = audioNodes;
             }
         }
 
-        // Aplicar efectos de luces mejorados
+        // Aplicar efectos de luces
         function applyLightEffect(element, row, col) {
             const r = parseInt(row);
             const c = parseInt(col);
             
             element.style.transition = 'all 0.3s ease';
-            
-            // Limpiar animaciones anteriores
-            element.style.animation = '';
-            element.style.background = '';
-            element.style.boxShadow = '';
-            element.style.filter = '';
+            clearPadEffects(element);
             
             setTimeout(() => {
                 switch(currentLightPattern) {
@@ -750,8 +990,7 @@
                         break;
                         
                     case 'scanline':
-                        element.style.background = `linear-gradient(90deg, 
-                            transparent 0%, #00ff00 50%, transparent 100%)`;
+                        element.style.background = `linear-gradient(90deg, transparent 0%, #00ff00 50%, transparent 100%)`;
                         element.style.backgroundSize = '200% 200%';
                         element.style.animation = 'scanline 1s infinite linear';
                         break;
@@ -759,11 +998,9 @@
                     case 'matrix':
                         element.style.background = '#00ff00';
                         element.style.boxShadow = '0 0 20px #00ff00';
-                        // Efecto matrix: destellos aleatorios
                         const matrixInterval = setInterval(() => {
                             element.style.opacity = Math.random() > 0.5 ? '1' : '0.3';
                         }, 100);
-                        // Guardar el intervalo para limpiarlo después
                         element.dataset.matrixInterval = matrixInterval;
                         break;
                         
@@ -772,7 +1009,6 @@
                         const fireColor = fireColors[Math.floor(Math.random() * fireColors.length)];
                         element.style.background = fireColor;
                         element.style.boxShadow = `0 0 35px ${fireColor}`;
-                        // Efecto de fuego titilante
                         const fireInterval = setInterval(() => {
                             const intensity = 0.7 + Math.random() * 0.3;
                             element.style.opacity = intensity.toString();
@@ -780,7 +1016,7 @@
                         element.dataset.fireInterval = fireInterval;
                         break;
                         
-                    default: // Por defecto
+                    default:
                         element.style.background = 'var(--led-loop)';
                         element.style.boxShadow = '0 0 20px var(--led-loop)';
                         element.style.animation = 'pulse 1s infinite alternate';
@@ -790,11 +1026,9 @@
         }
 
         // Limpiar efectos de un pad
-        function clearPadEffects(padId) {
-            const element = document.getElementById(padId);
+        function clearPadEffects(element) {
             if (!element) return;
             
-            // Detener intervalos si existen
             if (element.dataset.matrixInterval) {
                 clearInterval(parseInt(element.dataset.matrixInterval));
                 delete element.dataset.matrixInterval;
@@ -817,12 +1051,26 @@
         // Control del panel
         controlBtn.addEventListener('click', () => {
             controlPanel.style.display = 'block';
-            // Actualizar selectores al abrir el panel
             generatePadSelectors();
         });
 
         closePanel.addEventListener('click', () => {
             controlPanel.style.display = 'none';
+        });
+
+        // Selector de tipo de audio
+        samplerBtn.addEventListener('click', () => {
+            samplerBtn.classList.add('selected');
+            loopBtn.classList.remove('selected');
+            currentAudioType = 'sampler';
+            audioTypeInfo.textContent = '🎵 SAMPLER seleccionado (se reproduce una vez)';
+        });
+
+        loopBtn.addEventListener('click', () => {
+            loopBtn.classList.add('selected');
+            samplerBtn.classList.remove('selected');
+            currentAudioType = 'loop';
+            audioTypeInfo.textContent = '🔄 LOOP seleccionado (se reproduce continuamente)';
         });
 
         // Cargar archivo de audio
@@ -831,11 +1079,12 @@
             if (!file) return;
             
             currentAudioFile = file;
-            audioInfo.textContent = `📁 ${file.name} seleccionado - Ahora elige un pad destino`;
+            const typeText = currentAudioType === 'loop' ? '🔄 LOOP' : '🎵 SAMPLER';
+            audioInfo.textContent = `📁 ${file.name} - ${typeText} - Ahora elige un pad destino`;
             loadToSelectedPad.disabled = !selectedPadId;
             loadToSelectedPad.textContent = selectedPadId 
-                ? `🔊 Cargar en ${selectedPadId}` 
-                : '🔊 Cargar en Pad Seleccionado';
+                ? `${currentAudioType === 'loop' ? '🔄' : '🎵'} Cargar en ${selectedPadId}` 
+                : 'Cargar en Pad Seleccionado';
         });
 
         // Cargar audio al pad seleccionado
@@ -846,17 +1095,17 @@
             }
             
             try {
-                await loadAudioSample(currentAudioFile, selectedPadId);
+                await loadAudioSample(currentAudioFile, selectedPadId, currentAudioType);
                 
                 // Resetear
                 selectedPadId = null;
                 currentAudioFile = null;
                 audioUpload.value = '';
                 loadToSelectedPad.disabled = true;
-                loadToSelectedPad.textContent = '🔊 Cargar en Pad Seleccionado';
+                loadToSelectedPad.textContent = 'Cargar en Pad Seleccionado';
                 selectedPadInfo.textContent = '✅ Audio cargado. Selecciona otro pad si quieres cargar más.';
                 
-                // Resetear selector visualmente
+                // Resetear selector
                 const selectedElement = padSelector.querySelector('.selected');
                 if (selectedElement) {
                     selectedElement.classList.remove('selected');
@@ -872,9 +1121,6 @@
             if (!padToDeleteId) return;
             
             if (deleteAudioFromPad(padToDeleteId)) {
-                // Limpiar efectos visuales
-                clearPadEffects(padToDeleteId);
-                
                 // Resetear selección
                 const selectedElement = deletePadSelector.querySelector('.selected');
                 if (selectedElement) {
@@ -890,7 +1136,8 @@
                 Object.keys(loops).forEach(padId => {
                     if (loops[padId]) {
                         loops[padId].source.stop();
-                        clearPadEffects(padId);
+                        const element = document.getElementById(padId);
+                        if (element) clearPadEffects(element);
                     }
                 });
                 
@@ -898,9 +1145,13 @@
                 Object.keys(audioBuffers).forEach(padId => {
                     delete audioBuffers[padId];
                 });
+                Object.keys(audioTypes).forEach(padId => {
+                    delete audioTypes[padId];
+                });
                 
-                // Resetear loops
-                Object.keys(loops).forEach(key => delete loops[key]);
+                // Resetear
+                loops = {};
+                samples = {};
                 
                 // Actualizar visuales
                 updatePadVisuals();
@@ -911,11 +1162,12 @@
                 currentAudioFile = null;
                 audioUpload.value = '';
                 loadToSelectedPad.disabled = true;
-                loadToSelectedPad.textContent = '🔊 Cargar en Pad Seleccionado';
+                loadToSelectedPad.textContent = 'Cargar en Pad Seleccionado';
                 deletePadAudio.disabled = true;
                 selectedPadInfo.textContent = '✅ Todos los sonidos eliminados';
                 padToDeleteInfo.textContent = 'Selecciona un pad para eliminar su sonido';
                 audioInfo.textContent = 'Selecciona un archivo de audio';
+                audioTypeInfo.textContent = 'Selecciona Sampler o Loop';
                 
                 alert('✅ Todos los sonidos han sido eliminados');
             }
@@ -924,6 +1176,7 @@
         // Aplicar patrón de luces a loops activos
         applyPattern.addEventListener('click', () => {
             currentLightPattern = lightPattern.value;
+            currentWaveEffect = waveEffect.value;
             
             // Aplicar nuevo efecto a todos los loops activos
             Object.keys(loops).forEach(padId => {
@@ -935,7 +1188,7 @@
                 }
             });
             
-            alert(`🎨 Efecto '${lightPattern.options[lightPattern.selectedIndex].text}' aplicado a los loops`);
+            alert(`🎨 Efectos aplicados: ${lightPattern.options[lightPattern.selectedIndex].text} + ${waveEffect.options[waveEffect.selectedIndex].text}`);
         });
 
         // Controles de efectos de audio
@@ -973,7 +1226,8 @@
                     name: "Launchpad Project",
                     date: new Date().toISOString(),
                     version: "1.0",
-                    lightPattern: currentLightPattern
+                    lightPattern: currentLightPattern,
+                    waveEffect: currentWaveEffect
                 },
                 settings: {
                     gain: gainControl.value,
@@ -984,7 +1238,8 @@
                     padId: id,
                     fileName: audioBuffers[id].name,
                     fileSize: audioBuffers[id].size,
-                    duration: audioBuffers[id].duration
+                    duration: audioBuffers[id].duration,
+                    type: audioTypes[id]
                 })),
                 activeLoops: Object.keys(loops)
             };

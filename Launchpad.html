@@ -118,7 +118,7 @@
             padding: 20px;
             border-radius: 10px;
             color: white;
-            width: 300px;
+            width: 320px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             display: none;
             z-index: 1000;
@@ -138,24 +138,137 @@
         }
 
         select, button, input[type="file"], input[type="range"] {
-            background: #222; color: white; border: 1px solid #444;
-            padding: 8px; border-radius: 4px; cursor: pointer; width: 100%;
+            background: #222; 
+            color: white; 
+            border: 1px solid #444;
+            padding: 8px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            width: 100%;
             margin-bottom: 10px;
+            box-sizing: border-box;
         }
 
+        button:hover {
+            background: #333;
+        }
+
+        /* Selector de pads */
         .pad-selector-grid {
-            display: grid; grid-template-columns: repeat(8, 1fr);
-            gap: 2px; background: #000; padding: 5px; border-radius: 5px;
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px; 
+            background: #000; 
+            padding: 8px; 
+            border-radius: 5px;
+            margin: 10px 0;
         }
 
         .pad-selector {
-            width: 20px; height: 20px; background: #333; border-radius: 2px; cursor: pointer;
+            width: 22px; 
+            height: 22px; 
+            background: #333; 
+            border-radius: 2px; 
+            cursor: pointer;
+            border: 1px solid #555;
+            transition: all 0.2s;
         }
 
-        .pad-selector.selected { background: var(--accent); }
-        .pad-selector.has-audio { background: var(--led-loop); }
-        
-        .audio-info { font-size: 11px; color: #888; margin: 10px 0; }
+        .pad-selector:hover {
+            transform: scale(1.1);
+        }
+
+        .pad-selector.selected { 
+            background: var(--accent); 
+            border-color: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .pad-selector.has-sampler { 
+            background: #2255ff; 
+            border-color: #2255ff;
+        }
+
+        .pad-selector.has-loop { 
+            background: var(--led-loop); 
+            border-color: var(--led-loop);
+        }
+
+        .audio-info { 
+            font-size: 11px; 
+            color: #888; 
+            margin: 10px 0;
+            padding: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .section-title {
+            color: var(--accent);
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .type-btn {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            background: #222;
+            border: 2px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .type-btn:hover {
+            background: #2a2a2a;
+        }
+
+        .type-btn.selected {
+            border-color: var(--accent);
+            background: rgba(0, 255, 85, 0.1);
+            color: var(--accent);
+        }
+
+        .delete-btn {
+            background: #552222;
+            border: 1px solid #ff5555;
+            color: #ffaaaa;
+        }
+
+        .delete-btn:hover {
+            background: #663333;
+        }
+
+        .clear-all-btn {
+            background: #552222;
+            border: 1px solid #ff5555;
+            color: #ffaaaa;
+        }
+
+        .clear-all-btn:hover {
+            background: #663333;
+        }
+
+        .export-btn {
+            background: #225522;
+            border: 1px solid #55ff55;
+            color: #aaffaa;
+        }
+
+        .export-btn:hover {
+            background: #336633;
+        }
     </style>
 </head>
 <body>
@@ -179,23 +292,41 @@
     </button>
 
     <div class="control-panel" id="controlPanel">
-        <button id="closePanel" style="background:none; border:none; color:white; float:right; font-size:20px;">×</button>
-        <h3 style="color:var(--accent)">Ajustes de RTBS Crew</h3>
+        <button id="closePanel" style="background:none; border:none; color:white; float:right; font-size:20px; cursor:pointer;">×</button>
+        <h3 style="color:var(--accent); margin-top: 0;">Ajustes de RTBS Crew</h3>
         
-        <div style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
-            <label>Cargar Sonido (.mp3 / .wav):</label>
-            <input type="file" id="audioUpload" accept="audio/*">
-            <div id="audioInfo" class="audio-info">Selecciona un archivo</div>
-            <div class="pad-selector-grid" id="padSelector"></div>
-            <button id="loadToSelectedPad" disabled>Cargar en Pad</button>
+        <!-- SECCIÓN 1: CARGAR AUDIO -->
+        <div class="section-title">CARGAR SONIDO (.mp3 / .wav)</div>
+        <input type="file" id="audioUpload" accept="audio/*">
+        <div id="audioInfo" class="audio-info">Selecciona un archivo de audio</div>
+        
+        <div class="section-title">TIPO DE SONIDO</div>
+        <div class="type-selector">
+            <div class="type-btn" id="samplerBtn" data-type="sampler">🎵 SAMPLER</div>
+            <div class="type-btn" id="loopBtn" data-type="loop">🔄 LOOP</div>
         </div>
+        <div id="typeInfo" class="audio-info">Selecciona Sampler (una vez) o Loop (continuo)</div>
+        
+        <div class="section-title">SELECCIONAR PAD DESTINO</div>
+        <div class="pad-selector-grid" id="padSelector"></div>
+        <div id="selectedPadInfo" class="audio-info">Ningún pad seleccionado</div>
+        
+        <button id="loadToSelectedPad" disabled>Cargar en Pad Seleccionado</button>
 
-        <div>
-            <label>Ganancia Global:</label>
-            <input type="range" id="gainControl" min="0" max="200" value="100">
-            <button id="clearAllAudio" style="background:#552222;">Borrar todos los sonidos</button>
-            <button id="exportConfig">Exportar Proyecto</button>
-        </div>
+        <!-- SECCIÓN 2: ELIMINAR SONIDO -->
+        <div class="section-title">ELIMINAR SONIDO DE PAD</div>
+        <div class="pad-selector-grid" id="deletePadSelector"></div>
+        <div id="deletePadInfo" class="audio-info">Selecciona un pad para eliminar su sonido</div>
+        <button id="deletePadBtn" class="delete-btn" disabled>✖ Eliminar Sonido del Pad</button>
+
+        <!-- SECCIÓN 3: CONTROLES -->
+        <div class="section-title">CONTROLES DE SONIDO</div>
+        <label>Ganancia Global:</label>
+        <input type="range" id="gainControl" min="0" max="200" value="100">
+        <span id="gainValue" style="color:#888; font-size:12px;">100%</span>
+
+        <button id="clearAllAudio" class="clear-all-btn" style="margin-top:15px;">🗑️ Borrar todos los sonidos</button>
+        <button id="exportConfig" class="export-btn">💾 Exportar Proyecto</button>
     </div>
 
     <script>
@@ -203,8 +334,11 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const loops = {};
         const audioBuffers = {};
+        const audioTypes = {}; // 'sampler' o 'loop'
         let selectedPadId = null;
+        let deletePadId = null;
         let currentAudioFile = null;
+        let currentAudioType = 'sampler';
 
         // --- CREACIÓN DE LA REJILLA ---
         for (let row = 0; row < 8; row++) {
@@ -219,7 +353,7 @@
                 pad.addEventListener('pointerdown', (e) => {
                     e.preventDefault();
                     triggerPad(padId, row, col);
-                    triggerExpansionEffect(row, col); // <--- NUEVA FUNCIÓN DE LUCES
+                    triggerExpansionEffect(row, col);
                 });
                 lp.appendChild(pad);
             }
@@ -228,15 +362,13 @@
             lp.appendChild(rBtn);
         }
 
-        // --- EFECTO DE EXPANSIÓN DE LUCES (ESTILO LAUNCHPAD MK2/PRO) ---
+        // --- EFECTO DE EXPANSIÓN DE LUCES ---
         function triggerExpansionEffect(originRow, originCol) {
-            const maxDistance = 3; // Distancia de la onda
+            const maxDistance = 3;
             for (let d = 1; d <= maxDistance; d++) {
                 setTimeout(() => {
-                    // Obtener pads a distancia 'd'
                     for (let r = originRow - d; r <= originRow + d; r++) {
                         for (let c = originCol - d; c <= originCol + d; c++) {
-                            // Solo iluminar el perímetro del cuadrado de distancia d
                             if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
                                 const targetPad = document.getElementById(`p-${r}-${c}`);
                                 if (targetPad && !targetPad.classList.contains('looping')) {
@@ -246,42 +378,79 @@
                             }
                         }
                     }
-                }, d * 60); // Velocidad de la onda (60ms entre pasos)
+                }, d * 60);
             }
         }
 
-        // --- LÓGICA DE AUDIO (TU CÓDIGO MEJORADO) ---
+        // --- GENERAR SELECTORES DE PAD ---
+        function generatePadSelectors() {
+            const loadGrid = document.getElementById('padSelector');
+            const deleteGrid = document.getElementById('deletePadSelector');
+            
+            loadGrid.innerHTML = '';
+            deleteGrid.innerHTML = '';
+            
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const padId = `p-${r}-${c}`;
+                    
+                    // Selector para cargar
+                    const loadSelector = document.createElement('div');
+                    loadSelector.className = 'pad-selector';
+                    if (audioBuffers[padId]) {
+                        loadSelector.classList.add(audioTypes[padId] === 'loop' ? 'has-loop' : 'has-sampler');
+                    }
+                    if (selectedPadId === padId) {
+                        loadSelector.classList.add('selected');
+                    }
+                    loadSelector.onclick = () => {
+                        selectedPadId = padId;
+                        document.getElementById('selectedPadInfo').textContent = 
+                            `Pad seleccionado: ${padId} (Fila ${r+1}, Col ${c+1})`;
+                        if (audioBuffers[padId]) {
+                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
+                            document.getElementById('selectedPadInfo').textContent += ` - ${type} cargado`;
+                        }
+                        document.getElementById('loadToSelectedPad').disabled = !currentAudioFile;
+                        generatePadSelectors();
+                    };
+                    loadGrid.appendChild(loadSelector);
+                    
+                    // Selector para eliminar
+                    const deleteSelector = document.createElement('div');
+                    deleteSelector.className = 'pad-selector';
+                    if (audioBuffers[padId]) {
+                        deleteSelector.classList.add(audioTypes[padId] === 'loop' ? 'has-loop' : 'has-sampler');
+                    }
+                    if (deletePadId === padId) {
+                        deleteSelector.classList.add('selected');
+                    }
+                    deleteSelector.onclick = () => {
+                        deletePadId = padId;
+                        if (audioBuffers[padId]) {
+                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
+                            document.getElementById('deletePadInfo').textContent = 
+                                `Pad seleccionado: ${padId} - ${type}`;
+                            document.getElementById('deletePadBtn').disabled = false;
+                        } else {
+                            document.getElementById('deletePadInfo').textContent = 
+                                `Pad seleccionado: ${padId} - SIN SONIDO`;
+                            document.getElementById('deletePadBtn').disabled = true;
+                        }
+                        generatePadSelectors();
+                    };
+                    deleteGrid.appendChild(deleteSelector);
+                }
+            }
+        }
+
+        // --- LÓGICA DE AUDIO ---
         async function triggerPad(id, r, c) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const element = document.getElementById(id);
-            const isLoopType = (r === 0);
-
-            if (loops[id]) {
-                loops[id].source.stop();
-                delete loops[id];
-                element.classList.remove('looping');
-                return;
-            }
-
-            if (audioBuffers[id]) {
-                const source = audioCtx.createBufferSource();
-                source.buffer = audioBuffers[id].buffer;
-                const gain = audioCtx.createGain();
-                gain.gain.value = document.getElementById('gainControl').value / 100;
-                source.connect(gain).connect(audioCtx.destination);
-                
-                source.loop = isLoopType;
-                source.start();
-
-                if (isLoopType) {
-                    loops[id] = { source };
-                    element.classList.add('looping');
-                } else {
-                    element.classList.add('active');
-                    setTimeout(() => element.classList.remove('active'), 200);
-                }
-            } else {
-                // Sonido por defecto si está vacío
+            
+            // Si no hay audio, usar sonido por defecto
+            if (!audioBuffers[id]) {
                 const osc = audioCtx.createOscillator();
                 osc.frequency.value = 150 + (c * 30);
                 const g = audioCtx.createGain();
@@ -291,72 +460,226 @@
                 osc.stop(audioCtx.currentTime + 0.1);
                 element.classList.add('active');
                 setTimeout(() => element.classList.remove('active'), 100);
+                return;
+            }
+            
+            const type = audioTypes[id];
+            
+            // Si es loop y ya está activo, detenerlo
+            if (type === 'loop' && loops[id]) {
+                loops[id].source.stop();
+                delete loops[id];
+                element.classList.remove('looping');
+                return;
+            }
+            
+            // Reproducir el audio
+            const source = audioCtx.createBufferSource();
+            source.buffer = audioBuffers[id].buffer;
+            const gain = audioCtx.createGain();
+            gain.gain.value = document.getElementById('gainControl').value / 100;
+            source.connect(gain).connect(audioCtx.destination);
+            
+            if (type === 'loop') {
+                source.loop = true;
+                source.start();
+                loops[id] = { source };
+                element.classList.add('looping');
+            } else {
+                source.start();
+                source.stop(audioCtx.currentTime + source.buffer.duration);
+                element.classList.add('active');
+                setTimeout(() => element.classList.remove('active'), 200);
             }
         }
 
-        // --- INTERFAZ DE CARGA ---
-        function updateSelectors() {
-            const grid = document.getElementById('padSelector');
-            grid.innerHTML = '';
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const id = `p-${r}-${c}`;
-                    const d = document.createElement('div');
-                    d.className = 'pad-selector' + (audioBuffers[id] ? ' has-audio' : '');
-                    if (selectedPadId === id) d.classList.add('selected');
-                    d.onclick = () => {
-                        selectedPadId = id;
-                        document.getElementById('loadToSelectedPad').disabled = !currentAudioFile;
-                        updateSelectors();
-                    };
-                    grid.appendChild(d);
-                }
-            }
-        }
-
-        document.getElementById('audioUpload').onchange = (e) => {
-            currentAudioFile = e.target.files[0];
-            document.getElementById('audioInfo').innerText = currentAudioFile.name;
-            if (selectedPadId) document.getElementById('loadToSelectedPad').disabled = false;
+        // --- INTERFAZ Y EVENTOS ---
+        // Selector de tipo
+        document.getElementById('samplerBtn').onclick = () => {
+            currentAudioType = 'sampler';
+            document.getElementById('samplerBtn').classList.add('selected');
+            document.getElementById('loopBtn').classList.remove('selected');
+            document.getElementById('typeInfo').textContent = '🎵 SAMPLER seleccionado (se reproduce una vez)';
+        };
+        
+        document.getElementById('loopBtn').onclick = () => {
+            currentAudioType = 'loop';
+            document.getElementById('loopBtn').classList.add('selected');
+            document.getElementById('samplerBtn').classList.remove('selected');
+            document.getElementById('typeInfo').textContent = '🔄 LOOP seleccionado (se reproduce continuamente)';
         };
 
+        // Cargar archivo
+        document.getElementById('audioUpload').onchange = (e) => {
+            currentAudioFile = e.target.files[0];
+            if (currentAudioFile) {
+                document.getElementById('audioInfo').textContent = 
+                    `Archivo seleccionado: ${currentAudioFile.name}`;
+                if (selectedPadId) {
+                    document.getElementById('loadToSelectedPad').disabled = false;
+                }
+            }
+        };
+
+        // Cargar en pad seleccionado
         document.getElementById('loadToSelectedPad').onclick = async () => {
+            if (!currentAudioFile || !selectedPadId) {
+                alert('Selecciona un archivo y un pad destino');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = async (e) => {
-                const buffer = await audioCtx.decodeAudioData(e.target.result);
-                audioBuffers[selectedPadId] = { buffer };
-                document.getElementById(selectedPadId).classList.add('has-sample');
-                updateSelectors();
-                alert('Pad configurado con éxito');
+                try {
+                    const buffer = await audioCtx.decodeAudioData(e.target.result);
+                    audioBuffers[selectedPadId] = { buffer };
+                    audioTypes[selectedPadId] = currentAudioType;
+                    
+                    // Actualizar visual del pad principal
+                    const padElement = document.getElementById(selectedPadId);
+                    padElement.classList.add('has-sample');
+                    
+                    // Actualizar selectores
+                    generatePadSelectors();
+                    
+                    // Resetear
+                    document.getElementById('audioUpload').value = '';
+                    currentAudioFile = null;
+                    selectedPadId = null;
+                    document.getElementById('loadToSelectedPad').disabled = true;
+                    document.getElementById('selectedPadInfo').textContent = '✅ Audio cargado exitosamente';
+                    document.getElementById('audioInfo').textContent = 'Selecciona un archivo de audio';
+                    
+                    alert(`✅ ${currentAudioType === 'loop' ? 'LOOP' : 'SAMPLER'} cargado correctamente`);
+                    
+                } catch (err) {
+                    alert('Error al cargar el archivo de audio: ' + err.message);
+                }
             };
             reader.readAsArrayBuffer(currentAudioFile);
         };
 
-        document.getElementById('control-btn').onclick = () => {
-            document.getElementById('controlPanel').style.display = 'block';
-            updateSelectors();
+        // Eliminar sonido de pad
+        document.getElementById('deletePadBtn').onclick = () => {
+            if (!deletePadId || !audioBuffers[deletePadId]) {
+                alert('Selecciona un pad con sonido para eliminar');
+                return;
+            }
+            
+            // Detener si está reproduciéndose
+            if (audioTypes[deletePadId] === 'loop' && loops[deletePadId]) {
+                loops[deletePadId].source.stop();
+                delete loops[deletePadId];
+            }
+            
+            // Eliminar audio
+            delete audioBuffers[deletePadId];
+            delete audioTypes[deletePadId];
+            
+            // Actualizar visual
+            const padElement = document.getElementById(deletePadId);
+            padElement.classList.remove('has-sample', 'looping', 'active');
+            
+            // Actualizar selectores
+            generatePadSelectors();
+            
+            // Resetear
+            deletePadId = null;
+            document.getElementById('deletePadBtn').disabled = true;
+            document.getElementById('deletePadInfo').textContent = '✅ Sonido eliminado. Selecciona otro pad si deseas eliminar más.';
         };
-        document.getElementById('closePanel').onclick = () => document.getElementById('controlPanel').style.display = 'none';
-        
+
+        // Control de ganancia
+        document.getElementById('gainControl').oninput = (e) => {
+            const value = e.target.value;
+            document.getElementById('gainValue').textContent = value + '%';
+            
+            // Aplicar a todos los loops activos
+            Object.values(loops).forEach(loop => {
+                if (loop.source) {
+                    // Buscar el nodo de ganancia
+                    const gainNode = loop.source.context.createGain();
+                    gainNode.gain.value = value / 100;
+                }
+            });
+        };
+
+        // Borrar todos los sonidos
         document.getElementById('clearAllAudio').onclick = () => {
-            if(confirm('¿Borrar todos los sonidos cargados?')) {
+            if(confirm('¿Estás seguro de querer borrar TODOS los sonidos de TODOS los pads?')) {
+                // Detener todos los loops
+                Object.keys(loops).forEach(k => {
+                    if (loops[k].source) {
+                        loops[k].source.stop();
+                    }
+                });
+                
+                // Limpiar todas las estructuras
                 Object.keys(audioBuffers).forEach(k => delete audioBuffers[k]);
-                document.querySelectorAll('.pad').forEach(p => p.classList.remove('has-sample', 'looping'));
-                updateSelectors();
+                Object.keys(audioTypes).forEach(k => delete audioTypes[k]);
+                Object.keys(loops).forEach(k => delete loops[k]);
+                
+                // Limpiar visual de pads
+                document.querySelectorAll('.pad').forEach(p => {
+                    p.classList.remove('has-sample', 'looping', 'active');
+                });
+                
+                // Actualizar selectores
+                generatePadSelectors();
+                
+                // Resetear estado
+                selectedPadId = null;
+                deletePadId = null;
+                currentAudioFile = null;
+                document.getElementById('loadToSelectedPad').disabled = true;
+                document.getElementById('deletePadBtn').disabled = true;
+                document.getElementById('selectedPadInfo').textContent = 'Todos los sonidos eliminados';
+                document.getElementById('deletePadInfo').textContent = 'Selecciona un pad para eliminar su sonido';
+                document.getElementById('audioInfo').textContent = 'Selecciona un archivo de audio';
+                
+                alert('✅ Todos los sonidos han sido eliminados');
             }
         };
 
-        // Exportar proyecto simple
+        // Exportar proyecto
         document.getElementById('exportConfig').onclick = () => {
-            const data = { pads: Object.keys(audioBuffers), date: new Date() };
-            const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+            const projectData = {
+                name: "RTBS Crew Looper Project",
+                date: new Date().toISOString(),
+                version: "1.0",
+                audioFiles: Object.keys(audioBuffers).map(padId => ({
+                    padId: padId,
+                    type: audioTypes[padId],
+                    fileName: audioBuffers[padId].buffer ? "audio_cargado" : "none",
+                    duration: audioBuffers[padId].buffer ? audioBuffers[padId].buffer.duration : 0
+                })),
+                settings: {
+                    gain: document.getElementById('gainControl').value
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(projectData, null, 2)], {type: 'application/json'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'rtbs-project.json';
+            a.download = `rtbs-project-${new Date().getTime()}.json`;
             a.click();
+            alert('✅ Proyecto exportado exitosamente');
         };
+
+        // Control del panel
+        document.getElementById('control-btn').onclick = () => {
+            document.getElementById('controlPanel').style.display = 'block';
+            generatePadSelectors();
+        };
+        
+        document.getElementById('closePanel').onclick = () => {
+            document.getElementById('controlPanel').style.display = 'none';
+        };
+
+        // Inicializar
+        generatePadSelectors();
+        document.getElementById('samplerBtn').click(); // Seleccionar sampler por defecto
 
     </script>
 </body>
 </html>
-

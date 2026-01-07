@@ -13,6 +13,7 @@
             --led-on: #00ff55;
             --led-loop: #ff2255;
             --accent: #00ff55;
+            --secondary-color: #2255ff;
         }
 
         body {
@@ -107,6 +108,34 @@
             animation: cascadePulse 0.6s ease-out;
         }
 
+        .pad.neon-effect {
+            animation: neonPulse 0.4s ease-out;
+        }
+
+        .pad.pulse-effect {
+            animation: pulseEffect 0.5s ease-out;
+        }
+
+        .pad.radial-effect {
+            animation: radialPulse 0.6s ease-out;
+        }
+
+        .pad.bounce-effect {
+            animation: bouncePulse 0.4s ease-out;
+        }
+
+        .pad.gradient-effect {
+            animation: gradientPulse 0.8s ease-out;
+        }
+
+        .pad.chaos-effect {
+            animation: chaosPulse 0.5s ease-out;
+        }
+
+        .pad.matrix-effect {
+            animation: matrixPulse 0.7s ease-out;
+        }
+
         @keyframes wavePulse {
             0% { transform: scale(1); opacity: 1; }
             50% { transform: scale(0.85); opacity: 0.7; }
@@ -149,6 +178,70 @@
             100% { transform: translateY(5px) scale(0.95); opacity: 0.8; }
         }
 
+        @keyframes neonPulse {
+            0%, 100% { 
+                filter: brightness(1) drop-shadow(0 0 5px currentColor);
+                transform: scale(0.9);
+            }
+            50% { 
+                filter: brightness(2) drop-shadow(0 0 20px currentColor);
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes pulseEffect {
+            0%, 100% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes radialPulse {
+            0% { 
+                clip-path: circle(0% at 50% 50%);
+                transform: scale(1);
+            }
+            50% { 
+                clip-path: circle(50% at 50% 50%);
+                transform: scale(0.8);
+            }
+            100% { 
+                clip-path: circle(100% at 50% 50%);
+                transform: scale(0.95);
+            }
+        }
+
+        @keyframes bouncePulse {
+            0%, 100% { transform: translateY(0) scale(0.9); }
+            50% { transform: translateY(-10px) scale(1.1); }
+        }
+
+        @keyframes gradientPulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes chaosPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            33% { transform: scale(0.7) rotate(120deg); }
+            66% { transform: scale(1.2) rotate(240deg); }
+            100% { transform: scale(0.9) rotate(360deg); }
+        }
+
+        @keyframes matrixPulse {
+            0% { 
+                transform: translateY(0) scale(1);
+                filter: blur(0px);
+            }
+            50% { 
+                transform: translateY(5px) scale(0.8);
+                filter: blur(2px);
+            }
+            100% { 
+                transform: translateY(0) scale(0.95);
+                filter: blur(0px);
+            }
+        }
+
         .round-btn {
             background: var(--btn-circular);
             border-radius: 50%;
@@ -184,7 +277,7 @@
             padding: 20px;
             border-radius: 10px;
             color: white;
-            width: 350px;
+            width: 380px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             display: none;
             z-index: 1000;
@@ -411,6 +504,96 @@
             border-color: var(--accent);
             color: var(--accent);
         }
+
+        /* Controles de audio */
+        .audio-control-group {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+
+        .slider-container label {
+            min-width: 120px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            margin: 0;
+        }
+
+        .slider-value {
+            min-width: 40px;
+            text-align: right;
+            font-size: 11px;
+            color: #888;
+        }
+
+        .dual-color-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .dual-color-toggle label {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: var(--accent);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: rgba(0, 255, 85, 0.3);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
     </style>
 </head>
 <body>
@@ -447,6 +630,13 @@
             <div class="effect-btn" data-effect="diamond">💎 Diamond</div>
             <div class="effect-btn" data-effect="random">🎲 Random</div>
             <div class="effect-btn" data-effect="cascade">💧 Cascade</div>
+            <div class="effect-btn" data-effect="neon">✨ Neon</div>
+            <div class="effect-btn" data-effect="pulse">💓 Pulse</div>
+            <div class="effect-btn" data-effect="radial">⚫ Radial</div>
+            <div class="effect-btn" data-effect="bounce">🏀 Bounce</div>
+            <div class="effect-btn" data-effect="chaos">🌀 Chaos</div>
+            <div class="effect-btn" data-effect="matrix">💻 Matrix</div>
+            <div class="effect-btn" data-effect="gradient">🌈 Gradient</div>
             <div class="effect-btn" data-effect="circle">⭕ Circle</div>
             <div class="effect-btn" data-effect="checker">♟️ Checker</div>
         </div>
@@ -465,8 +655,94 @@
             <div class="color-option" style="background:#ff5555;" data-color="#ff5555"></div>
             <div class="color-option" style="background:#5555ff;" data-color="#5555ff"></div>
             <div class="color-option" style="background:#ffffff;" data-color="#ffffff"></div>
+            <div class="color-option" style="background:#ff5500;" data-color="#ff5500"></div>
+            <div class="color-option" style="background:#55ffff;" data-color="#55ffff"></div>
+            <div class="color-option" style="background:#ff55ff;" data-color="#ff55ff"></div>
+            <div class="color-option" style="background:#aaff55;" data-color="#aaff55"></div>
+            <div class="color-option" style="background:#55aa55;" data-color="#55aa55"></div>
+            <div class="color-option" style="background:#aa55ff;" data-color="#aa55ff"></div>
+            <div class="color-option" style="background:#ffaa55;" data-color="#ffaa55"></div>
+            <div class="color-option" style="background:#55aaff;" data-color="#55aaff"></div>
+            <div class="color-option" style="background:#aaffaa;" data-color="#aaffaa"></div>
+            <div class="color-option" style="background:#ffaaff;" data-color="#ffaaff"></div>
+            <div class="color-option" style="background:#aaaaff;" data-color="#aaaaff"></div>
+            <div class="color-option" style="background:#ffaaaa;" data-color="#ffaaaa"></div>
         </div>
-        <div id="effectInfo" class="audio-info">Efecto: Ripple | Color: #00ff55</div>
+        
+        <!-- NUEVA OPCIÓN: DOS COLORES A LA VEZ -->
+        <div class="dual-color-toggle">
+            <label>Usar 2 colores simultáneos:</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dualColorToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        
+        <div class="color-picker" id="colorSelector2" style="display:none;">
+            <div class="color-option" style="background:#00ff55;" data-color="#00ff55"></div>
+            <div class="color-option" style="background:#ff2255;" data-color="#ff2255"></div>
+            <div class="color-option" style="background:#2255ff;" data-color="#2255ff"></div>
+            <div class="color-option" style="background:#ffaa00;" data-color="#ffaa00"></div>
+            <div class="color-option" style="background:#aa00ff;" data-color="#aa00ff"></div>
+            <div class="color-option" style="background:#00ffff;" data-color="#00ffff"></div>
+            <div class="color-option" style="background:#ffff00;" data-color="#ffff00"></div>
+            <div class="color-option" style="background:#ff00ff;" data-color="#ff00ff"></div>
+            <div class="color-option" style="background:#55ff55;" data-color="#55ff55"></div>
+        </div>
+        
+        <div id="effectInfo" class="audio-info">Efecto: Ripple | Color: #00ff55 | 2º Color: #ff2255</div>
+        
+        <!-- NUEVA SECCIÓN: EDICIÓN DE SONIDO -->
+        <div class="section-title">EDICIÓN DE SONIDO</div>
+        <div class="audio-control-group">
+            <div class="slider-container">
+                <label>Ganancia Global:</label>
+                <input type="range" id="gainControl" min="0" max="200" value="100">
+                <span id="gainValue" class="slider-value">100%</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Filtro Agudo/Grave:</label>
+                <input type="range" id="toneControl" min="0" max="200" value="100">
+                <span id="toneValue" class="slider-value">Neutro</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Dinámica:</label>
+                <input type="range" id="dynamicControl" min="50" max="200" value="100">
+                <span id="dynamicValue" class="slider-value">Normal</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Ruido de fondo:</label>
+                <input type="range" id="noiseControl" min="0" max="100" value="0">
+                <span id="noiseValue" class="slider-value">0%</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Nitidez:</label>
+                <input type="range" id="sharpnessControl" min="0" max="200" value="100">
+                <span id="sharpnessValue" class="slider-value">Normal</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Reverberación:</label>
+                <input type="range" id="reverbControl" min="0" max="100" value="0">
+                <span id="reverbValue" class="slider-value">0%</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Eco:</label>
+                <input type="range" id="echoControl" min="0" max="100" value="0">
+                <span id="echoValue" class="slider-value">0%</span>
+            </div>
+            
+            <div class="slider-container">
+                <label>Distorsión:</label>
+                <input type="range" id="distortionControl" min="0" max="100" value="0">
+                <span id="distortionValue" class="slider-value">0%</span>
+            </div>
+        </div>
         
         <!-- SECCIÓN ORIGINAL: CARGAR AUDIO -->
         <div class="section-title">CARGAR SONIDO (.mp3 / .wav)</div>
@@ -492,12 +768,7 @@
         <div id="deletePadInfo" class="audio-info">Selecciona un pad para eliminar su sonido</div>
         <button id="deletePadBtn" class="delete-btn" disabled>✖ Eliminar Sonido del Pad</button>
 
-        <!-- SECCIÓN ORIGINAL: CONTROLES -->
-        <div class="section-title">CONTROLES DE SONIDO</div>
-        <label>Ganancia Global:</label>
-        <input type="range" id="gainControl" min="0" max="200" value="100">
-        <span id="gainValue" style="color:#888; font-size:12px;">100%</span>
-
+        <!-- BOTONES ORIGINALES -->
         <button id="clearAllAudio" class="clear-all-btn" style="margin-top:15px;">🗑️ Borrar todos los sonidos</button>
         <button id="exportConfig" class="export-btn">💾 Exportar Proyecto</button>
     </div>
@@ -516,6 +787,8 @@
         // NUEVAS VARIABLES PARA EFECTOS
         let currentEffect = 'ripple';
         let currentColor = '#00ff55';
+        let currentColor2 = '#ff2255';
+        let useDualColors = false;
         let effectParams = {
             ripple: { maxDistance: 3, speed: 60 },
             wave: { direction: 'outward', intensity: 1.5 },
@@ -524,8 +797,27 @@
             diamond: { size: 3, speed: 80 },
             random: { chance: 0.7, intensity: 1.2 },
             cascade: { direction: 'down', speed: 40 },
+            neon: { intensity: 2.5, glow: 20 },
+            pulse: { beats: 3, speed: 0.2 },
+            radial: { circles: 3, speed: 0.8 },
+            bounce: { height: 10, bounces: 2 },
+            gradient: { colors: 3, speed: 0.5 },
+            chaos: { randomness: 0.8, speed: 0.3 },
+            matrix: { rows: 8, speed: 0.4 },
             circle: { radius: 3, smooth: true },
             checker: { pattern: 'alternate', size: 2 }
+        };
+
+        // VARIABLES PARA EDICIÓN DE SONIDO
+        let audioFilters = {
+            gain: 1.0,
+            tone: 1.0,
+            dynamic: 1.0,
+            noise: 0.0,
+            sharpness: 1.0,
+            reverb: 0.0,
+            echo: 0.0,
+            distortion: 0.0
         };
 
         // --- CREACIÓN DE LA REJILLA ---
@@ -574,6 +866,27 @@
                 case 'cascade':
                     cascadeEffect(originRow, originCol);
                     break;
+                case 'neon':
+                    neonEffect(originRow, originCol);
+                    break;
+                case 'pulse':
+                    pulseEffect(originRow, originCol);
+                    break;
+                case 'radial':
+                    radialEffect(originRow, originCol);
+                    break;
+                case 'bounce':
+                    bounceEffect(originRow, originCol);
+                    break;
+                case 'gradient':
+                    gradientEffect(originRow, originCol);
+                    break;
+                case 'chaos':
+                    chaosEffect(originRow, originCol);
+                    break;
+                case 'matrix':
+                    matrixEffect(originRow, originCol);
+                    break;
                 case 'circle':
                     circleEffect(originRow, originCol);
                     break;
@@ -594,7 +907,7 @@
                             if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
                                 const targetPad = document.getElementById(`p-${r}-${c}`);
                                 if (targetPad) {
-                                    applyEffectToPad(targetPad, 'ripple-effect');
+                                    applyEffectToPad(targetPad, 'ripple-effect', d);
                                 }
                             }
                         }
@@ -613,7 +926,7 @@
                     directions.forEach(([dr, dc]) => {
                         const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
                         if (targetPad) {
-                            applyEffectToPad(targetPad, 'wave-effect');
+                            applyEffectToPad(targetPad, 'wave-effect', d);
                         }
                     });
                 }, d * 80);
@@ -633,7 +946,7 @@
                     
                     const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
                     if (targetPad) {
-                        applyEffectToPad(targetPad, 'spiral-effect');
+                        applyEffectToPad(targetPad, 'spiral-effect', step);
                     }
                 }, step * (effectParams.spiral.speed * 100));
             }
@@ -655,7 +968,7 @@
                             
                             const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
                             if (targetPad) {
-                                applyEffectToPad(targetPad, 'cross-effect');
+                                applyEffectToPad(targetPad, 'cross-effect', distance);
                             }
                         }
                     }
@@ -678,7 +991,7 @@
                         points.forEach(([r, c]) => {
                             const targetPad = document.getElementById(`p-${r}-${c}`);
                             if (targetPad) {
-                                applyEffectToPad(targetPad, 'diamond-effect');
+                                applyEffectToPad(targetPad, 'diamond-effect', d);
                             }
                         });
                     }
@@ -697,7 +1010,7 @@
                         setTimeout(() => {
                             const targetPad = document.getElementById(`p-${r}-${c}`);
                             if (targetPad) {
-                                applyEffectToPad(targetPad, 'random-effect');
+                                applyEffectToPad(targetPad, 'random-effect', Math.random());
                             }
                         }, delay);
                     }
@@ -729,10 +1042,123 @@
                         
                         const targetPad = document.getElementById(`p-${r}-${c}`);
                         if (targetPad) {
-                            applyEffectToPad(targetPad, 'cascade-effect');
+                            applyEffectToPad(targetPad, 'cascade-effect', offset);
                         }
                     }
                 }, offset * speed);
+            }
+        }
+
+        function neonEffect(originRow, originCol) {
+            const intensity = effectParams.neon.intensity;
+            for (let d = 0; d < 3; d++) {
+                setTimeout(() => {
+                    for (let r = originRow - d; r <= originRow + d; r++) {
+                        for (let c = originCol - d; c <= originCol + d; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) {
+                                applyEffectToPad(targetPad, 'neon-effect', d);
+                            }
+                        }
+                    }
+                }, d * 100);
+            }
+        }
+
+        function pulseEffect(originRow, originCol) {
+            const beats = effectParams.pulse.beats;
+            for (let beat = 0; beat < beats; beat++) {
+                setTimeout(() => {
+                    for (let r = originRow - 2; r <= originRow + 2; r++) {
+                        for (let c = originCol - 2; c <= originCol + 2; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad && Math.random() > 0.3) {
+                                applyEffectToPad(targetPad, 'pulse-effect', beat);
+                            }
+                        }
+                    }
+                }, beat * (effectParams.pulse.speed * 1000));
+            }
+        }
+
+        function radialEffect(originRow, originCol) {
+            const circles = effectParams.radial.circles;
+            for (let circle = 1; circle <= circles; circle++) {
+                setTimeout(() => {
+                    const radius = circle;
+                    const steps = 16;
+                    for (let step = 0; step < steps; step++) {
+                        const angle = (step * 360) / steps;
+                        const radians = angle * Math.PI / 180;
+                        const dr = Math.round(Math.sin(radians) * radius);
+                        const dc = Math.round(Math.cos(radians) * radius);
+                        
+                        const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
+                        if (targetPad) {
+                            applyEffectToPad(targetPad, 'radial-effect', circle);
+                        }
+                    }
+                }, circle * (effectParams.radial.speed * 300));
+            }
+        }
+
+        function bounceEffect(originRow, originCol) {
+            const bounces = effectParams.bounce.bounces;
+            for (let bounce = 0; bounce < bounces; bounce++) {
+                setTimeout(() => {
+                    for (let r = originRow - 1; r <= originRow + 1; r++) {
+                        for (let c = originCol - 1; c <= originCol + 1; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) {
+                                applyEffectToPad(targetPad, 'bounce-effect', bounce);
+                            }
+                        }
+                    }
+                }, bounce * 150);
+            }
+        }
+
+        function gradientEffect(originRow, originCol) {
+            const colors = effectParams.gradient.colors;
+            for (let colorIdx = 0; colorIdx < colors; colorIdx++) {
+                setTimeout(() => {
+                    for (let r = originRow - colorIdx; r <= originRow + colorIdx; r++) {
+                        for (let c = originCol - colorIdx; c <= originCol + colorIdx; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) {
+                                applyEffectToPad(targetPad, 'gradient-effect', colorIdx);
+                            }
+                        }
+                    }
+                }, colorIdx * (effectParams.gradient.speed * 200));
+            }
+        }
+
+        function chaosEffect(originRow, originCol) {
+            const randomness = effectParams.chaos.randomness;
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const dr = Math.floor(Math.random() * 7) - 3;
+                    const dc = Math.floor(Math.random() * 7) - 3;
+                    const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
+                    if (targetPad && Math.random() < randomness) {
+                        applyEffectToPad(targetPad, 'chaos-effect', Math.random());
+                    }
+                }, i * (effectParams.chaos.speed * 200));
+            }
+        }
+
+        function matrixEffect(originRow, originCol) {
+            const rows = effectParams.matrix.rows;
+            for (let row = 0; row < rows; row++) {
+                setTimeout(() => {
+                    for (let col = 0; col < 8; col++) {
+                        const targetPad = document.getElementById(`p-${row}-${col}`);
+                        if (targetPad && Math.random() > 0.5) {
+                            applyEffectToPad(targetPad, 'matrix-effect', row);
+                        }
+                    }
+                }, row * (effectParams.matrix.speed * 100));
             }
         }
 
@@ -749,7 +1175,7 @@
                 setTimeout(() => {
                     const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
                     if (targetPad) {
-                        applyEffectToPad(targetPad, 'ripple-effect');
+                        applyEffectToPad(targetPad, 'ripple-effect', angle);
                     }
                 }, angle * 5);
             }
@@ -767,22 +1193,32 @@
                     setTimeout(() => {
                         const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
                         if (targetPad) {
-                            applyEffectToPad(targetPad, 'wave-effect');
+                            applyEffectToPad(targetPad, 'wave-effect', Math.abs(dr) + Math.abs(dc));
                         }
                     }, (Math.abs(dr) + Math.abs(dc)) * 50);
                 }
             }
         }
 
-        function applyEffectToPad(padElement, effectClass) {
+        function applyEffectToPad(padElement, effectClass, index) {
             if (!padElement.classList.contains('looping')) {
                 padElement.classList.add(effectClass);
-                padElement.style.setProperty('--accent', currentColor);
+                
+                // Determinar color basado en posición y configuración dual
+                let effectColor;
+                if (useDualColors) {
+                    // Alternar colores basado en índice o posición
+                    effectColor = (index % 2 === 0) ? currentColor : currentColor2;
+                } else {
+                    effectColor = currentColor;
+                }
+                
+                padElement.style.setProperty('--accent', effectColor);
                 
                 // Aplicar color dinámico
-                const rgb = hexToRgb(currentColor);
+                const rgb = hexToRgb(effectColor);
                 padElement.style.background = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`;
-                padElement.style.boxShadow = `0 0 15px ${currentColor}`;
+                padElement.style.boxShadow = `0 0 15px ${effectColor}`;
                 
                 setTimeout(() => {
                     padElement.classList.remove(effectClass);
@@ -801,7 +1237,7 @@
             } : { r: 0, g: 255, b: 85 };
         }
 
-        // --- NUEVO: CONFIGURACIÓN DE EFECTOS ---
+        // --- NUEVO: CONFIGURACIÓN DE EFECTOS Y COLORES ---
         function setupEffectControls() {
             // Selector de efectos
             document.querySelectorAll('#effectSelector .effect-btn').forEach(btn => {
@@ -811,12 +1247,11 @@
                         b.classList.remove('selected');
                     });
                     btn.classList.add('selected');
-                    document.getElementById('effectInfo').textContent = 
-                        `Efecto: ${btn.textContent} | Color: ${currentColor}`;
+                    updateEffectInfo();
                 };
             });
 
-            // Selector de colores
+            // Selector de color principal
             document.querySelectorAll('#colorSelector .color-option').forEach(option => {
                 option.onclick = () => {
                     currentColor = option.dataset.color;
@@ -824,8 +1259,7 @@
                         opt.classList.remove('selected');
                     });
                     option.classList.add('selected');
-                    document.getElementById('effectInfo').textContent = 
-                        `Efecto: ${document.querySelector('#effectSelector .effect-btn.selected').textContent} | Color: ${currentColor}`;
+                    updateEffectInfo();
                     
                     // Actualizar CSS variables
                     document.documentElement.style.setProperty('--accent', currentColor);
@@ -833,9 +1267,140 @@
                 };
             });
 
+            // Selector de color secundario
+            document.querySelectorAll('#colorSelector2 .color-option').forEach(option => {
+                option.onclick = () => {
+                    currentColor2 = option.dataset.color;
+                    document.querySelectorAll('#colorSelector2 .color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    option.classList.add('selected');
+                    updateEffectInfo();
+                };
+            });
+
+            // Toggle de dos colores
+            document.getElementById('dualColorToggle').onchange = (e) => {
+                useDualColors = e.target.checked;
+                document.getElementById('colorSelector2').style.display = useDualColors ? 'flex' : 'none';
+                updateEffectInfo();
+            };
+
             // Seleccionar primeros valores por defecto
             document.querySelector('#effectSelector .effect-btn').click();
             document.querySelector('#colorSelector .color-option').click();
+            document.querySelector('#colorSelector2 .color-option').click();
+        }
+
+        function updateEffectInfo() {
+            const effectName = document.querySelector('#effectSelector .effect-btn.selected').textContent;
+            if (useDualColors) {
+                document.getElementById('effectInfo').textContent = 
+                    `Efecto: ${effectName} | Color: ${currentColor} | 2º Color: ${currentColor2}`;
+            } else {
+                document.getElementById('effectInfo').textContent = 
+                    `Efecto: ${effectName} | Color: ${currentColor}`;
+            }
+        }
+
+        // --- NUEVO: CONTROLES DE EDICIÓN DE SONIDO ---
+        function setupAudioControls() {
+            // Ganancia
+            document.getElementById('gainControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('gainValue').textContent = value + '%';
+                audioFilters.gain = value / 100;
+                applyAudioFilters();
+            };
+
+            // Tono (agudo/grave)
+            document.getElementById('toneControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                let label;
+                if (value < 90) label = "Grave";
+                else if (value > 110) label = "Agudo";
+                else label = "Neutro";
+                document.getElementById('toneValue').textContent = label;
+                audioFilters.tone = value / 100;
+                applyAudioFilters();
+            };
+
+            // Dinámica
+            document.getElementById('dynamicControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                let label;
+                if (value < 90) label = "Suave";
+                else if (value > 110) label = "Fuerte";
+                else label = "Normal";
+                document.getElementById('dynamicValue').textContent = label;
+                audioFilters.dynamic = value / 100;
+                applyAudioFilters();
+            };
+
+            // Ruido de fondo
+            document.getElementById('noiseControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('noiseValue').textContent = value + '%';
+                audioFilters.noise = value / 100;
+                applyAudioFilters();
+            };
+
+            // Nitidez
+            document.getElementById('sharpnessControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                let label;
+                if (value < 90) label = "Suave";
+                else if (value > 110) label = "Nítido";
+                else label = "Normal";
+                document.getElementById('sharpnessValue').textContent = label;
+                audioFilters.sharpness = value / 100;
+                applyAudioFilters();
+            };
+
+            // Reverberación
+            document.getElementById('reverbControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('reverbValue').textContent = value + '%';
+                audioFilters.reverb = value / 100;
+                applyAudioFilters();
+            };
+
+            // Eco
+            document.getElementById('echoControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('echoValue').textContent = value + '%';
+                audioFilters.echo = value / 100;
+                applyAudioFilters();
+            };
+
+            // Distorsión
+            document.getElementById('distortionControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('distortionValue').textContent = value + '%';
+                audioFilters.distortion = value / 100;
+                applyAudioFilters();
+            };
+        }
+
+        function applyAudioFilters() {
+            // Aplicar filtros a todos los loops activos
+            Object.values(loops).forEach(loop => {
+                if (loop.source && loop.filterNodes) {
+                    // Aplicar ganancia
+                    if (loop.filterNodes.gain) {
+                        loop.filterNodes.gain.gain.value = audioFilters.gain;
+                    }
+                    
+                    // Aplicar filtro de tono
+                    if (loop.filterNodes.biquadFilter) {
+                        const frequency = 1000 * audioFilters.tone;
+                        loop.filterNodes.biquadFilter.frequency.value = frequency;
+                    }
+                    
+                    // Aquí podrías añadir más efectos de audio usando la Web Audio API
+                    // como reverberación, eco, distorsión, etc.
+                }
+            });
         }
 
         // --- GENERAR SELECTORES DE PAD ---
@@ -900,7 +1465,7 @@
             }
         }
 
-        // --- LÓGICA DE AUDIO ---
+        // --- LÓGICA DE AUDIO MODIFICADA CON FILTROS ---
         async function triggerPad(id, r, c) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const element = document.getElementById(id);
@@ -929,24 +1494,55 @@
                 return;
             }
             
-            // Reproducir el audio
+            // Reproducir el audio con filtros
             const source = audioCtx.createBufferSource();
             source.buffer = audioBuffers[id].buffer;
-            const gain = audioCtx.createGain();
-            gain.gain.value = document.getElementById('gainControl').value / 100;
-            source.connect(gain).connect(audioCtx.destination);
+            
+            // Crear cadena de efectos de audio
+            const filterNodes = {
+                gain: audioCtx.createGain(),
+                biquadFilter: audioCtx.createBiquadFilter(),
+                // Aquí podrías añadir más nodos: convolver para reverb, delay para eco, etc.
+            };
+            
+            // Configurar filtros
+            filterNodes.gain.gain.value = audioFilters.gain;
+            filterNodes.biquadFilter.type = 'peaking';
+            filterNodes.biquadFilter.frequency.value = 1000 * audioFilters.tone;
+            filterNodes.biquadFilter.gain.value = (audioFilters.dynamic - 1) * 20;
+            
+            // Conectar cadena de audio
+            source.connect(filterNodes.biquadFilter);
+            filterNodes.biquadFilter.connect(filterNodes.gain);
+            filterNodes.gain.connect(audioCtx.destination);
             
             if (type === 'loop') {
                 source.loop = true;
                 source.start();
-                loops[id] = { source };
+                loops[id] = { 
+                    source,
+                    filterNodes: filterNodes  // Guardar nodos para ajustes en tiempo real
+                };
                 element.classList.add('looping');
-                element.style.setProperty('--led-loop', currentColor);
+                
+                // Aplicar color dual si está activado
+                if (useDualColors) {
+                    element.style.setProperty('--led-loop', (Math.random() > 0.5) ? currentColor : currentColor2);
+                } else {
+                    element.style.setProperty('--led-loop', currentColor);
+                }
             } else {
                 source.start();
                 source.stop(audioCtx.currentTime + source.buffer.duration);
                 element.classList.add('active');
-                element.style.setProperty('--led-on', currentColor);
+                
+                // Aplicar color dual si está activado
+                if (useDualColors) {
+                    element.style.setProperty('--led-on', (Math.random() > 0.5) ? currentColor : currentColor2);
+                } else {
+                    element.style.setProperty('--led-on', currentColor);
+                }
+                
                 setTimeout(() => element.classList.remove('active'), 200);
             }
         }
@@ -1047,21 +1643,6 @@
             document.getElementById('deletePadInfo').textContent = '✅ Sonido eliminado. Selecciona otro pad si deseas eliminar más.';
         };
 
-        // Control de ganancia
-        document.getElementById('gainControl').oninput = (e) => {
-            const value = e.target.value;
-            document.getElementById('gainValue').textContent = value + '%';
-            
-            // Aplicar a todos los loops activos
-            Object.values(loops).forEach(loop => {
-                if (loop.source) {
-                    // Buscar el nodo de ganancia
-                    const gainNode = loop.source.context.createGain();
-                    gainNode.gain.value = value / 100;
-                }
-            });
-        };
-
         // Borrar todos los sonidos
         document.getElementById('clearAllAudio').onclick = () => {
             if(confirm('¿Estás seguro de querer borrar TODOS los sonidos de TODOS los pads?')) {
@@ -1112,9 +1693,18 @@
                     duration: audioBuffers[padId].buffer ? audioBuffers[padId].buffer.duration : 0
                 })),
                 settings: {
-                    gain: document.getElementById('gainControl').value,
+                    gain: audioFilters.gain,
+                    tone: audioFilters.tone,
+                    dynamic: audioFilters.dynamic,
+                    noise: audioFilters.noise,
+                    sharpness: audioFilters.sharpness,
+                    reverb: audioFilters.reverb,
+                    echo: audioFilters.echo,
+                    distortion: audioFilters.distortion,
                     effect: currentEffect,
-                    color: currentColor
+                    color: currentColor,
+                    color2: currentColor2,
+                    dualColors: useDualColors
                 }
             };
             
@@ -1140,6 +1730,7 @@
         generatePadSelectors();
         document.getElementById('samplerBtn').click(); // Seleccionar sampler por defecto
         setupEffectControls(); // Configurar controles de efectos
+        setupAudioControls(); // Configurar controles de audio
 
     </script>
 </body>

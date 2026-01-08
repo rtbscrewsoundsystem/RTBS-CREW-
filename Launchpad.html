@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RTBS CREW LOOPER BETA</title>
+    <title>RTBS CREW LOOPER PRO - V2</title>
     <style>
         :root {
             --chassis: #1a1a1b;
@@ -14,6 +14,7 @@
             --led-loop: #ff2255;
             --accent: #00ff55;
             --secondary-color: #2255ff;
+            --tertiary-color: #ffaa00;
         }
 
         body {
@@ -28,23 +29,44 @@
             overflow: hidden;
         }
 
+        /* LÍNEA DE TIEMPO Y ONDA */
+        .timeline-container {
+            width: 90%;
+            max-width: 500px;
+            height: 60px;
+            background: #111;
+            border: 1px solid #333;
+            margin-bottom: 10px;
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #waveCanvas {
+            width: 100%;
+            height: 100%;
+        }
+        .bpm-display {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--accent);
+        }
+
         /* TÍTULO RTBS CREW */
         .main-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .main-header h1 {
             color: var(--accent);
-            font-size: 28px;
+            font-size: 24px;
             margin: 0;
             text-shadow: 0 0 15px var(--accent);
             letter-spacing: 3px;
             font-weight: 900;
-        }
-        .main-header span {
-            color: #555;
-            font-size: 12px;
-            text-transform: uppercase;
         }
 
         .lp-chassis {
@@ -77,64 +99,33 @@
             transition: background 0.1s, box-shadow 0.1s, transform 0.05s;
         }
 
-        /* EFECTO DE EXPANSIÓN (RIPPLE) - MÚLTIPLES PATRONES */
-        .pad.ripple-effect {
-            background: rgba(0, 255, 85, 0.4) !important;
-            box-shadow: 0 0 15px var(--accent) !important;
-            transform: scale(0.95);
+        /* ANIMACIONES DE EXPANSIÓN ADICIONALES */
+        .pad.expand-fast { animation: expandFast 0.3s ease-out; }
+        .pad.shockwave { animation: shockwave 0.4s ease-out; }
+        .pad.scanline { animation: scanline 0.5s linear; }
+        .pad.vortex { animation: vortex 0.6s ease-in-out; }
+
+        @keyframes expandFast {
+            0% { transform: scale(1); filter: brightness(2); }
+            100% { transform: scale(0.95); filter: brightness(1); }
+        }
+        @keyframes shockwave {
+            0% { transform: scale(0.5); border-radius: 50%; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0.95); border-radius: 3px; }
+        }
+        @keyframes scanline {
+            0% { transform: scaleY(0.1); opacity: 1; }
+            100% { transform: scaleY(0.95); opacity: 0.8; }
+        }
+        @keyframes vortex {
+            0% { transform: rotate(0deg) scale(0.2); }
+            100% { transform: rotate(360deg) scale(0.95); }
         }
 
-        .pad.wave-effect {
-            animation: wavePulse 0.3s ease-out;
-        }
-
-        .pad.spiral-effect {
-            animation: spiralPulse 0.5s ease-out;
-        }
-
-        .pad.cross-effect {
-            animation: crossPulse 0.4s ease-out;
-        }
-
-        .pad.diamond-effect {
-            animation: diamondPulse 0.4s ease-out;
-        }
-
-        .pad.random-effect {
-            animation: randomPulse 0.3s ease-out;
-        }
-
-        .pad.cascade-effect {
-            animation: cascadePulse 0.6s ease-out;
-        }
-
-        .pad.neon-effect {
-            animation: neonPulse 0.4s ease-out;
-        }
-
-        .pad.pulse-effect {
-            animation: pulseEffect 0.5s ease-out;
-        }
-
-        .pad.radial-effect {
-            animation: radialPulse 0.6s ease-out;
-        }
-
-        .pad.bounce-effect {
-            animation: bouncePulse 0.4s ease-out;
-        }
-
-        .pad.gradient-effect {
-            animation: gradientPulse 0.8s ease-out;
-        }
-
-        .pad.chaos-effect {
-            animation: chaosPulse 0.5s ease-out;
-        }
-
-        .pad.matrix-effect {
-            animation: matrixPulse 0.7s ease-out;
-        }
+        /* Estilos existentes de animaciones heredados */
+        .pad.ripple-effect { animation: wavePulse 0.3s ease-out; }
+        .pad.spiral-effect { animation: spiralPulse 0.5s ease-out; }
 
         @keyframes wavePulse {
             0% { transform: scale(1); opacity: 1; }
@@ -148,100 +139,6 @@
             100% { transform: scale(0.95) rotate(360deg); }
         }
 
-        @keyframes crossPulse {
-            0%, 100% { transform: scaleX(0.9) scaleY(0.9); }
-            50% { transform: scaleX(0.7) scaleY(1.1); }
-        }
-
-        @keyframes diamondPulse {
-            0%, 100% { 
-                clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-                transform: scale(0.9);
-            }
-            50% { 
-                clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-                transform: scale(0.7);
-            }
-        }
-
-        @keyframes randomPulse {
-            0% { transform: scale(1); }
-            25% { transform: scale(0.8) translateX(-2px); }
-            50% { transform: scale(0.9) translateY(2px); }
-            75% { transform: scale(0.85) translateX(2px); }
-            100% { transform: scale(0.95); }
-        }
-
-        @keyframes cascadePulse {
-            0% { transform: translateY(-5px) scale(1); opacity: 0; }
-            50% { transform: translateY(0) scale(0.85); opacity: 1; }
-            100% { transform: translateY(5px) scale(0.95); opacity: 0.8; }
-        }
-
-        @keyframes neonPulse {
-            0%, 100% { 
-                filter: brightness(1) drop-shadow(0 0 5px currentColor);
-                transform: scale(0.9);
-            }
-            50% { 
-                filter: brightness(2) drop-shadow(0 0 20px currentColor);
-                transform: scale(1.1);
-            }
-        }
-
-        @keyframes pulseEffect {
-            0%, 100% { transform: scale(0.9); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-
-        @keyframes radialPulse {
-            0% { 
-                clip-path: circle(0% at 50% 50%);
-                transform: scale(1);
-            }
-            50% { 
-                clip-path: circle(50% at 50% 50%);
-                transform: scale(0.8);
-            }
-            100% { 
-                clip-path: circle(100% at 50% 50%);
-                transform: scale(0.95);
-            }
-        }
-
-        @keyframes bouncePulse {
-            0%, 100% { transform: translateY(0) scale(0.9); }
-            50% { transform: translateY(-10px) scale(1.1); }
-        }
-
-        @keyframes gradientPulse {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes chaosPulse {
-            0% { transform: scale(1) rotate(0deg); }
-            33% { transform: scale(0.7) rotate(120deg); }
-            66% { transform: scale(1.2) rotate(240deg); }
-            100% { transform: scale(0.9) rotate(360deg); }
-        }
-
-        @keyframes matrixPulse {
-            0% { 
-                transform: translateY(0) scale(1);
-                filter: blur(0px);
-            }
-            50% { 
-                transform: translateY(5px) scale(0.8);
-                filter: blur(2px);
-            }
-            100% { 
-                transform: translateY(0) scale(0.95);
-                filter: blur(0px);
-            }
-        }
-
         .round-btn {
             background: var(--btn-circular);
             border-radius: 50%;
@@ -251,1487 +148,377 @@
             align-self: center;
         }
 
-        .pad.active {
-            background: var(--led-on);
-            box-shadow: 0 0 20px var(--led-on);
-        }
-
+        .pad.active { background: var(--led-on); box-shadow: 0 0 20px var(--led-on); }
         .pad.looping {
             background: var(--led-loop);
             box-shadow: 0 0 25px var(--led-loop);
             animation: pulse 1s infinite alternate;
         }
 
-        .pad.has-sample {
-            border: 1px solid var(--accent);
-        }
-
         @keyframes pulse { from { opacity: 1; } to { opacity: 0.6; } }
 
-        /* Panel de control lateral */
+        /* Panel de control */
         .control-panel {
-            position: fixed;
-            right: 20px;
-            top: 20px;
-            background: rgba(30, 30, 35, 0.98);
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            width: 380px;
+            position: fixed; right: 20px; top: 20px;
+            background: rgba(30, 30, 35, 0.98); padding: 20px;
+            border-radius: 10px; color: white; width: 380px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            display: none;
-            z-index: 1000;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid #444;
+            display: none; z-index: 1000;
+            max-height: 90vh; overflow-y: auto; border: 1px solid #444;
         }
 
-        .brand {
-            grid-column: 1 / 5;
-            color: #444;
-            font-size: 10px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            padding-left: 5px;
+        select, button, input[type="file"], input[type="range"], input[type="number"] {
+            background: #222; color: white; border: 1px solid #444;
+            padding: 8px; border-radius: 4px; cursor: pointer;
+            width: 100%; margin-bottom: 10px; box-sizing: border-box;
         }
 
-        select, button, input[type="file"], input[type="range"] {
-            background: #222; 
-            color: white; 
-            border: 1px solid #444;
-            padding: 8px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            width: 100%;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        button:hover {
-            background: #333;
-        }
-
-        /* Selector de pads */
         .pad-selector-grid {
-            display: grid; 
-            grid-template-columns: repeat(8, 1fr);
-            gap: 2px; 
-            background: #000; 
-            padding: 8px; 
-            border-radius: 5px;
-            margin: 10px 0;
+            display: grid; grid-template-columns: repeat(8, 1fr);
+            gap: 2px; background: #000; padding: 8px; border-radius: 5px;
         }
 
         .pad-selector {
-            width: 22px; 
-            height: 22px; 
-            background: #333; 
-            border-radius: 2px; 
-            cursor: pointer;
-            border: 1px solid #555;
-            transition: all 0.2s;
+            width: 22px; height: 22px; background: #333; border-radius: 2px;
+            cursor: pointer; border: 1px solid #555;
         }
-
-        .pad-selector:hover {
-            transform: scale(1.1);
-        }
-
-        .pad-selector.selected { 
-            background: var(--accent); 
-            border-color: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
-        }
-
-        .pad-selector.has-sampler { 
-            background: #2255ff; 
-            border-color: #2255ff;
-        }
-
-        .pad-selector.has-loop { 
-            background: var(--led-loop); 
-            border-color: var(--led-loop);
-        }
-
-        .audio-info { 
-            font-size: 11px; 
-            color: #888; 
-            margin: 10px 0;
-            padding: 5px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 3px;
-        }
+        .pad-selector.selected { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
         .section-title {
-            color: var(--accent);
-            margin-top: 15px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
+            color: var(--accent); margin-top: 15px; font-size: 14px;
+            font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px;
         }
 
-        .type-selector {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-        }
+        .color-picker { display: flex; gap: 5px; flex-wrap: wrap; margin: 5px 0; }
+        .color-option { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .color-option.selected { border-color: white; transform: scale(1.1); }
 
-        .type-btn {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            background: #222;
-            border: 2px solid #555;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        .effect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+        .effect-btn { font-size: 11px; padding: 5px; text-align: center; }
+        .effect-btn.selected { border-color: var(--accent); color: var(--accent); }
 
-        .type-btn:hover {
-            background: #2a2a2a;
-        }
-
-        .type-btn.selected {
-            border-color: var(--accent);
-            background: rgba(0, 255, 85, 0.1);
-            color: var(--accent);
-        }
-
-        .delete-btn {
-            background: #552222;
-            border: 1px solid #ff5555;
-            color: #ffaaaa;
-        }
-
-        .delete-btn:hover {
-            background: #663333;
-        }
-
-        .clear-all-btn {
-            background: #552222;
-            border: 1px solid #ff5555;
-            color: #ffaaaa;
-        }
-
-        .clear-all-btn:hover {
-            background: #663333;
-        }
-
-        .export-btn {
-            background: #225522;
-            border: 1px solid #55ff55;
-            color: #aaffaa;
-        }
-
-        .export-btn:hover {
-            background: #336633;
-        }
-
-        /* Nuevos estilos para personalización de efectos */
-        .effect-preview {
-            width: 30px;
-            height: 30px;
-            margin: 5px;
-            border-radius: 3px;
-            display: inline-block;
-            cursor: pointer;
-            border: 2px solid #444;
-            transition: all 0.2s;
-        }
-
-        .effect-preview:hover {
-            transform: scale(1.1);
-            border-color: var(--accent);
-        }
-
-        .effect-preview.selected {
-            border-color: var(--accent);
-            box-shadow: 0 0 10px var(--accent);
-        }
-
-        .color-picker {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 10px 0;
-        }
-
-        .color-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .color-option:hover {
-            transform: scale(1.2);
-        }
-
-        .color-option.selected {
-            border-color: white;
-            box-shadow: 0 0 10px white;
-        }
-
-        .effect-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 10px 0;
-        }
-
-        .effect-btn {
-            padding: 8px;
-            text-align: center;
-            background: #222;
-            border: 1px solid #444;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-
-        .effect-btn:hover {
-            background: #2a2a2a;
-            transform: translateY(-2px);
-        }
-
-        .effect-btn.selected {
-            background: rgba(0, 255, 85, 0.2);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* Controles de audio */
-        .audio-control-group {
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 8px 0;
-        }
-
-        .slider-container label {
-            min-width: 120px;
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        .slider-container input[type="range"] {
-            flex: 1;
-            margin: 0;
-        }
-
-        .slider-value {
-            min-width: 40px;
-            text-align: right;
-            font-size: 11px;
-            color: #888;
-        }
-
-        .dual-color-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .dual-color-toggle label {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #333;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: var(--accent);
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: rgba(0, 255, 85, 0.3);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
+        .bpm-controls { display: flex; gap: 10px; align-items: center; }
     </style>
 </head>
 <body>
 
     <div class="main-header">
         <h1>RTBS CREW LOOPER</h1>
-        <span>SISTEMA DE PERFORMANCE BETA v1.0</span>
+    </div>
+
+    <div class="timeline-container">
+        <canvas id="waveCanvas"></canvas>
+        <div class="bpm-display" id="bpmShow">120 BPM</div>
     </div>
 
     <div class="lp-chassis" id="launchpad">
-        <div class="brand">RTBS-01 PRO</div>
-        <div class="cell round-btn"></div>
-        <div class="cell round-btn"></div>
-        <div class="cell round-btn"></div>
-        <div class="cell round-btn"></div>
-        <div class="cell round-btn"></div>
+        <div class="brand" style="grid-column: 1/5; color: #444; font-size: 10px;">RTBS-02 MULTICOLOR</div>
     </div>
 
-    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; width:auto; padding: 10px 20px; background: var(--accent); color: black; font-weight: bold; border:none;">
-        ⚙️ PANEL DE CONTROL
+    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; width:auto; padding: 10px 20px; background: var(--accent); color: black; font-weight: bold; border:none; cursor:pointer; border-radius: 5px;">
+        ⚙️ PERFORMANCE PANEL
     </button>
 
     <div class="control-panel" id="controlPanel">
         <button id="closePanel" style="background:none; border:none; color:white; float:right; font-size:20px; cursor:pointer;">×</button>
-        <h3 style="color:var(--accent); margin-top: 0;">Ajustes de RTBS Crew</h3>
+        <h3 style="color:var(--accent); margin-top: 0;">Configuración Avanzada</h3>
         
-        <!-- NUEVA SECCIÓN: EFECTOS Y COLORES -->
-        <div class="section-title">EFECTOS DE EXPANSIÓN</div>
+        <div class="section-title">CONTROL DE TIEMPO (BPM)</div>
+        <div class="bpm-controls">
+            <input type="number" id="bpmInput" value="120" min="40" max="240" style="flex:1">
+            <button id="syncBpm" style="flex:1; background: #2255ff;">Sincronizar Loops</button>
+        </div>
+
+        <div class="section-title">PERSONALIZACIÓN DE COLORES (TRIPLE)</div>
+        <p style="font-size: 10px; color: #888;">Color 1 (Principal):</p>
+        <div class="color-picker" id="colorSelector1"></div>
+        
+        <p style="font-size: 10px; color: #888;">Color 2:</p>
+        <div class="color-picker" id="colorSelector2"></div>
+        
+        <p style="font-size: 10px; color: #888;">Color 3:</p>
+        <div class="color-picker" id="colorSelector3"></div>
+
+        <div class="section-title">ANIMACIONES DE EXPANSIÓN</div>
         <div class="effect-grid" id="effectSelector">
-            <div class="effect-btn" data-effect="ripple">🌊 Ripple</div>
-            <div class="effect-btn" data-effect="wave">🌊 Wave</div>
-            <div class="effect-btn" data-effect="spiral">🌀 Spiral</div>
-            <div class="effect-btn" data-effect="cross">➕ Cross</div>
-            <div class="effect-btn" data-effect="diamond">💎 Diamond</div>
-            <div class="effect-btn" data-effect="random">🎲 Random</div>
-            <div class="effect-btn" data-effect="cascade">💧 Cascade</div>
-            <div class="effect-btn" data-effect="neon">✨ Neon</div>
-            <div class="effect-btn" data-effect="pulse">💓 Pulse</div>
-            <div class="effect-btn" data-effect="radial">⚫ Radial</div>
-            <div class="effect-btn" data-effect="bounce">🏀 Bounce</div>
-            <div class="effect-btn" data-effect="chaos">🌀 Chaos</div>
-            <div class="effect-btn" data-effect="matrix">💻 Matrix</div>
-            <div class="effect-btn" data-effect="gradient">🌈 Gradient</div>
-            <div class="effect-btn" data-effect="circle">⭕ Circle</div>
-            <div class="effect-btn" data-effect="checker">♟️ Checker</div>
+            <button class="effect-btn" data-effect="ripple">Ripple</button>
+            <button class="effect-btn" data-effect="shockwave">Shockwave</button>
+            <button class="effect-btn" data-effect="scanline">Scanline</button>
+            <button class="effect-btn" data-effect="vortex">Vortex</button>
+            <button class="effect-btn" data-effect="spiral">Spiral</button>
+            <button class="effect-btn" data-effect="random">Random</button>
         </div>
-        
-        <div class="section-title">COLORES PERSONALIZADOS</div>
-        <div class="color-picker" id="colorSelector">
-            <div class="color-option" style="background:#00ff55;" data-color="#00ff55"></div>
-            <div class="color-option" style="background:#ff2255;" data-color="#ff2255"></div>
-            <div class="color-option" style="background:#2255ff;" data-color="#2255ff"></div>
-            <div class="color-option" style="background:#ffaa00;" data-color="#ffaa00"></div>
-            <div class="color-option" style="background:#aa00ff;" data-color="#aa00ff"></div>
-            <div class="color-option" style="background:#00ffff;" data-color="#00ffff"></div>
-            <div class="color-option" style="background:#ffff00;" data-color="#ffff00"></div>
-            <div class="color-option" style="background:#ff00ff;" data-color="#ff00ff"></div>
-            <div class="color-option" style="background:#55ff55;" data-color="#55ff55"></div>
-            <div class="color-option" style="background:#ff5555;" data-color="#ff5555"></div>
-            <div class="color-option" style="background:#5555ff;" data-color="#5555ff"></div>
-            <div class="color-option" style="background:#ffffff;" data-color="#ffffff"></div>
-            <div class="color-option" style="background:#ff5500;" data-color="#ff5500"></div>
-            <div class="color-option" style="background:#55ffff;" data-color="#55ffff"></div>
-            <div class="color-option" style="background:#ff55ff;" data-color="#ff55ff"></div>
-            <div class="color-option" style="background:#aaff55;" data-color="#aaff55"></div>
-            <div class="color-option" style="background:#55aa55;" data-color="#55aa55"></div>
-            <div class="color-option" style="background:#aa55ff;" data-color="#aa55ff"></div>
-            <div class="color-option" style="background:#ffaa55;" data-color="#ffaa55"></div>
-            <div class="color-option" style="background:#55aaff;" data-color="#55aaff"></div>
-            <div class="color-option" style="background:#aaffaa;" data-color="#aaffaa"></div>
-            <div class="color-option" style="background:#ffaaff;" data-color="#ffaaff"></div>
-            <div class="color-option" style="background:#aaaaff;" data-color="#aaaaff"></div>
-            <div class="color-option" style="background:#ffaaaa;" data-color="#ffaaaa"></div>
-        </div>
-        
-        <!-- NUEVA OPCIÓN: DOS COLORES A LA VEZ -->
-        <div class="dual-color-toggle">
-            <label>Usar 2 colores simultáneos:</label>
-            <label class="toggle-switch">
-                <input type="checkbox" id="dualColorToggle">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
-        
-        <div class="color-picker" id="colorSelector2" style="display:none;">
-            <div class="color-option" style="background:#00ff55;" data-color="#00ff55"></div>
-            <div class="color-option" style="background:#ff2255;" data-color="#ff2255"></div>
-            <div class="color-option" style="background:#2255ff;" data-color="#2255ff"></div>
-            <div class="color-option" style="background:#ffaa00;" data-color="#ffaa00"></div>
-            <div class="color-option" style="background:#aa00ff;" data-color="#aa00ff"></div>
-            <div class="color-option" style="background:#00ffff;" data-color="#00ffff"></div>
-            <div class="color-option" style="background:#ffff00;" data-color="#ffff00"></div>
-            <div class="color-option" style="background:#ff00ff;" data-color="#ff00ff"></div>
-            <div class="color-option" style="background:#55ff55;" data-color="#55ff55"></div>
-        </div>
-        
-        <div id="effectInfo" class="audio-info">Efecto: Ripple | Color: #00ff55 | 2º Color: #ff2255</div>
-        
-        <!-- NUEVA SECCIÓN: EDICIÓN DE SONIDO -->
-        <div class="section-title">EDICIÓN DE SONIDO</div>
-        <div class="audio-control-group">
-            <div class="slider-container">
-                <label>Ganancia Global:</label>
-                <input type="range" id="gainControl" min="0" max="200" value="100">
-                <span id="gainValue" class="slider-value">100%</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Filtro Agudo/Grave:</label>
-                <input type="range" id="toneControl" min="0" max="200" value="100">
-                <span id="toneValue" class="slider-value">Neutro</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Dinámica:</label>
-                <input type="range" id="dynamicControl" min="50" max="200" value="100">
-                <span id="dynamicValue" class="slider-value">Normal</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Ruido de fondo:</label>
-                <input type="range" id="noiseControl" min="0" max="100" value="0">
-                <span id="noiseValue" class="slider-value">0%</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Nitidez:</label>
-                <input type="range" id="sharpnessControl" min="0" max="200" value="100">
-                <span id="sharpnessValue" class="slider-value">Normal</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Reverberación:</label>
-                <input type="range" id="reverbControl" min="0" max="100" value="0">
-                <span id="reverbValue" class="slider-value">0%</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Eco:</label>
-                <input type="range" id="echoControl" min="0" max="100" value="0">
-                <span id="echoValue" class="slider-value">0%</span>
-            </div>
-            
-            <div class="slider-container">
-                <label>Distorsión:</label>
-                <input type="range" id="distortionControl" min="0" max="100" value="0">
-                <span id="distortionValue" class="slider-value">0%</span>
-            </div>
-        </div>
-        
-        <!-- SECCIÓN ORIGINAL: CARGAR AUDIO -->
-        <div class="section-title">CARGAR SONIDO (.mp3 / .wav)</div>
+
+        <div class="section-title">CARGAR AUDIO</div>
         <input type="file" id="audioUpload" accept="audio/*">
-        <div id="audioInfo" class="audio-info">Selecciona un archivo de audio</div>
-        
-        <div class="section-title">TIPO DE SONIDO</div>
-        <div class="type-selector">
-            <div class="type-btn" id="samplerBtn" data-type="sampler">🎵 SAMPLER</div>
-            <div class="type-btn" id="loopBtn" data-type="loop">🔄 LOOP</div>
+        <div class="bpm-controls">
+            <button id="samplerBtn" class="selected">SAMPLER</button>
+            <button id="loopBtn">LOOP</button>
         </div>
-        <div id="typeInfo" class="audio-info">Selecciona Sampler (una vez) o Loop (continuo)</div>
-        
-        <div class="section-title">SELECCIONAR PAD DESTINO</div>
+
+        <div class="section-title">SELECCIONAR PAD</div>
         <div class="pad-selector-grid" id="padSelector"></div>
-        <div id="selectedPadInfo" class="audio-info">Ningún pad seleccionado</div>
+        <button id="loadToSelectedPad" disabled style="margin-top:10px; background: var(--accent); color:black;">Cargar en Pad</button>
         
-        <button id="loadToSelectedPad" disabled>Cargar en Pad Seleccionado</button>
-
-        <!-- SECCIÓN ORIGINAL: ELIMINAR SONIDO -->
-        <div class="section-title">ELIMINAR SONIDO DE PAD</div>
-        <div class="pad-selector-grid" id="deletePadSelector"></div>
-        <div id="deletePadInfo" class="audio-info">Selecciona un pad para eliminar su sonido</div>
-        <button id="deletePadBtn" class="delete-btn" disabled>✖ Eliminar Sonido del Pad</button>
-
-        <!-- BOTONES ORIGINALES -->
-        <button id="clearAllAudio" class="clear-all-btn" style="margin-top:15px;">🗑️ Borrar todos los sonidos</button>
-        <button id="exportConfig" class="export-btn">💾 Exportar Proyecto</button>
+        <button id="clearAllAudio" style="background: #522; color: #faa; margin-top:20px;">🗑️ Borrar todo</button>
     </div>
 
     <script>
-        const lp = document.getElementById('launchpad');
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        
+        const lp = document.getElementById('launchpad');
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+        
         const loops = {};
         const audioBuffers = {};
-        const audioTypes = {}; // 'sampler' o 'loop'
+        const audioTypes = {};
         let selectedPadId = null;
-        let deletePadId = null;
         let currentAudioFile = null;
         let currentAudioType = 'sampler';
+        let bpm = 120;
         
-        // NUEVAS VARIABLES PARA EFECTOS
+        let color1 = '#00ff55', color2 = '#2255ff', color3 = '#ffaa00';
         let currentEffect = 'ripple';
-        let currentColor = '#00ff55';
-        let currentColor2 = '#ff2255';
-        let useDualColors = false;
-        let effectParams = {
-            ripple: { maxDistance: 3, speed: 60 },
-            wave: { direction: 'outward', intensity: 1.5 },
-            spiral: { rotations: 1, speed: 0.5 },
-            cross: { arms: 4, thickness: 2 },
-            diamond: { size: 3, speed: 80 },
-            random: { chance: 0.7, intensity: 1.2 },
-            cascade: { direction: 'down', speed: 40 },
-            neon: { intensity: 2.5, glow: 20 },
-            pulse: { beats: 3, speed: 0.2 },
-            radial: { circles: 3, speed: 0.8 },
-            bounce: { height: 10, bounces: 2 },
-            gradient: { colors: 3, speed: 0.5 },
-            chaos: { randomness: 0.8, speed: 0.3 },
-            matrix: { rows: 8, speed: 0.4 },
-            circle: { radius: 3, smooth: true },
-            checker: { pattern: 'alternate', size: 2 }
-        };
 
-        // VARIABLES PARA EDICIÓN DE SONIDO
-        let audioFilters = {
-            gain: 1.0,
-            tone: 1.0,
-            dynamic: 1.0,
-            noise: 0.0,
-            sharpness: 1.0,
-            reverb: 0.0,
-            echo: 0.0,
-            distortion: 0.0
-        };
+        const colors = ['#00ff55', '#ff2255', '#2255ff', '#ffaa00', '#aa00ff', '#00ffff', '#ffff00', '#ffffff'];
 
-        // --- CREACIÓN DE LA REJILLA ---
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const pad = document.createElement('div');
-                pad.className = 'cell pad';
-                const padId = `p-${row}-${col}`;
-                pad.id = padId;
-                pad.dataset.row = row;
-                pad.dataset.col = col;
-                
-                pad.addEventListener('pointerdown', (e) => {
-                    e.preventDefault();
-                    triggerPad(padId, row, col);
-                    triggerExpansionEffect(row, col);
+        // --- INICIALIZACIÓN ---
+        function init() {
+            // Crear Rejilla
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const pad = document.createElement('div');
+                    pad.className = 'cell pad';
+                    const id = `p-${row}-${col}`;
+                    pad.id = id;
+                    pad.addEventListener('pointerdown', () => triggerPad(id, row, col));
+                    lp.appendChild(pad);
+                }
+                const rBtn = document.createElement('div');
+                rBtn.className = 'cell round-btn';
+                lp.appendChild(rBtn);
+            }
+            
+            // Generar Selectores de Color
+            [1, 2, 3].forEach(num => {
+                const container = document.getElementById(`colorSelector${num}`);
+                colors.forEach(c => {
+                    const opt = document.createElement('div');
+                    opt.className = 'color-option';
+                    opt.style.background = c;
+                    if (num === 1 && c === color1) opt.classList.add('selected');
+                    opt.onclick = () => {
+                        if (num === 1) color1 = c;
+                        if (num === 2) color2 = c;
+                        if (num === 3) color3 = c;
+                        container.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                        opt.classList.add('selected');
+                    };
+                    container.appendChild(opt);
                 });
-                lp.appendChild(pad);
-            }
-            const rBtn = document.createElement('div');
-            rBtn.className = 'cell round-btn';
-            lp.appendChild(rBtn);
-        }
-
-        // --- NUEVAS FUNCIONES DE EFECTOS DE EXPANSIÓN ---
-        function triggerExpansionEffect(originRow, originCol) {
-            switch(currentEffect) {
-                case 'ripple':
-                    rippleEffect(originRow, originCol);
-                    break;
-                case 'wave':
-                    waveEffect(originRow, originCol);
-                    break;
-                case 'spiral':
-                    spiralEffect(originRow, originCol);
-                    break;
-                case 'cross':
-                    crossEffect(originRow, originCol);
-                    break;
-                case 'diamond':
-                    diamondEffect(originRow, originCol);
-                    break;
-                case 'random':
-                    randomEffect(originRow, originCol);
-                    break;
-                case 'cascade':
-                    cascadeEffect(originRow, originCol);
-                    break;
-                case 'neon':
-                    neonEffect(originRow, originCol);
-                    break;
-                case 'pulse':
-                    pulseEffect(originRow, originCol);
-                    break;
-                case 'radial':
-                    radialEffect(originRow, originCol);
-                    break;
-                case 'bounce':
-                    bounceEffect(originRow, originCol);
-                    break;
-                case 'gradient':
-                    gradientEffect(originRow, originCol);
-                    break;
-                case 'chaos':
-                    chaosEffect(originRow, originCol);
-                    break;
-                case 'matrix':
-                    matrixEffect(originRow, originCol);
-                    break;
-                case 'circle':
-                    circleEffect(originRow, originCol);
-                    break;
-                case 'checker':
-                    checkerEffect(originRow, originCol);
-                    break;
-                default:
-                    rippleEffect(originRow, originCol);
-            }
-        }
-
-        function rippleEffect(originRow, originCol) {
-            const maxDistance = effectParams.ripple.maxDistance;
-            for (let d = 1; d <= maxDistance; d++) {
-                setTimeout(() => {
-                    for (let r = originRow - d; r <= originRow + d; r++) {
-                        for (let c = originCol - d; c <= originCol + d; c++) {
-                            if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
-                                const targetPad = document.getElementById(`p-${r}-${c}`);
-                                if (targetPad) {
-                                    applyEffectToPad(targetPad, 'ripple-effect', d);
-                                }
-                            }
-                        }
-                    }
-                }, d * effectParams.ripple.speed);
-            }
-        }
-
-        function waveEffect(originRow, originCol) {
-            const intensity = effectParams.wave.intensity;
-            for (let d = 0; d < 4; d++) {
-                setTimeout(() => {
-                    const directions = [
-                        [0, d], [0, -d], [d, 0], [-d, 0]
-                    ];
-                    directions.forEach(([dr, dc]) => {
-                        const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                        if (targetPad) {
-                            applyEffectToPad(targetPad, 'wave-effect', d);
-                        }
-                    });
-                }, d * 80);
-            }
-        }
-
-        function spiralEffect(originRow, originCol) {
-            const rotations = effectParams.spiral.rotations;
-            const steps = rotations * 4;
-            for (let step = 0; step < steps; step++) {
-                setTimeout(() => {
-                    const radius = Math.floor(step / 4) + 1;
-                    const angle = (step % 4) * 90;
-                    const radians = angle * Math.PI / 180;
-                    const dr = Math.round(Math.sin(radians) * radius);
-                    const dc = Math.round(Math.cos(radians) * radius);
-                    
-                    const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                    if (targetPad) {
-                        applyEffectToPad(targetPad, 'spiral-effect', step);
-                    }
-                }, step * (effectParams.spiral.speed * 100));
-            }
-        }
-
-        function crossEffect(originRow, originCol) {
-            const arms = effectParams.cross.arms;
-            const thickness = effectParams.cross.thickness;
-            
-            for (let distance = 0; distance < 4; distance++) {
-                setTimeout(() => {
-                    for (let arm = 0; arm < arms; arm++) {
-                        const angle = (arm * 90) % 360;
-                        const radians = angle * Math.PI / 180;
-                        
-                        for (let t = -thickness; t <= thickness; t++) {
-                            const dr = Math.round(Math.sin(radians) * distance + Math.cos(radians) * t);
-                            const dc = Math.round(Math.cos(radians) * distance + Math.sin(radians) * t);
-                            
-                            const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                            if (targetPad) {
-                                applyEffectToPad(targetPad, 'cross-effect', distance);
-                            }
-                        }
-                    }
-                }, distance * 70);
-            }
-        }
-
-        function diamondEffect(originRow, originCol) {
-            const size = effectParams.diamond.size;
-            for (let d = 0; d <= size; d++) {
-                setTimeout(() => {
-                    for (let i = 0; i <= d; i++) {
-                        const points = [
-                            [originRow - d + i, originCol - i],
-                            [originRow + d - i, originCol - i],
-                            [originRow - d + i, originCol + i],
-                            [originRow + d - i, originCol + i]
-                        ];
-                        
-                        points.forEach(([r, c]) => {
-                            const targetPad = document.getElementById(`p-${r}-${c}`);
-                            if (targetPad) {
-                                applyEffectToPad(targetPad, 'diamond-effect', d);
-                            }
-                        });
-                    }
-                }, d * effectParams.diamond.speed);
-            }
-        }
-
-        function randomEffect(originRow, originCol) {
-            const chance = effectParams.random.chance;
-            const intensity = effectParams.random.intensity;
-            
-            for (let r = originRow - 3; r <= originRow + 3; r++) {
-                for (let c = originCol - 3; c <= originCol + 3; c++) {
-                    if (Math.random() < chance) {
-                        const delay = Math.random() * 300;
-                        setTimeout(() => {
-                            const targetPad = document.getElementById(`p-${r}-${c}`);
-                            if (targetPad) {
-                                applyEffectToPad(targetPad, 'random-effect', Math.random());
-                            }
-                        }, delay);
-                    }
-                }
-            }
-        }
-
-        function cascadeEffect(originRow, originCol) {
-            const direction = effectParams.cascade.direction;
-            const speed = effectParams.cascade.speed;
-            
-            for (let offset = 0; offset < 8; offset++) {
-                setTimeout(() => {
-                    for (let i = -offset; i <= offset; i++) {
-                        let r, c;
-                        if (direction === 'down') {
-                            r = originRow + offset;
-                            c = originCol + i;
-                        } else if (direction === 'up') {
-                            r = originRow - offset;
-                            c = originCol + i;
-                        } else if (direction === 'right') {
-                            r = originRow + i;
-                            c = originCol + offset;
-                        } else { // left
-                            r = originRow + i;
-                            c = originCol - offset;
-                        }
-                        
-                        const targetPad = document.getElementById(`p-${r}-${c}`);
-                        if (targetPad) {
-                            applyEffectToPad(targetPad, 'cascade-effect', offset);
-                        }
-                    }
-                }, offset * speed);
-            }
-        }
-
-        function neonEffect(originRow, originCol) {
-            const intensity = effectParams.neon.intensity;
-            for (let d = 0; d < 3; d++) {
-                setTimeout(() => {
-                    for (let r = originRow - d; r <= originRow + d; r++) {
-                        for (let c = originCol - d; c <= originCol + d; c++) {
-                            const targetPad = document.getElementById(`p-${r}-${c}`);
-                            if (targetPad) {
-                                applyEffectToPad(targetPad, 'neon-effect', d);
-                            }
-                        }
-                    }
-                }, d * 100);
-            }
-        }
-
-        function pulseEffect(originRow, originCol) {
-            const beats = effectParams.pulse.beats;
-            for (let beat = 0; beat < beats; beat++) {
-                setTimeout(() => {
-                    for (let r = originRow - 2; r <= originRow + 2; r++) {
-                        for (let c = originCol - 2; c <= originCol + 2; c++) {
-                            const targetPad = document.getElementById(`p-${r}-${c}`);
-                            if (targetPad && Math.random() > 0.3) {
-                                applyEffectToPad(targetPad, 'pulse-effect', beat);
-                            }
-                        }
-                    }
-                }, beat * (effectParams.pulse.speed * 1000));
-            }
-        }
-
-        function radialEffect(originRow, originCol) {
-            const circles = effectParams.radial.circles;
-            for (let circle = 1; circle <= circles; circle++) {
-                setTimeout(() => {
-                    const radius = circle;
-                    const steps = 16;
-                    for (let step = 0; step < steps; step++) {
-                        const angle = (step * 360) / steps;
-                        const radians = angle * Math.PI / 180;
-                        const dr = Math.round(Math.sin(radians) * radius);
-                        const dc = Math.round(Math.cos(radians) * radius);
-                        
-                        const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                        if (targetPad) {
-                            applyEffectToPad(targetPad, 'radial-effect', circle);
-                        }
-                    }
-                }, circle * (effectParams.radial.speed * 300));
-            }
-        }
-
-        function bounceEffect(originRow, originCol) {
-            const bounces = effectParams.bounce.bounces;
-            for (let bounce = 0; bounce < bounces; bounce++) {
-                setTimeout(() => {
-                    for (let r = originRow - 1; r <= originRow + 1; r++) {
-                        for (let c = originCol - 1; c <= originCol + 1; c++) {
-                            const targetPad = document.getElementById(`p-${r}-${c}`);
-                            if (targetPad) {
-                                applyEffectToPad(targetPad, 'bounce-effect', bounce);
-                            }
-                        }
-                    }
-                }, bounce * 150);
-            }
-        }
-
-        function gradientEffect(originRow, originCol) {
-            const colors = effectParams.gradient.colors;
-            for (let colorIdx = 0; colorIdx < colors; colorIdx++) {
-                setTimeout(() => {
-                    for (let r = originRow - colorIdx; r <= originRow + colorIdx; r++) {
-                        for (let c = originCol - colorIdx; c <= originCol + colorIdx; c++) {
-                            const targetPad = document.getElementById(`p-${r}-${c}`);
-                            if (targetPad) {
-                                applyEffectToPad(targetPad, 'gradient-effect', colorIdx);
-                            }
-                        }
-                    }
-                }, colorIdx * (effectParams.gradient.speed * 200));
-            }
-        }
-
-        function chaosEffect(originRow, originCol) {
-            const randomness = effectParams.chaos.randomness;
-            for (let i = 0; i < 10; i++) {
-                setTimeout(() => {
-                    const dr = Math.floor(Math.random() * 7) - 3;
-                    const dc = Math.floor(Math.random() * 7) - 3;
-                    const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                    if (targetPad && Math.random() < randomness) {
-                        applyEffectToPad(targetPad, 'chaos-effect', Math.random());
-                    }
-                }, i * (effectParams.chaos.speed * 200));
-            }
-        }
-
-        function matrixEffect(originRow, originCol) {
-            const rows = effectParams.matrix.rows;
-            for (let row = 0; row < rows; row++) {
-                setTimeout(() => {
-                    for (let col = 0; col < 8; col++) {
-                        const targetPad = document.getElementById(`p-${row}-${col}`);
-                        if (targetPad && Math.random() > 0.5) {
-                            applyEffectToPad(targetPad, 'matrix-effect', row);
-                        }
-                    }
-                }, row * (effectParams.matrix.speed * 100));
-            }
-        }
-
-        function circleEffect(originRow, originCol) {
-            const radius = effectParams.circle.radius;
-            const smooth = effectParams.circle.smooth;
-            const steps = smooth ? 16 : 8;
-            
-            for (let angle = 0; angle < 360; angle += 360/steps) {
-                const radians = angle * Math.PI / 180;
-                const dr = Math.round(Math.sin(radians) * radius);
-                const dc = Math.round(Math.cos(radians) * radius);
-                
-                setTimeout(() => {
-                    const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                    if (targetPad) {
-                        applyEffectToPad(targetPad, 'ripple-effect', angle);
-                    }
-                }, angle * 5);
-            }
-        }
-
-        function checkerEffect(originRow, originCol) {
-            const pattern = effectParams.checker.pattern;
-            const size = effectParams.checker.size;
-            
-            for (let dr = -size; dr <= size; dr++) {
-                for (let dc = -size; dc <= size; dc++) {
-                    if (pattern === 'alternate' && (dr + dc) % 2 === 0) continue;
-                    if (pattern === 'solid' && (dr + dc) % 2 !== 0) continue;
-                    
-                    setTimeout(() => {
-                        const targetPad = document.getElementById(`p-${originRow + dr}-${originCol + dc}`);
-                        if (targetPad) {
-                            applyEffectToPad(targetPad, 'wave-effect', Math.abs(dr) + Math.abs(dc));
-                        }
-                    }, (Math.abs(dr) + Math.abs(dc)) * 50);
-                }
-            }
-        }
-
-        function applyEffectToPad(padElement, effectClass, index) {
-            if (!padElement.classList.contains('looping')) {
-                padElement.classList.add(effectClass);
-                
-                // Determinar color basado en posición y configuración dual
-                let effectColor;
-                if (useDualColors) {
-                    // Alternar colores basado en índice o posición
-                    effectColor = (index % 2 === 0) ? currentColor : currentColor2;
-                } else {
-                    effectColor = currentColor;
-                }
-                
-                padElement.style.setProperty('--accent', effectColor);
-                
-                // Aplicar color dinámico
-                const rgb = hexToRgb(effectColor);
-                padElement.style.background = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`;
-                padElement.style.boxShadow = `0 0 15px ${effectColor}`;
-                
-                setTimeout(() => {
-                    padElement.classList.remove(effectClass);
-                    padElement.style.background = '';
-                    padElement.style.boxShadow = '';
-                }, 300);
-            }
-        }
-
-        function hexToRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : { r: 0, g: 255, b: 85 };
-        }
-
-        // --- NUEVO: CONFIGURACIÓN DE EFECTOS Y COLORES ---
-        function setupEffectControls() {
-            // Selector de efectos
-            document.querySelectorAll('#effectSelector .effect-btn').forEach(btn => {
-                btn.onclick = () => {
-                    currentEffect = btn.dataset.effect;
-                    document.querySelectorAll('#effectSelector .effect-btn').forEach(b => {
-                        b.classList.remove('selected');
-                    });
-                    btn.classList.add('selected');
-                    updateEffectInfo();
-                };
             });
 
-            // Selector de color principal
-            document.querySelectorAll('#colorSelector .color-option').forEach(option => {
-                option.onclick = () => {
-                    currentColor = option.dataset.color;
-                    document.querySelectorAll('#colorSelector .color-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    option.classList.add('selected');
-                    updateEffectInfo();
-                    
-                    // Actualizar CSS variables
-                    document.documentElement.style.setProperty('--accent', currentColor);
-                    document.documentElement.style.setProperty('--led-on', currentColor);
-                };
-            });
-
-            // Selector de color secundario
-            document.querySelectorAll('#colorSelector2 .color-option').forEach(option => {
-                option.onclick = () => {
-                    currentColor2 = option.dataset.color;
-                    document.querySelectorAll('#colorSelector2 .color-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    option.classList.add('selected');
-                    updateEffectInfo();
-                };
-            });
-
-            // Toggle de dos colores
-            document.getElementById('dualColorToggle').onchange = (e) => {
-                useDualColors = e.target.checked;
-                document.getElementById('colorSelector2').style.display = useDualColors ? 'flex' : 'none';
-                updateEffectInfo();
-            };
-
-            // Seleccionar primeros valores por defecto
-            document.querySelector('#effectSelector .effect-btn').click();
-            document.querySelector('#colorSelector .color-option').click();
-            document.querySelector('#colorSelector2 .color-option').click();
+            generatePadSelectors();
+            drawWave();
         }
 
-        function updateEffectInfo() {
-            const effectName = document.querySelector('#effectSelector .effect-btn.selected').textContent;
-            if (useDualColors) {
-                document.getElementById('effectInfo').textContent = 
-                    `Efecto: ${effectName} | Color: ${currentColor} | 2º Color: ${currentColor2}`;
-            } else {
-                document.getElementById('effectInfo').textContent = 
-                    `Efecto: ${effectName} | Color: ${currentColor}`;
-            }
-        }
-
-        // --- NUEVO: CONTROLES DE EDICIÓN DE SONIDO ---
-        function setupAudioControls() {
-            // Ganancia
-            document.getElementById('gainControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                document.getElementById('gainValue').textContent = value + '%';
-                audioFilters.gain = value / 100;
-                applyAudioFilters();
-            };
-
-            // Tono (agudo/grave)
-            document.getElementById('toneControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                let label;
-                if (value < 90) label = "Grave";
-                else if (value > 110) label = "Agudo";
-                else label = "Neutro";
-                document.getElementById('toneValue').textContent = label;
-                audioFilters.tone = value / 100;
-                applyAudioFilters();
-            };
-
-            // Dinámica
-            document.getElementById('dynamicControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                let label;
-                if (value < 90) label = "Suave";
-                else if (value > 110) label = "Fuerte";
-                else label = "Normal";
-                document.getElementById('dynamicValue').textContent = label;
-                audioFilters.dynamic = value / 100;
-                applyAudioFilters();
-            };
-
-            // Ruido de fondo
-            document.getElementById('noiseControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                document.getElementById('noiseValue').textContent = value + '%';
-                audioFilters.noise = value / 100;
-                applyAudioFilters();
-            };
-
-            // Nitidez
-            document.getElementById('sharpnessControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                let label;
-                if (value < 90) label = "Suave";
-                else if (value > 110) label = "Nítido";
-                else label = "Normal";
-                document.getElementById('sharpnessValue').textContent = label;
-                audioFilters.sharpness = value / 100;
-                applyAudioFilters();
-            };
-
-            // Reverberación
-            document.getElementById('reverbControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                document.getElementById('reverbValue').textContent = value + '%';
-                audioFilters.reverb = value / 100;
-                applyAudioFilters();
-            };
-
-            // Eco
-            document.getElementById('echoControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                document.getElementById('echoValue').textContent = value + '%';
-                audioFilters.echo = value / 100;
-                applyAudioFilters();
-            };
-
-            // Distorsión
-            document.getElementById('distortionControl').oninput = (e) => {
-                const value = parseInt(e.target.value);
-                document.getElementById('distortionValue').textContent = value + '%';
-                audioFilters.distortion = value / 100;
-                applyAudioFilters();
-            };
-        }
-
-        function applyAudioFilters() {
-            // Aplicar filtros a todos los loops activos
-            Object.values(loops).forEach(loop => {
-                if (loop.source && loop.filterNodes) {
-                    // Aplicar ganancia
-                    if (loop.filterNodes.gain) {
-                        loop.filterNodes.gain.gain.value = audioFilters.gain;
-                    }
-                    
-                    // Aplicar filtro de tono
-                    if (loop.filterNodes.biquadFilter) {
-                        const frequency = 1000 * audioFilters.tone;
-                        loop.filterNodes.biquadFilter.frequency.value = frequency;
-                    }
-                    
-                    // Aquí podrías añadir más efectos de audio usando la Web Audio API
-                    // como reverberación, eco, distorsión, etc.
-                }
-            });
-        }
-
-        // --- GENERAR SELECTORES DE PAD ---
-        function generatePadSelectors() {
-            const loadGrid = document.getElementById('padSelector');
-            const deleteGrid = document.getElementById('deletePadSelector');
-            
-            loadGrid.innerHTML = '';
-            deleteGrid.innerHTML = '';
-            
-            for (let r = 0; r < 8; r++) {
-                for (let c = 0; c < 8; c++) {
-                    const padId = `p-${r}-${c}`;
-                    
-                    // Selector para cargar
-                    const loadSelector = document.createElement('div');
-                    loadSelector.className = 'pad-selector';
-                    if (audioBuffers[padId]) {
-                        loadSelector.classList.add(audioTypes[padId] === 'loop' ? 'has-loop' : 'has-sampler');
-                    }
-                    if (selectedPadId === padId) {
-                        loadSelector.classList.add('selected');
-                    }
-                    loadSelector.onclick = () => {
-                        selectedPadId = padId;
-                        document.getElementById('selectedPadInfo').textContent = 
-                            `Pad seleccionado: ${padId} (Fila ${r+1}, Col ${c+1})`;
-                        if (audioBuffers[padId]) {
-                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
-                            document.getElementById('selectedPadInfo').textContent += ` - ${type} cargado`;
-                        }
-                        document.getElementById('loadToSelectedPad').disabled = !currentAudioFile;
-                        generatePadSelectors();
-                    };
-                    loadGrid.appendChild(loadSelector);
-                    
-                    // Selector para eliminar
-                    const deleteSelector = document.createElement('div');
-                    deleteSelector.className = 'pad-selector';
-                    if (audioBuffers[padId]) {
-                        deleteSelector.classList.add(audioTypes[padId] === 'loop' ? 'has-loop' : 'has-sampler');
-                    }
-                    if (deletePadId === padId) {
-                        deleteSelector.classList.add('selected');
-                    }
-                    deleteSelector.onclick = () => {
-                        deletePadId = padId;
-                        if (audioBuffers[padId]) {
-                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
-                            document.getElementById('deletePadInfo').textContent = 
-                                `Pad seleccionado: ${padId} - ${type}`;
-                            document.getElementById('deletePadBtn').disabled = false;
-                        } else {
-                            document.getElementById('deletePadInfo').textContent = 
-                                `Pad seleccionado: ${padId} - SIN SONIDO`;
-                            document.getElementById('deletePadBtn').disabled = true;
-                        }
-                        generatePadSelectors();
-                    };
-                    deleteGrid.appendChild(deleteSelector);
-                }
-            }
-        }
-
-        // --- LÓGICA DE AUDIO MODIFICADA CON FILTROS ---
-        async function triggerPad(id, r, c) {
+        // --- LÓGICA DE AUDIO ---
+        async function triggerPad(id, row, col) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            const element = document.getElementById(id);
             
-            // Si no hay audio, usar sonido por defecto
+            triggerExpansion(row, col);
+            
             if (!audioBuffers[id]) {
-                const osc = audioCtx.createOscillator();
-                osc.frequency.value = 150 + (c * 30);
-                const g = audioCtx.createGain();
-                osc.connect(g).connect(audioCtx.destination);
-                g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-                element.classList.add('active');
-                setTimeout(() => element.classList.remove('active'), 100);
+                playDefaultSound(col);
                 return;
             }
-            
-            const type = audioTypes[id];
-            
-            // Si es loop y ya está activo, detenerlo
-            if (type === 'loop' && loops[id]) {
+
+            const element = document.getElementById(id);
+            if (audioTypes[id] === 'loop' && loops[id]) {
                 loops[id].source.stop();
                 delete loops[id];
                 element.classList.remove('looping');
                 return;
             }
-            
-            // Reproducir el audio con filtros
+
             const source = audioCtx.createBufferSource();
             source.buffer = audioBuffers[id].buffer;
             
-            // Crear cadena de efectos de audio
-            const filterNodes = {
-                gain: audioCtx.createGain(),
-                biquadFilter: audioCtx.createBiquadFilter(),
-                // Aquí podrías añadir más nodos: convolver para reverb, delay para eco, etc.
-            };
-            
-            // Configurar filtros
-            filterNodes.gain.gain.value = audioFilters.gain;
-            filterNodes.biquadFilter.type = 'peaking';
-            filterNodes.biquadFilter.frequency.value = 1000 * audioFilters.tone;
-            filterNodes.biquadFilter.gain.value = (audioFilters.dynamic - 1) * 20;
-            
-            // Conectar cadena de audio
-            source.connect(filterNodes.biquadFilter);
-            filterNodes.biquadFilter.connect(filterNodes.gain);
-            filterNodes.gain.connect(audioCtx.destination);
-            
-            if (type === 'loop') {
+            const gainNode = audioCtx.createGain();
+            source.connect(gainNode);
+            gainNode.connect(analyser);
+            analyser.connect(audioCtx.destination);
+
+            if (audioTypes[id] === 'loop') {
                 source.loop = true;
+                // Ajustar velocidad según BPM (basado en un loop estándar de 4 tiempos a 120bpm)
+                const playbackRate = bpm / 120;
+                source.playbackRate.value = playbackRate;
                 source.start();
-                loops[id] = { 
-                    source,
-                    filterNodes: filterNodes  // Guardar nodos para ajustes en tiempo real
-                };
+                loops[id] = { source };
                 element.classList.add('looping');
-                
-                // Aplicar color dual si está activado
-                if (useDualColors) {
-                    element.style.setProperty('--led-loop', (Math.random() > 0.5) ? currentColor : currentColor2);
-                } else {
-                    element.style.setProperty('--led-loop', currentColor);
-                }
+                element.style.setProperty('--led-loop', color1);
             } else {
                 source.start();
-                source.stop(audioCtx.currentTime + source.buffer.duration);
                 element.classList.add('active');
-                
-                // Aplicar color dual si está activado
-                if (useDualColors) {
-                    element.style.setProperty('--led-on', (Math.random() > 0.5) ? currentColor : currentColor2);
-                } else {
-                    element.style.setProperty('--led-on', currentColor);
-                }
-                
+                element.style.setProperty('--led-on', color1);
                 setTimeout(() => element.classList.remove('active'), 200);
             }
         }
 
-        // --- INTERFAZ Y EVENTOS ---
-        // Selector de tipo
-        document.getElementById('samplerBtn').onclick = () => {
-            currentAudioType = 'sampler';
-            document.getElementById('samplerBtn').classList.add('selected');
-            document.getElementById('loopBtn').classList.remove('selected');
-            document.getElementById('typeInfo').textContent = '🎵 SAMPLER seleccionado (se reproduce una vez)';
-        };
-        
-        document.getElementById('loopBtn').onclick = () => {
-            currentAudioType = 'loop';
-            document.getElementById('loopBtn').classList.add('selected');
-            document.getElementById('samplerBtn').classList.remove('selected');
-            document.getElementById('typeInfo').textContent = '🔄 LOOP seleccionado (se reproduce continuamente)';
+        function playDefaultSound(col) {
+            const osc = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            osc.frequency.value = 200 + (col * 50);
+            osc.connect(g).connect(analyser);
+            g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
+
+        // --- ANIMACIONES DE EXPANSIÓN ---
+        function triggerExpansion(r, c) {
+            const maxDist = 3;
+            const effectClass = getEffectClass();
+
+            for (let i = 0; i <= maxDist; i++) {
+                setTimeout(() => {
+                    applyToRing(r, c, i, effectClass);
+                }, i * 60);
+            }
+        }
+
+        function applyToRing(r, c, dist, className) {
+            const colorSet = [color1, color2, color3];
+            const ringColor = colorSet[dist % 3];
+
+            for (let i = r - dist; i <= r + dist; i++) {
+                for (let j = c - dist; j <= c + dist; j++) {
+                    if (Math.abs(i - r) === dist || Math.abs(j - c) === dist) {
+                        const target = document.getElementById(`p-${i}-${j}`);
+                        if (target && !target.classList.contains('looping')) {
+                            target.classList.add(className);
+                            target.style.background = ringColor;
+                            target.style.boxShadow = `0 0 15px ${ringColor}`;
+                            setTimeout(() => {
+                                target.classList.remove(className);
+                                target.style.background = '';
+                                target.style.boxShadow = '';
+                            }, 400);
+                        }
+                    }
+                }
+            }
+        }
+
+        function getEffectClass() {
+            switch(currentEffect) {
+                case 'shockwave': return 'shockwave';
+                case 'scanline': return 'scanline';
+                case 'vortex': return 'vortex';
+                default: return 'ripple-effect';
+            }
+        }
+
+        // --- VISUALIZADOR ---
+        function drawWave() {
+            requestAnimationFrame(drawWave);
+            analyser.getByteFrequencyData(dataArray);
+            
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const barWidth = (canvas.width / bufferLength) * 2.5;
+            let x = 0;
+
+            for(let i = 0; i < bufferLength; i++) {
+                const barHeight = dataArray[i] / 4;
+                ctx.fillStyle = i % 2 === 0 ? color1 : color2;
+                ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+        }
+
+        // --- INTERFAZ PANEL ---
+        document.getElementById('bpmInput').onchange = (e) => {
+            bpm = e.target.value;
+            document.getElementById('bpmShow').textContent = `${bpm} BPM`;
         };
 
-        // Cargar archivo
+        document.getElementById('syncBpm').onclick = () => {
+            Object.keys(loops).forEach(id => {
+                loops[id].source.playbackRate.value = bpm / 120;
+            });
+        };
+
+        document.querySelectorAll('.effect-btn').forEach(btn => {
+            btn.onclick = () => {
+                currentEffect = btn.dataset.effect;
+                document.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            };
+        });
+
+        // Lógica de carga (respetando original)
         document.getElementById('audioUpload').onchange = (e) => {
             currentAudioFile = e.target.files[0];
-            if (currentAudioFile) {
-                document.getElementById('audioInfo').textContent = 
-                    `Archivo seleccionado: ${currentAudioFile.name}`;
-                if (selectedPadId) {
-                    document.getElementById('loadToSelectedPad').disabled = false;
-                }
-            }
+            if (selectedPadId) document.getElementById('loadToSelectedPad').disabled = false;
         };
 
-        // Cargar en pad seleccionado
         document.getElementById('loadToSelectedPad').onclick = async () => {
-            if (!currentAudioFile || !selectedPadId) {
-                alert('Selecciona un archivo y un pad destino');
-                return;
-            }
-            
             const reader = new FileReader();
             reader.onload = async (e) => {
-                try {
-                    const buffer = await audioCtx.decodeAudioData(e.target.result);
-                    audioBuffers[selectedPadId] = { buffer };
-                    audioTypes[selectedPadId] = currentAudioType;
-                    
-                    // Actualizar visual del pad principal
-                    const padElement = document.getElementById(selectedPadId);
-                    padElement.classList.add('has-sample');
-                    
-                    // Actualizar selectores
-                    generatePadSelectors();
-                    
-                    // Resetear
-                    document.getElementById('audioUpload').value = '';
-                    currentAudioFile = null;
-                    selectedPadId = null;
-                    document.getElementById('loadToSelectedPad').disabled = true;
-                    document.getElementById('selectedPadInfo').textContent = '✅ Audio cargado exitosamente';
-                    document.getElementById('audioInfo').textContent = 'Selecciona un archivo de audio';
-                    
-                    alert(`✅ ${currentAudioType === 'loop' ? 'LOOP' : 'SAMPLER'} cargado correctamente`);
-                    
-                } catch (err) {
-                    alert('Error al cargar el archivo de audio: ' + err.message);
-                }
+                const buffer = await audioCtx.decodeAudioData(e.target.result);
+                audioBuffers[selectedPadId] = { buffer };
+                audioTypes[selectedPadId] = currentAudioType;
+                document.getElementById(selectedPadId).classList.add('has-sample');
+                generatePadSelectors();
+                alert('Cargado!');
             };
             reader.readAsArrayBuffer(currentAudioFile);
         };
 
-        // Eliminar sonido de pad
-        document.getElementById('deletePadBtn').onclick = () => {
-            if (!deletePadId || !audioBuffers[deletePadId]) {
-                alert('Selecciona un pad con sonido para eliminar');
-                return;
-            }
-            
-            // Detener si está reproduciéndose
-            if (audioTypes[deletePadId] === 'loop' && loops[deletePadId]) {
-                loops[deletePadId].source.stop();
-                delete loops[deletePadId];
-            }
-            
-            // Eliminar audio
-            delete audioBuffers[deletePadId];
-            delete audioTypes[deletePadId];
-            
-            // Actualizar visual
-            const padElement = document.getElementById(deletePadId);
-            padElement.classList.remove('has-sample', 'looping', 'active');
-            
-            // Actualizar selectores
-            generatePadSelectors();
-            
-            // Resetear
-            deletePadId = null;
-            document.getElementById('deletePadBtn').disabled = true;
-            document.getElementById('deletePadInfo').textContent = '✅ Sonido eliminado. Selecciona otro pad si deseas eliminar más.';
-        };
-
-        // Borrar todos los sonidos
-        document.getElementById('clearAllAudio').onclick = () => {
-            if(confirm('¿Estás seguro de querer borrar TODOS los sonidos de TODOS los pads?')) {
-                // Detener todos los loops
-                Object.keys(loops).forEach(k => {
-                    if (loops[k].source) {
-                        loops[k].source.stop();
-                    }
-                });
-                
-                // Limpiar todas las estructuras
-                Object.keys(audioBuffers).forEach(k => delete audioBuffers[k]);
-                Object.keys(audioTypes).forEach(k => delete audioTypes[k]);
-                Object.keys(loops).forEach(k => delete loops[k]);
-                
-                // Limpiar visual de pads
-                document.querySelectorAll('.pad').forEach(p => {
-                    p.classList.remove('has-sample', 'looping', 'active');
-                });
-                
-                // Actualizar selectores
-                generatePadSelectors();
-                
-                // Resetear estado
-                selectedPadId = null;
-                deletePadId = null;
-                currentAudioFile = null;
-                document.getElementById('loadToSelectedPad').disabled = true;
-                document.getElementById('deletePadBtn').disabled = true;
-                document.getElementById('selectedPadInfo').textContent = 'Todos los sonidos eliminados';
-                document.getElementById('deletePadInfo').textContent = 'Selecciona un pad para eliminar su sonido';
-                document.getElementById('audioInfo').textContent = 'Selecciona un archivo de audio';
-                
-                alert('✅ Todos los sonidos han sido eliminados');
-            }
-        };
-
-        // Exportar proyecto
-        document.getElementById('exportConfig').onclick = () => {
-            const projectData = {
-                name: "RTBS Crew Looper Project",
-                date: new Date().toISOString(),
-                version: "1.0",
-                audioFiles: Object.keys(audioBuffers).map(padId => ({
-                    padId: padId,
-                    type: audioTypes[padId],
-                    fileName: audioBuffers[padId].buffer ? "audio_cargado" : "none",
-                    duration: audioBuffers[padId].buffer ? audioBuffers[padId].buffer.duration : 0
-                })),
-                settings: {
-                    gain: audioFilters.gain,
-                    tone: audioFilters.tone,
-                    dynamic: audioFilters.dynamic,
-                    noise: audioFilters.noise,
-                    sharpness: audioFilters.sharpness,
-                    reverb: audioFilters.reverb,
-                    echo: audioFilters.echo,
-                    distortion: audioFilters.distortion,
-                    effect: currentEffect,
-                    color: currentColor,
-                    color2: currentColor2,
-                    dualColors: useDualColors
+        function generatePadSelectors() {
+            const grid = document.getElementById('padSelector');
+            grid.innerHTML = '';
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const id = `p-${r}-${c}`;
+                    const div = document.createElement('div');
+                    div.className = 'pad-selector';
+                    if (audioBuffers[id]) div.style.background = '#555';
+                    if (selectedPadId === id) div.classList.add('selected');
+                    div.onclick = () => {
+                        selectedPadId = id;
+                        generatePadSelectors();
+                        if (currentAudioFile) document.getElementById('loadToSelectedPad').disabled = false;
+                    };
+                    grid.appendChild(div);
                 }
-            };
-            
-            const blob = new Blob([JSON.stringify(projectData, null, 2)], {type: 'application/json'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `rtbs-project-${new Date().getTime()}.json`;
-            a.click();
-            alert('✅ Proyecto exportado exitosamente');
+            }
+        }
+
+        document.getElementById('samplerBtn').onclick = () => {
+            currentAudioType = 'sampler';
+            document.getElementById('samplerBtn').classList.add('selected');
+            document.getElementById('loopBtn').classList.remove('selected');
         };
 
-        // Control del panel
-        document.getElementById('control-btn').onclick = () => {
-            document.getElementById('controlPanel').style.display = 'block';
-            generatePadSelectors();
-        };
-        
-        document.getElementById('closePanel').onclick = () => {
-            document.getElementById('controlPanel').style.display = 'none';
+        document.getElementById('loopBtn').onclick = () => {
+            currentAudioType = 'loop';
+            document.getElementById('loopBtn').classList.add('selected');
+            document.getElementById('samplerBtn').classList.remove('selected');
         };
 
-        // Inicializar
-        generatePadSelectors();
-        document.getElementById('samplerBtn').click(); // Seleccionar sampler por defecto
-        setupEffectControls(); // Configurar controles de efectos
-        setupAudioControls(); // Configurar controles de audio
+        document.getElementById('control-btn').onclick = () => document.getElementById('controlPanel').style.display = 'block';
+        document.getElementById('closePanel').onclick = () => document.getElementById('controlPanel').style.display = 'none';
 
+        init();
     </script>
 </body>
 </html>

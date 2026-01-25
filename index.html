@@ -1848,21 +1848,37 @@ footer {
     </div>
 </div>
 
-  <!-- SECCIÓN RTBS VISUALIZER -->
-<div id="rtbs-visualizer" class="seccion" style="display:none;">
+ <div id="rtbs-visualizer" class="seccion" style="display:none;">
   <div class="post-content">
     <div class="post-title-box">
       <h2 class="post-title">RTBS CREW VISUALIZER</h2>
     </div>
 
-    <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 1px solid #00FF00; background: rgba(0,0,0,0.8);">
-      <p><strong>PROYECTO EXPERIMENTAL:</strong> Este reproductor de música con visualizador ha sido desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de Inteligencia Artificial.</p>
-      <p>Se trata de un experimento técnico para demostrar hasta dónde puede llegar una persona sin conocimientos previos de programación utilizando herramientas de IA para materializar ideas complejas. El proyecto está en <strong>modificación constante</strong>, evolucionando día a día.</p>
-      <p><strong>SOFTWARE LIBRE:</strong> Es de código abierto y descarga gratuita. Atribución requerida a: <em>RTBS CREW</em>.</p>
+    <div class="descripcion" style="margin-bottom: 20px; padding: 15px; border: 1px solid #00FF00; background: rgba(0,0,0,0.8); color: #00FF00; font-family: monospace;">
+      <p><strong>PROYECTO EXPERIMENTAL:</strong> Desarrollado íntegramente por <strong>RTBS CREW</strong> con la asistencia de <strong>Inteligencia Artificial</strong>.</p>
+      <p>Este visualizador es un experimento técnico para demostrar la materialización de ideas complejas sin conocimientos previos de programación. El proyecto está en <strong>modificación constante</strong>.</p>
+      <hr style="border: 0.5px solid #00FF00; margin: 10px 0;">
+      <p><strong>SOFTWARE LIBRE:</strong> Código abierto. <strong>Atribución requerida a: RDS.</strong></p>
     </div>
 
-    <div class="visualizer-container" style="width: 100%; height: 80vh; border: 2px solid #0000FF; overflow: hidden; background: #000;">
+    <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+        <a href="rtbs crew visualicer.html" target="_blank" class="windows-xp-button" style="text-decoration: none; display: flex; align-items: center; gap: 5px; background: #c0c0c0; padding: 5px 15px; border: 2px solid; border-color: #fff #808080 #808080 #fff; color: #000;">
+            🖥️ PANTALLA COMPLETA
+        </a>
+        <a href="rtbs crew visualicer.html" download="rtbs_crew_visualizer.html" class="windows-xp-button" style="text-decoration: none; display: flex; align-items: center; gap: 5px; background: #c0c0c0; padding: 5px 15px; border: 2px solid; border-color: #fff #808080 #808080 #fff; color: #000;">
+            💾 DESCARGAR (CÓDIGO FUENTE)
+        </a>
+    </div>
+
+    <div class="visualizer-container" style="width: 100%; height: 80vh; border: 2px solid #0000FF; overflow: hidden; background: #000; position: relative;">
       <iframe src="rtbs crew visualicer.html" style="width: 100%; height: 100%; border: none;" title="RTBS Visualizer"></iframe>
+    </div>
+
+    <div class="like-dislike" style="justify-content: center; margin-top: 15px;">
+        <button class="like-btn" onclick="event.stopPropagation();">👍</button>
+        <span class="like-count">0</span>
+        <button class="dislike-btn" onclick="event.stopPropagation();">👎</button>
+        <span class="dislike-count">0</span>
     </div>
   </div>
 </div>

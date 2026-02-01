@@ -1696,7 +1696,15 @@ footer {
     <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
   </div>
     
-  <div id="dj" class="seccion" style="display:none;">
+<!-- Código de diagnóstico (añádelo después del iframe si sigue sin funcionar) -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="checkDJFile()" style="padding: 5px 10px; background: #FF0000; color: white; border: none; border-radius: 3px; font-size: 12px;">
+        🔍 DIAGNÓSTICO
+    </button>
+    <div id="dj-diagnostic" style="margin-top: 10px; font-size: 12px; color: #FFFF00;"></div>
+</div>
+
+<div id="dj" class="seccion" style="display:none;">
 
     <!-- Protesta Free Program -->
     <div class="protesta-container">
@@ -1802,25 +1810,36 @@ footer {
 
     <!-- VERSIÓN 2.0 FINAL -->
     <div style="background: rgba(0, 40, 0, 0.7); border: 3px solid #00FF00; border-radius: 10px; padding: 20px; margin-bottom: 30px;">
-        <h2 style="color: #FFFF00; text-align: center; margin-bottom: 15px;">🎚️ RTBS CREW DJ CONTROLER MIX BETA 2.0 FINAL 🎚️</h2>
+        <h2 style="color: #FFFF00; text-align: center; margin-bottom: 15px;">🎚️ RTBS CREW DJ CONTROLLER MIX V2 🎚️</h2>
         
         <div style="text-align:right; margin-bottom:10px;">
-            <button onclick="toggleFullScreenDJ('djPlayer20')" style="padding:8px 12px; background:#00AA00; color:#000; border:1px solid #00FF00; border-radius:5px; font-weight:bold; cursor:pointer;">🖥️ Pantalla completa (2.0)</button>
+            <button onclick="toggleFullScreenDJ('djPlayer20')" style="padding:8px 12px; background:#00AA00; color:#000; border:1px solid #00FF00; border-radius:5px; font-weight:bold; cursor:pointer;">🖥️ Pantalla completa</button>
         </div>
         
+        <!-- IFRAME CON NUEVO NOMBRE -->
         <iframe id="djPlayer20"
-            src="RTBS_CREW_DJ_CONTROLER_MIX_BETA_2.0_FINAL.html"
+            src="RTBS_DJ_CONTROLLER_V2.html"
             width="100%"
             height="900"
             frameborder="0"
-            allow="autoplay; encrypted-media; midi; microphone; fullscreen">
+            allow="autoplay; encrypted-media; midi; microphone; fullscreen"
+            style="border: 3px solid #00FF00; border-radius: 8px;">
         </iframe>
         
         <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0;">
-            <a href="RTBS_CREW_DJ_CONTROLER_MIX_BETA_2.0_FINAL.html" download="RTBS_CREW_DJ_CONTROLER_MIX_BETA_2.0_FINAL.html"
-                style="display: inline-block; padding: 10px 20px; background: #00AA00; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00FF00; transition: all 0.3s;">
-                📥 DESCARGAR VERSIÓN 2.0 FINAL
+            <a href="RTBS_DJ_CONTROLLER_V2.html" download="RTBS_DJ_CONTROLLER_V2.html"
+                style="display: inline-block; padding: 10px 20px; background: #00AA00; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; border: 2px solid #00FF00; transition: all 0.3s; text-align: center;">
+                📥 DESCARGAR VERSIÓN 2.0 (HTML)
             </a>
+            
+            <a href="RTBS_DJ_CONTROLLER_V2.zip" download="RTBS_DJ_CONTROLLER_V2.zip"
+                style="display: inline-block; padding: 10px 20px; background: #003300; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 2px solid #00AA00; transition: all 0.3s; text-align: center;">
+                📦 DESCARGAR VERSIÓN 2.0 (ZIP)
+            </a>
+        </div>
+        
+        <div style="color: #CCFFCC; text-align: center; margin-top: 15px; padding: 10px; background: rgba(0, 50, 0, 0.3); border-radius: 5px;">
+            <strong>Nota:</strong> Si el reproductor no carga inmediatamente, refresca la página o haz clic en "Pantalla completa"
         </div>
     </div>
 
@@ -1830,18 +1849,18 @@ footer {
         
         <!-- VERSIÓN 1.0 -->
         <div style="background: rgba(0, 30, 0, 0.5); border: 1px solid #008800; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-            <h4 style="color: #CCFFCC; margin-top: 0;">RTBS CREW DJ CONTROLER MIX BETA 1.0</h4>
+            <h4 style="color: #CCFFCC; margin-top: 0;">RTBS CREW DJ CONTROLLER MIX V1</h4>
             <p style="color: #88FF88; margin-bottom: 10px;">Versión inicial del controlador DJ</p>
             
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <a href="rtbs_dj_with_recorder.html" download="RTBS_CREW_DJ_CONTROLER_MIX_BETA_1.0.html"
-                    style="display: inline-block; padding: 8px 16px; background: #003300; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00AA00; transition: all 0.3s;">
-                    📥 DESCARGAR VERSIÓN 1.0
-                </a>
-                
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                 <a href="rtbs_dj_with_recorder.html" target="_blank"
                     style="display: inline-block; padding: 8px 16px; background: #002200; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00AA00; transition: all 0.3s;">
-                    🔗 VER VERSIÓN 1.0
+                    🔗 VER VERSIÓN 1.0 ONLINE
+                </a>
+                
+                <a href="rtbs_dj_with_recorder.html" download="RTBS_DJ_CONTROLLER_V1.html"
+                    style="display: inline-block; padding: 8px 16px; background: #003300; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00AA00; transition: all 0.3s;">
+                    📥 DESCARGAR VERSIÓN 1.0
                 </a>
             </div>
         </div>
@@ -1862,16 +1881,21 @@ footer {
                 style="display: inline-block; padding: 10px 20px; background: #003300; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00FF00; transition: all 0.3s;">
                 🔧 VER CÓDIGO EN GITHUB
             </a>
+            
+            <a href="mailto:rtbscrewsoundsystem@gmail.com"
+                style="display: inline-block; padding: 10px 20px; background: #004400; color: #00FF00; text-decoration: none; border-radius: 5px; font-weight: bold; border: 1px solid #00AA00; transition: all 0.3s;">
+                📧 CONTACTO
+            </a>
         </div>
         
-        <div style="color: #88FF88; font-size: 14px; margin-top: 15px;">
+        <div style="color: #88FF88; font-size: 14px; margin-top: 15px; line-height: 1.6;">
             <strong>Autor:</strong> RTBS CREW (con ayuda de IA)<br>
             <strong>Licencia:</strong> Libre uso - Atribución a RTBS CREW<br>
             <strong>Repositorio:</strong> github.com/rtbscrewsoundsystem/RTBS-CREW-<br>
             <strong>Estado:</strong> En desarrollo constante
         </div>
         
-        <div style="color: #FFFF00; font-size: 12px; margin-top: 20px; padding: 10px; background: rgba(0, 60, 0, 0.3); border-radius: 5px;">
+        <div style="color: #FFFF00; font-size: 12px; margin-top: 20px; padding: 10px; background: rgba(0, 60, 0, 0.3); border-radius: 5px; border: 1px solid #FF0000;">
             ⚠️ <strong>Nota:</strong> La página web tiene © Todos los derechos reservados RTBS CREW 2025<br>
             Solo el reproductor DJ es de código libre y modificable
         </div>

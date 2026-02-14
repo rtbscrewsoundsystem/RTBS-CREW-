@@ -1695,6 +1695,16 @@ footer {
       
     <a href="#" onclick="showTabWithTransition('musica')" class="bandcamp-link">▶ EXPLORAR NUESTRA MÚSICA ◀</a>
   </div>
+    
+<!-- Código de diagnóstico (añádelo después del iframe si sigue sin funcionar) -->
+<div style="text-align: center; margin-top: 20px;">
+    <button onclick="checkDJFile()" style="padding: 5px 10px; background: #FF0000; color: white; border: none; border-radius: 3px; font-size: 12px;">
+        🔍 DIAGNÓSTICO
+    </button>
+    <div id="dj-diagnostic" style="margin-top: 10px; font-size: 12px; color: #FFFF00;"></div>
+</div>
+
+<div id="dj" class="seccion" style="display:none;">
 
     <!-- Protesta Free Program -->
     <div class="protesta-container">
@@ -2207,26 +2217,6 @@ footer {
             <a href="https://www.youtube.com/watch?v=lmEeShOaoB0&list=OLAK5uy_m-UehAj2RjQ-fIjMfaeEnoeGAE3jFnKWo&index=1" target="_blank">YOUTUBE</a>
         </div>
 
-        <div class="like-dislike">
-           <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
-            <span class="like-count">0</span>
-            <button class="dislike-btn" onclick="rateItem(this, 'dislike')">🔇</button>
-            <span class="dislike-count">0</span>
-        </div>
-    </div>
-</div>
-
-      <!-- 13: BIZARRE EMERGENCIES -->
-<div class="vinyl-item" onclick="mostrarLanzamientoDetalle('bizarre-emergencies')">
-    <div class="vinyl-decoration"></div>
-    <div class="vinyl-content">
-        <div class="vinyl-title">DJ FLUGEL RTBS CREW - BIZARRE EMERGENCIES</div>
-        <div class="vinyl-description">Nuevo lanzamiento de sonidos extremos</div>
-        <div class="vinyl-links">
-            <a href="https://rtbscrew.bandcamp.com/track/bizarre-emergencies" target="_blank">BANDCAMP</a>
-            <a href="https://www.discogs.com/es/release/36395329-DJ-FLUGEL-RTBS-CREW-BIZARRE-EMERGENCIES" target="_blank">DISCOGS</a>
-            <a href="https://www.youtube.com/watch?v=Dink8NKWUDs" target="_blank">YOUTUBE</a>
-        </div>
         <div class="like-dislike">
            <button class="like-btn" onclick="rateItem(this, 'like')">🔊</button>
             <span class="like-count">0</span>

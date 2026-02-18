@@ -2,6 +2,7 @@
 <html lang="es">
 <head> 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>RTBS CREW | DJ FLUGEL RTBS CREW | Hardtek & Schranz ☢️</title>
     <meta name="description" content="RTBS CREW - Sonido Libre y Sucio. Escucha los últimos tracks de DJ FLUGEL RTBS CREW. Hardtek, schranz, Tekno y proyecto Soundsystem. Proyecto RTBS CREW controller mix y RTBS CREW visualizer codigo abierto.">
@@ -17,7 +18,7 @@
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="RTBS CREW ☢️ Sonido Libre y Sucio">
-    <meta property="og:description" content="☢️ RTBS CREW SOUNDSYSTEM ☢️  DJ FLUGEL RTBS CREW. Sonido Hardtek, Schranz, tekno y Soundsystem.">
+    <meta property="og:description" content="☢️ RTBS CREW SOUNDSYSTEM ☢️ DJ FLUGEL RTBS CREW. Sonido Hardtek, Schranz, tekno y Soundsystem.">
     <meta property="og:image" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/Proyecto_29.png">
    <meta property="og:url" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/">
    <meta name="twitter:card" content="summary_large_image">
@@ -1930,10 +1931,10 @@ footer {
     
 <!-- SECCIÓN NUESTRA MÚSICA -->
 <div id="musica" style="display:none;">
-  <h2>🎧 DJs DEL COLECTIVO RTBS CREW 🎧</h2>
+  <h2>🎧 DJ DEL COLECTIVO RTBS CREW 🎧</h2>
 
     <div class="dj-grid">
-    <!-- DJ FLUGEL RTBS CREW -->
+    <!-- DJ FLUGEL RTBS CREW - ÚNICO MIEMBRO -->
     <div class="dj-item" onclick="toggleDJ('flugel')" id="dj-flugel">
         <div class="dj-photo-container">
             <img src="Proyecto_43_112957.png" alt="DJ FLUGEL RTBS CREW" class="dj-photo">
@@ -1943,7 +1944,8 @@ footer {
         <div class="dj-description">Haz clic para ver sus lanzamientos</div>
         <div class="dj-status available">CONTENIDO DISPONIBLE</div>
     </div>
-    
+</div>
+
   <!-- LANZAMIENTOS DJ FLUGEL -->
   <div id="lanzamientos-flugel" class="lanzamientos-container">
     <h3 style="color: #FFFF00; text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px #FFFF00;">
@@ -2815,7 +2817,7 @@ footer {
         </a>
     </div>
   </div>
-    
+</div>
 <!-- FIN SECCIÓN NUESTRA MÚSICA -->
 
     <!-- SECCIÓN VÍDEOS VISUALES -->
@@ -2829,12 +2831,7 @@ footer {
         <div class="video-title">DJ FLUGEL RTBS CREW - MINI IMPROMIX //HARDTEK - SCHRANZ//</div>
       </div>
       
-      <!-- Video 2 -->
-      <div class="video-item">
-        <iframe class="video-player" src="https://www.youtube.com/embed/tBARcjoLgnE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div class="video-title">TRAKS PSIKOTIK 001 - TOUXMAN DJ</div>
-      </div>
-      
+      <!-- Video 2 (eliminado el de TOUXMAN DJ) -->
       <!-- Video 3 -->
       <div class="video-item">
         <iframe class="video-player" src="https://www.youtube.com/embed/d9Pl4Otti6s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -3631,40 +3628,23 @@ let djActivo = null;
 
 function toggleDJ(dj) {
   const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
-  const lanzamientosTouxman = document.getElementById('lanzamientos-touxman');
   const djFlugel = document.getElementById('dj-flugel');
-  const djTouxman = document.getElementById('dj-touxman');
   
   if (djActivo === dj) {
     // Si haces clic en el mismo DJ, ocultar los lanzamientos
     lanzamientosFlugel.classList.remove('active');
-    lanzamientosTouxman.classList.remove('active');
     djFlugel.classList.remove('active');
-    djTouxman.classList.remove('active');
     djActivo = null;
   } else {
     // Mostrar los lanzamientos del DJ seleccionado
     if (dj === 'flugel') {
       lanzamientosFlugel.classList.add('active');
-      lanzamientosTouxman.classList.remove('active');
       djFlugel.classList.add('active');
-      djTouxman.classList.remove('active');
       djActivo = 'flugel';
       
       // Desplazar suavemente a los lanzamientos
       setTimeout(() => {
         lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
-    } else if (dj === 'touxman') {
-      lanzamientosFlugel.classList.remove('active');
-      lanzamientosTouxman.classList.add('active');
-      djFlugel.classList.remove('active');
-      djTouxman.classList.add('active');
-      djActivo = 'touxman';
-      
-      // Desplazar suavemente a los lanzamientos
-      setTimeout(() => {
-        lanzamientosTouxman.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 300);
     }
   }

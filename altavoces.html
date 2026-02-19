@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="es">
+<head> 
+    <meta charset="UTF-8">
+    
+    <title>RTBS CREW | Nuestros Altavoces | Proyectos Soundsystem | Hardtek & Schranz ☢️</title>
+    <meta name="description" content="Proyectos de altavoces artesanales de RTBS CREW. CERWIN VEGA 1.0 y 2.0 escala 1:3, TURBOSOUND y más. Construcción de cajas acústicas.">
+    <meta name="keywords" content="RTBS CREW, DJ FLUGEL RTBS CREW, Hardtek, Tekno, Free Party, Soundsystem, Schranz, Rave, Altavoces Artesanales, Cajas Acústicas, CERWIN VEGA, TURBOSOUND">
+    <meta name="author" content="RTBS CREW">
+    <meta name="robots" content="index, follow">
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RTBS CREW ☢️ Nuestros Altavoces - Proyectos Soundsystem">
+    <meta property="og:description" content="☢️ Proyectos de altavoces artesanales. CERWIN VEGA, TURBOSOUND.">
+    <meta property="og:image" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/Proyecto_29.png">
+    <meta property="og:url" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/altavoces.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RTBS CREW ☢️ Altavoces">
+    <meta name="twitter:description" content="Construcción de cajas acústicas.">
+    <meta name="twitter:image" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/Proyecto_29.png">
+
+    <link rel="canonical" href="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/altavoces.html">
+    <link rel="preload" as="image" href="Proyecto_29.png">
+
+<style>
+/* --- Loader mejorado --- */
+#loader { 
+    position: fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background: #000; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    z-index:9999;
+    font-family: 'Arial Black', Impact, sans-serif;
+}
+.loader-content {
+    text-align: center;
+}
+.loader-rtbs {
+    font-size: 48px;
+    color: #00FF00;
+    text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+    margin-bottom: 30px;
+    animation: glitch 2s infinite;
+}
+.bar { 
+    width:8px; 
+    height:40px; 
+    margin:2px; 
+    background: linear-gradient(180deg, #00FF00, #FF0000, #FFFF00);
+    display: inline-block;
+    animation: bounce 0.6s infinite alternate;
+}
+.bar:nth-child(2){ animation-delay:0.1s; } 
+.bar:nth-child(3){ animation-delay:0.2s; } 
+.bar:nth-child(4){ animation-delay:0.3s; } 
+.bar:nth-child(5){ animation-delay:0.4s; }
+.bar:nth-child(6){ animation-delay:0.5s; }
+
+@keyframes bounce { 
+    from { transform: scaleY(0.3); } 
+    to { transform: scaleY(1); } 
+}
+    .logo-titulo {
+  width: 100px; /* tamaño del logo */
+  height: auto;
+  vertical-align: middle;
+  margin-right: 15px;
+  border: 2px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+.titulo-con-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+    
+/* --- Estilos generales --- */
+body { 
+    margin:0; 
+    font-family:'Arial Black', Impact, sans-serif; 
+    background:#000;
+    color:#00FF00;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fondo tribal con efectos */
+.tribal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('tribal-tattoo-design-elements-set-260nw-565457776.jpg') center/cover;
+    filter: grayscale(100%) brightness(0.8) contrast(1.2);
+    z-index: -2;
+    animation: tribalGlitch 8s infinite, tribalDistortion 12s infinite;
+}
+
+/* Capa de superposición para mejor legibilidad */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+/* Efectos de glitch para el fondo tribal */
+@keyframes tribalGlitch {
+    0%, 100% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    2% { 
+        filter: grayscale(100%) brightness(0.9) contrast(1.3);
+        transform: scale(1.05) translate(2px, 1px);
+    }
+    4% { 
+        filter: grayscale(100%) brightness(0.7) contrast(1.1);
+        transform: scale(1.05) translate(-1px, -2px);
+    }
+    6% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    50% { 
+        filter: grayscale(100%) brightness(0.85) contrast(1.25);
+        transform: scale(1.05) translate(0, 0);
+    }
+}
+
+/* Efectos de distorsión */
+@keyframes tribalDistortion {
+    0%, 100% { 
+        transform: scale(1.05) skew(0deg, 0deg);
+    }
+    25% { 
+        transform: scale(1.05) skew(0.2deg, 0.1deg);
+    }
+    50% { 
+        transform: scale(1.05) skew(-0.1deg, 0.2deg);
+    }
+    75% { 
+        transform: scale(1.05) skew(0.1deg, -0.1deg);
+    }
+}
+
+h1 { 
+    font-size:52px; 
+    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000; 
+    text-align:center; 
+    letter-spacing: 2px;
+    animation: titleGlitch 5s infinite;
+    margin: 20px 0;
+}
+
+@keyframes titleGlitch {
+    0%, 100% { transform: translate(0, 0); }
+    95% { transform: translate(0, 0); }
+    96% { transform: translate(-1px, 1px); }
+    97% { transform: translate(1px, -1px); }
+    98% { transform: translate(-1px, -1px); }
+    99% { transform: translate(1px, 1px); }
+}
+
+h1 span {
+    display: inline-block;
+    position: relative;
+}
+
+h1 span:nth-child(odd){ 
+    color:#00FF00; 
+    animation: pulse 3s infinite alternate;
+}
+h1 span:nth-child(even){ 
+    color:#FFFF00; 
+    animation: pulse 2.5s infinite alternate-reverse;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); text-shadow: 0 0 10px currentColor; }
+    100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+/* --- Menú lateral tribal rave --- */
+nav { 
+    width:220px; 
+    position:fixed; 
+    height:100%; 
+    background: linear-gradient(to bottom, #111, #002200, #111);
+    padding-top:30px; 
+    border-right: 3px solid #00FF00;
+    box-shadow: 0 0 15px #00FF00;
+    z-index: 100;
+}
+
+nav:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, #00FF00, #FFFF00 10px, #FF0000 20px, #00FF00 30px);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 0; }
+}
+
+nav a { 
+    display:block; 
+    color:#00FF00; 
+    padding:15px 20px; 
+    text-decoration:none; 
+    font-weight:bold;
+    font-size: 16px;
+    border-bottom: 1px dashed #003300;
+    position: relative;
+    transition: all 0.3s;
+    text-shadow: 0 0 5px #00FF00;
+}
+
+nav a:hover { 
+    background:#003300; 
+    color:#FFFF00; 
+    padding-left: 25px;
+    text-shadow: 0 0 10px #FFFF00;
+}
+
+nav a:hover:after {
+    content: "☢️";
+    position: absolute;
+    right: 15px;
+}
+
+nav a:first-child {
+    background: #002200;
+    color: #FFFF00;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #00FF00;
+    box-shadow: 0 0 10px #00FF00;
+    margin: 0 10px 20px 10px;
+    border-radius: 5px;
+}
+
+/* --- Contenido principal --- */
+.main { 
+    margin-left:220px; 
+    padding:20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* --- Transición de disco vinilo (se mantiene pero no se usa) --- */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.vinyl-transition {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
+        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
+    border: 5px solid #00FF00;
+    box-shadow: 0 0 20px #00FF00;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Sección INICIO (oculta por defecto) --- */
+#inicio {
+    display: none;
+}
+
+/* --- Sección ALTAVOCES (visible) --- */
+#altavoces {
+    display: block;
+}
+
+    /* --- Estilos para páginas detalladas de lanzamientos --- */
+.lanzamiento-detalle {
+    display: none;
+    background: rgba(0, 20, 0, 0.9);
+    border: 3px solid #00FF00;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 20px 0;
+    position: relative;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.lanzamiento-detalle.active {
+    display: block;
+}
+
+.portada-lanzamiento {
+    width: 300px;
+    height: 300px;
+    border: 3px solid #00FF00;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00FF00;
+    margin: 0 auto 20px;
+    object-fit: cover;
+}
+
+.info-lanzamiento {
+    background: rgba(0, 40, 0, 0.6);
+    border: 2px solid #00AA00;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.info-lanzamiento h4 {
+    color: #FFFF00;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px #FFFF00;
+}
+
+.info-lanzamiento p {
+    color: #CCFFCC;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.links-extras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.link-extra {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #003300;
+    border: 1px solid #00AA00;
+    border-radius: 8px;
+    color: #00FF00;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.link-extra:hover {
+    background: #00AA00;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+.link-extra img {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-volver {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #00AA00;
+    color: #000;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 2px solid #00FF00;
+    transition: all 0.3s;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn-volver:hover {
+    background: #00FF00;
+    transform: scale(1.05);
+}
+
+.vinyl-item {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.vinyl-item:hover {
+    transform: translateY(-5px) scale(1.02);
+}
+    
+    /* --- Estilos para fotos de DJs con vinilo --- */
+.dj-photo-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+}
+
+.dj-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00FF00;
+  box-shadow: 0 0 15px #00FF00;
+  position: relative;
+  z-index: 2;
+}
+
+.dj-vinyl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.vinyl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.vinyl-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.vinyl-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.vinyl-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+/* Vinilo giratorio decorativo */
+.vinyl-decoration {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
+        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
+    border: 3px solid #00FF00;
+    box-shadow: 0 0 10px #00FF00;
+    animation: spin 3s linear infinite;
+    position: relative;
+}
+
+.vinyl-decoration:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    background: #00FF00;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.vinyl-content {
+    flex: 1;
+}
+
+.vinyl-title {
+    font-size: 16px;
+    color: #FFFF00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #FFFF00;
+}
+
+.vinyl-description {
+    font-size: 12px;
+    color: #CCFFCC;
+    margin-bottom: 10px;
+}
+
+.vinyl-links {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0;
+    flex-wrap: wrap;
+}
+
+.vinyl-links a {
+    display: inline-block;
+    padding: 4px 8px;
+    background: #003300;
+    color: #00FF00;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 12px;
+    transition: all 0.3s;
+    border: 1px solid #00AA00;
+}
+
+.vinyl-links a:hover {
+    background: #00AA00;
+    color: #000;
+}
+
+    /* --- ESTILOS PRÓXIMO LANZAMIENTO --- */
+.proximo-lanzamiento-container {
+    margin-top: 40px;
+    padding: 20px;
+    border: 2px dashed #ff0000; /* Borde discontinuo para que parezca una alerta */
+    background: rgba(255, 0, 0, 0.05);
+    border-radius: 8px;
+}
+
+.titulo-proximo {
+    color: #FF0000;
+    text-align: center;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+.lanzamiento-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00FF00;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.lanzamiento-info-flex {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap; /* Para que en móviles se ponga uno debajo de otro */
+}
+
+.lanzamiento-foto img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.lanzamiento-texto {
+    flex: 1;
+    min-width: 250px;
+}
+
+.lanzamiento-texto h3 {
+    color: #00FF00;
+    margin-top: 0;
+    font-size: 1.8rem;
+}
+
+.reproductor-bandcamp {
+    margin: 15px 0;
+    background: #111;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.countdown-aviso {
+    display: inline-block;
+    background: #ff0000;
+    color: #fff;
+    padding: 5px 15px;
+    font-weight: bold;
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
+
+/* Adaptación para el MODO CLARO que hicimos */
+body.light-mode .lanzamiento-card {
+    background: #fff;
+    color: #000;
+    border-color: #ff0000;
+}
+
+body.light-mode .lanzamiento-texto h3 {
+    color: #ff0000;
+}
+    
+    /* --- CONFIGURACIÓN DE CONTORNOS ESPECÍFICOS --- */
+
+/* 1. Letras VERDES con contorno AZUL ELÉCTRICO (Estilo Windows XP RGB) */
+/* Aplicamos a clases que ya usas como .loader-rtbs, nav a, .link-extra, etc. */
+.loader-rtbs, 
+nav a, 
+.link-extra, 
+.vinyl-links a, 
+.descripcion strong, 
+#comment-form input, 
+#comment-form textarea,
+footer,
+body {
+    color: #00FF00 !important; /* Verde puro */
+    text-shadow: 
+        -2px -2px 0 #0000FF,  
+         2px -2px 0 #0000FF,
+        -2px  2px 0 #0000FF,
+         2px  2px 0 #0000FF,
+         0px  0px 10px #0000FF !important; /* Brillo azul eléctrico */
+}
+
+/* 2. Letras ROJAS con contorno VERDE FOSFORITO */
+/* Aplicamos a títulos de posts, hashtags y botones de dislike */
+.post-title-box, 
+.post-hashtags, 
+.dislike-btn, 
+h1 span:nth-child(even),
+.bar:nth-child(2), .bar:nth-child(5) {
+    color: #FF0000 !important; /* Rojo puro */
+    text-shadow: 
+        -2px -2px 0 #00FF00,  
+         2px -2px 0 #00FF00,
+        -2px  2px 0 #00FF00,
+         2px  2px 0 #00FF00,
+         0px  0px 10px #00FF00 !important; /* Brillo verde fosforito */
+}
+
+/* 3. Limpieza de otros colores (Eliminar amarillos o rosas) */
+h1 span:nth-child(even), 
+nav a:hover, 
+.vinyl-title, 
+.info-lanzamiento h4,
+.video-title,
+.dj-title {
+    color: #00FF00 !important; /* Forzamos a verde si antes eran amarillos */
+}
+
+/* Ajuste para el H1 principal */
+h1 span {
+    text-shadow: -2px -2px 0 #0000FF, 2px -2px 0 #0000FF, -2px 2px 0 #0000FF, 2px 2px 0 #0000FF !important;
+}
+
+    /* --- ESTILOS PARA LA TABLA DE ESPECIFICACIONES DJ (COLORES Y CONTORNOS) --- */
+
+/* 1. FUNCIONALIDADES ESTABLES (BIEN): Letras VERDES, Contorno AZUL FOSFORITO */
+#dj-controller-desc div[style*="border-left: 3px solid #00FF00"] li,
+#dj-controller-desc div[style*="border-left: 3px solid #00FF00"] h3 {
+    color: #00FF00 !important; /* Verde Puro */
+    text-shadow: 
+        -2px -2px 0 #0000FF,  
+         2px -2px 0 #0000FF,
+        -2px 2px 0 #0000FF,
+         2px 2px 0 #0000FF,
+         0px 0px 8px #0000FF !important; /* Resplandor Azul */
+}
+
+/* 2. EN DESARROLLO (MÁS O MENOS): Letras NARANJA, Contorno AZUL FOSFORITO */
+#dj-controller-desc div[style*="border-left: 3px solid #FFA500"] li,
+#dj-controller-desc div[style*="border-left: 3px solid #FFA500"] h3 {
+    color: #FF8000 !important; /* Naranja Brillante */
+    text-shadow: 
+        -2px -2px 0 #0000FF,  
+         2px -2px 0 #0000FF,
+        -2px 2px 0 #0000FF,
+         2px 2px 0 #0000FF,
+         0px 0px 8px #0000FF !important; /* Resplandor Azul */
+}
+
+/* 3. NO IMPLEMENTADAS (ROJO): Letras ROJAS, Contorno VERDE FOSFORITO */
+#dj-controller-desc div[style*="border-left: 3px solid #FF0000"] li,
+#dj-controller-desc div[style*="border-left: 3px solid #FF0000"] h3 {
+    color: #FF0000 !important; /* Rojo Puro */
+    text-shadow: 
+        -2px -2px 0 #00FF00,  
+         2px -2px 0 #00FF00,
+        -2px 2px 0 #00FF00,
+         2px 2px 0 #00FF00,
+         0px 0px 8px #00FF00 !important; /* Resplandor Verde */
+}
+
+/* Ajuste para que las viñetas (dots) de la lista no se vean raras */
+#dj-controller-desc ul {
+    list-style-position: inside;
+}
+    
+/* Sistema de likes/dislikes */
+.like-dislike {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.like-btn, .dislike-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s;
+    padding: 5px;
+}
+
+.like-btn {
+    color: #00FF00;
+}
+
+.like-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #00FF00;
+}
+
+.dislike-btn {
+    color: #FF0000;
+}
+
+.dislike-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #FF0000;
+}
+
+.like-count, .dislike-count {
+    font-size: 14px;
+    color: #CCFFCC;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* --- Sección EN OBRAS (Visuales y Altavoces) --- */
+.under-construction {
+    background: #000080 !important;
+    border: 4px solid #C0C0C0 !important;
+    position: relative;
+    overflow: hidden;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+}
+
+.construction-border {
+    border: 2px solid #DFDFDF;
+    background: #C0C0C0;
+    padding: 3px;
+    margin: 2px;
+}
+
+.construction-content {
+    background: #008080;
+    padding: 40px 20px;
+    text-align: center;
+    border: 2px solid #000;
+    position: relative;
+    z-index: 2;
+}
+
+    /* --- ESTILOS ADICIONALES PARA LA DESCRIPCIÓN DEL POST DE ALTAVOCES --- */
+
+/* Estilo para el contenedor general del detalle del post */
+.altavoz-post-detalle {
+    margin: 25px auto;
+    padding: 15px;
+    border: 1px solid #333;
+    background-color: #1a1a1a;
+    color: #fff;
+}
+
+/* Nuevo estilo para el título del proyecto con recuadro negro */
+.post-title-box {
+    background-color: #000;
+    color: #FF0000;
+    padding: 10px;
+    margin: 20px 0 10px 0;
+    border: 2px solid #FF0000;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.4em;
+    text-transform: uppercase;
+}
+
+/* Estilo para el reproductor de video */
+.post-video-container {
+    margin: 20px 0;
+    text-align: center;
+}
+.post-video-container video {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #FF0000;
+    display: block;
+    margin: 0 auto;
+}
+
+    /* --- ESTILOS PARA GALERÍA DE 3 FOTOS EN HORIZONTAL --- */
+.three-col-gallery {
+    display: flex; /* Usar Flexbox para poner las imágenes en línea */
+    justify-content: space-around; /* Distribuir el espacio entre ellas */
+    align-items: flex-start;
+    margin: 20px 0;
+    gap: 10px; /* Espacio entre las imágenes */
+}
+
+.three-col-gallery img {
+    width: 30%; /* Cada imagen ocupa aproximadamente un tercio del contenedor */
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #00FF00; /* Borde para que se destaquen */
+}
+
+/* Diseño Responsive: Apilar en dispositivos pequeños */
+@media (max-width: 600px) {
+    .three-col-gallery {
+        flex-direction: column;
+    }
+    .three-col-gallery img {
+        width: 80%;
+        margin: 10px auto;
+    }
+}
+    
+/* Estilo para el enlace a Instagram */
+.post-link a {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #00FF00; /* Color verde llamativo */
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+/* Estilo para los hashtags */
+.post-hashtags {
+    color: #FF0000;
+    font-size: 0.9em;
+    margin-top: 15px;
+    text-align: center;
+}
+    
+/* Tiras de obras animadas */
+.tape {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffff00,
+        #ffff00 20px,
+        #000 20px,
+        #000 40px
+    );
+    animation: tapeMove 3s linear infinite;
+    z-index: 1;
+    opacity: 0.8;
+}
+
+.tape:nth-child(1) {
+    top: 20%;
+    animation-delay: 0s;
+}
+
+.tape:nth-child(2) {
+    top: 50%;
+    animation-delay: 1s;
+}
+
+.tape:nth-child(3) {
+    top: 80%;
+    animation-delay: 2s;
+}
+
+@keyframes tapeMove {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+    /* --- NUEVOS ESTILOS PARA CINTAS VERTICALES EN LA SECCIÓN EN OBRAS (.under-construction) --- */
+
+/* 1. Modificar la cinta para que sea vertical y cambiar la animación */
+.under-construction .tape {
+    width: 30px; /* Ancho para la cinta vertical */
+    height: 100%; /* Cubre toda la altura de la sección */
+    top: 0;
+    /* La animación original 'tapeMove' hace un movimiento horizontal que ya no sirve,
+       así que usamos una nueva keyframe 'tapeVerticalScroll'. */
+    animation: tapeVerticalScroll 3s linear infinite;
+}
+
+/* 2. Posicionar la primera cinta a la izquierda */
+.under-construction .tape:nth-child(1) {
+    left: 0;
+    right: auto;
+    /* Las propiedades 'top' horizontales originales se anulan con el 'top: 0' de arriba */
+    animation-delay: 0s;
+}
+
+/* 3. Posicionar la segunda cinta a la derecha */
+.under-construction .tape:nth-child(2) {
+    right: 0;
+    left: auto; /* Asegura que se pegue a la derecha */
+    animation-delay: 1.5s; /* Desfase para que no se muevan a la vez */
+}
+
+/* 4. Ocultar la tercera cinta (si existe) */
+.under-construction .tape:nth-child(3) {
+    display: none;
+}
+
+/* 5. Definir la nueva animación: desplaza el patrón de fondo verticalmente */
+@keyframes tapeVerticalScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 40px; } /* Mueve el fondo la distancia de una repetición (40px) */
+}
+    
+/* Humo pixelado */
+.smoke {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #C0C0C0;
+    animation: smokeRise 4s linear infinite;
+    opacity: 0;
+}
+
+.smoke:nth-child(4) { left: 20%; animation-delay: 0s; }
+.smoke:nth-child(5) { left: 40%; animation-delay: 1s; }
+.smoke:nth-child(6) { left: 60%; animation-delay: 2s; }
+.smoke:nth-child(7) { left: 80%; animation-delay: 3s; }
+
+@keyframes smokeRise {
+    0% { 
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+    20% { 
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translateY(-100px) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Estilo Windows XP */
+.windows-xp-title {
+    background: linear-gradient(to bottom, #000080, #1084D0);
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #DFDFDF;
+    border-bottom-color: #000;
+    border-right-color: #000;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 1px #000;
+}
+
+.windows-xp-button {
+    background: linear-gradient(to bottom, #DFDFDF, #808080);
+    border: 2px solid;
+    border-top-color: #FFF;
+    border-left-color: #FFF;
+    border-bottom-color: #000;
+    border-right-color: #000;
+    padding: 8px 16px;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    margin: 10px;
+    image-rendering: pixelated;
+}
+
+.windows-xp-button:active {
+    border-top-color: #000;
+    border-left-color: #000;
+    border-bottom-color: #FFF;
+    border-right-color: #FFF;
+}
+
+.xp-icon {
+    font-size: 48px;
+    margin: 20px 0;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0px #000);
+}
+
+/* --- Sección VÍDEOS VISUALES (oculta) --- */
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.video-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.video-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+.video-title {
+    font-size: 16px;
+    color: #FFFF00;
+    margin: 10px 0;
+    text-shadow: 0 0 5px #FFFF00;
+    text-align: center;
+}
+
+.video-player {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #00AA00;
+}
+
+/* --- Otras secciones (ocultas) --- */
+.seccion {
+    display: none;
+}
+
+iframe {
+    margin-top:20px; 
+    border:2px solid #00FF00;
+    border-radius: 5px;
+}
+
+/* Redes Sociales */
+.redes { 
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.redes a { 
+    display: inline-block;
+    transition: transform 0.3s;
+}
+.redes a:hover {
+    transform: scale(1.2);
+}
+.redes img { 
+    width:60px; 
+    margin:5px; 
+    filter: drop-shadow(0 0 5px #00FF00);
+}
+
+/* Comentarios */
+#comment-form { 
+    display:flex; 
+    flex-direction:column; 
+    width:100%; 
+    max-width:500px;
+    margin: 0 auto;
+}
+#comment-form input, #comment-form textarea { 
+    margin-bottom:10px; 
+    padding:10px;
+    background: #002200;
+    border: 1px solid #00AA00;
+    color: #00FF00;
+    border-radius: 5px;
+}
+#comment-form button { 
+    padding:10px;
+    background: #00AA00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+#comment-form button:hover {
+    background: #00FF00;
+}
+.comment { 
+    border:1px solid #00AA00; 
+    margin-bottom:10px; 
+    padding:10px; 
+    background: rgba(0, 40, 0, 0.5);
+    border-radius: 5px;
+}
+
+footer { 
+    margin-top:50px; 
+    color:#00FF00; 
+    text-align:center; 
+    padding: 20px;
+    border-top: 1px solid #00AA00;
+    text-shadow: 0 0 5px #00AA00;
+}
+
+.bandcamp-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background: #004400;
+    color: #00FF00;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 1px solid #00FF00;
+    transition: all 0.3s;
+}
+
+.bandcamp-link:hover {
+    background: #00FF00;
+    color: #000;
+    text-shadow: none;
+}
+
+#logo-placeholder {
+    width: 80px;
+    height: 80px;
+    background: #111;
+    border: 3px solid #00FF00;
+    display: inline-block;
+    margin-right: 15px;
+    vertical-align: middle;
+    box-shadow: 0 0 15px #00FF00;
+}
+
+
+#logo-loader {
+  width: 80px;
+  height: auto;
+  margin-right: 15px;
+  vertical-align: middle;
+  border: 3px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+    /* Contenedor principal */
+.protesta-container {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 2px solid #ff0000;
+    border-bottom: 2px solid #ff0000;
+    margin: 20px 0;
+}
+
+/* Estilo base para los textos */
+.glitch-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 900;
+    text-transform: uppercase;
+    position: relative;
+    display: block;
+    animation: flash-colors 0.2s infinite, strobe 0.1s infinite;
+}
+
+/* El pequeño */
+.small {
+    font-size: 1.2rem;
+    color: #fff;
+    letter-spacing: 4px;
+    opacity: 0.8;
+}
+
+/* EL GRANDE Y CANTOSO */
+.big {
+    font-size: 2.5rem; /* Casi el doble de grande */
+    letter-spacing: 2px;
+    margin-top: 10px;
+    text-shadow: 3px 3px #ff0000, -3px -3px #0000ff;
+    animation: flash-colors 0.15s infinite, ultra-glitch 0.4s infinite;
+}
+
+/* Animación de colores estroboscópicos */
+@keyframes flash-colors {
+    0% { color: #ff0000; }
+    20% { color: #00ff00; }
+    40% { color: #ffff00; }
+    60% { color: #00ffff; }
+    80% { color: #ff00ff; }
+    100% { color: #ffffff; }
+}
+
+/* Efecto de vibración/glitch para el texto grande */
+@keyframes ultra-glitch {
+    0% { transform: translate(0); clip-path: inset(0% 0% 0% 0%); }
+    20% { transform: translate(-5px, 2px); clip-path: inset(10% 0% 40% 0%); }
+    40% { transform: translate(5px, -2px); clip-path: inset(50% 0% 5% 0%); }
+    60% { transform: translate(-2px, 5px); clip-path: inset(30% 0% 60% 0%); }
+    80% { transform: translate(2px, -5px); clip-path: inset(0% 0% 20% 0%); }
+    100% { transform: translate(0); }
+}
+
+/* Parpadeo de "luz de rave" (Strobe) */
+@keyframes strobe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+/* Adaptación para móviles */
+@media (max-width: 768px) {
+    .big { font-size: 1.5rem; }
+    .small { font-size: 0.8rem; }
+}
+    
+/* --- NUEVOS ESTILOS PARA DJs --- */
+.dj-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.dj-item {
+    background: linear-gradient(to bottom, #111, #002200);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 25px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+}
+
+.dj-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px #00FF00;
+    border-color: #FFFF00;
+}
+
+.dj-item:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #00FF00, #FFFF00, #FF0000);
+}
+
+.dj-item.active {
+    background: linear-gradient(to bottom, #002200, #004400);
+    border-color: #FFFF00;
+    box-shadow: 0 0 20px #FFFF00;
+}
+
+    /* Arreglar altura de los vinyl-items */
+.vinyl-item {
+    min-height: 180px;
+    height: auto;
+}
+
+.vinyl-content {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.vinyl-title {
+    font-size: 15px;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.vinyl-description {
+    font-size: 12px;
+    color: #88FF88;
+    margin-bottom: 10px;
+    min-height: 30px;
+}
+
+/* Asegurar que TOUXMAN DJ se vea igual que FLUGEL */
+#lanzamientos-touxman .vinyl-item {
+    min-height: 180px;
+}
+
+#lanzamientos-touxman .vinyl-content {
+    min-height: 140px;
+}
+    
+/* Icono de tabla de mezclas */
+.mixer-icon {
+    width: 80px;
+    height: 40px;
+    background: linear-gradient(135deg, #333, #000);
+    border: 3px solid #00FF00;
+    border-radius: 8px;
+    margin: 0 auto 15px;
+    position: relative;
+    box-shadow: 0 0 10px #00FF00;
+}
+
+.mixer-icon:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    right: 10px;
+    height: 10px;
+    background: #00FF00;
+    border-radius: 3px;
+    box-shadow: 0 0 5px #00FF00;
+}
+
+.mixer-icon:after {
+    content: "";
+    position: absolute;
+    bottom: 5px;
+    left: 15px;
+    right: 15px;
+    height: 6px;
+    background: #FFFF00;
+    border-radius: 2px;
+    box-shadow: 0 0 3px #FFFF00;
+}
+
+.dj-title {
+    font-size: 20px;
+    color: #FFFF00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #FFFF00;
+}
+
+.dj-description {
+    font-size: 14px;
+    color: #CCFFCC;
+    margin-bottom: 15px;
+}
+
+.dj-status {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.dj-status.available {
+    background: #004400;
+    color: #00FF00;
+    border: 1px solid #00FF00;
+}
+
+.dj-status.coming {
+    background: #444400;
+    color: #FFFF00;
+    border: 1px solid #FFFF00;
+}
+
+/* Contenedor de lanzamientos */
+.lanzamientos-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 30, 0, 0.8);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    display: none;
+}
+
+.lanzamientos-container.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toggle-btn {
+    background: #00AA00;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #00FF00;
+}
+
+</style>
+</head>
+<body>
+
+<!-- Fondo tribal con efectos -->
+<div class="tribal-background"></div>
+<div class="overlay"></div>
+
+<div id="loader">
+  <div class="loader-content">
+    <div class="loader-rtbs">
+      <img src="Proyecto_29.png" alt="Logo RTBS CREW" id="logo-loader">
+      RTBS CREW
+    </div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+</div>
+
+<!-- Transición de disco vinilo -->
+<div id="transition-overlay">
+    <div class="vinyl-transition"></div>
+</div>
+
+<nav>
+  <a href="#" onclick="toggleTheme()" id="theme-toggle" style="background: #00FF00; color: #000; font-weight: bold; border: 2px solid #fff; margin-bottom: 15px;">MODO CLARO 💡</a>
+
+  <a href="index.html">INICIO ☢️</a>
+  <a href="musica.html">NUESTRA MÚSICA</a>
+  <a href="visuales.html">MÚSICA VISUALES</a>
+  <a href="visualizer.html">RTBS VISUALIZER 🚀</a>
+  <a href="videos-cortos.html">VÍDEOS CORTOS 🎬</a>
+  <a href="redes.html">REDES SOCIALES</a>
+  <a href="comentarios.html">COMENTARIOS</a>
+  <a href="rtbs-crew-dj-controller-mix.html">RTBS CREW DJ CONTROLER MIX</a>
+  <a href="altavoces.html" style="background: #003300; color: #FFFF00; border-left: 4px solid #FFFF00;">NUESTROS ALTAVOCES</a>
+</nav>
+
+<div class="main">
+  <h1 class="titulo-con-logo">
+    <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+      <img src="Proyecto_29.png" alt="Logo RTBS CREW" class="logo-titulo">
+      <span>R</span><span>T</span><span>B</span><span>S</span> CREW
+    </a>
+  </h1>
+
+  <!-- SOLO LA SECCIÓN ALTAVOCES (con TODOS los efectos originales) -->
+  <div id="altavoces" class="seccion under-construction" style="display:block;">
+    <div class="tape"></div>
+    <div class="tape"></div>
+    <div class="smoke"></div>
+    
+    <!-- Humo pixelado -->
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    <div class="smoke"></div>
+    
+    <div class="windows-xp-title">🔧 NUESTROS ALTAVOCES - EN CONSTRUCCIÓN 🔧</div>
+    <section id="nuestros-altavoces" class="nuestros-altavoces">
+      <div class="contenedor-principal">
+        <h2 class="titulo-seccion">NUESTROS ALTAVOCES</h2>
+        <p class="subtitulo-seccion">El sonido libre y sucio requiere el equipo adecuado. Conoce nuestros proyectos de construcción y mejora de cajas acústicas.</p>
+        
+        <!-- Contenido de la sección Altavoces -->
+        <div class="altavoces-contenido">
+          <!-- Bloque de Introducción/Resumen -->
+          <div class="altavoces-resumen">
+            <h3 class="resumen-titulo">CERWIN VEGA 1.0 y 2.0 - Escala 1:3</h3>
+            <p class="resumen-texto">El proyecto comenzó con la versión **CERWIN VEGA 1.0 Escala 1:3**. Se inició el desarrollo, trabajando continuamente para mejorar y perfeccionar el equipo. Lamentablemente, el altavoz original del 1.0 acabó fallando por completo y tuvo que ser descartado. A pesar del contratiempo, se logró encontrar un sustituto para la caja acústica, y el CERWIN VEGA 1.0 fue revivido y completado al 100%, pendiente solo de volver a colocar la tapa final.</p>
+            <p class="resumen-texto">Paralelamente, se inició el proyecto **CERWIN VEGA 2.0 Escala 1:3**. Una vez colocadas todas las piezas, se procedió a aplicar masilla de madera en los huecos superiores restantes para lograr un aislamiento sonoro total, finalizando con la primera prueba de sonido del CERWIN VEGA 2.0.</p>
+          </div>
+          
+          <!-- Post 1: Inicio CERWIN VEGA 1.0 y 2.0 -->
+          <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+            <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+              POST 1: INICIO DEL PROYECTO CERWIN VEGA 1.0 y 2.0
+            </div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px;">
+              <img src="SaveClip.App_496821849_17851473531447325_2752775863769893307_n.jpg" alt="Foto 1" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+              <img src="SaveClip.App_497063848_17851473540447325_646349771874319268_n.jpg" alt="Foto 2" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+              <img src="SaveClip.App_497141184_17851473549447325_3293157005935637525_n.jpg" alt="Foto 3" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+            </div>
+            <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+              <div class="altavoz-post-detalle">
+                <div class="post-title-box">
+                  CERWIN VEGA 1.0 ESCALA
+                </div>
+                
+                <p>
+                  Finalmente he puesto la entrada de cables y lo que sería todo el chasis del altavoz, ahora un poco de pintura gris y roja para rematar el color y ya. Ha sido un proyecto bastante complicado por haberlo tenido que volver a abrir 2 veces por problemas de fallas con el altavoz interno, que al final tuve que cambiar entero.
+                </p>
+
+                <p class="post-link">
+                  <a href="https://www.instagram.com/reel/DQq6dukjRlk/?igsh=aGpkcGZuOWNiaHlv" target="_blank" rel="noopener noreferrer">
+                    🔗 Ver Publicación Original en Instagram
+                  </a>
+                </p>
+
+                <div class="post-video-container">
+                  <video controls>
+                    <source src="1000026504.mp4" type="video/mp4">
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+                
+                <div class="post-hashtags">
+                  #freeparty #rave #teuf #rtbscrew #freepartyisnotacrime #soundsystem
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Post 2: CERWIN VEGA 1.0 Revivido -->
+          <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+            <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+              POST 2: CERWIN VEGA 1.0 REVIVIDO (SUSTITUTO DE CAJA ACÚSTICA)
+            </div>
+            <div style="text-align: center; margin-bottom: 10px;">
+              <video controls style="width: 80%; max-width: 400px; border: 3px solid #00FF00;">
+                <source src="SaveClip.App_AQNseJYjUP18QoZ1g2EZI6SOKzO7tO3Uj40FUiJbMEoyMnP2rW0fXfP1BqeqRN21uj4QXeh-9KBpdB50Cb_tWkGknjfwQl14TE8N9Bg.mp4" type="video/mp4">
+                Tu navegador no soporta el video.
+              </video>
+            </div>
+            <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+              El altavoz original falló, pero encontramos un sustituto y lo terminamos al 100%.
+            </div>
+          </div>
+
+          <!-- Post 3: CERWIN VEGA 2.0 Montaje -->
+          <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+            <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+              POST 3: CERWIN VEGA 2.0 MONTAJE FINAL Y AISLAMIENTO
+            </div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px;">
+              <img src="SaveClip.App_555084652_17868788139447325_841079977886370508_n.jpg" alt="Foto 1" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+              <img src="SaveClip.App_554996255_17868788130447325_7273488961855246324_n (1).jpg" alt="Foto 2" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+              <img src="SaveClip.App_554822942_17868788148447325_1966711022279555211_n.jpg" alt="Foto 3" style="width: 30%; max-width: 200px; border: 2px solid #00FF00;">
+            </div>
+            <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+              <a href="https://www.instagram.com/p/DPHYCGKjY3x/?igsh=ZTBzcTV3MmZuZGk2" target="_blank" style="color: #00FF00;">Ver post original en Instagram</a>
+            </div>
+          </div>
+
+          <!-- Post 4: CERWIN VEGA 2.0 Prueba de sonido -->
+          <div style="background: #000080; border: 2px solid #C0C0C0; padding: 15px; margin-bottom: 25px;">
+            <div style="color: #00FF00; font-family: 'Arial Black'; font-size: 16px; margin-bottom: 10px; text-align: center;">
+              POST 4: CERWIN VEGA 2.0 ¡PRIMERA PRUEBA DE SONIDO!
+            </div>
+            <div style="text-align: center; margin-bottom: 10px;">
+              <video controls style="width: 80%; max-width: 400px; border: 3px solid #00FF00;">
+                <source src="SaveClip.App_AQPkj0I7EwYWW_B8DA0boNhP5ohbsWE-1vBoNlzuLdPT6Cx6vxHBjnu_MB7rcHu2Kj2uclh5_gbg2gaId4pfcs2s-PS_poAHXH5dhNA.mp4" type="video/mp4">
+                Tu navegador no soporta el video.
+              </video>
+            </div>
+            <div style="color: #C0C0C0; font-size: 12px; text-align: center;">
+              Primera prueba de sonido del CERWIN VEGA 2.0.
+            </div>
+          </div>
+
+          <!-- TURBOSOUND -->
+          <div style="margin-top: 50px;">
+            <div class="altavoz-post-detalle">
+              <div class="post-title-box">
+                TURBOSOUND 1:3
+              </div>
+              
+              <p>
+                PAREJA DE TURBOSOUND 1:3: 1.0 (500W) Y 2.0 (30W + 30 W). Un altavoz estaba ya finalizado desde hace un año y decidí hacerle un compañero. Así va quedando el interior de las cajas acústicas inspiradas en altavoz TURBOSOUND. Materiales reciclados y mucha paciencia y ganas de ir aprendiendo durante el proceso, teniendo bastantes dificultades pero poco a poco solucionándolas a prueba y error.
+              </p>
+
+              <p class="post-link">
+                <a href="https://www.instagram.com/p/DMsJ9CuikKs/?igsh=OGY1b3lzMnhzcndw" target="_blank" rel="noopener noreferrer">
+                  🔗 Ver Publicación Original en Instagram
+                </a>
+              </p>
+              
+              <div class="post-hashtags">
+                #CajasAcústicas #HechoAMano #SoundSystemEnProceso
+              </div>
+              
+              <div class="fotos-proyecto-turbosound" style="text-align: center;">
+                <img src="1000026505.jpg" alt="Altavoz Turbosound 1:3, Vista 1" style="max-width: 100%; height: auto; margin: 10px;">
+                <img src="1000026506.jpg" alt="Altavoz Turbosound 1:3, Vista 2" style="max-width: 100%; height: auto; margin: 10px;">
+                <img src="1000026507.jpg" alt="Altavoz Turbosound 1:3, Vista 3" style="max-width: 100%; height: auto; margin: 10px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Cableado TURBOSOUND -->
+          <div style="margin-top: 50px;">
+            <div class="altavoz-post-detalle">
+              <p>
+                Los 2 turbosound ya suenan: cableado acabado. Se irán modificando cosas para irlos mejorando, pero está quedando guapísimos.
+              </p>
+
+              <p class="post-link">
+                <a href="https://www.instagram.com/p/DNjHpIVt6Gs/?igsh=MWFkdHVkenVnZGNwbw==" target="_blank" rel="noopener noreferrer">
+                  🔗 Ver Cableado y Sonido en Instagram
+                </a>
+              </p>
+
+              <div class="three-col-gallery">
+                <img src="SaveClip.App_534952736_17864197542447325_5353815633669150667_n.jpg" alt="Detalle del cableado Turbosound 1">
+                <img src="SaveClip.App_536873300_17864197551447325_9128030490532847443_n.jpg" alt="Detalle del cableado Turbosound 2">
+                <img src="SaveClip.App_536229912_17864197530447325_3176371262324725272_n.jpg" alt="Detalle del cableado Turbosound 3">
+              </div>
+
+              <div class="post-video-container">
+                <video controls>
+                  <source src="SaveClip.App_AQMMZ7WMUmLMmQS2F44OQKnEb3g2FNnbApBbtC9-sTv6366mDa0GEBgZSB8OC8huVBg9mG9IZCnTNHpex7ItV2QGbwU6vOk46v1Nzu8.mp4" type="video/mp4">
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              </div>
+              
+              <h3 style="color: #FF0000; text-align: center; margin-top: 30px; margin-bottom: 10px; text-transform: uppercase;">
+                PRIMERAS PRUEBAS DE SONIDO DE TURBOSOUND 2.0
+              </h3>
+
+              <div class="post-video-container">
+                <video controls>
+                  <source src="SaveClip.App_AQMbgRCCzgM7Z7nuO34nNHS_SActb6BNg24aBcTni7LL3w8WlUOkDPWBM1ubz3V5QA10CCnx9ER2rLUUL_w06D3m7s1x_HfOxwzkARE.mp4" type="video/mp4">
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              </div>
+            </div>
+          </div>
+          
+          <!-- SECCIÓN "EN OBRAS" (abajo del todo, con cintas y humo) -->
+          <div style="margin-top: 50px; padding: 20px; background: #000080; border: 3px solid #C0C0C0; position: relative; overflow: hidden;">
+            <!-- Cintas de obras -->
+            <div class="tape"></div>
+            <div class="tape"></div>
+            <div class="tape"></div>
+            
+            <!-- Humo pixelado -->
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            <div class="smoke"></div>
+            
+            <div class="windows-xp-title">🚧 PRÓXIMOS PROYECTOS - EN CONSTRUCCIÓN 🚧</div>
+            <div style="color: #C0C0C0; font-family: 'MS Sans Serif'; font-size: 14px; margin-top: 20px; text-align: center;">
+              ⚡ Seguimos trabajando en nuevos diseños y mejoras. ¡Pronto más novedades! ⚡
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+              <button class="windows-xp-button" onclick="alert('Próximamente más info!')">VER AVANCES</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <div style="color: #C0C0C0; font-family: 'MS Sans Serif'; font-size: 12px; margin-top: 30px;">
+      ⚡ Proyecto en desarrollo - Vuelve pronto ⚡
+    </div>
+  </div>
+
+  <!-- ELIMINADAS TODAS LAS DEMÁS SECCIONES -->
+
+</div>
+
+<footer>© 2025 RTBS CREW - ☢️ SONIDO LIBRE Y SUCIO ☢️<p>RTBS CREW 2025 — Todos los derechos reservados.</p>
+</footer>
+
+<script>
+// ----------------- Loader (2 segundos fijo) -----------------
+setTimeout(() => { 
+    document.getElementById("loader").style.display = "none"; 
+}, 2000);
+
+// ----------------- Comentarios (se mantiene por si acaso) -----------------
+function addComment(){
+  const name = document.getElementById('name').value;
+  const comment = document.getElementById('comment').value;
+  const section = document.getElementById('comment-section');
+  const div = document.createElement('div');
+  div.className = 'comment';
+  div.innerHTML = `<strong>${name}</strong>: ${comment}`;
+  section.prepend(div);
+  document.getElementById('comment-form').reset();
+  return false;
+}
+
+// ----------------- Sistema de Likes/Dislikes -----------------
+function rateItem(button, type) {
+    const container = button.closest('.like-dislike');
+    const likeCount = container.querySelector('.like-count');
+    const dislikeCount = container.querySelector('.dislike-count');
+    const likeBtn = container.querySelector('.like-btn');
+    const dislikeBtn = container.querySelector('.dislike-btn');
+    
+    const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
+    const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
+    
+    if (type === 'like') {
+        if (currentRating.liked) {
+            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+            currentRating.liked = false;
+            likeBtn.style.opacity = '1';
+        } else {
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+            currentRating.liked = true;
+            likeBtn.style.opacity = '0.8';
+            
+            if (currentRating.disliked) {
+                dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+                currentRating.disliked = false;
+                dislikeBtn.style.opacity = '1';
+            }
+        }
+    } else if (type === 'dislike') {
+        if (currentRating.disliked) {
+            dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+            currentRating.disliked = false;
+            dislikeBtn.style.opacity = '1';
+        } else {
+            dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
+            currentRating.disliked = true;
+            dislikeBtn.style.opacity = '0.8';
+            
+            if (currentRating.liked) {
+                likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                currentRating.liked = false;
+                likeBtn.style.opacity = '1';
+            }
+        }
+    }
+    
+    localStorage.setItem(storageKey, JSON.stringify(currentRating));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingContainers = document.querySelectorAll('.like-dislike');
+    ratingContainers.forEach(container => {
+        const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
+        const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
+        const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
+        
+        if (currentRating.liked) {
+            container.querySelector('.like-count').textContent = '1';
+            container.querySelector('.like-btn').style.opacity = '0.8';
+        }
+        if (currentRating.disliked) {
+            container.querySelector('.dislike-count').textContent = '1';
+            container.querySelector('.dislike-btn').style.opacity = '0.8';
+        }
+    });
+});
+
+function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('theme-toggle');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        btn.innerText = "MODO OSCURO 🌙";
+        btn.style.background = "#000";
+        btn.style.color = "#00FF00";
+        document.querySelector('.tribal-background').style.opacity = "0.4";
+    } else {
+        btn.innerText = "MODO CLARO 💡";
+        btn.style.background = "#00FF00";
+        btn.style.color = "#000";
+        document.querySelector('.tribal-background').style.opacity = "1";
+    }
+}
+    
+function addTextGlitches() {
+    const titles = document.querySelectorAll('h1, h2, .vinyl-title, .video-title');
+    
+    titles.forEach(title => {
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                title.style.opacity = '0.7';
+                setTimeout(() => {
+                    title.style.opacity = '1';
+                }, 100);
+            }
+        }, 3000);
+        
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                const originalTransform = title.style.transform;
+                title.style.transform = 'translateX(2px)';
+                setTimeout(() => {
+                    title.style.transform = originalTransform;
+                }, 50);
+            }
+        }, 5000);
+    });
+}
+
+window.addEventListener('load', addTextGlitches);
+
+function toggleFullScreenDJ(playerId) {
+  const iframe = document.getElementById(playerId);
+  if (!document.fullscreenElement) {
+    iframe.requestFullscreen().catch(err => alert('No se pudo activar pantalla completa: ' + err));
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+let djActivo = null;
+
+function toggleDJ(dj) {
+  const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
+  const djFlugel = document.getElementById('dj-flugel');
+  
+  if (djActivo === dj) {
+    lanzamientosFlugel.classList.remove('active');
+    djFlugel.classList.remove('active');
+    djActivo = null;
+  } else {
+    if (dj === 'flugel') {
+      lanzamientosFlugel.classList.add('active');
+      djFlugel.classList.add('active');
+      djActivo = 'flugel';
+      
+      setTimeout(() => {
+        lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }
+}
+
+function mostrarLanzamientoDetalle(lanzamientoId) {
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
+    });
+    
+    const detalle = document.getElementById('detalle-' + lanzamientoId);
+    if (detalle) {
+        detalle.classList.add('active');
+        setTimeout(() => {
+            detalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+    }
+}
+
+function volverALanzamientos() {
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
+    });
+}
+
+function toggleMobileMenu() {
+    const nav = document.querySelector('nav');
+    nav.classList.toggle('active');
+}
+
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            document.querySelector('nav').classList.remove('active');
+        }
+    });
+});
+    
+</script>
+
+    <script async src="https://www.tiktok.com/embed.js"></script>
+</body>
+</html>

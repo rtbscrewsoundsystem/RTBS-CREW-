@@ -1589,6 +1589,7 @@ footer {
     cursor: pointer;
     text-shadow: 0 0 10px #00FF00;
     transition: 0.3s;
+    z-index: 10000; /* Asegura que esté por encima */
 }
 
 .cerrar-modal:hover {
@@ -1873,8 +1874,8 @@ footer {
 </div>
 
 <!-- MODAL PARA VER LAS FOTOS EN GRANDE -->
-<div id="modal-foto" class="modal" onclick="cerrarModal()">
-    <span class="cerrar-modal">&times;</span>
+<div id="modal-foto" class="modal" onclick="cerrarModalFondo(event)">
+    <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
     <img class="modal-contenido" id="foto-ampliada">
 </div>
 
@@ -2078,8 +2079,7 @@ document.querySelectorAll('nav a').forEach(link => {
     });
 });
 
-// ========== NUEVAS FUNCIONES PARA EL MODAL DE FOTOS ==========
-// Obtener el modal
+// ========== FUNCIONES CORREGIDAS PARA EL MODAL DE FOTOS ==========
 var modal = document.getElementById("modal-foto");
 var modalImg = document.getElementById("foto-ampliada");
 
@@ -2092,8 +2092,8 @@ function cerrarModal() {
     modal.style.display = "none";
 }
 
-// Cerrar modal si se hace clic fuera de la imagen (el fondo)
-modal.onclick = function(event) {
+function cerrarModalFondo(event) {
+    // Esto evita que se cierre si se hace clic en la X (porque la X ya tiene su propio onclick)
     if (event.target === modal) {
         cerrarModal();
     }
@@ -2105,7 +2105,7 @@ document.addEventListener('keydown', function(event) {
         cerrarModal();
     }
 });
-// ========== FIN NUEVAS FUNCIONES ==========
+// ========== FIN FUNCIONES CORREGIDAS ==========
     
 </script>
 

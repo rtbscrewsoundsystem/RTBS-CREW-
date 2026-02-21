@@ -1489,6 +1489,114 @@ footer {
     background: #00FF00;
 }
 
+/* ========== NUEVOS ESTILOS PARA LA GALERÍA DE FOTOS ========== */
+.galeria-dj {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(0, 20, 0, 0.6);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+.galeria-dj h3 {
+    color: #FFFF00;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #FFFF00;
+    font-size: 24px;
+}
+
+.contenedor-fotos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.foto-item {
+    flex: 1 1 auto;
+    max-width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.foto-item img {
+    width: 100%;
+    height: auto;
+    border: 3px solid #00FF00;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #00FF00;
+    transition: all 0.3s ease;
+    object-fit: cover;
+}
+
+.foto-item img:hover {
+    transform: scale(1.02);
+    border-color: #FFFF00;
+    box-shadow: 0 0 20px #FFFF00;
+}
+
+/* Foto principal (más grande) */
+.foto-principal {
+    flex-basis: 100%;
+    max-width: 600px;
+    margin-bottom: 10px;
+}
+
+.foto-secundaria {
+    max-width: 280px;
+}
+
+/* Estilos para el modal (lightbox) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-contenido {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border: 5px solid #00FF00;
+    border-radius: 10px;
+    box-shadow: 0 0 30px #00FF00;
+    animation: fadeInModal 0.3s;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #00FF00;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 0 0 10px #00FF00;
+    transition: 0.3s;
+}
+
+.cerrar-modal:hover {
+    color: #FFFF00;
+    text-shadow: 0 0 15px #FFFF00;
+}
+/* ========== FIN NUEVOS ESTILOS ========== */
+
 </style>
 </head>
 <body>
@@ -1543,6 +1651,32 @@ footer {
         <div class="glitch-text small">FREE PARTY IS NOT A CRIME</div>
         <div class="glitch-text big">FREE PROGRAM IS NOT A CRIME</div>
     </div>
+
+    <!-- ========== NUEVA GALERÍA DE FOTOS ========== -->
+    <div class="galeria-dj">
+        <h3>📸 CAPTURAS DEL CONTROLADOR 📸</h3>
+        <div class="contenedor-fotos">
+            <!-- Foto Principal (más grande) - Captura 213557 -->
+            <div class="foto-item foto-principal" onclick="abrirModal(this)">
+                <img src="Captura de pantalla 2026-02-21 213557.png" alt="Vista principal del DJ Controller - RTBS CREW">
+            </div>
+            <!-- Fotos secundarias -->
+            <div class="foto-item foto-secundaria" onclick="abrirModal(this)">
+                <img src="Captura de pantalla 2026-02-21 213611.png" alt="Ecualizador de 30 bandas del DJ Controller">
+            </div>
+            <div class="foto-item foto-secundaria" onclick="abrirModal(this)">
+                <img src="Captura de pantalla 2026-02-21 214051.png" alt="Controles y loops del DJ Controller">
+            </div>
+            <div class="foto-item foto-secundaria" onclick="abrirModal(this)">
+                <img src="Captura de pantalla 2026-02-21 214138.png" alt="Ajustes de sonido y MIDI del DJ Controller">
+            </div>
+            <div class="foto-item foto-secundaria" onclick="abrirModal(this)">
+                <img src="Captura de pantalla 2026-02-21 214155.png" alt="Interfaz completa del mezclador DJ">
+            </div>
+        </div>
+        <p style="text-align: center; color: #CCFFCC; margin-top: 15px; font-size: 14px;">(Haz clic en cualquier imagen para verla en grande)</p>
+    </div>
+    <!-- ========== FIN NUEVA GALERÍA ========== -->
 
     <!-- Especificaciones del Controller -->
     <section id="dj-controller-desc" style="
@@ -1736,6 +1870,12 @@ footer {
 
   <!-- ELIMINADAS TODAS LAS DEMÁS SECCIONES -->
 
+</div>
+
+<!-- MODAL PARA VER LAS FOTOS EN GRANDE -->
+<div id="modal-foto" class="modal" onclick="cerrarModal()">
+    <span class="cerrar-modal">&times;</span>
+    <img class="modal-contenido" id="foto-ampliada">
 </div>
 
 <footer>© 2025 RTBS CREW - ☢️ SONIDO LIBRE Y SUCIO ☢️<p>RTBS CREW 2025 — Todos los derechos reservados.</p>
@@ -1937,6 +2077,35 @@ document.querySelectorAll('nav a').forEach(link => {
         }
     });
 });
+
+// ========== NUEVAS FUNCIONES PARA EL MODAL DE FOTOS ==========
+// Obtener el modal
+var modal = document.getElementById("modal-foto");
+var modalImg = document.getElementById("foto-ampliada");
+
+function abrirModal(elemento) {
+    modal.style.display = "flex";
+    modalImg.src = elemento.querySelector('img').src;
+}
+
+function cerrarModal() {
+    modal.style.display = "none";
+}
+
+// Cerrar modal si se hace clic fuera de la imagen (el fondo)
+modal.onclick = function(event) {
+    if (event.target === modal) {
+        cerrarModal();
+    }
+}
+
+// Cerrar con la tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+        cerrarModal();
+    }
+});
+// ========== FIN NUEVAS FUNCIONES ==========
     
 </script>
 

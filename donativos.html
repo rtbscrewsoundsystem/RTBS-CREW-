@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="es">
+<head> 
+    <meta charset="UTF-8">
+    
+    <title>RTBS CREW | DONATIVOS & COLABORACIONES | Pegatinas, Camisetas y Sorteos ☢️</title>
+    <meta name="description" content="Colabora con RTBS CREW. Consigue pegatinas, camisetas o participa en sorteos. Sin ánimo de lucro, solo para mantener el sonido libre.">
+    <meta name="keywords" content="RTBS CREW, donativos, colaboraciones, pegatinas, camisetas, sorteos, soundsystem, hardtek, schranz">
+    <meta name="author" content="RTBS CREW">
+    <meta name="robots" content="index, follow">
+
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="favicon.png" sizes="192x192">
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RTBS CREW ☢️ DONATIVOS">
+    <meta property="og:description" content="Apoya el sonido libre y consigue algo único.">
+    <meta property="og:image" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/Proyecto_29.png">
+    <meta property="og:url" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/donativos.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RTBS CREW ☢️ DONATIVOS">
+    <meta name="twitter:description" content="Pegatinas, camisetas y sorteos.">
+    <meta name="twitter:image" content="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/Proyecto_29.png">
+
+    <link rel="canonical" href="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/donativos.html">
+    <link rel="preload" as="image" href="Proyecto_29.png">
+
+<style>
+/* --- Loader mejorado --- */
+#loader { 
+    position: fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background: #000; 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    z-index:9999;
+    font-family: 'Arial Black', Impact, sans-serif;
+}
+.loader-content {
+    text-align: center;
+}
+.loader-rtbs {
+    font-size: 48px;
+    color: #00FF00;
+    text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00;
+    margin-bottom: 30px;
+    animation: glitch 2s infinite;
+}
+.bar { 
+    width:8px; 
+    height:40px; 
+    margin:2px; 
+    background: linear-gradient(180deg, #00FF00, #FF0000, #FFFF00);
+    display: inline-block;
+    animation: bounce 0.6s infinite alternate;
+}
+.bar:nth-child(2){ animation-delay:0.1s; } 
+.bar:nth-child(3){ animation-delay:0.2s; } 
+.bar:nth-child(4){ animation-delay:0.3s; } 
+.bar:nth-child(5){ animation-delay:0.4s; }
+.bar:nth-child(6){ animation-delay:0.5s; }
+
+@keyframes bounce { 
+    from { transform: scaleY(0.3); } 
+    to { transform: scaleY(1); } 
+}
+    .logo-titulo {
+  width: 100px; /* tamaño del logo */
+  height: auto;
+  vertical-align: middle;
+  margin-right: 15px;
+  border: 2px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+.titulo-con-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+    
+/* --- Estilos generales --- */
+body { 
+    margin:0; 
+    font-family:'Arial Black', Impact, sans-serif; 
+    background:#000;
+    color:#00FF00;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fondo tribal con efectos */
+.tribal-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('tribal-tattoo-design-elements-set-260nw-565457776.jpg') center/cover;
+    filter: grayscale(100%) brightness(0.8) contrast(1.2);
+    z-index: -2;
+    animation: tribalGlitch 8s infinite, tribalDistortion 12s infinite;
+}
+
+/* Capa de superposición para mejor legibilidad */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+/* Efectos de glitch para el fondo tribal */
+@keyframes tribalGlitch {
+    0%, 100% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    2% { 
+        filter: grayscale(100%) brightness(0.9) contrast(1.3);
+        transform: scale(1.05) translate(2px, 1px);
+    }
+    4% { 
+        filter: grayscale(100%) brightness(0.7) contrast(1.1);
+        transform: scale(1.05) translate(-1px, -2px);
+    }
+    6% { 
+        filter: grayscale(100%) brightness(0.8) contrast(1.2);
+        transform: scale(1.05) translate(0, 0);
+    }
+    50% { 
+        filter: grayscale(100%) brightness(0.85) contrast(1.25);
+        transform: scale(1.05) translate(0, 0);
+    }
+}
+
+/* Efectos de distorsión */
+@keyframes tribalDistortion {
+    0%, 100% { 
+        transform: scale(1.05) skew(0deg, 0deg);
+    }
+    25% { 
+        transform: scale(1.05) skew(0.2deg, 0.1deg);
+    }
+    50% { 
+        transform: scale(1.05) skew(-0.1deg, 0.2deg);
+    }
+    75% { 
+        transform: scale(1.05) skew(0.1deg, -0.1deg);
+    }
+}
+
+h1 { 
+    font-size:52px; 
+    text-shadow:0 0 10px #00FF00, 0 0 20px #00FF00, 2px 2px 0 #FF0000; 
+    text-align:center; 
+    letter-spacing: 2px;
+    animation: titleGlitch 5s infinite;
+    margin: 20px 0;
+}
+
+@keyframes titleGlitch {
+    0%, 100% { transform: translate(0, 0); }
+    95% { transform: translate(0, 0); }
+    96% { transform: translate(-1px, 1px); }
+    97% { transform: translate(1px, -1px); }
+    98% { transform: translate(-1px, -1px); }
+    99% { transform: translate(1px, 1px); }
+}
+
+h1 span {
+    display: inline-block;
+    position: relative;
+}
+
+h1 span:nth-child(odd){ 
+    color:#00FF00; 
+    animation: pulse 3s infinite alternate;
+}
+h1 span:nth-child(even){ 
+    color:#FFFF00; 
+    animation: pulse 2.5s infinite alternate-reverse;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); text-shadow: 0 0 10px currentColor; }
+    100% { transform: scale(1.05); text-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+/* --- Menú lateral tribal rave --- */
+nav { 
+    width:220px; 
+    position:fixed; 
+    height:100%; 
+    background: linear-gradient(to bottom, #111, #002200, #111);
+    padding-top:30px; 
+    border-right: 3px solid #00FF00;
+    box-shadow: 0 0 15px #00FF00;
+    z-index: 100;
+}
+
+nav:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, #00FF00, #FFFF00 10px, #FF0000 20px, #00FF00 30px);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 0; }
+}
+
+nav a { 
+    display:block; 
+    color:#00FF00; 
+    padding:15px 20px; 
+    text-decoration:none; 
+    font-weight:bold;
+    font-size: 16px;
+    border-bottom: 1px dashed #003300;
+    position: relative;
+    transition: all 0.3s;
+    text-shadow: 0 0 5px #00FF00;
+}
+
+nav a:hover { 
+    background:#003300; 
+    color:#FFFF00; 
+    padding-left: 25px;
+    text-shadow: 0 0 10px #FFFF00;
+}
+
+nav a:hover:after {
+    content: "☢️";
+    position: absolute;
+    right: 15px;
+}
+
+nav a:first-child {
+    background: #002200;
+    color: #FFFF00;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #00FF00;
+    box-shadow: 0 0 10px #00FF00;
+    margin: 0 10px 20px 10px;
+    border-radius: 5px;
+}
+
+/* --- Contenido principal --- */
+.main { 
+    margin-left:220px; 
+    padding:20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* --- Transición de disco vinilo (se mantiene pero no se usa) --- */
+#transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.vinyl-transition {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: 
+        radial-gradient(circle at 50% 50%, #222 30%, #000 31%),
+        repeating-conic-gradient(from 0deg, #000 0deg 10deg, #00FF00 10deg 20deg);
+    border: 5px solid #00FF00;
+    box-shadow: 0 0 20px #00FF00;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Sección INICIO (oculta por defecto) --- */
+#inicio {
+    display: none;
+}
+
+/* --- Sección DONATIVOS (visible) --- */
+#donativos {
+    display: block;
+}
+
+/* --- Estilos para la sección DONATIVOS --- */
+.donativos-descripcion {
+    background: rgba(0, 20, 0, 0.7);
+    border: 2px solid #00FF00;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px #00FF00;
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+    color: #CCFFCC;
+    text-shadow: 0 0 5px #00AA00;
+}
+
+.donativos-descripcion p {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-left: 3px solid #00FF00;
+    background: rgba(0, 40, 0, 0.3);
+}
+
+.anuncios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+/* --- Estilo para los recuadros de "EN OBRAS" adaptados a anuncios --- */
+.anuncio-item {
+    background: #000080 !important; /* Azul de obras de Windows */
+    border: 4px solid #C0C0C0 !important;
+    position: relative;
+    overflow: hidden;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+    padding: 0;
+    border-radius: 0;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.anuncio-item .construction-border {
+    border: 2px solid #DFDFDF;
+    background: #C0C0C0;
+    padding: 3px;
+    margin: 2px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.anuncio-item .construction-content {
+    background: #008080;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #000;
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.anuncio-item .tape {
+    width: 30px;
+    height: 100%;
+    top: 0;
+    animation: tapeVerticalScroll 3s linear infinite;
+    opacity: 0.8;
+}
+.anuncio-item .tape:nth-child(1) { left: 0; animation-delay: 0s; }
+.anuncio-item .tape:nth-child(2) { right: 0; left: auto; animation-delay: 1.5s; }
+.anuncio-item .tape:nth-child(3) { display: none; } /* Ocultamos la tercera */
+
+@keyframes tapeVerticalScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 40px; }
+}
+
+.xp-icon-anuncio {
+    font-size: 48px;
+    margin: 10px 0;
+    image-rendering: pixelated;
+    filter: drop-shadow(2px 2px 0px #000);
+}
+
+.anuncio-titulo {
+    color: #FFFF00;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 10px 0;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.anuncio-descripcion {
+    color: #FFFFFF;
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.windows-xp-button {
+    background: linear-gradient(to bottom, #DFDFDF, #808080);
+    border: 2px solid;
+    border-top-color: #FFF;
+    border-left-color: #FFF;
+    border-bottom-color: #000;
+    border-right-color: #000;
+    padding: 8px 16px;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    margin: 10px auto 0;
+    image-rendering: pixelated;
+    width: fit-content;
+}
+
+.windows-xp-button:active {
+    border-top-color: #000;
+    border-left-color: #000;
+    border-bottom-color: #FFF;
+    border-right-color: #FFF;
+}
+
+/* Humo pixelado (heredado) */
+.smoke {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #C0C0C0;
+    animation: smokeRise 4s linear infinite;
+    opacity: 0;
+    z-index: 3;
+}
+.smoke:nth-child(4) { left: 20%; animation-delay: 0s; }
+.smoke:nth-child(5) { left: 40%; animation-delay: 1s; }
+.smoke:nth-child(6) { left: 60%; animation-delay: 2s; }
+.smoke:nth-child(7) { left: 80%; animation-delay: 3s; }
+
+@keyframes smokeRise {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    20% { opacity: 0.8; }
+    100% { transform: translateY(-100px) scale(2); opacity: 0; }
+}
+
+    /* --- CONFIGURACIÓN DE CONTORNOS ESPECÍFICOS --- */
+
+/* 1. Letras VERDES con contorno AZUL ELÉCTRICO (Estilo Windows XP RGB) */
+.loader-rtbs, 
+nav a, 
+.link-extra, 
+.vinyl-links a, 
+.descripcion strong, 
+#comment-form input, 
+#comment-form textarea,
+footer,
+body {
+    color: #00FF00 !important; /* Verde puro */
+    text-shadow: 
+        -2px -2px 0 #0000FF,  
+         2px -2px 0 #0000FF,
+        -2px  2px 0 #0000FF,
+         2px  2px 0 #0000FF,
+         0px  0px 10px #0000FF !important; /* Brillo azul eléctrico */
+}
+
+/* 2. Letras ROJAS con contorno VERDE FOSFORITO */
+.post-title-box, 
+.post-hashtags, 
+.dislike-btn, 
+h1 span:nth-child(even),
+.bar:nth-child(2), .bar:nth-child(5) {
+    color: #FF0000 !important; /* Rojo puro */
+    text-shadow: 
+        -2px -2px 0 #00FF00,  
+         2px -2px 0 #00FF00,
+        -2px  2px 0 #00FF00,
+         2px  2px 0 #00FF00,
+         0px  0px 10px #00FF00 !important; /* Brillo verde fosforito */
+}
+
+/* 3. Limpieza de otros colores (Eliminar amarillos o rosas) */
+h1 span:nth-child(even), 
+nav a:hover, 
+.vinyl-title, 
+.info-lanzamiento h4,
+.video-title,
+.dj-title {
+    color: #00FF00 !important; /* Forzamos a verde si antes eran amarillos */
+}
+
+/* Ajuste para el H1 principal */
+h1 span {
+    text-shadow: -2px -2px 0 #0000FF, 2px -2px 0 #0000FF, -2px 2px 0 #0000FF, 2px 2px 0 #0000FF !important;
+}
+    
+/* Sistema de likes/dislikes (por si acaso) */
+.like-dislike {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.like-btn, .dislike-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s;
+    padding: 5px;
+}
+
+.like-btn {
+    color: #00FF00;
+}
+
+.like-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #00FF00;
+}
+
+.dislike-btn {
+    color: #FF0000;
+}
+
+.dislike-btn:hover {
+    transform: scale(1.2);
+    text-shadow: 0 0 10px #FF0000;
+}
+
+.like-count, .dislike-count {
+    font-size: 14px;
+    color: #CCFFCC;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* --- Sección EN OBRAS (heredado para el fondo general) --- */
+.under-construction {
+    background: #000080 !important;
+    border: 4px solid #C0C0C0 !important;
+    position: relative;
+    overflow: hidden;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+}
+
+/* --- Tiras de obras animadas (verticales para los anuncios) --- */
+.tape {
+    position: absolute;
+    width: 30px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffff00,
+        #ffff00 20px,
+        #000 20px,
+        #000 40px
+    );
+    z-index: 1;
+    opacity: 0.8;
+    top: 0;
+    animation: tapeVerticalScroll 3s linear infinite;
+}
+
+/* --- Otros estilos que se usan en otras secciones (los dejamos para no romper nada) --- */
+.vinyl-grid, .dj-grid, .videos-grid { display: none; }
+.seccion { display: none; }
+#altavoces { display: none; }
+
+iframe {
+    margin-top:20px; 
+    border:2px solid #00FF00;
+    border-radius: 5px;
+}
+
+/* Redes Sociales */
+.redes { 
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.redes a { 
+    display: inline-block;
+    transition: transform 0.3s;
+}
+.redes a:hover {
+    transform: scale(1.2);
+}
+.redes img { 
+    width:60px; 
+    margin:5px; 
+    filter: drop-shadow(0 0 5px #00FF00);
+}
+
+/* Comentarios */
+#comment-form { 
+    display:flex; 
+    flex-direction:column; 
+    width:100%; 
+    max-width:500px;
+    margin: 0 auto;
+}
+#comment-form input, #comment-form textarea { 
+    margin-bottom:10px; 
+    padding:10px;
+    background: #002200;
+    border: 1px solid #00AA00;
+    color: #00FF00;
+    border-radius: 5px;
+}
+#comment-form button { 
+    padding:10px;
+    background: #00AA00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+#comment-form button:hover {
+    background: #00FF00;
+}
+.comment { 
+    border:1px solid #00AA00; 
+    margin-bottom:10px; 
+    padding:10px; 
+    background: rgba(0, 40, 0, 0.5);
+    border-radius: 5px;
+}
+
+footer { 
+    margin-top:50px; 
+    color:#00FF00; 
+    text-align:center; 
+    padding: 20px;
+    border-top: 1px solid #00AA00;
+    text-shadow: 0 0 5px #00AA00;
+}
+
+.bandcamp-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background: #004400;
+    color: #00FF00;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 1px solid #00FF00;
+    transition: all 0.3s;
+}
+
+.bandcamp-link:hover {
+    background: #00FF00;
+    color: #000;
+    text-shadow: none;
+}
+
+#logo-placeholder {
+    width: 80px;
+    height: 80px;
+    background: #111;
+    border: 3px solid #00FF00;
+    display: inline-block;
+    margin-right: 15px;
+    vertical-align: middle;
+    box-shadow: 0 0 15px #00FF00;
+}
+
+
+#logo-loader {
+  width: 80px;
+  height: auto;
+  margin-right: 15px;
+  vertical-align: middle;
+  border: 3px solid #00FF00;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00FF00;
+}
+
+/* Estilo Windows XP para títulos */
+.windows-xp-title {
+    background: linear-gradient(to bottom, #000080, #1084D0);
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #DFDFDF;
+    border-bottom-color: #000;
+    border-right-color: #000;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 1px #000;
+}
+    
+</style>
+</head>
+<body>
+
+<!-- Fondo tribal con efectos -->
+<div class="tribal-background"></div>
+<div class="overlay"></div>
+
+<div id="loader">
+  <div class="loader-content">
+    <div class="loader-rtbs">
+      <img src="Proyecto_29.png" alt="Logo RTBS CREW" id="logo-loader">
+      RTBS CREW
+    </div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+</div>
+
+<!-- Transición de disco vinilo -->
+<div id="transition-overlay">
+    <div class="vinyl-transition"></div>
+</div>
+
+<nav>
+  <a href="#" onclick="toggleTheme()" id="theme-toggle" style="background: #00FF00; color: #000; font-weight: bold; border: 2px solid #fff; margin-bottom: 15px;">MODO CLARO 💡</a>
+
+  <a href="index.html">INICIO ☢️</a>
+  <a href="musica.html">NUESTRA MÚSICA</a>
+  <a href="visuales.html">MÚSICA VISUALES</a>
+  <a href="visualizer.html">RTBS VISUALIZER 🚀</a>
+  <a href="videos-cortos.html">VÍDEOS CORTOS 🎬</a>
+  <a href="redes.html">REDES SOCIALES</a>
+  <a href="comentarios.html">COMENTARIOS</a>
+  <a href="rtbs-crew-dj-controller-mix.html">RTBS CREW DJ CONTROLER MIX</a>
+  <a href="altavoces.html">NUESTROS ALTAVOCES</a>
+  <a href="donativos.html" style="background: #003300; color: #FFFF00; border-left: 4px solid #FFFF00;">DONATIVOS 🎁</a>
+</nav>
+
+<div class="main">
+  <h1 class="titulo-con-logo">
+    <a href="index.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+      <img src="Proyecto_29.png" alt="Logo RTBS CREW" class="logo-titulo">
+      <span>R</span><span>T</span><span>B</span><span>S</span> CREW
+    </a>
+  </h1>
+
+  <!-- SECCIÓN DONATIVOS -->
+  <div id="donativos" class="seccion" style="display:block;">
+    
+    <!-- Texto explicativo (versión resumida y con tu estilo) -->
+    <div class="donativos-descripcion">
+      <p>🎁 <strong>COLABORA CON LA CREW</strong> 🎁</p>
+      <p>Esto lo hacemos sin ánimo de lucro, por amor al ruido y al movimiento. Si quieres echar una mano y llevarte algo único, has llegado al sitio adecuado.</p>
+      <p>De vez en cuando sacamos pequeños lotes de pegatinas con diseños diferentes, alguna camiseta que nos sobra, o montamos sorteos entre la peña que nos apoya. No es una tienda, es un trueque: tú aportas un donativo simbólico para ayudar con los gastos (cables, madera, pintura, gasolina para las furgos...) y a cambio te llevas algo hecho con la misma pasión que la música.</p>
+      <p>El stock es mínimo, porque son cosas que no están a la venta en ningún sitio. Si sale algo nuevo, lo anunciaremos aquí. Sin prisas, sin postureo.</p>
+    </div>
+
+    <!-- Zona de anuncios (con recuadros de "En obras" de Windows XP) -->
+    <div class="windows-xp-title" style="margin-top: 40px;">📢 ANUNCIOS Y NOVEDADES 📢</div>
+    
+    <div class="anuncios-grid">
+
+      <!-- ANUNCIO 1: Pegatinas -->
+      <div class="anuncio-item under-construction">
+        <div class="tape"></div>
+        <div class="tape"></div>
+        <div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div>
+        <div class="construction-border">
+          <div class="construction-content">
+            <div class="xp-icon-anuncio">🖨️</div>
+            <div class="anuncio-titulo">PEGATINAS</div>
+            <div class="anuncio-descripcion">Próximamente nuevos diseños. Estaremos atentos a las existencias.</div>
+            <button class="windows-xp-button" onclick="alert('De momento no hay pegatinas disponibles. ¡Vuelve pronto!')">SIN STOCK</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANUNCIO 2: Camisetas -->
+      <div class="anuncio-item under-construction">
+        <div class="tape"></div>
+        <div class="tape"></div>
+        <div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div>
+        <div class="construction-border">
+          <div class="construction-content">
+            <div class="xp-icon-anuncio">👕</div>
+            <div class="anuncio-titulo">CAMISETAS</div>
+            <div class="anuncio-descripcion">Stock por confirmar. Cuando haya lotes libres, las colgaremos aquí.</div>
+            <button class="windows-xp-button" onclick="alert('De momento no hay camisetas disponibles. ¡Vuelve pronto!')">SIN STOCK</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANUNCIO 3: Sorteos -->
+      <div class="anuncio-item under-construction">
+        <div class="tape"></div>
+        <div class="tape"></div>
+        <div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div>
+        <div class="construction-border">
+          <div class="construction-content">
+            <div class="xp-icon-anuncio">🎲</div>
+            <div class="anuncio-titulo">SORTEOS</div>
+            <div class="anuncio-descripcion">Próximamente anunciaremos las bases del primer sorteo. ¡Atentos!</div>
+            <button class="windows-xp-button" onclick="alert('No hay sorteos activos ahora mismo.')">PRÓXIMAMENTE</button>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- Fin de anuncios-grid -->
+
+    <!-- Espacio para futuras cosillas -->
+    <div style="margin-top: 40px; text-align: center;">
+      <span class="windows-xp-button" onclick="alert('Gracias por apoyar el sonido libre.')">⚡ MOLA, QUIERO COLABORAR ⚡</span>
+    </div>
+
+  </div> <!-- Fin de #donativos -->
+
+  <!-- ELIMINADAS TODAS LAS DEMÁS SECCIONES -->
+
+</div>
+
+<footer>© 2025 RTBS CREW - ☢️ SONIDO LIBRE Y SUCIO ☢️<p>RTBS CREW 2025 — Todos los derechos reservados.</p>
+</footer>
+
+<script>
+// ----------------- Loader (2 segundos fijo) -----------------
+setTimeout(() => { 
+    document.getElementById("loader").style.display = "none"; 
+}, 2000);
+
+// ----------------- Comentarios (se mantiene por si acaso) -----------------
+function addComment(){
+  const name = document.getElementById('name').value;
+  const comment = document.getElementById('comment').value;
+  const section = document.getElementById('comment-section');
+  const div = document.createElement('div');
+  div.className = 'comment';
+  div.innerHTML = `<strong>${name}</strong>: ${comment}`;
+  section.prepend(div);
+  document.getElementById('comment-form').reset();
+  return false;
+}
+
+// ----------------- Sistema de Likes/Dislikes (por si acaso se usa) -----------------
+function rateItem(button, type) {
+    const container = button.closest('.like-dislike');
+    const likeCount = container.querySelector('.like-count');
+    const dislikeCount = container.querySelector('.dislike-count');
+    const likeBtn = container.querySelector('.like-btn');
+    const dislikeBtn = container.querySelector('.dislike-btn');
+    
+    const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
+    const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
+    
+    if (type === 'like') {
+        if (currentRating.liked) {
+            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+            currentRating.liked = false;
+            likeBtn.style.opacity = '1';
+        } else {
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+            currentRating.liked = true;
+            likeBtn.style.opacity = '0.8';
+            
+            if (currentRating.disliked) {
+                dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+                currentRating.disliked = false;
+                dislikeBtn.style.opacity = '1';
+            }
+        }
+    } else if (type === 'dislike') {
+        if (currentRating.disliked) {
+            dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
+            currentRating.disliked = false;
+            dislikeBtn.style.opacity = '1';
+        } else {
+            dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
+            currentRating.disliked = true;
+            dislikeBtn.style.opacity = '0.8';
+            
+            if (currentRating.liked) {
+                likeCount.textContent = parseInt(likeCount.textContent) - 1;
+                currentRating.liked = false;
+                likeBtn.style.opacity = '1';
+            }
+        }
+    }
+    
+    localStorage.setItem(storageKey, JSON.stringify(currentRating));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingContainers = document.querySelectorAll('.like-dislike');
+    ratingContainers.forEach(container => {
+        const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
+        const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
+        const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
+        
+        if (currentRating.liked) {
+            container.querySelector('.like-count').textContent = '1';
+            container.querySelector('.like-btn').style.opacity = '0.8';
+        }
+        if (currentRating.disliked) {
+            container.querySelector('.dislike-count').textContent = '1';
+            container.querySelector('.dislike-btn').style.opacity = '0.8';
+        }
+    });
+});
+
+function toggleTheme() {
+    const body = document.body;
+    const btn = document.getElementById('theme-toggle');
+    
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        btn.innerText = "MODO OSCURO 🌙";
+        btn.style.background = "#000";
+        btn.style.color = "#00FF00";
+        document.querySelector('.tribal-background').style.opacity = "0.4";
+    } else {
+        btn.innerText = "MODO CLARO 💡";
+        btn.style.background = "#00FF00";
+        btn.style.color = "#000";
+        document.querySelector('.tribal-background').style.opacity = "1";
+    }
+}
+    
+function addTextGlitches() {
+    const titles = document.querySelectorAll('h1, h2, .vinyl-title, .video-title');
+    
+    titles.forEach(title => {
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                title.style.opacity = '0.7';
+                setTimeout(() => {
+                    title.style.opacity = '1';
+                }, 100);
+            }
+        }, 3000);
+        
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                const originalTransform = title.style.transform;
+                title.style.transform = 'translateX(2px)';
+                setTimeout(() => {
+                    title.style.transform = originalTransform;
+                }, 50);
+            }
+        }, 5000);
+    });
+}
+
+window.addEventListener('load', addTextGlitches);
+
+function toggleFullScreenDJ(playerId) {
+  const iframe = document.getElementById(playerId);
+  if (!document.fullscreenElement) {
+    iframe.requestFullscreen().catch(err => alert('No se pudo activar pantalla completa: ' + err));
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+let djActivo = null;
+
+function toggleDJ(dj) {
+  const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
+  const djFlugel = document.getElementById('dj-flugel');
+  
+  if (djActivo === dj) {
+    lanzamientosFlugel.classList.remove('active');
+    djFlugel.classList.remove('active');
+    djActivo = null;
+  } else {
+    if (dj === 'flugel') {
+      lanzamientosFlugel.classList.add('active');
+      djFlugel.classList.add('active');
+      djActivo = 'flugel';
+      
+      setTimeout(() => {
+        lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }
+}
+
+function mostrarLanzamientoDetalle(lanzamientoId) {
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
+    });
+    
+    const detalle = document.getElementById('detalle-' + lanzamientoId);
+    if (detalle) {
+        detalle.classList.add('active');
+        setTimeout(() => {
+            detalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+    }
+}
+
+function volverALanzamientos() {
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
+        detalle.classList.remove('active');
+    });
+}
+
+function toggleMobileMenu() {
+    const nav = document.querySelector('nav');
+    nav.classList.toggle('active');
+}
+
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            document.querySelector('nav').classList.remove('active');
+        }
+    });
+});
+    
+</script>
+
+    <script async src="https://www.tiktok.com/embed.js"></script>
+</body>
+</html>

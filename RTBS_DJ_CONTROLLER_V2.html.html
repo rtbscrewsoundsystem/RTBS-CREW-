@@ -5,7 +5,7 @@
 <title>RTBS CREW DJ CONTROLLER MIX - MOD</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* --- SKIN VIRTUAL DJ 8 PLATEADO --- */
+/* --- SKIN VIRTUAL DJ 8 PLATEADO (DEFAULT) --- */
 body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,6 +16,78 @@ body {
     align-items: center;
     min-height: 100vh;
     overflow-x: hidden;
+    transition: all 0.3s ease;
+}
+
+body.skin-white {
+    background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+    color: #333;
+}
+
+body.skin-white .container {
+    background: linear-gradient(145deg, #f0f0f0 0%, #e0e0e0 100%);
+    border-color: #aaa;
+}
+
+body.skin-white .deck {
+    background: linear-gradient(145deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-color: #aaa;
+}
+
+body.skin-white .center-controls-container {
+    background: linear-gradient(145deg, #f0f0f0 0%, #e0e0e0 100%);
+    border-color: #aaa;
+}
+
+body.skin-white .deck-button,
+body.skin-white .button {
+    background: linear-gradient(to bottom, #ddd 0%, #ccc 100%);
+    border-color: #aaa;
+    color: #333;
+}
+
+body.skin-white .knob {
+    background: radial-gradient(circle at 30% 30%, #ddd, #bbb);
+    border-color: #aaa;
+}
+
+body.skin-white .knob-label,
+body.skin-white h1 {
+    color: #666;
+}
+
+body.skin-white .platter-inner {
+    background: radial-gradient(circle at 30% 30%, #ccc, #aaa);
+    color: #666;
+}
+
+body.skin-white .effect-button-platter {
+    background: linear-gradient(to bottom, #9a6a9a 0%, #7a5a7a 100%);
+    color: #ffddff;
+}
+
+body.skin-white .effect-button-platter.active {
+    background: linear-gradient(to bottom, #ff66ff 0%, #cc66cc 100%);
+}
+
+body.skin-white .loop-pad {
+    background: linear-gradient(to bottom, #5a7a9a 0%, #4a6a8a 100%);
+}
+
+body.skin-white .hot-cue-button {
+    background: linear-gradient(to bottom, #5a7a9a 0%, #4a6a8a 100%);
+}
+
+body.skin-white .reverse-button {
+    background: linear-gradient(to bottom, #9a5a5a 0%, #8a4a4a 100%);
+}
+
+body.skin-white .sync-button {
+    background: linear-gradient(to bottom, #5a8aaa 0%, #4a7a9a 100%);
+}
+
+body.skin-white .load-file-button {
+    background: linear-gradient(to bottom, #5a8aaa 0%, #4a7a9a 100%);
 }
 
 .container {
@@ -248,6 +320,7 @@ h1 {
     box-shadow: 
         0 5px 15px rgba(0, 0, 0, 0.5),
         inset 0 2px 5px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
 }
 
 .knob-label {
@@ -361,8 +434,7 @@ h1 {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    transition: height 0.1s ease;
+    transition: height 0.03s linear;
 }
 
 /* --- CROSSFADER --- */
@@ -470,11 +542,17 @@ h1 {
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.1s ease;
 }
 
 .effect-button-platter.active {
     background: linear-gradient(to bottom, #ff00ff 0%, #cc00cc 100%);
     box-shadow: 0 0 15px #ff00ff;
+    color: white;
+}
+
+.effect-button-platter:active {
+    transform: translateY(1px);
 }
 
 /* --- WAVEFORM INDIVIDUAL --- */
@@ -623,6 +701,7 @@ h1 {
     gap: 15px;
     border-radius: 12px;
     min-width: 500px;
+    color: #e0e0e0;
 }
 
 .close-btn {
@@ -742,7 +821,7 @@ h1 {
 
 /* Mejorar los VU meters */
 .vu-meter-container {
-    display: none !important; /* Ocultamos los VU meters de abajo */
+    display: none !important;
 }
 
 /* Estilos para la fila de knobs con filtro */
@@ -791,6 +870,27 @@ h1 {
     right: 50%;
     transform: translateX(50%);
 }
+
+.settings-section {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.settings-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.settings-section select {
+    width: 100%;
+    padding: 8px;
+    background: #444;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 5px;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -807,7 +907,6 @@ h1 {
     <div class="decks-container">
         <!-- DECK 1 -->
         <div class="deck" data-deck="1">
-            <!-- Controles superiores del deck 1 -->
             <div class="deck-controls deck1">
                 <div class="deck-button" id="button1" onclick="playPause(1)">Play</div>
                 <div class="deck-button sync-button" id="sync1" onclick="sync(1)">Sync</div>
@@ -823,7 +922,6 @@ h1 {
                 <div class="platter-inner">1</div>
             </div>
             
-            <!-- Botón para cargar archivo -->
             <div class="load-file-button" onclick="document.getElementById('fileInput1').click()">CARGAR AUDIO</div>
             <input type="file" id="fileInput1" accept="audio/*" style="display: none;">
             
@@ -845,7 +943,6 @@ h1 {
                 <div class="nav-button" onclick="navigateByBeats(1, 4)">+4</div>
             </div>
             
-            <!-- Loop Pads -->
             <div class="loop-pads" id="loopPads1">
                 <div class="loop-pad" data-value="0.125" onmousedown="startLoopRoll(1, 0.125)" onmouseup="stopLoopRoll(1)" onmouseleave="stopLoopRoll(1)">1/8</div>
                 <div class="loop-pad" data-value="0.0625" onmousedown="startLoopRoll(1, 0.0625)" onmouseup="stopLoopRoll(1)" onmouseleave="stopLoopRoll(1)">1/16</div>
@@ -855,7 +952,6 @@ h1 {
                 <div class="loop-pad" data-value="2" onmousedown="startLoopRoll(1, 2)" onmouseup="stopLoopRoll(1)" onmouseleave="stopLoopRoll(1)">2</div>
             </div>
             
-            <!-- Knobs circulares CON FILTRO -->
             <div class="knobs-row">
                 <div class="knob-container">
                     <div class="knob" id="gainKnob1">
@@ -881,7 +977,6 @@ h1 {
                     </div>
                     <div class="knob-label">Treble</div>
                 </div>
-                <!-- FILTRO para deck 1 -->
                 <div class="knob-container">
                     <div class="knob" id="filterKnob1">
                         <div class="knob-marker" id="filterMarker1"></div>
@@ -890,14 +985,12 @@ h1 {
                 </div>
             </div>
             
-            <!-- EQ Kill buttons -->
             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 5px;">
                 <button class="button" onclick="toggleEQ('bass', 1)">B Kill</button>
                 <button class="button" onclick="toggleEQ('mid', 1)">M Kill</button>
                 <button class="button" onclick="toggleEQ('treble', 1)">T Kill</button>
             </div>
             
-            <!-- Inputs ocultos para la funcionalidad original -->
             <input type="range" id="bass1" min="-20" max="20" value="0" class="rotary-knob">
             <input type="range" id="mid1" min="-20" max="20" value="0" class="rotary-knob">
             <input type="range" id="treble1" min="-20" max="20" value="0" class="rotary-knob">
@@ -913,10 +1006,9 @@ h1 {
                 </div>
                 <div class="effect-group">
                     <button class="effect-button-platter" id="effect1-cut" onclick="toggleEffect(1, 'cut')">CUT</button>
-                    <button class="effect-button-platter" id="effect1-flanger" onclick="toggleEffect(1, 'flanger')">FLNG</button>
+                    <button class="effect-button-platter" id="effect1-echo" onclick="toggleEffect(1, 'echo')">ECHO</button>
                 </div>
                 
-                <!-- VU Meters centrales SOLO ESTOS -->
                 <div class="vu-meters-central">
                     <div class="vu-meter-central">
                         <div class="vu-meter-level-central" id="vuMeterCentral1"></div>
@@ -928,7 +1020,7 @@ h1 {
                 
                 <div class="effect-group">
                     <button class="effect-button-platter" id="effect2-cut" onclick="toggleEffect(2, 'cut')">CUT</button>
-                    <button class="effect-button-platter" id="effect2-flanger" onclick="toggleEffect(2, 'flanger')">FLNG</button>
+                    <button class="effect-button-platter" id="effect2-echo" onclick="toggleEffect(2, 'echo')">ECHO</button>
                 </div>
                 <div class="vertical-fader-container">
                     <input type="range" id="volume2" min="0" max="1" step="0.01" value="0.7" class="vertical-fader">
@@ -963,7 +1055,6 @@ h1 {
 
         <!-- DECK 2 -->
         <div class="deck" data-deck="2">
-            <!-- Controles superiores del deck 2 -->
             <div class="deck-controls deck2">
                 <div class="deck-button" id="button2" onclick="playPause(2)">Play</div>
                 <div class="deck-button sync-button" id="sync2" onclick="sync(2)">Sync</div>
@@ -979,7 +1070,6 @@ h1 {
                 <div class="platter-inner">2</div>
             </div>
             
-            <!-- Botón para cargar archivo -->
             <div class="load-file-button" onclick="document.getElementById('fileInput2').click()">CARGAR AUDIO</div>
             <input type="file" id="fileInput2" accept="audio/*" style="display: none;">
             
@@ -1001,7 +1091,6 @@ h1 {
                 <div class="nav-button" onclick="navigateByBeats(2, 4)">+4</div>
             </div>
             
-            <!-- Loop Pads -->
             <div class="loop-pads" id="loopPads2">
                 <div class="loop-pad" data-value="0.125" onmousedown="startLoopRoll(2, 0.125)" onmouseup="stopLoopRoll(2)" onmouseleave="stopLoopRoll(2)">1/8</div>
                 <div class="loop-pad" data-value="0.0625" onmousedown="startLoopRoll(2, 0.0625)" onmouseup="stopLoopRoll(2)" onmouseleave="stopLoopRoll(2)">1/16</div>
@@ -1011,7 +1100,6 @@ h1 {
                 <div class="loop-pad" data-value="2" onmousedown="startLoopRoll(2, 2)" onmouseup="stopLoopRoll(2)" onmouseleave="stopLoopRoll(2)">2</div>
             </div>
             
-            <!-- Knobs circulares CON FILTRO -->
             <div class="knobs-row">
                 <div class="knob-container">
                     <div class="knob" id="gainKnob2">
@@ -1037,7 +1125,6 @@ h1 {
                     </div>
                     <div class="knob-label">Treble</div>
                 </div>
-                <!-- FILTRO para deck 2 -->
                 <div class="knob-container">
                     <div class="knob" id="filterKnob2">
                         <div class="knob-marker" id="filterMarker2"></div>
@@ -1046,14 +1133,12 @@ h1 {
                 </div>
             </div>
             
-            <!-- EQ Kill buttons -->
             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 5px;">
                 <button class="button" onclick="toggleEQ('bass', 2)">B Kill</button>
                 <button class="button" onclick="toggleEQ('mid', 2)">M Kill</button>
                 <button class="button" onclick="toggleEQ('treble', 2)">T Kill</button>
             </div>
             
-            <!-- Inputs ocultos para la funcionalidad original -->
             <input type="range" id="bass2" min="-20" max="20" value="0" class="rotary-knob">
             <input type="range" id="mid2" min="-20" max="20" value="0" class="rotary-knob">
             <input type="range" id="treble2" min="-20" max="20" value="0" class="rotary-knob">
@@ -1081,6 +1166,13 @@ h1 {
 <div id="settingsPopup">
     <h3>Ajustes de Sonido y MIDI</h3>
     <div class="settings-section">
+        <label for="skinSelector">Skin:</label>
+        <select id="skinSelector">
+            <option value="silver">Plateado Metálico</option>
+            <option value="white">Blanco</option>
+        </select>
+    </div>
+    <div class="settings-section">
         <label for="audioOutputSelector">Salida de Sonido:</label>
         <select id="audioOutputSelector"></select>
     </div>
@@ -1099,9 +1191,12 @@ h1 {
             <option value="bars">Barras</option>
             <option value="dots">Puntos</option>
             <option value="outline">Contorno</option>
+            <option value="neon">Neon Glow</option>
+            <option value="fire">Fuego</option>
+            <option value="ice">Hielo</option>
+            <option value="cyberpunk">Cyberpunk</option>
         </select>
     </div>
-
     <div class="settings-section">
         <label for="recordingSourceSelector">Fuente de Grabación:</label>
         <select id="recordingSourceSelector">
@@ -1109,7 +1204,6 @@ h1 {
             <option value="mic">Micrófono</option>
         </select>
     </div>
-    
     <div class="settings-section">
         <label for="midiMappingSelector">Mapeo MIDI:</label>
         <select id="midiMappingSelector">
@@ -1121,7 +1215,6 @@ h1 {
             <option value="custom">Personalizado</option>
         </select>
     </div>
-
     <button class="close-btn" onclick="applySettings()">Aplicar</button>
     <button class="close-btn" onclick="toggleSettingsPopup()">Cerrar</button>
 </div>
@@ -1148,15 +1241,11 @@ h1 {
             eqValue: { bass: 0, mid: 0, treble: 0 },
             bpm: 0,
             loopRollSource: null,
-            vinylBrakeInterval: null,
             hotCue: null,
-            effects: { cut: false, flanger: false },
+            effects: { cut: false, echo: false },
             vinylStartSound: null,
             vinylStopSound: null,
-            // Efectos
-            cutEffect: null,
-            flangerEffect: null,
-            // Para el visualizador superior
+            effectNodes: { cut: null, echo: null },
             waveformData: null,
             currentBeat: 0
         },
@@ -1179,15 +1268,11 @@ h1 {
             eqValue: { bass: 0, mid: 0, treble: 0 },
             bpm: 0,
             loopRollSource: null,
-            vinylBrakeInterval: null,
             hotCue: null,
-            effects: { cut: false, flanger: false },
+            effects: { cut: false, echo: false },
             vinylStartSound: null,
             vinylStopSound: null,
-            // Efectos
-            cutEffect: null,
-            flangerEffect: null,
-            // Para el visualizador superior
+            effectNodes: { cut: null, echo: null },
             waveformData: null,
             currentBeat: 0
         }
@@ -1195,14 +1280,13 @@ h1 {
     let mediaRecorder;
     let recordedChunks = [];
     let analyserMaster = audioContext.createAnalyser(); analyserMaster.fftSize = 2048;
-    let showDeck = {1:true,2:true}; // control which deck wave is superimposed
-    
-    let recordingStream;
+    let showDeck = {1:true,2:true};
     let isRecording = false;
     let activeRecordingSource = 'master';
     let currentWaveformStyle = 'default';
     let lastWavBlob = null;
-    let lastVUUpdate = 0;
+    let vuAnimationId = null;
+    let timeOffset = 0;
 
     // 30-band equalizer
     const frequencies = [
@@ -1210,61 +1294,212 @@ h1 {
         31, 62, 125, 250, 500, 1000, 2000, 4000, 8000, 16000,
         20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240
     ];
-    const eqNodes = [];
     let globalEqFilters = [];
     const row1 = document.getElementById('row1');
     const row2 = document.getElementById('row2');
-
     const superCanvas = document.getElementById('superimposedWaveformCanvas');
     const superCtx = superCanvas.getContext('2d');
 
-    // Función para actualizar VU Meters CENTRALES
+    // Función para cambiar skin
+    function changeSkin(skin) {
+        if (skin === 'white') {
+            document.body.classList.add('skin-white');
+        } else {
+            document.body.classList.remove('skin-white');
+        }
+    }
+
+    // Función para obtener color según estilo y deck
+    function getWaveformColor(deckNum, i, width, style) {
+        const progress = i / width;
+        const time = Date.now() / 1000;
+        
+        switch(style) {
+            case 'blue-orange':
+                return deckNum === 1 ? `hsl(210, 100%, 60%)` : `hsl(30, 100%, 55%)`;
+            case 'rainbow':
+                const hue = (time * 30 + (deckNum === 1 ? 0 : 180) + i * 2) % 360;
+                return `hsl(${hue}, 100%, 60%)`;
+            case 'mono':
+                return deckNum === 1 ? `hsl(0, 0%, 70%)` : `hsl(0, 0%, 50%)`;
+            case 'gradient':
+                const gradProgress = progress;
+                if (deckNum === 1) {
+                    return `hsl(${120 + gradProgress * 240}, 100%, 55%)`;
+                } else {
+                    return `hsl(${0 + gradProgress * 360}, 100%, 55%)`;
+                }
+            case 'bars':
+                return deckNum === 1 ? `#00FF00` : `#FF0000`;
+            case 'dots':
+                return deckNum === 1 ? `#00FF00` : `#FF0000`;
+            case 'outline':
+                return deckNum === 1 ? `#00FF00` : `#FF0000`;
+            case 'neon':
+                return deckNum === 1 ? `#ff00ff` : `#00ffff`;
+            case 'fire':
+                const fireIntensity = Math.sin(time * 10 + i * 0.1) * 0.5 + 0.5;
+                return `hsl(${20 + fireIntensity * 40}, 100%, ${50 + fireIntensity * 30}%)`;
+            case 'ice':
+                const iceIntensity = Math.sin(time * 5 + i * 0.05) * 0.5 + 0.5;
+                return `hsl(${180 + iceIntensity * 60}, 100%, ${50 + iceIntensity * 30}%)`;
+            case 'cyberpunk':
+                return deckNum === 1 ? `#ff00aa` : `#00ffaa`;
+            default: // default
+                return deckNum === 1 ? `#00FF00` : `#FF0000`;
+        }
+    }
+
+    // Función para actualizar VU Meters
     function updateVUMeters() {
-        const now = Date.now();
-        if (now - lastVUUpdate < 50) return; // Actualizar cada 50ms
-        
-        lastVUUpdate = now;
-        
         for (let deckNum of [1, 2]) {
             if (decks[deckNum].isLoaded && decks[deckNum].analyser) {
                 const analyser = decks[deckNum].analyser;
                 const dataArray = new Uint8Array(analyser.frequencyBinCount);
                 analyser.getByteFrequencyData(dataArray);
                 
-                // Calcular volumen promedio
-                let sum = 0;
+                let sumSquares = 0;
                 for (let i = 0; i < dataArray.length; i++) {
-                    sum += dataArray[i];
+                    const normalized = dataArray[i] / 256;
+                    sumSquares += normalized * normalized;
                 }
-                const average = sum / dataArray.length;
-                const normalized = average / 256; // 0-1
+                let rms = Math.sqrt(sumSquares / dataArray.length);
                 
-                // Actualizar VU Meter central SOLO
-                const vuMeterCentral = document.getElementById(`vuMeterCentral${deckNum}`);
-                if (vuMeterCentral) {
-                    vuMeterCentral.style.height = `${(1 - normalized) * 100}%`;
+                let volumeGain = parseFloat(document.getElementById(`volume${deckNum}`).value);
+                const crossfader = parseFloat(document.getElementById('crossfader').value);
+                
+                if (deckNum === 1) {
+                    volumeGain *= crossfader < 0.5 ? 1 : Math.max(0, 1 - ((crossfader - 0.5) * 2));
+                } else {
+                    volumeGain *= crossfader > 0.5 ? 1 : Math.max(0, crossfader * 2);
+                }
+                
+                const gainValue = parseFloat(document.getElementById(`gain${deckNum}`).value);
+                let finalLevel = Math.min(1, rms * 1.8 * volumeGain * gainValue);
+                
+                const vuElement = document.getElementById(`vuMeterCentral${deckNum}`);
+                if (vuElement) {
+                    const currentHeight = parseFloat(vuElement.style.height) || 0;
+                    const targetHeight = finalLevel * 100;
+                    const newHeight = currentHeight * 0.7 + targetHeight * 0.3;
+                    vuElement.style.height = `${newHeight}%`;
                     
-                    // Cambiar color según nivel
-                    if (normalized > 0.9) {
-                        vuMeterCentral.style.background = 'rgba(255, 255, 255, 0.9)';
-                    } else if (normalized > 0.75) {
-                        vuMeterCentral.style.background = 'rgba(255, 0, 0, 0.8)';
-                    } else if (normalized > 0.5) {
-                        vuMeterCentral.style.background = 'rgba(255, 165, 0, 0.7)';
+                    if (finalLevel > 0.9) {
+                        vuElement.style.background = 'rgba(255, 255, 255, 0.95)';
+                    } else if (finalLevel > 0.75) {
+                        vuElement.style.background = 'rgba(255, 0, 0, 0.9)';
+                    } else if (finalLevel > 0.5) {
+                        vuElement.style.background = 'rgba(255, 165, 0, 0.85)';
+                    } else if (finalLevel > 0.25) {
+                        vuElement.style.background = 'rgba(255, 255, 0, 0.8)';
                     } else {
-                        vuMeterCentral.style.background = 'rgba(0, 255, 0, 0.6)';
+                        vuElement.style.background = 'rgba(0, 255, 0, 0.7)';
                     }
+                }
+            } else if (!decks[deckNum].isLoaded) {
+                const vuElement = document.getElementById(`vuMeterCentral${deckNum}`);
+                if (vuElement) {
+                    vuElement.style.height = '0%';
                 }
             }
         }
-        
-        requestAnimationFrame(updateVUMeters);
+        vuAnimationId = requestAnimationFrame(updateVUMeters);
     }
 
-    // Función para inicializar knobs circulares (INCLUYENDO FILTRO)
+    // Función para aplicar efecto CUT
+    function applyCutEffect(deckNum) {
+        if (!decks[deckNum].isLoaded) return;
+        
+        if (decks[deckNum].effectNodes.cut) {
+            if (decks[deckNum].effectNodes.cut.gainNode) {
+                decks[deckNum].effectNodes.cut.gainNode.disconnect();
+            }
+            if (decks[deckNum].effectNodes.cut.oscillator) {
+                decks[deckNum].effectNodes.cut.oscillator.stop();
+                decks[deckNum].effectNodes.cut.oscillator.disconnect();
+            }
+            decks[deckNum].effectNodes.cut = null;
+            decks[deckNum].filterNode.connect(decks[deckNum].gainNode);
+        } else {
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0.5;
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'square';
+            oscillator.frequency.value = 8;
+            oscillator.start();
+            const gainMod = audioContext.createGain();
+            gainMod.gain.value = 0.8;
+            oscillator.connect(gainMod);
+            gainMod.connect(gainNode.gain);
+            decks[deckNum].filterNode.disconnect();
+            decks[deckNum].filterNode.connect(gainNode);
+            gainNode.connect(decks[deckNum].gainNode);
+            decks[deckNum].effectNodes.cut = { gainNode, oscillator, gainMod };
+        }
+    }
+
+    // Función para aplicar efecto ECHO
+    function applyEchoEffect(deckNum) {
+        if (!decks[deckNum].isLoaded) return;
+        
+        if (decks[deckNum].effectNodes.echo) {
+            if (decks[deckNum].effectNodes.echo.delayNode) {
+                decks[deckNum].effectNodes.echo.delayNode.disconnect();
+            }
+            if (decks[deckNum].effectNodes.echo.feedbackGain) {
+                decks[deckNum].effectNodes.echo.feedbackGain.disconnect();
+            }
+            decks[deckNum].effectNodes.echo = null;
+            decks[deckNum].filterNode.connect(decks[deckNum].gainNode);
+        } else {
+            const delayNode = audioContext.createDelay();
+            delayNode.delayTime.value = 0.35;
+            const feedbackGain = audioContext.createGain();
+            feedbackGain.gain.value = 0.5;
+            const dryGain = audioContext.createGain();
+            dryGain.gain.value = 0.7;
+            const wetGain = audioContext.createGain();
+            wetGain.gain.value = 0.5;
+            
+            decks[deckNum].filterNode.disconnect();
+            decks[deckNum].filterNode.connect(dryGain);
+            decks[deckNum].filterNode.connect(delayNode);
+            delayNode.connect(feedbackGain);
+            feedbackGain.connect(delayNode);
+            delayNode.connect(wetGain);
+            dryGain.connect(decks[deckNum].gainNode);
+            wetGain.connect(decks[deckNum].gainNode);
+            
+            decks[deckNum].effectNodes.echo = { delayNode, feedbackGain, dryGain, wetGain };
+        }
+    }
+
+    // Función para toggle effect
+    function toggleEffect(deckNum, effect) {
+        const button = document.getElementById(`effect${deckNum}-${effect}`);
+        
+        if (decks[deckNum].effects[effect]) {
+            decks[deckNum].effects[effect] = false;
+            button.classList.remove('active');
+            if (effect === 'cut') {
+                applyCutEffect(deckNum);
+            } else if (effect === 'echo') {
+                applyEchoEffect(deckNum);
+            }
+        } else {
+            decks[deckNum].effects[effect] = true;
+            button.classList.add('active');
+            if (effect === 'cut') {
+                applyCutEffect(deckNum);
+            } else if (effect === 'echo') {
+                applyEchoEffect(deckNum);
+            }
+        }
+    }
+
+    // Función para inicializar knobs circulares
     function initKnobs() {
         for (let deckNum of [1, 2]) {
-            // Configurar knobs para gain, bass, mid, treble Y FILTRO
             ['gain', 'bass', 'mid', 'treble', 'filter'].forEach((type) => {
                 const knob = document.getElementById(`${type}Knob${deckNum}`);
                 const marker = document.getElementById(`${type}Marker${deckNum}`);
@@ -1276,7 +1511,6 @@ h1 {
                         const delta = e.deltaY > 0 ? -0.05 : 0.05;
                         let newValue = parseFloat(input.value) + delta;
                         
-                        // Limitar valores según el tipo
                         if (type === 'gain') {
                             newValue = Math.max(0, Math.min(2, newValue));
                         } else if (type === 'filter') {
@@ -1290,15 +1524,15 @@ h1 {
                         updateKnobMarker(marker, input, type);
                     });
                     
-                    // Actualizar marcador inicial
                     updateKnobMarker(marker, input, type);
                     
-                    // Actualizar cuando cambia el input
                     input.addEventListener('input', () => {
                         updateKnobMarker(marker, input, type);
+                        if (type === 'filter') {
+                            decks[deckNum].filterNode.frequency.value = parseFloat(input.value);
+                        }
                     });
                     
-                    // Permitir arrastrar el knob
                     let isDragging = false;
                     let startY = 0;
                     let startValue = 0;
@@ -1313,10 +1547,8 @@ h1 {
                     
                     function onMouseMove(e) {
                         if (!isDragging) return;
-                        
                         const deltaY = startY - e.clientY;
                         let newValue;
-                        
                         if (type === 'gain') {
                             newValue = startValue + (deltaY * 0.01);
                             newValue = Math.max(0, Math.min(2, newValue));
@@ -1327,10 +1559,12 @@ h1 {
                             newValue = startValue + (deltaY * 0.5);
                             newValue = Math.max(-20, Math.min(20, newValue));
                         }
-                        
                         input.value = newValue;
                         input.dispatchEvent(new Event('input'));
                         updateKnobMarker(marker, input, type);
+                        if (type === 'filter') {
+                            decks[deckNum].filterNode.frequency.value = newValue;
+                        }
                     }
                     
                     function onMouseUp() {
@@ -1343,59 +1577,39 @@ h1 {
         }
     }
 
-    // Función para actualizar posición del marcador del knob
     function updateKnobMarker(marker, input, type) {
         const value = parseFloat(input.value);
         let angle;
         
         if (type === 'gain') {
-            // Gain: 0-2 → 225°-315°
             angle = 225 + (value / 2) * 90;
         } else if (type === 'filter') {
-            // Filter: 20-22050 → 225°-315° (logarítmico)
             const normalized = Math.log(value/20) / Math.log(22050/20);
             angle = 225 + normalized * 90;
         } else {
-            // EQ: -20 a 20 → 225°-315°
             angle = 225 + ((value + 20) / 40) * 90;
         }
         
         marker.style.transform = `translateX(-50%) rotate(${angle}deg)`;
     }
 
-    // Cargar sonidos de inicio y parada de vinilo
     async function loadVinylSounds() {
         try {
-            // Crear sonidos sintéticos para inicio y parada de vinilo
             const createVinylSound = (fadeIn, duration) => {
                 const sampleRate = audioContext.sampleRate;
                 const length = sampleRate * duration;
                 const buffer = audioContext.createBuffer(1, length, sampleRate);
                 const data = buffer.getChannelData(0);
-                
                 for (let i = 0; i < length; i++) {
-                    // Ruido blanco
                     let value = Math.random() * 2 - 1;
-                    
-                    // Aplicar filtro de paso bajo para simular ruido de vinilo
-                    if (i > 0) {
-                        value = 0.95 * data[i-1] + 0.05 * value;
-                    }
-                    
-                    // Aplicar envolvente
+                    if (i > 0) value = 0.95 * data[i-1] + 0.05 * value;
                     let envelope;
-                    if (fadeIn) {
-                        envelope = Math.min(1, i / (sampleRate * 0.1)); // Fade in rápido
-                    } else {
-                        envelope = Math.max(0, 1 - (i / (sampleRate * 0.3))); // Fade out más lento
-                    }
-                    
+                    if (fadeIn) envelope = Math.min(1, i / (sampleRate * 0.1));
+                    else envelope = Math.max(0, 1 - (i / (sampleRate * 0.3)));
                     data[i] = value * envelope * 0.3;
                 }
-                
                 return buffer;
             };
-            
             decks[1].vinylStartSound = createVinylSound(true, 0.2);
             decks[1].vinylStopSound = createVinylSound(false, 0.5);
             decks[2].vinylStartSound = createVinylSound(true, 0.2);
@@ -1405,48 +1619,32 @@ h1 {
         }
     }
 
-    // Reproducir sonido de vinilo
     function playVinylSound(deckNum, isStart) {
         if (!decks[deckNum]) return;
-        
         const buffer = isStart ? decks[deckNum].vinylStartSound : decks[deckNum].vinylStopSound;
         if (!buffer) return;
-        
         const source = audioContext.createBufferSource();
         source.buffer = buffer;
         source.connect(audioContext.destination);
         source.start();
     }
 
-    // Inicializar ecualizador de 30 bandas
     function init30BandEQ() {
-        // Clear existing nodes
         while (globalEqFilters.length > 0) {
             const filter = globalEqFilters.pop();
             filter.disconnect();
         }
-        
-        // Create new filters
         for (let i = 0; i < frequencies.length; i++) {
             const filter = audioContext.createBiquadFilter();
             filter.type = 'peaking';
             filter.frequency.value = frequencies[i];
             filter.Q.value = 1;
             filter.gain.value = 0;
-            
-            // Connect in series
-            if (i === 0) {
-                analyserMaster.connect(filter);
-            } else {
-                globalEqFilters[i-1].connect(filter);
-            }
-            
+            if (i === 0) analyserMaster.connect(filter);
+            else globalEqFilters[i-1].connect(filter);
             globalEqFilters.push(filter);
-            
-            // Create UI controls
             const band = document.createElement('div');
             band.className = 'band';
-            
             const input = document.createElement('input');
             input.type = 'range';
             input.min = '-20';
@@ -1457,72 +1655,39 @@ h1 {
                 const index = parseInt(e.target.dataset.index);
                 globalEqFilters[index].gain.value = parseFloat(e.target.value);
             });
-            
             const label = document.createElement('label');
             label.textContent = `${frequencies[i]}Hz`;
-            
             band.appendChild(input);
             band.appendChild(label);
-            
-            if (i < 15) {
-                row1.appendChild(band);
-            } else {
-                row2.appendChild(band);
-            }
+            if (i < 15) row1.appendChild(band);
+            else row2.appendChild(band);
         }
-        
-        // Connect the last filter to destination
         globalEqFilters[globalEqFilters.length - 1].connect(audioContext.destination);
     }
 
-    // Initialize the application
     function init() {
-        // Set up audio routing
         analyserMaster.connect(audioContext.destination);
-        
-        // Initialize 30-band EQ
         init30BandEQ();
-        
-        // Load vinyl sounds
         loadVinylSounds();
-        
-        // Set up file inputs
         document.getElementById('fileInput1').addEventListener('change', (e) => handleFileSelect(e, 1));
         document.getElementById('fileInput2').addEventListener('change', (e) => handleFileSelect(e, 2));
-        
-        // Set up controls
         setupControls();
-        
-        // Set up canvas dimensions
         setupCanvasDimensions();
-        
-        // Set up MIDI
         setupMIDI();
-        
-        // Inicializar knobs (INCLUYENDO FILTRO)
         initKnobs();
-        
-        // Iniciar VU Meters (SOLO CENTRALES)
-        requestAnimationFrame(updateVUMeters);
-        
-        // Start animation
+        updateVUMeters();
         animate();
-        
-        // Set up recording
         setupRecording();
+        
+        // Configurar selector de skin
+        document.getElementById('skinSelector').addEventListener('change', (e) => changeSkin(e.target.value));
+        // Iniciar contador de tiempo para animaciones
+        setInterval(() => { timeOffset += 0.1; }, 100);
     }
 
-    // Set up controls
     function setupControls() {
-        // Volume controls
-        document.getElementById('volume1').addEventListener('input', (e) => {
-            decks[1].gainNode.gain.value = parseFloat(e.target.value);
-        });
-        document.getElementById('volume2').addEventListener('input', (e) => {
-            decks[2].gainNode.gain.value = parseFloat(e.target.value);
-        });
-        
-        // EQ controls
+        document.getElementById('volume1').addEventListener('input', (e) => { decks[1].gainNode.gain.value = parseFloat(e.target.value); });
+        document.getElementById('volume2').addEventListener('input', (e) => { decks[2].gainNode.gain.value = parseFloat(e.target.value); });
         ['bass', 'mid', 'treble'].forEach((band) => {
             for (let i = 1; i <= 2; i++) {
                 document.getElementById(`${band}${i}`).addEventListener('input', (e) => {
@@ -1531,137 +1696,59 @@ h1 {
                 });
             }
         });
-        
-        // Gain controls
-        document.getElementById('gain1').addEventListener('input', (e) => {
-            decks[1].gainNode.gain.value = parseFloat(e.target.value);
-        });
-        document.getElementById('gain2').addEventListener('input', (e) => {
-            decks[2].gainNode.gain.value = parseFloat(e.target.value);
-        });
-        
-        // Filter controls
+        document.getElementById('gain1').addEventListener('input', (e) => { decks[1].gainNode.gain.value = parseFloat(e.target.value); });
+        document.getElementById('gain2').addEventListener('input', (e) => { decks[2].gainNode.gain.value = parseFloat(e.target.value); });
         document.getElementById('filter1').addEventListener('input', (e) => {
-            const value = parseFloat(e.target.value);
-            decks[1].filterNode.frequency.value = value;
-            // Actualizar visualmente si existe el knob
-            const marker = document.getElementById('filterMarker1');
-            if (marker) {
-                updateKnobMarker(marker, e.target, 'filter');
-            }
+            decks[1].filterNode.frequency.value = parseFloat(e.target.value);
         });
         document.getElementById('filter2').addEventListener('input', (e) => {
-            const value = parseFloat(e.target.value);
-            decks[2].filterNode.frequency.value = value;
-            // Actualizar visualmente si existe el knob
-            const marker = document.getElementById('filterMarker2');
-            if (marker) {
-                updateKnobMarker(marker, e.target, 'filter');
-            }
+            decks[2].filterNode.frequency.value = parseFloat(e.target.value);
         });
-        
-        // Pitch controls
-        document.getElementById('pitch1').addEventListener('input', (e) => {
-            if (decks[1].source) {
-                decks[1].source.playbackRate.value = parseFloat(e.target.value);
-            }
-        });
-        document.getElementById('pitch2').addEventListener('input', (e) => {
-            if (decks[2].source) {
-                decks[2].source.playbackRate.value = parseFloat(e.target.value);
-            }
-        });
-        
-        // Crossfader
+        document.getElementById('pitch1').addEventListener('input', (e) => { if (decks[1].source) decks[1].source.playbackRate.value = parseFloat(e.target.value); });
+        document.getElementById('pitch2').addEventListener('input', (e) => { if (decks[2].source) decks[2].source.playbackRate.value = parseFloat(e.target.value); });
         document.getElementById('crossfader').addEventListener('input', (e) => {
             const value = parseFloat(e.target.value);
-            // Adjust volumes based on crossfader position
-            decks[1].gainNode.gain.value = value < 0.5 ? 1 : 1 - ((value - 0.5) * 2);
-            decks[2].gainNode.gain.value = value > 0.5 ? 1 : value * 2;
+            decks[1].gainNode.gain.value = value < 0.5 ? 1 : Math.max(0, 1 - ((value - 0.5) * 2));
+            decks[2].gainNode.gain.value = value > 0.5 ? 1 : Math.max(0, value * 2);
         });
-        
-        // Progress bars
-        document.getElementById('progressBar1').addEventListener('input', (e) => {
-            if (decks[1].isLoaded) {
-                seekTrack(1, parseFloat(e.target.value));
-            }
-        });
-        document.getElementById('progressBar2').addEventListener('input', (e) => {
-            if (decks[2].isLoaded) {
-                seekTrack(2, parseFloat(e.target.value));
-            }
-        });
+        document.getElementById('progressBar1').addEventListener('input', (e) => { if (decks[1].isLoaded) seekTrack(1, parseFloat(e.target.value)); });
+        document.getElementById('progressBar2').addEventListener('input', (e) => { if (decks[2].isLoaded) seekTrack(2, parseFloat(e.target.value)); });
     }
 
-    // Set up canvas dimensions
     function setupCanvasDimensions() {
-        const canvases = [
-            document.getElementById('superimposedWaveformCanvas'),
-            document.getElementById('waveformCanvas1'),
-            document.getElementById('waveformCanvas2')
-        ];
-        
-        canvases.forEach(canvas => {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        });
+        const canvases = [document.getElementById('superimposedWaveformCanvas'), document.getElementById('waveformCanvas1'), document.getElementById('waveformCanvas2')];
+        canvases.forEach(canvas => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; });
     }
 
-    // Handle file selection
     async function handleFileSelect(event, deckNum) {
         const file = event.target.files[0];
         if (!file) return;
-        
         try {
             const arrayBuffer = await file.arrayBuffer();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            
-            // Store audio buffer
             decks[deckNum].audioBuffer = audioBuffer;
             decks[deckNum].isLoaded = true;
-            
-            // Preprocess waveform data for the top visualizer
             preprocessWaveformData(deckNum, audioBuffer);
-            
-            // Create reversed buffer
             createReversedBuffer(deckNum, audioBuffer);
-            
-            // Create analyser
             decks[deckNum].analyser = audioContext.createAnalyser();
             decks[deckNum].analyser.fftSize = 2048;
-            
-            // Set up audio routing
             setupAudioRouting(deckNum);
-            
-            // Draw waveform
             drawFullWaveform(deckNum);
-            
-            // Update duration display
-            const duration = formatTime(audioBuffer.duration);
-            document.getElementById(`duration${deckNum}`).textContent = duration;
-            
-            // Detect BPM
+            document.getElementById(`duration${deckNum}`).textContent = formatTime(audioBuffer.duration);
             detectBPM(deckNum, audioBuffer);
-            
-            // Actualizar botón de play
             document.getElementById(`button${deckNum}`).textContent = 'Play';
-            
         } catch (error) {
             console.error('Error loading audio file:', error);
-            alert('Error al cargar el archivo de audio. Asegúrate de que es un archivo de audio válido.');
+            alert('Error al cargar el archivo de audio.');
         }
     }
 
-    // Preprocess waveform data for the top visualizer
     function preprocessWaveformData(deckNum, audioBuffer) {
         const channelData = audioBuffer.getChannelData(0);
         const samplesPerPixel = Math.floor(channelData.length / superCanvas.width);
         decks[deckNum].waveformData = [];
-        
         for (let i = 0; i < superCanvas.width; i++) {
-            let min = 0;
-            let max = 0;
-            
+            let min = 0, max = 0;
             for (let j = 0; j < samplesPerPixel; j++) {
                 const index = i * samplesPerPixel + j;
                 if (index < channelData.length) {
@@ -1670,50 +1757,31 @@ h1 {
                     if (value > max) max = value;
                 }
             }
-            
             decks[deckNum].waveformData.push({ min, max });
         }
     }
 
-    // Create reversed audio buffer
     function createReversedBuffer(deckNum, audioBuffer) {
-        const reversedBuffer = audioContext.createBuffer(
-            audioBuffer.numberOfChannels,
-            audioBuffer.length,
-            audioBuffer.sampleRate
-        );
-        
+        const reversedBuffer = audioContext.createBuffer(audioBuffer.numberOfChannels, audioBuffer.length, audioBuffer.sampleRate);
         for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
             const originalData = audioBuffer.getChannelData(channel);
             const reversedData = reversedBuffer.getChannelData(channel);
-            
-            for (let i = 0; i < audioBuffer.length; i++) {
-                reversedData[i] = originalData[audioBuffer.length - 1 - i];
-            }
+            for (let i = 0; i < audioBuffer.length; i++) reversedData[i] = originalData[audioBuffer.length - 1 - i];
         }
-        
         decks[deckNum].reversedBuffer = reversedBuffer;
     }
 
-    // Set up audio routing
     function setupAudioRouting(deckNum) {
-        // Set up EQ
         decks[deckNum].eq.bass.type = 'lowshelf';
         decks[deckNum].eq.bass.frequency.value = 250;
-        
         decks[deckNum].eq.mid.type = 'peaking';
         decks[deckNum].eq.mid.frequency.value = 1000;
         decks[deckNum].eq.mid.Q.value = 1;
-        
         decks[deckNum].eq.treble.type = 'highshelf';
         decks[deckNum].eq.treble.frequency.value = 4000;
-        
-        // Set up filter
         decks[deckNum].filterNode.type = 'lowpass';
         decks[deckNum].filterNode.frequency.value = 22050;
         decks[deckNum].filterNode.Q.value = 1;
-        
-        // Connect nodes
         decks[deckNum].eq.bass.connect(decks[deckNum].eq.mid);
         decks[deckNum].eq.mid.connect(decks[deckNum].eq.treble);
         decks[deckNum].eq.treble.connect(decks[deckNum].filterNode);
@@ -1722,33 +1790,21 @@ h1 {
         decks[deckNum].analyser.connect(analyserMaster);
     }
 
-    // Draw full waveform
     function drawFullWaveform(deckNum) {
         const canvas = document.getElementById(`waveformCanvas${deckNum}`);
         const ctx = canvas.getContext('2d');
-        const width = canvas.width;
-        const height = canvas.height;
-        
+        const width = canvas.width, height = canvas.height;
         ctx.clearRect(0, 0, width, height);
-        
         if (!decks[deckNum].audioBuffer) return;
-        
         const audioBuffer = decks[deckNum].audioBuffer;
         const channelData = audioBuffer.getChannelData(0);
         const step = Math.ceil(channelData.length / width);
-        
         ctx.beginPath();
         ctx.moveTo(0, height / 2);
-        
-        // Choose color based on deck
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        ctx.strokeStyle = color;
+        ctx.strokeStyle = deckNum === 1 ? '#00FF00' : '#FF0000';
         ctx.lineWidth = 2;
-        
         for (let i = 0; i < width; i++) {
-            let min = 0;
-            let max = 0;
-            
+            let min = 0, max = 0;
             for (let j = 0; j < step; j++) {
                 const index = i * step + j;
                 if (index < channelData.length) {
@@ -1757,535 +1813,266 @@ h1 {
                     if (value > max) max = value;
                 }
             }
-            
             ctx.lineTo(i, height / 2 - min * height / 2);
             ctx.lineTo(i, height / 2 - max * height / 2);
         }
-        
         ctx.stroke();
     }
 
-    // Play/Pause track
     function playPause(deckNum) {
         if (!decks[deckNum].isLoaded) {
             alert('Primero carga un archivo de audio en el deck ' + deckNum);
             document.getElementById(`fileInput${deckNum}`).click();
             return;
         }
-        
-        if (decks[deckNum].isPlaying) {
-            pauseTrack(deckNum);
-        } else {
-            playTrack(deckNum);
-        }
+        if (decks[deckNum].isPlaying) pauseTrack(deckNum);
+        else playTrack(deckNum);
     }
 
-    // Play track
     function playTrack(deckNum) {
         if (!decks[deckNum].isLoaded) return;
-        
-        // Play vinyl start sound
         playVinylSound(deckNum, true);
-        
         const source = audioContext.createBufferSource();
-        
-        if (decks[deckNum].isReversed) {
-            source.buffer = decks[deckNum].reversedBuffer;
-        } else {
-            source.buffer = decks[deckNum].audioBuffer;
-        }
-        
-        // Set playback rate
+        source.buffer = decks[deckNum].isReversed ? decks[deckNum].reversedBuffer : decks[deckNum].audioBuffer;
         source.playbackRate.value = parseFloat(document.getElementById(`pitch${deckNum}`).value);
-        
-        // Connect source to audio chain
         source.connect(decks[deckNum].eq.bass);
-        
-        // Store source
         decks[deckNum].source = source;
-        
-        // Calculate start time
         let startTime;
-        if (decks[deckNum].pauseTime > 0) {
-            startTime = audioContext.currentTime - decks[deckNum].pauseTime;
-        } else {
-            startTime = audioContext.currentTime;
-        }
-        
-        // Start playback
+        if (decks[deckNum].pauseTime > 0) startTime = audioContext.currentTime - decks[deckNum].pauseTime;
+        else startTime = audioContext.currentTime;
         source.start(0, decks[deckNum].pauseTime);
-        
-        // Update state
         decks[deckNum].isPlaying = true;
         decks[deckNum].startTime = startTime;
-        
-        // Update button text
         document.getElementById(`button${deckNum}`).textContent = 'Pause';
-        
-        // Start platter animation
         document.getElementById(`platter${deckNum}`).classList.add('playing');
-        
-        // Start animation for progress bar
         cancelAnimationFrame(decks[deckNum].animationFrame);
         animateProgress(deckNum);
+        if (decks[deckNum].effects.cut) applyCutEffect(deckNum);
+        if (decks[deckNum].effects.echo) applyEchoEffect(deckNum);
     }
 
-    // Pause track
     function pauseTrack(deckNum) {
         if (!decks[deckNum].isPlaying || !decks[deckNum].source) return;
-        
-        // Play vinyl stop sound
         playVinylSound(deckNum, false);
-        
-        // Stop source
         decks[deckNum].source.stop();
         decks[deckNum].source.disconnect();
-        
-        // Calculate pause time
         decks[deckNum].pauseTime = audioContext.currentTime - decks[deckNum].startTime;
-        
-        // Update state
         decks[deckNum].isPlaying = false;
-        
-        // Update button text
         document.getElementById(`button${deckNum}`).textContent = 'Play';
-        
-        // Stop platter animation
         document.getElementById(`platter${deckNum}`).classList.remove('playing');
-        
-        // Stop animation
         cancelAnimationFrame(decks[deckNum].animationFrame);
     }
 
-    // Seek track
     function seekTrack(deckNum, progress) {
         const wasPlaying = decks[deckNum].isPlaying;
-        
-        if (wasPlaying) {
-            pauseTrack(deckNum);
-        }
-        
+        if (wasPlaying) pauseTrack(deckNum);
         decks[deckNum].pauseTime = progress * decks[deckNum].audioBuffer.duration;
-        
-        // Update beat position
         updateBeatPosition(deckNum);
-        
-        if (wasPlaying) {
-            playTrack(deckNum);
-        } else {
-            // Update progress bar
+        if (wasPlaying) playTrack(deckNum);
+        else {
             document.getElementById(`progressBar${deckNum}`).value = progress;
             document.getElementById(`currentTime${deckNum}`).textContent = formatTime(decks[deckNum].pauseTime);
         }
     }
 
-    // Navegación por beats (4 tiempos)
     function navigateByBeats(deckNum, beats) {
         if (!decks[deckNum].isLoaded || decks[deckNum].bpm === 0) return;
-        
         const wasPlaying = decks[deckNum].isPlaying;
-        
-        if (wasPlaying) {
-            pauseTrack(deckNum);
-        }
-        
-        // Calcular duración de un beat en segundos
+        if (wasPlaying) pauseTrack(deckNum);
         const secondsPerBeat = 60 / decks[deckNum].bpm;
-        
-        // Calcular nueva posición
         let newPosition = decks[deckNum].pauseTime + (beats * secondsPerBeat);
-        
-        // Asegurarse de que está dentro de los límites
         if (newPosition < 0) newPosition = 0;
         if (newPosition > decks[deckNum].audioBuffer.duration) newPosition = decks[deckNum].audioBuffer.duration;
-        
         decks[deckNum].pauseTime = newPosition;
-        
-        // Update beat position
         updateBeatPosition(deckNum);
-        
-        if (wasPlaying) {
-            playTrack(deckNum);
-        } else {
-            // Actualizar barra de progreso
+        if (wasPlaying) playTrack(deckNum);
+        else {
             const progress = newPosition / decks[deckNum].audioBuffer.duration;
             document.getElementById(`progressBar${deckNum}`).value = progress;
             document.getElementById(`currentTime${deckNum}`).textContent = formatTime(newPosition);
         }
     }
 
-    // Update beat position for visualization
     function updateBeatPosition(deckNum) {
         if (!decks[deckNum].isLoaded || decks[deckNum].bpm === 0) return;
-        
-        // Calcular posición actual en beats
         const secondsPerBeat = 60 / decks[deckNum].bpm;
         decks[deckNum].currentBeat = Math.floor(decks[deckNum].pauseTime / secondsPerBeat);
     }
 
-    // Animate progress bar
     function animateProgress(deckNum) {
         if (!decks[deckNum].isPlaying) return;
-        
         const currentTime = audioContext.currentTime - decks[deckNum].startTime;
         const duration = decks[deckNum].audioBuffer.duration;
         const progress = currentTime / duration;
-        
-        // Update progress bar
         document.getElementById(`progressBar${deckNum}`).value = progress;
         document.getElementById(`currentTime${deckNum}`).textContent = formatTime(currentTime);
-        
-        // Update beat position
         updateBeatPosition(deckNum);
-        
-        // Continue animation
         decks[deckNum].animationFrame = requestAnimationFrame(() => animateProgress(deckNum));
     }
 
-    // Format time
     function formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    // Detect BPM
     function detectBPM(deckNum, audioBuffer) {
-        // Simple BPM detection (this is a placeholder)
-        // In a real application, you would use a more sophisticated algorithm
         const estimatedBPM = Math.floor(80 + Math.random() * 60);
         decks[deckNum].bpm = estimatedBPM;
         document.getElementById(`bpmDisplay${deckNum}`).textContent = `${estimatedBPM} BPM`;
     }
 
-    // Sync BPM
     function sync(deckNum) {
         const otherDeckNum = deckNum === 1 ? 2 : 1;
-        
         if (!decks[otherDeckNum].isLoaded) {
             alert('Primero carga un archivo en el otro deck para sincronizar');
             return;
         }
-        
-        // Set pitch to match other deck's BPM
         const targetBPM = decks[otherDeckNum].bpm;
         const currentBPM = decks[deckNum].bpm;
-        
         if (currentBPM > 0) {
             const ratio = targetBPM / currentBPM;
             document.getElementById(`pitch${deckNum}`).value = ratio;
-            
-            if (decks[deckNum].source) {
-                decks[deckNum].source.playbackRate.value = ratio;
-            }
-            
-            // Actualizar visualmente el knob de pitch si existe
-            const pitchInput = document.getElementById(`pitch${deckNum}`);
-            if (pitchInput) {
-                pitchInput.dispatchEvent(new Event('input'));
-            }
+            if (decks[deckNum].source) decks[deckNum].source.playbackRate.value = ratio;
         }
     }
 
-    // Toggle EQ band
     function toggleEQ(band, deckNum) {
         const isEnabled = decks[deckNum].eqState[band];
-        
         if (isEnabled) {
-            // Kill the band por completo
             decks[deckNum].eq[band].gain.value = -40;
             decks[deckNum].eqState[band] = false;
         } else {
-            // Restaurar la banda al valor previo
             decks[deckNum].eq[band].gain.value = decks[deckNum].eqValue[band];
             decks[deckNum].eqState[band] = true;
         }
     }
 
-    // Start reverse
     function startReverse(deckNum) {
         if (!decks[deckNum].isLoaded) return;
-
         const currentTime = decks[deckNum].isPlaying ? (audioContext.currentTime - decks[deckNum].startTime) : decks[deckNum].pauseTime;
-        
-        if (decks[deckNum].isPlaying) {
-            pauseTrack(deckNum);
-        }
-
+        if (decks[deckNum].isPlaying) pauseTrack(deckNum);
         decks[deckNum].isReversed = true;
         decks[deckNum].pauseTime = decks[deckNum].audioBuffer.duration - currentTime;
-
         playTrack(deckNum);
     }
 
-    // Stop reverse
     function stopReverse(deckNum) {
         if (!decks[deckNum].isLoaded || !decks[deckNum].isReversed) return;
-
         const currentTime = decks[deckNum].audioBuffer.duration - decks[deckNum].pauseTime;
-
-        if (decks[deckNum].isPlaying) {
-            pauseTrack(deckNum);
-        }
-
+        if (decks[deckNum].isPlaying) pauseTrack(deckNum);
         decks[deckNum].isReversed = false;
         decks[deckNum].pauseTime = currentTime;
-
         playTrack(deckNum);
     }
 
-    // Toggle hot cue
     function toggleHotCue(deckNum) {
         if (!decks[deckNum].isLoaded) return;
-        
         if (decks[deckNum].hotCue === null) {
-            // Set hot cue
-            const currentTime = decks[deckNum].isPlaying ? 
-                (audioContext.currentTime - decks[deckNum].startTime) : 
-                decks[deckNum].pauseTime;
-            
+            const currentTime = decks[deckNum].isPlaying ? (audioContext.currentTime - decks[deckNum].startTime) : decks[deckNum].pauseTime;
             decks[deckNum].hotCue = currentTime;
-            
-            // Create visual marker
             createHotCueMarker(deckNum, currentTime);
-            
             document.getElementById(`hotCue${deckNum}`).textContent = 'GoTo';
         } else {
-            // Go to hot cue
             seekTrack(deckNum, decks[deckNum].hotCue / decks[deckNum].audioBuffer.duration);
         }
     }
 
-    // Delete hot cue
     function deleteHotCue(deckNum) {
         decks[deckNum].hotCue = null;
         document.getElementById(`hotCue${deckNum}`).textContent = 'HotCue';
-        
-        // Remove visual marker
         const markers = document.querySelectorAll(`.hot-cue-marker[data-deck="${deckNum}"]`);
         markers.forEach(marker => marker.remove());
     }
 
-    // Create hot cue marker
     function createHotCueMarker(deckNum, time) {
         const progress = time / decks[deckNum].audioBuffer.duration;
         const waveformContainer = document.querySelector(`.waveform-deck-container.deck${deckNum}`);
-        
-        // Remove existing marker
         const existingMarker = document.querySelector(`.hot-cue-marker[data-deck="${deckNum}"]`);
         if (existingMarker) existingMarker.remove();
-        
-        // Create new marker
         const marker = document.createElement('div');
         marker.className = 'hot-cue-marker';
         marker.dataset.deck = deckNum;
         marker.style.left = `${progress * 100}%`;
-        
         waveformContainer.appendChild(marker);
     }
 
-    // Toggle effect
-    function toggleEffect(deckNum, effect) {
-        const button = document.getElementById(`effect${deckNum}-${effect}`);
-        
-        if (decks[deckNum].effects[effect]) {
-            // Disable effect
-            decks[deckNum].effects[effect] = false;
-            button.classList.remove('active');
-            
-            // Disconnect effect nodes
-            if (effect === 'cut' && decks[deckNum].cutEffect) {
-                decks[deckNum].cutEffect.disconnect();
-                decks[deckNum].cutEffect = null;
-            } else if (effect === 'flanger' && decks[deckNum].flangerEffect) {
-                decks[deckNum].flangerEffect.disconnect();
-                decks[deckNum].flangerEffect = null;
-            }
-        } else {
-            // Enable effect
-            decks[deckNum].effects[effect] = true;
-            button.classList.add('active');
-            
-            // Create and connect effect nodes
-            if (effect === 'cut') {
-                // Create a simple cut effect (mute/unmute rapidly)
-                const oscillator = audioContext.createOscillator();
-                oscillator.frequency.value = 10; // 10Hz for a choppy effect
-                const gainNode = audioContext.createGain();
-                gainNode.gain.value = 0;
-                
-                oscillator.connect(gainNode.gain);
-                oscillator.start();
-                
-                gainNode.connect(decks[deckNum].gainNode);
-                decks[deckNum].cutEffect = gainNode;
-            } else if (effect === 'flanger') {
-                // Create a simple flanger effect
-                const delay = audioContext.createDelay();
-                delay.delayTime.value = 0.005;
-                
-                const oscillator = audioContext.createOscillator();
-                oscillator.frequency.value = 0.5;
-                
-                const gain = audioContext.createGain();
-                gain.gain.value = 0.002;
-                
-                oscillator.connect(gain);
-                gain.connect(delay.delayTime);
-                
-                delay.connect(decks[deckNum].gainNode);
-                oscillator.start();
-                
-                decks[deckNum].flangerEffect = delay;
-            }
-        }
-    }
-
-    // Start loop roll
     function startLoopRoll(deckNum, duration) {
         if (!decks[deckNum].isLoaded || !decks[deckNum].isPlaying) return;
-
-        // Pausar pista principal
         pauseTrack(deckNum);
-
         const currentTime = decks[deckNum].pauseTime;
         const startTime = currentTime;
         const endTime = startTime + duration;
-
-        // Crear nuevo source en loop
         const source = audioContext.createBufferSource();
         source.buffer = decks[deckNum].audioBuffer;
         source.loop = true;
         source.loopStart = startTime;
         source.loopEnd = endTime;
-
-        // Conectar source
         source.connect(decks[deckNum].eq.bass);
-
-        // Reproducir fragmento
         source.start(0, startTime);
         decks[deckNum].loopRollSource = { source, startTime };
     }
 
-    // Stop loop roll
     function stopLoopRoll(deckNum) {
         if (decks[deckNum].loopRollSource) {
             const { source, startTime } = decks[deckNum].loopRollSource;
             const now = audioContext.currentTime;
             const loopDuration = source.loopEnd - source.loopStart;
-
             source.stop();
             source.disconnect();
             decks[deckNum].loopRollSource = null;
-
-            // Calcular nuevo punto de tiempo real
             decks[deckNum].pauseTime = startTime + ((now - decks[deckNum].startTime) % loopDuration);
             playTrack(deckNum);
         }
     }
 
-    // Toggle superimpose
-    function toggleSuperimpose(deckNum) {
-        showDeck[deckNum] = !showDeck[deckNum];
-    }
+    function toggleSuperimpose(deckNum) { showDeck[deckNum] = !showDeck[deckNum]; }
 
-    // Animate all canvas elements
-    function animate() {
-        drawSuperimposedWaveform();
-        requestAnimationFrame(animate);
-    }
+    function animate() { drawSuperimposedWaveform(); requestAnimationFrame(animate); }
 
-    // draw superimposed waveform for both decks
     function drawSuperimposedWaveform() {
-        const width = superCanvas.width;
-        const height = superCanvas.height;
-        
+        const width = superCanvas.width, height = superCanvas.height;
         superCtx.clearRect(0, 0, width, height);
-        
-        // draw deck 1 waveform if shown and loaded
-        if (showDeck[1] && decks[1].isLoaded && decks[1].waveformData) {
-            drawDeckWaveformSegment(1, width, height);
-        }
-        
-        // draw deck 2 waveform if shown and loaded
-        if (showDeck[2] && decks[2].isLoaded && decks[2].waveformData) {
-            drawDeckWaveformSegment(2, width, height);
-        }
+        if (showDeck[1] && decks[1].isLoaded && decks[1].waveformData) drawDeckWaveformSegment(1, width, height);
+        if (showDeck[2] && decks[2].isLoaded && decks[2].waveformData) drawDeckWaveformSegment(2, width, height);
     }
 
-    // draw a segment of the waveform for the top visualizer
     function drawDeckWaveformSegment(deckNum, width, height) {
         if (!decks[deckNum].waveformData || !decks[deckNum].isLoaded) return;
-        
         const audioBuffer = decks[deckNum].audioBuffer;
         if (!audioBuffer) return;
-        
-        const currentPositionSeconds = decks[deckNum].isPlaying ? 
-            (audioContext.currentTime - decks[deckNum].startTime) : 
-            decks[deckNum].pauseTime;
-        
-        const durationSeconds = audioBuffer.duration;
+        const currentPositionSeconds = decks[deckNum].isPlaying ? (audioContext.currentTime - decks[deckNum].startTime) : decks[deckNum].pauseTime;
         const totalSamples = audioBuffer.length;
         const sampleRate = audioBuffer.sampleRate;
-        
-        // calculate the number of samples to display
-        // 20 seconds of audio, adjust for playback rate
-        const viewDuration = 20; 
+        const viewDuration = 20;
         const samplesPerView = viewDuration * sampleRate;
-        
-        // calculate the current sample index and the start/end samples for the view
         const currentSampleIndex = Math.floor(currentPositionSeconds * sampleRate);
         const startSample = Math.max(0, currentSampleIndex - samplesPerView / 2);
         const endSample = Math.min(totalSamples, currentSampleIndex + samplesPerView / 2);
-        
         const channelData = audioBuffer.getChannelData(0);
-        
-        // determine the number of samples per pixel for this zoomed-in view
         const samplesPerPixel = (endSample - startSample) / width;
         
-        let color;
-        switch(currentWaveformStyle) {
-            case 'blue-orange':
-                color = deckNum === 1 ? '#0088FF' : '#FF8800';
-                break;
-            case 'rainbow':
-                const hue = (Date.now() / 20 + deckNum * 60) % 360;
-                color = `hsl(${hue}, 100%, 60%)`;
-                break;
-            case 'mono':
-                color = deckNum === 1 ? '#CCCCCC' : '#888888';
-                break;
-            case 'gradient':
-                const gradient = superCtx.createLinearGradient(0, 0, width, 0);
-                gradient.addColorStop(0, deckNum === 1 ? '#00FF00' : '#FF0000');
-                gradient.addColorStop(1, deckNum === 1 ? '#0000FF' : '#FF00FF');
-                color = gradient;
-                break;
-            case 'bars':
-                drawBarsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
-                return;
-            case 'dots':
-                drawDotsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
-                return;
-            case 'outline':
-                drawOutlineWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData);
-                return;
-            default: // 'default'
-                color = deckNum === 1 ? '#00FF00' : '#FF0000';
+        const style = currentWaveformStyle;
+        
+        if (style === 'bars') {
+            drawBarsStyle(deckNum, width, height, startSample, endSample, channelData, samplesPerPixel);
+            return;
+        } else if (style === 'dots') {
+            drawDotsStyle(deckNum, width, height, startSample, endSample, channelData, samplesPerPixel);
+            return;
+        } else if (style === 'outline') {
+            drawOutlineStyle(deckNum, width, height, startSample, endSample, channelData, samplesPerPixel);
+            return;
         }
-
-        superCtx.strokeStyle = color;
-        superCtx.lineWidth = 2;
         
         superCtx.beginPath();
+        superCtx.lineWidth = 2;
+        
         for (let i = 0; i < width; i++) {
             const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
             if (sampleIndex >= totalSamples) break;
             
-            let min = 0;
-            let max = 0;
-            
-            // get min and max for the group of samples for this pixel
+            let min = 0, max = 0;
             for (let j = 0; j < samplesPerPixel; j++) {
                 const index = sampleIndex + j;
                 if (index < totalSamples) {
@@ -2295,7 +2082,9 @@ h1 {
                 }
             }
             
-            // draw the line for the pixel
+            const color = getWaveformColor(deckNum, i, width, style);
+            superCtx.strokeStyle = color;
+            
             if (i === 0) {
                 superCtx.moveTo(i, height / 2 - min * height / 2);
             } else {
@@ -2305,19 +2094,13 @@ h1 {
         }
         superCtx.stroke();
     }
-
-    // draw bars style waveform for superimposed view
-    function drawBarsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        const samplesPerPixel = (endSample - startSample) / width;
-        
+    
+    function drawBarsStyle(deckNum, width, height, startSample, endSample, channelData, samplesPerPixel) {
         for (let i = 0; i < width; i += 4) {
             const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
             if (sampleIndex >= channelData.length) break;
-
-            let min = 0;
-            let max = 0;
-
+            
+            let min = 0, max = 0;
             for (let j = 0; j < samplesPerPixel; j++) {
                 const index = sampleIndex + j;
                 if (index < channelData.length) {
@@ -2326,27 +2109,19 @@ h1 {
                     if (value > max) max = value;
                 }
             }
-            const barHeight = (max - min) * height / 2;
-            
+            const barHeight = Math.abs(max - min) * height / 2;
+            const color = getWaveformColor(deckNum, i, width, 'bars');
             superCtx.fillStyle = color;
-            superCtx.fillRect(i, height / 2 - barHeight / 2, 3, barHeight);
+            superCtx.fillRect(i, height / 2 - barHeight / 2, 3, Math.max(1, barHeight));
         }
     }
-
-    // draw dots style waveform for superimposed view
-    function drawDotsWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        const samplesPerPixel = (endSample - startSample) / width;
-        
-        superCtx.fillStyle = color;
-        
+    
+    function drawDotsStyle(deckNum, width, height, startSample, endSample, channelData, samplesPerPixel) {
         for (let i = 0; i < width; i += 3) {
             const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
             if (sampleIndex >= channelData.length) break;
-
-            let min = 0;
-            let max = 0;
-
+            
+            let min = 0, max = 0;
             for (let j = 0; j < samplesPerPixel; j++) {
                 const index = sampleIndex + j;
                 if (index < channelData.length) {
@@ -2355,31 +2130,27 @@ h1 {
                     if (value > max) max = value;
                 }
             }
-            
+            const color = getWaveformColor(deckNum, i, width, 'dots');
+            superCtx.fillStyle = color;
             superCtx.beginPath();
-            superCtx.arc(i, height / 2 - min * height / 2, 1.5, 0, Math.PI * 2);
+            superCtx.arc(i, height / 2 - min * height / 2, 2, 0, Math.PI * 2);
             superCtx.fill();
-            
             superCtx.beginPath();
-            superCtx.arc(i, height / 2 - max * height / 2, 1.5, 0, Math.PI * 2);
+            superCtx.arc(i, height / 2 - max * height / 2, 2, 0, Math.PI * 2);
             superCtx.fill();
         }
     }
-
-    // draw outline style waveform for superimposed view
-    function drawOutlineWaveformSuperimposed(deckNum, width, height, startSample, endSample, channelData) {
-        const color = deckNum === 1 ? '#00FF00' : '#FF0000';
-        const samplesPerPixel = (endSample - startSample) / width;
-        
+    
+    function drawOutlineStyle(deckNum, width, height, startSample, endSample, channelData, samplesPerPixel) {
+        const color = getWaveformColor(deckNum, 0, width, 'outline');
         superCtx.strokeStyle = color;
-        superCtx.lineWidth = 1;
+        superCtx.lineWidth = 1.5;
         
-        // draw upper outline
         superCtx.beginPath();
         for (let i = 0; i < width; i++) {
             const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
             if (sampleIndex >= channelData.length) break;
-
+            
             let max = 0;
             for (let j = 0; j < samplesPerPixel; j++) {
                 const index = sampleIndex + j;
@@ -2388,21 +2159,16 @@ h1 {
                     if (value > max) max = value;
                 }
             }
-            
-            if (i === 0) {
-                superCtx.moveTo(i, height / 2 - max * height / 2);
-            } else {
-                superCtx.lineTo(i, height / 2 - max * height / 2);
-            }
+            if (i === 0) superCtx.moveTo(i, height / 2 - max * height / 2);
+            else superCtx.lineTo(i, height / 2 - max * height / 2);
         }
         superCtx.stroke();
         
-        // draw lower outline
         superCtx.beginPath();
         for (let i = 0; i < width; i++) {
             const sampleIndex = Math.floor(startSample + i * samplesPerPixel);
             if (sampleIndex >= channelData.length) break;
-
+            
             let min = 0;
             for (let j = 0; j < samplesPerPixel; j++) {
                 const index = sampleIndex + j;
@@ -2411,96 +2177,50 @@ h1 {
                     if (value < min) min = value;
                 }
             }
-            
-            if (i === 0) {
-                superCtx.moveTo(i, height / 2 - min * height / 2);
-            } else {
-                superCtx.lineTo(i, height / 2 - min * height / 2);
-            }
+            if (i === 0) superCtx.moveTo(i, height / 2 - min * height / 2);
+            else superCtx.lineTo(i, height / 2 - min * height / 2);
         }
         superCtx.stroke();
     }
 
-    // Set up MIDI
     function setupMIDI() {
         if (navigator.requestMIDIAccess) {
-            navigator.requestMIDIAccess().then(
-                (midiAccess) => {
-                    console.log('MIDI access granted', midiAccess);
-                    
-                    // List available MIDI inputs
-                    const inputs = midiAccess.inputs.values();
-                    const inputSelector = document.getElementById('midiInputSelector');
-                    
-                    for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
-                        const option = document.createElement('option');
-                        option.value = input.value.id;
-                        option.textContent = input.value.name;
-                        inputSelector.appendChild(option);
-                        
-                        // Add event listener
-                        input.value.onmidimessage = handleMIDIMessage;
-                    }
-                },
-                (error) => {
-                    console.error('MIDI access denied', error);
+            navigator.requestMIDIAccess().then((midiAccess) => {
+                const inputs = midiAccess.inputs.values();
+                const inputSelector = document.getElementById('midiInputSelector');
+                for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+                    const option = document.createElement('option');
+                    option.value = input.value.id;
+                    option.textContent = input.value.name;
+                    inputSelector.appendChild(option);
+                    input.value.onmidimessage = handleMIDIMessage;
                 }
-            );
+            }, (error) => console.error('MIDI access denied', error));
         }
     }
 
-    // Handle MIDI message
-    function handleMIDIMessage(message) {
-        // This is a placeholder for MIDI mapping
-        // In a real application, you would map MIDI controls to deck functions
-        console.log('MIDI message received', message.data);
-    }
+    function handleMIDIMessage(message) { console.log('MIDI message received', message.data); }
 
-    // Toggle equalizer popup
     function toggleEqualizerPopup() {
         const popup = document.getElementById('equalizer-popup');
         popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Toggle settings popup
     function toggleSettingsPopup() {
         const popup = document.getElementById('settingsPopup');
         popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    // Apply settings
     function applySettings() {
-        // Get selected values
         const waveformStyle = document.getElementById('waveformStyleSelector').value;
         const recordingSource = document.getElementById('recordingSourceSelector').value;
         const midiMapping = document.getElementById('midiMappingSelector').value;
-        
-        // Apply waveform style
-        applyWaveformStyle(waveformStyle);
-        
-        // Set recording source
+        currentWaveformStyle = waveformStyle;
         activeRecordingSource = recordingSource;
-        
-        // Apply MIDI mapping
-        applyMIDIMapping(midiMapping);
-        
-        // Close popup
+        console.log('Applying MIDI mapping:', midiMapping);
         toggleSettingsPopup();
     }
 
-    // Apply waveform style
-    function applyWaveformStyle(style) {
-        currentWaveformStyle = style;
-    }
-
-    // Apply MIDI mapping
-    function applyMIDIMapping(mapping) {
-        // This is a placeholder for MIDI mapping
-        // In a real application, you would change how MIDI messages are handled
-        console.log('Applying MIDI mapping:', mapping);
-    }
-
-    // Initialize when page loads
     window.addEventListener('load', init);
     window.addEventListener('resize', setupCanvasDimensions);
 </script>
@@ -2509,45 +2229,21 @@ h1 {
 <script>
     async function setupRecording() {
         try {
-            // Create or reuse a MediaStreamDestination to capture the master output
-            if (!window.recordingDestination) {
-                window.recordingDestination = audioContext.createMediaStreamDestination();
-            }
-
-            // Connect the end of the EQ chain to the recording destination if possible
+            if (!window.recordingDestination) window.recordingDestination = audioContext.createMediaStreamDestination();
             try {
-                if (globalEqFilters && globalEqFilters.length > 0) {
-                    // Connect last global EQ filter to the recording destination (in addition to destination)
-                    globalEqFilters[globalEqFilters.length - 1].connect(window.recordingDestination);
-                } else {
-                    // Fallback: connect analyserMaster to recording destination
-                    analyserMaster.connect(window.recordingDestination);
-                }
-            } catch (e) {
-                console.warn("No globalEqFilters available yet:", e);
-                try { analyserMaster.connect(window.recordingDestination); } catch(e2) {}
-            }
-
-            // Prepare mic stream (for "mic" recording source)
+                if (globalEqFilters && globalEqFilters.length > 0) globalEqFilters[globalEqFilters.length - 1].connect(window.recordingDestination);
+                else analyserMaster.connect(window.recordingDestination);
+            } catch (e) { try { analyserMaster.connect(window.recordingDestination); } catch(e2) {} }
             window._micStream = null;
-            document.getElementById('recordingSourceSelector').addEventListener('change', (e) => {
-                activeRecordingSource = e.target.value;
-            });
-
-            console.log("Recording setup complete.");
-        } catch (err) {
-            console.error("setupRecording error:", err);
-        }
+            document.getElementById('recordingSourceSelector').addEventListener('change', (e) => { activeRecordingSource = e.target.value; });
+        } catch (err) { console.error("setupRecording error:", err); }
     }
 
-    // Utility: encode AudioBuffer to WAV (16-bit PCM)
     function encodeWAV(audioBuffer) {
         const numChannels = audioBuffer.numberOfChannels;
         const sampleRate = audioBuffer.sampleRate;
-        const format = 1; // PCM
+        const format = 1;
         const bitsPerSample = 16;
-
-        // interleave
         let samples;
         if (numChannels === 2) {
             const left = audioBuffer.getChannelData(0);
@@ -2561,66 +2257,38 @@ h1 {
         } else {
             const ch = audioBuffer.getChannelData(0);
             samples = new Int16Array(ch.length);
-            for (let i = 0; i < ch.length; i++) {
-                samples[i] = Math.max(-1, Math.min(1, ch[i])) * 0x7fff;
-            }
+            for (let i = 0; i < ch.length; i++) samples[i] = Math.max(-1, Math.min(1, ch[i])) * 0x7fff;
         }
-
         const blockAlign = numChannels * bitsPerSample / 8;
         const byteRate = sampleRate * blockAlign;
         const dataSize = samples.length * (bitsPerSample / 8);
         const buffer = new ArrayBuffer(44 + dataSize);
         const view = new DataView(buffer);
-
-        /* RIFF identifier */
-        writeString(view, 0, 'RIFF');
-        /* file length */
-        view.setUint32(4, 36 + dataSize, true);
-        /* RIFF type */
-        writeString(view, 8, 'WAVE');
-        /* format chunk identifier */
-        writeString(view, 12, 'fmt ');
-        /* format chunk length */
-        view.setUint32(16, 16, true);
-        /* sample format (raw) */
-        view.setUint16(20, format, true);
-        /* channel count */
-        view.setUint16(22, numChannels, true);
-        /* sample rate */
-        view.setUint32(24, sampleRate, true);
-        /* byte rate (sample rate * block align) */
-        view.setUint32(28, byteRate, true);
-        /* block align (channel count * bytes per sample) */
-        view.setUint16(32, blockAlign, true);
-        /* bits per sample */
-        view.setUint16(34, bitsPerSample, true);
-        /* data chunk identifier */
-        writeString(view, 36, 'data');
-        /* data chunk length */
-        view.setUint32(40, dataSize, true);
-
-        // write the PCM samples
-        let offset = 44;
-        for (let i = 0; i < samples.length; i++, offset += 2) {
-            view.setInt16(offset, samples[i], true);
-        }
-
-        return new Blob([view], { type: 'audio/wav' });
-
         function writeString(dataview, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                dataview.setUint8(offset + i, string.charCodeAt(i));
-            }
+            for (let i = 0; i < string.length; i++) dataview.setUint8(offset + i, string.charCodeAt(i));
         }
+        writeString(view, 0, 'RIFF');
+        view.setUint32(4, 36 + dataSize, true);
+        writeString(view, 8, 'WAVE');
+        writeString(view, 12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, format, true);
+        view.setUint16(22, numChannels, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, byteRate, true);
+        view.setUint16(32, blockAlign, true);
+        view.setUint16(34, bitsPerSample, true);
+        writeString(view, 36, 'data');
+        view.setUint32(40, dataSize, true);
+        let offset = 44;
+        for (let i = 0; i < samples.length; i++, offset += 2) view.setInt16(offset, samples[i], true);
+        return new Blob([view], { type: 'audio/wav' });
     }
 
-    // Convert arbitrary audio Blob (like webm/opus) to WAV by decoding and re-encoding
     async function convertBlobToWav(blob) {
         const arrayBuffer = await blob.arrayBuffer();
         const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        // If channel count >2, downmix to stereo
         if (audioBuffer.numberOfChannels > 2) {
-            // create stereo buffer
             const offline = audioContext.createBuffer(2, audioBuffer.length, audioBuffer.sampleRate);
             const outL = offline.getChannelData(0);
             const outR = offline.getChannelData(1);
@@ -2634,58 +2302,33 @@ h1 {
                 outR[i] = sumR / Math.floor(audioBuffer.numberOfChannels / 2);
             }
             return encodeWAV(offline);
-        } else {
-            return encodeWAV(audioBuffer);
-        }
+        } else return encodeWAV(audioBuffer);
     }
 
-    // Toggle recording (start/stop)
     async function toggleRecording() {
         try {
             const button = document.getElementById('recordButton');
             if (!isRecording) {
-                // Start recording
-                // Ensure recordingDestination is ready
                 await setupRecording();
-
                 const sourceSelector = document.getElementById('recordingSourceSelector').value;
                 let stream;
                 if (sourceSelector === 'mic') {
-                    // ask for mic permissions and use mic stream
                     window._micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     stream = window._micStream;
                 } else {
-                    // master output stream
-                    if (!window.recordingDestination) {
-                        alert('No recording destination available.');
-                        return;
-                    }
+                    if (!window.recordingDestination) { alert('No recording destination available.'); return; }
                     stream = window.recordingDestination.stream;
                 }
-
-                // Use MediaRecorder (will likely be webm/opus) and then convert to WAV
                 const options = { mimeType: 'audio/webm' };
-                try {
-                    mediaRecorder = new MediaRecorder(stream, options);
-                } catch (e) {
-                    // fallback without mimeType
-                    mediaRecorder = new MediaRecorder(stream);
-                }
-
+                try { mediaRecorder = new MediaRecorder(stream, options); } catch (e) { mediaRecorder = new MediaRecorder(stream); }
                 recordedChunks = [];
-                mediaRecorder.ondataavailable = (ev) => {
-                    if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data);
-                };
-
+                mediaRecorder.ondataavailable = (ev) => { if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data); };
                 mediaRecorder.onstop = async () => {
                     try {
                         const blob = new Blob(recordedChunks, { type: recordedChunks[0].type || 'audio/webm' });
-                        // Convert to WAV
                         const wavBlob = await convertBlobToWav(blob);
                         lastWavBlob = wavBlob;
-                        // Show save button
                         document.getElementById('saveButton').style.display = 'inline-block';
-                        // Create automatic download link (temporary)
                         const url = URL.createObjectURL(wavBlob);
                         const a = document.createElement('a');
                         a.href = url;
@@ -2694,44 +2337,24 @@ h1 {
                         a.click();
                         a.remove();
                         URL.revokeObjectURL(url);
-                    } catch (err) {
-                        console.error('Error converting recording to WAV:', err);
-                        alert('Error al convertir la grabación a WAV. Revisa la consola.');
-                    }
+                    } catch (err) { console.error('Error converting recording to WAV:', err); alert('Error al convertir la grabación a WAV.'); }
                 };
-
                 mediaRecorder.start();
                 isRecording = true;
                 button.textContent = 'Grabando...';
                 button.style.background = '#AA0000';
-                console.log('Recording started.');
             } else {
-                // Stop recording
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                    mediaRecorder.stop();
-                }
-                // stop mic stream if used
-                if (window._micStream) {
-                    window._micStream.getTracks().forEach(t => t.stop());
-                    window._micStream = null;
-                }
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+                if (window._micStream) { window._micStream.getTracks().forEach(t => t.stop()); window._micStream = null; }
                 isRecording = false;
                 document.getElementById('recordButton').textContent = 'Grabar';
                 document.getElementById('recordButton').style.background = '';
-                console.log('Recording stopped.');
             }
-        } catch (err) {
-            console.error('toggleRecording error:', err);
-            alert('Error al iniciar/detener la grabación. Mira la consola.');
-        }
+        } catch (err) { console.error('toggleRecording error:', err); alert('Error al iniciar/detener la grabación.'); }
     }
 
-    // Save last WAV to disk (if exists)
     function saveRecording() {
-        if (!lastWavBlob) {
-            alert('No hay grabación para guardar.');
-            return;
-        }
+        if (!lastWavBlob) { alert('No hay grabación para guardar.'); return; }
         const url = URL.createObjectURL(lastWavBlob);
         const a = document.createElement('a');
         a.style.display = 'none';

@@ -27,6 +27,9 @@
 
     <link rel="canonical" href="https://rtbscrewsoundsystem.github.io/RTBS-CREW-/donativos.html">
     <link rel="preload" as="image" href="Proyecto_29.png">
+    
+    <!-- Formspree Ajax -->
+    <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
 <style>
 /* --- Loader mejorado --- */
@@ -71,8 +74,8 @@
     from { transform: scaleY(0.3); } 
     to { transform: scaleY(1); } 
 }
-    .logo-titulo {
-  width: 100px; /* tamaño del logo */
+.logo-titulo {
+  width: 100px;
   height: auto;
   vertical-align: middle;
   margin-right: 15px;
@@ -88,7 +91,6 @@
   gap: 10px;
 }
 
-
 @keyframes glitch {
     0% { transform: translate(0); }
     20% { transform: translate(-2px, 2px); }
@@ -97,12 +99,6 @@
     80% { transform: translate(2px, -2px); }
     100% { transform: translate(0); }
 }
-
-    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
     
 /* --- Estilos generales --- */
 body { 
@@ -138,7 +134,6 @@ body {
     z-index: -1;
 }
 
-/* Efectos de glitch para el fondo tribal */
 @keyframes tribalGlitch {
     0%, 100% { 
         filter: grayscale(100%) brightness(0.8) contrast(1.2);
@@ -162,7 +157,6 @@ body {
     }
 }
 
-/* Efectos de distorsión */
 @keyframes tribalDistortion {
     0%, 100% { 
         transform: scale(1.05) skew(0deg, 0deg);
@@ -288,7 +282,7 @@ nav a:first-child {
     position: relative;
 }
 
-/* --- Transición de disco vinilo (se mantiene pero no se usa) --- */
+/* --- Transición de disco vinilo --- */
 #transition-overlay {
     position: fixed;
     top: 0;
@@ -322,12 +316,10 @@ nav a:first-child {
     to { transform: rotate(360deg); }
 }
 
-/* --- Sección INICIO (oculta por defecto) --- */
+/* --- Secciones --- */
 #inicio {
     display: none;
 }
-
-/* --- Sección DONATIVOS (visible) --- */
 #donativos {
     display: block;
 }
@@ -361,9 +353,9 @@ nav a:first-child {
     margin-top: 40px;
 }
 
-/* --- Estilo para los recuadros de "EN OBRAS" adaptados a anuncios --- */
+/* --- Estilo para los recuadros estilo Windows XP --- */
 .anuncio-item {
-    background: #000080 !important; /* Azul de obras de Windows */
+    background: #000080 !important;
     border: 4px solid #C0C0C0 !important;
     position: relative;
     overflow: hidden;
@@ -399,15 +391,17 @@ nav a:first-child {
 }
 
 .anuncio-item .tape {
+    position: absolute;
     width: 30px;
     height: 100%;
+    background: repeating-linear-gradient(45deg, #ffff00, #ffff00 20px, #000 20px, #000 40px);
+    z-index: 1;
+    opacity: 0.8;
     top: 0;
     animation: tapeVerticalScroll 3s linear infinite;
-    opacity: 0.8;
 }
 .anuncio-item .tape:nth-child(1) { left: 0; animation-delay: 0s; }
 .anuncio-item .tape:nth-child(2) { right: 0; left: auto; animation-delay: 1.5s; }
-.anuncio-item .tape:nth-child(3) { display: none; } /* Ocultamos la tercera */
 
 @keyframes tapeVerticalScroll {
     0% { background-position: 0 0; }
@@ -461,7 +455,7 @@ nav a:first-child {
     border-right-color: #FFF;
 }
 
-/* Humo pixelado (heredado) */
+/* Humo pixelado */
 .smoke {
     position: absolute;
     width: 8px;
@@ -482,58 +476,21 @@ nav a:first-child {
     100% { transform: translateY(-100px) scale(2); opacity: 0; }
 }
 
-    /* --- CONFIGURACIÓN DE CONTORNOS ESPECÍFICOS --- */
-
-/* 1. Letras VERDES con contorno AZUL ELÉCTRICO (Estilo Windows XP RGB) */
-.loader-rtbs, 
-nav a, 
-.link-extra, 
-.vinyl-links a, 
-.descripcion strong, 
-#comment-form input, 
-#comment-form textarea,
-footer,
-body {
-    color: #00FF00 !important; /* Verde puro */
-    text-shadow: 
-        -2px -2px 0 #0000FF,  
-         2px -2px 0 #0000FF,
-        -2px  2px 0 #0000FF,
-         2px  2px 0 #0000FF,
-         0px  0px 10px #0000FF !important; /* Brillo azul eléctrico */
+/* Configuración de contornos */
+.loader-rtbs, nav a, .link-extra, .vinyl-links a, .descripcion strong, #comment-form input, #comment-form textarea, footer, body {
+    color: #00FF00 !important;
+    text-shadow: -2px -2px 0 #0000FF, 2px -2px 0 #0000FF, -2px 2px 0 #0000FF, 2px 2px 0 #0000FF, 0px 0px 10px #0000FF !important;
 }
 
-/* 2. Letras ROJAS con contorno VERDE FOSFORITO */
-.post-title-box, 
-.post-hashtags, 
-.dislike-btn, 
-h1 span:nth-child(even),
-.bar:nth-child(2), .bar:nth-child(5) {
-    color: #FF0000 !important; /* Rojo puro */
-    text-shadow: 
-        -2px -2px 0 #00FF00,  
-         2px -2px 0 #00FF00,
-        -2px  2px 0 #00FF00,
-         2px  2px 0 #00FF00,
-         0px  0px 10px #00FF00 !important; /* Brillo verde fosforito */
+.post-title-box, .post-hashtags, .dislike-btn, h1 span:nth-child(even), .bar:nth-child(2), .bar:nth-child(5) {
+    color: #FF0000 !important;
+    text-shadow: -2px -2px 0 #00FF00, 2px -2px 0 #00FF00, -2px 2px 0 #00FF00, 2px 2px 0 #00FF00, 0px 0px 10px #00FF00 !important;
 }
 
-/* 3. Limpieza de otros colores (Eliminar amarillos o rosas) */
-h1 span:nth-child(even), 
-nav a:hover, 
-.vinyl-title, 
-.info-lanzamiento h4,
-.video-title,
-.dj-title {
-    color: #00FF00 !important; /* Forzamos a verde si antes eran amarillos */
-}
-
-/* Ajuste para el H1 principal */
 h1 span {
     text-shadow: -2px -2px 0 #0000FF, 2px -2px 0 #0000FF, -2px 2px 0 #0000FF, 2px 2px 0 #0000FF !important;
 }
-    
-/* Sistema de likes/dislikes (por si acaso) */
+
 .like-dislike {
     display: flex;
     gap: 15px;
@@ -550,24 +507,10 @@ h1 span {
     padding: 5px;
 }
 
-.like-btn {
-    color: #00FF00;
-}
-
-.like-btn:hover {
-    transform: scale(1.2);
-    text-shadow: 0 0 10px #00FF00;
-}
-
-.dislike-btn {
-    color: #FF0000;
-}
-
-.dislike-btn:hover {
-    transform: scale(1.2);
-    text-shadow: 0 0 10px #FF0000;
-}
-
+.like-btn { color: #00FF00; }
+.like-btn:hover { transform: scale(1.2); text-shadow: 0 0 10px #00FF00; }
+.dislike-btn { color: #FF0000; }
+.dislike-btn:hover { transform: scale(1.2); text-shadow: 0 0 10px #FF0000; }
 .like-count, .dislike-count {
     font-size: 14px;
     color: #CCFFCC;
@@ -575,7 +518,6 @@ h1 span {
     text-align: center;
 }
 
-/* --- Sección EN OBRAS (heredado para el fondo general) --- */
 .under-construction {
     background: #000080 !important;
     border: 4px solid #C0C0C0 !important;
@@ -584,56 +526,22 @@ h1 span {
     font-family: 'MS Sans Serif', 'Arial', sans-serif;
 }
 
-/* --- Tiras de obras animadas (verticales para los anuncios) --- */
-.tape {
-    position: absolute;
-    width: 30px;
-    height: 100%;
-    background: repeating-linear-gradient(
-        45deg,
-        #ffff00,
-        #ffff00 20px,
-        #000 20px,
-        #000 40px
-    );
-    z-index: 1;
-    opacity: 0.8;
-    top: 0;
-    animation: tapeVerticalScroll 3s linear infinite;
-}
-
-/* --- Otros estilos que se usan en otras secciones (los dejamos para no romper nada) --- */
-.vinyl-grid, .dj-grid, .videos-grid { display: none; }
-.seccion { display: none; }
-#altavoces { display: none; }
-
 iframe {
     margin-top:20px; 
     border:2px solid #00FF00;
     border-radius: 5px;
 }
 
-/* Redes Sociales */
 .redes { 
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
 }
-.redes a { 
-    display: inline-block;
-    transition: transform 0.3s;
-}
-.redes a:hover {
-    transform: scale(1.2);
-}
-.redes img { 
-    width:60px; 
-    margin:5px; 
-    filter: drop-shadow(0 0 5px #00FF00);
-}
+.redes a { display: inline-block; transition: transform 0.3s; }
+.redes a:hover { transform: scale(1.2); }
+.redes img { width:60px; margin:5px; filter: drop-shadow(0 0 5px #00FF00); }
 
-/* Comentarios */
 #comment-form { 
     display:flex; 
     flex-direction:column; 
@@ -659,9 +567,7 @@ iframe {
     cursor: pointer;
     transition: all 0.3s;
 }
-#comment-form button:hover {
-    background: #00FF00;
-}
+#comment-form button:hover { background: #00FF00; }
 .comment { 
     border:1px solid #00AA00; 
     margin-bottom:10px; 
@@ -692,7 +598,6 @@ footer {
     border: 1px solid #00FF00;
     transition: all 0.3s;
 }
-
 .bandcamp-link:hover {
     background: #00FF00;
     color: #000;
@@ -710,7 +615,6 @@ footer {
     box-shadow: 0 0 15px #00FF00;
 }
 
-
 #logo-loader {
   width: 80px;
   height: auto;
@@ -721,7 +625,6 @@ footer {
   box-shadow: 0 0 15px #00FF00;
 }
 
-/* Estilo Windows XP para títulos */
 .windows-xp-title {
     background: linear-gradient(to bottom, #000080, #1084D0);
     color: white;
@@ -734,7 +637,6 @@ footer {
     margin-bottom: 20px;
     text-shadow: 1px 1px 1px #000;
 }
-    
 </style>
 </head>
 <body>
@@ -761,7 +663,6 @@ footer {
 
 <nav>
   <a href="#" onclick="toggleTheme()" id="theme-toggle" style="background: #00FF00; color: #000; font-weight: bold; border: 2px solid #fff; margin-bottom: 15px;">MODO CLARO 💡</a>
-
   <a href="index.html">INICIO ☢️</a>
   <a href="musica.html">NUESTRA MÚSICA</a>
   <a href="visuales.html">MÚSICA VISUALES</a>
@@ -785,50 +686,52 @@ footer {
   <!-- SECCIÓN DONATIVOS -->
   <div id="donativos" class="seccion" style="display:block;">
     
-    <!-- Texto explicativo (versión resumida y con tu estilo) -->
+    <!-- Texto explicativo -->
     <div class="donativos-descripcion">
       <p>🎁 <strong>COLABORA CON LA CREW</strong> 🎁</p>
       <p>Esto lo hacemos sin ánimo de lucro, por amor al ruido y al movimiento. Si quieres echar una mano y llevarte algo único, has llegado al sitio adecuado.</p>
       <p>De vez en cuando sacamos pequeños lotes de pegatinas con diseños diferentes, alguna camiseta que nos sobra, o montamos sorteos entre la peña que nos apoya. No es una tienda, es un trueque: tú aportas un donativo simbólico para ayudar con los gastos (cables, madera, pintura, gasolina para las furgos...) y a cambio te llevas algo hecho con la misma pasión que la música.</p>
-      <p>El stock es mínimo, porque son cosas que no están a la venta en ningún sitio. Si sale algo nuevo, lo anunciaremos aquí. Sin prisas, sin postureo.</p>
+      <p>El stock es mínimo, porque son cosas que no están a la venta en ningún sitio. Si sale algo nuevo, lo anunciaremos aquí.</p>
     </div>
 
-    <!-- Zona de anuncios (con recuadros de "En obras" de Windows XP) -->
+    <!-- Zona de anuncios -->
     <div class="windows-xp-title" style="margin-top: 40px;">📢 ANUNCIOS Y NOVEDADES 📢</div>
     
     <div class="anuncios-grid">
 
-      <!-- ANUNCIO 1: Pegatinas -->
-      <div class="anuncio-item under-construction">
+      <!-- ANUNCIO: Buff + Pegatinas (ocupa 2 columnas) -->
+      <div class="anuncio-item under-construction" style="grid-column: span 2;">
         <div class="tape"></div>
         <div class="tape"></div>
         <div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div>
         <div class="construction-border">
-          <div class="construction-content">
-            <div class="xp-icon-anuncio">🖨️</div>
-            <div class="anuncio-titulo">PEGATINAS</div>
-            <div class="anuncio-descripcion">Próximamente nuevos diseños. Estaremos atentos a las existencias.</div>
-            <button class="windows-xp-button" onclick="alert('De momento no hay pegatinas disponibles. ¡Vuelve pronto!')">SIN STOCK</button>
+          <div class="construction-content" style="display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: space-between;">
+            <!-- Columna Izquierda: Texto -->
+            <div style="flex: 2; min-width: 200px; text-align: left;">
+              <div class="anuncio-titulo" style="font-size: 18px;">🎁 DONATIVO X BUFF + 2 PEGATINAS SORPRESA RTBS CREW</div>
+              <div class="anuncio-descripcion" style="font-size: 14px; line-height: 1.6;">
+                ✅ 1 Buff fino logo DJ FLUGEL RTBS CREW.<br>
+                ✅ 2 Pegatinas Sorpresa RTBS CREW.<br>
+                🌎 <strong>10€ - ENVÍO GRATIS A TODO EL MUNDO.</strong><br><br>
+                📩 <strong>Rellena el formulario si quieres apoyar el colectivo :)</strong> GRACIAS !!<br>
+                <span style="color: #FF5555;">(STOCK LIMITADO 7 UNIDADES)</span>
+              </div>
+              <button class="windows-xp-button" id="openFormBtn" style="margin-top: 15px; margin-left: 0;">📋 FORMULARIO PARA DONATIVO</button>
+            </div>
+            
+            <!-- Columna Derecha: Fotos -->
+            <div style="flex: 1; min-width: 150px; text-align: center;">
+              <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <img src="1000020663.jpg" alt="Buff RTBS CREW" style="width: 100px; height: auto; border: 2px solid #00FF00; cursor: pointer; border-radius: 5px;" onclick="openImageModal(this.src)">
+                <img src="1000020677.jpg" alt="Pegatinas RTBS CREW" style="width: 100px; height: auto; border: 2px solid #00FF00; cursor: pointer; border-radius: 5px;" onclick="openImageModal(this.src)">
+              </div>
+              <div class="anuncio-descripcion" style="font-size: 10px; margin-top: 8px;">(Haz clic en las fotos para ampliar)</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- ANUNCIO 2: Camisetas -->
-      <div class="anuncio-item under-construction">
-        <div class="tape"></div>
-        <div class="tape"></div>
-        <div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div>
-        <div class="construction-border">
-          <div class="construction-content">
-            <div class="xp-icon-anuncio">👕</div>
-            <div class="anuncio-titulo">CAMISETAS</div>
-            <div class="anuncio-descripcion">Stock por confirmar. Cuando haya lotes libres, las colgaremos aquí.</div>
-            <button class="windows-xp-button" onclick="alert('De momento no hay camisetas disponibles. ¡Vuelve pronto!')">SIN STOCK</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ANUNCIO 3: Sorteos -->
+      <!-- ANUNCIO: Sorteos (el único que queda) -->
       <div class="anuncio-item under-construction">
         <div class="tape"></div>
         <div class="tape"></div>
@@ -843,29 +746,81 @@ footer {
         </div>
       </div>
 
-    </div> <!-- Fin de anuncios-grid -->
+    </div> <!-- Fin anuncios-grid -->
 
-    <!-- Espacio para futuras cosillas -->
+    <!-- Mensaje importante -->
+    <div style="margin-top: 30px; background: rgba(0, 0, 128, 0.6); border: 2px solid #C0C0C0; padding: 15px; text-align: center; font-family: 'MS Sans Serif', sans-serif;">
+      <p style="margin: 0; color: #FFFF00; font-weight: bold;">⚠️ MENSAJE IMPORTANTE ⚠️</p>
+      <p style="margin: 10px 0 0 0; color: #FFFFFF; font-size: 14px;">
+        Esto <strong>NO es una tienda</strong>. Somos un colectivo sin ánimo de lucro. De vez en cuando, si sobra material (pegatinas, camisetas, buffs...), lo ofrecemos a cambio de un donativo simbólico para ayudar con gastos del sonido (cables, madera, gasolina...). 
+        Si quieres apoyar el movimiento, rellena el formulario. Si no hay stock, no pasa nada. ¡Gracias por estar ahí!
+      </p>
+    </div>
+
+    <!-- Botón extra -->
     <div style="margin-top: 40px; text-align: center;">
       <span class="windows-xp-button" onclick="alert('Gracias por apoyar el sonido libre.')">⚡ MOLA, QUIERO COLABORAR ⚡</span>
     </div>
 
-  </div> <!-- Fin de #donativos -->
+  </div> <!-- Fin #donativos -->
 
-  <!-- ELIMINADAS TODAS LAS DEMÁS SECCIONES -->
+  <!-- Modal para ampliar fotos -->
+  <div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+    <div style="position: relative; max-width: 90%; max-height: 90%;">
+      <span id="closeModal" style="position: absolute; top: -30px; right: 0; color: white; font-size: 30px; font-weight: bold; cursor: pointer; background: rgba(0,0,0,0.5); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">×</span>
+      <img id="modalImage" src="" alt="Ampliada" style="width: 100%; height: auto; max-height: 90vh; object-fit: contain; border: 3px solid #00FF00;">
+    </div>
+  </div>
 
-</div>
+  <!-- Formulario emergente para donativos -->
+  <div id="donationPopup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10001; justify-content: center; align-items: center; font-family: 'MS Sans Serif', 'Arial', sans-serif;">
+    <div style="background: #000080; border: 4px solid #C0C0C0; padding: 20px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 0 30px #00FF00;">
+      <span id="closePopup" style="position: absolute; top: 8px; right: 12px; color: white; font-size: 28px; font-weight: bold; cursor: pointer;">×</span>
+      <div class="windows-xp-title" style="margin-top: 0; margin-bottom: 15px;">📝 FORMULARIO DE DONATIVO</div>
+      
+      <div data-fs-success style="background: #00AA00; color: black; padding: 10px; margin-bottom: 15px; text-align: center; font-weight: bold; display: none;">✅ ¡Gracias! Nos pondremos en contacto contigo pronto.</div>
+      <div data-fs-error style="background: #AA0000; color: white; padding: 10px; margin-bottom: 15px; text-align: center; font-weight: bold; display: none;">❌ Hubo un error. Inténtalo de nuevo o contacta por redes.</div>
+      
+      <form id="donationForm">
+        <label for="nombre" style="color: white; display: block; margin-top: 10px;">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" data-fs-field required style="width: 100%; padding: 6px; margin-bottom: 10px; background: #C0C0C0; border: 2px solid #000; font-family: monospace;">
+        <span data-fs-error="nombre" style="color: #FFAAAA; font-size: 11px;"></span>
+        
+        <label for="direccion" style="color: white; display: block; margin-top: 10px;">Dirección / CP / Ciudad:</label>
+        <input type="text" id="direccion" name="direccion" data-fs-field required style="width: 100%; padding: 6px; margin-bottom: 10px; background: #C0C0C0; border: 2px solid #000; font-family: monospace;">
+        <span data-fs-error="direccion" style="color: #FFAAAA; font-size: 11px;"></span>
+        
+        <label for="pais" style="color: white; display: block; margin-top: 10px;">País:</label>
+        <input type="text" id="pais" name="pais" data-fs-field required style="width: 100%; padding: 6px; margin-bottom: 10px; background: #C0C0C0; border: 2px solid #000; font-family: monospace;">
+        <span data-fs-error="pais" style="color: #FFAAAA; font-size: 11px;"></span>
+        
+        <label for="telefono" style="color: white; display: block; margin-top: 10px;">Teléfono:</label>
+        <input type="tel" id="telefono" name="telefono" data-fs-field required style="width: 100%; padding: 6px; margin-bottom: 10px; background: #C0C0C0; border: 2px solid #000; font-family: monospace;">
+        <span data-fs-error="telefono" style="color: #FFAAAA; font-size: 11px;"></span>
+        
+        <label for="email" style="color: white; display: block; margin-top: 10px;">Email de contacto:</label>
+        <input type="email" id="email" name="email" data-fs-field required style="width: 100%; padding: 6px; margin-bottom: 10px; background: #C0C0C0; border: 2px solid #000; font-family: monospace;">
+        <span data-fs-error="email" style="color: #FFAAAA; font-size: 11px;"></span>
+        
+        <input type="hidden" name="producto" value="DONATIVO BUFF + 2 PEGATINAS (10€ ENVÍO GRATIS)">
+        
+        <button type="submit" data-fs-submit-btn style="margin-top: 20px; background: #00AA00; color: black; border: 2px solid #FFF; padding: 10px; font-weight: bold; width: 100%; cursor: pointer;">💾 ENVIAR SOLICITUD</button>
+      </form>
+    </div>
+  </div>
+
+</div> <!-- Fin .main -->
 
 <footer>© 2025 RTBS CREW - ☢️ SONIDO LIBRE Y SUCIO ☢️<p>RTBS CREW 2025 — Todos los derechos reservados.</p>
 </footer>
 
 <script>
-// ----------------- Loader (2 segundos fijo) -----------------
+// Loader (2 segundos)
 setTimeout(() => { 
     document.getElementById("loader").style.display = "none"; 
 }, 2000);
 
-// ----------------- Comentarios (se mantiene por si acaso) -----------------
+// Función para comentarios (por si acaso)
 function addComment(){
   const name = document.getElementById('name').value;
   const comment = document.getElementById('comment').value;
@@ -878,7 +833,7 @@ function addComment(){
   return false;
 }
 
-// ----------------- Sistema de Likes/Dislikes (por si acaso se usa) -----------------
+// Sistema de Likes/Dislikes
 function rateItem(button, type) {
     const container = button.closest('.like-dislike');
     const likeCount = container.querySelector('.like-count');
@@ -899,7 +854,6 @@ function rateItem(button, type) {
             likeCount.textContent = parseInt(likeCount.textContent) + 1;
             currentRating.liked = true;
             likeBtn.style.opacity = '0.8';
-            
             if (currentRating.disliked) {
                 dislikeCount.textContent = parseInt(dislikeCount.textContent) - 1;
                 currentRating.disliked = false;
@@ -915,7 +869,6 @@ function rateItem(button, type) {
             dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
             currentRating.disliked = true;
             dislikeBtn.style.opacity = '0.8';
-            
             if (currentRating.liked) {
                 likeCount.textContent = parseInt(likeCount.textContent) - 1;
                 currentRating.liked = false;
@@ -923,7 +876,6 @@ function rateItem(button, type) {
             }
         }
     }
-    
     localStorage.setItem(storageKey, JSON.stringify(currentRating));
 }
 
@@ -933,7 +885,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemId = container.closest('.vinyl-item, .video-item').querySelector('.vinyl-title, .video-title').textContent;
         const storageKey = `rating_${itemId.replace(/[^a-zA-Z0-9]/g, '_')}`;
         const currentRating = JSON.parse(localStorage.getItem(storageKey) || '{"liked":false,"disliked":false}');
-        
         if (currentRating.liked) {
             container.querySelector('.like-count').textContent = '1';
             container.querySelector('.like-btn').style.opacity = '0.8';
@@ -948,9 +899,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById('theme-toggle');
-    
     body.classList.toggle('light-mode');
-    
     if (body.classList.contains('light-mode')) {
         btn.innerText = "MODO OSCURO 🌙";
         btn.style.background = "#000";
@@ -966,29 +915,22 @@ function toggleTheme() {
     
 function addTextGlitches() {
     const titles = document.querySelectorAll('h1, h2, .vinyl-title, .video-title');
-    
     titles.forEach(title => {
         setInterval(() => {
             if (Math.random() > 0.7) {
                 title.style.opacity = '0.7';
-                setTimeout(() => {
-                    title.style.opacity = '1';
-                }, 100);
+                setTimeout(() => { title.style.opacity = '1'; }, 100);
             }
         }, 3000);
-        
         setInterval(() => {
             if (Math.random() > 0.9) {
                 const originalTransform = title.style.transform;
                 title.style.transform = 'translateX(2px)';
-                setTimeout(() => {
-                    title.style.transform = originalTransform;
-                }, 50);
+                setTimeout(() => { title.style.transform = originalTransform; }, 50);
             }
         }, 5000);
     });
 }
-
 window.addEventListener('load', addTextGlitches);
 
 function toggleFullScreenDJ(playerId) {
@@ -1001,11 +943,9 @@ function toggleFullScreenDJ(playerId) {
 }
 
 let djActivo = null;
-
 function toggleDJ(dj) {
   const lanzamientosFlugel = document.getElementById('lanzamientos-flugel');
   const djFlugel = document.getElementById('dj-flugel');
-  
   if (djActivo === dj) {
     lanzamientosFlugel.classList.remove('active');
     djFlugel.classList.remove('active');
@@ -1015,32 +955,22 @@ function toggleDJ(dj) {
       lanzamientosFlugel.classList.add('active');
       djFlugel.classList.add('active');
       djActivo = 'flugel';
-      
-      setTimeout(() => {
-        lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
+      setTimeout(() => { lanzamientosFlugel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
     }
   }
 }
 
 function mostrarLanzamientoDetalle(lanzamientoId) {
-    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
-        detalle.classList.remove('active');
-    });
-    
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => { detalle.classList.remove('active'); });
     const detalle = document.getElementById('detalle-' + lanzamientoId);
     if (detalle) {
         detalle.classList.add('active');
-        setTimeout(() => {
-            detalle.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 300);
+        setTimeout(() => { detalle.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
     }
 }
 
 function volverALanzamientos() {
-    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => {
-        detalle.classList.remove('active');
-    });
+    document.querySelectorAll('.lanzamiento-detalle').forEach(detalle => { detalle.classList.remove('active'); });
 }
 
 function toggleMobileMenu() {
@@ -1055,9 +985,45 @@ document.querySelectorAll('nav a').forEach(link => {
         }
     });
 });
-    
+
+// --- Funcionalidad del popup y modal de imágenes ---
+document.addEventListener('DOMContentLoaded', function() {
+  // Popup formulario
+  const openBtn = document.getElementById('openFormBtn');
+  const popup = document.getElementById('donationPopup');
+  const closePopupBtn = document.getElementById('closePopup');
+  if (openBtn) {
+    openBtn.onclick = () => { popup.style.display = 'flex'; };
+  }
+  if (closePopupBtn) {
+    closePopupBtn.onclick = () => { popup.style.display = 'none'; };
+  }
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) popup.style.display = 'none';
+  });
+  
+  // Modal imágenes
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage');
+  const closeModal = document.getElementById('closeModal');
+  window.openImageModal = (src) => {
+    modal.style.display = 'flex';
+    modalImg.src = src;
+  };
+  if (closeModal) {
+    closeModal.onclick = () => { modal.style.display = 'none'; };
+  }
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
+  });
+  
+  // Inicializar Formspree
+  if (typeof formspree !== 'undefined') {
+    formspree('initForm', { formElement: '#donationForm', formId: 'xkopvkpd' });
+  }
+});
 </script>
 
-    <script async src="https://www.tiktok.com/embed.js"></script>
+<script async src="https://www.tiktok.com/embed.js"></script>
 </body>
 </html>

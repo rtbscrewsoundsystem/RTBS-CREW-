@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RTBS CREW LOOPER BETA</title>
+    <style>
+        :root {
+            --chassis: #1a1a1b;
+            --pad-empty: #313131;
+            --pad-border: #111;
+            --btn-circular: #444;
+            --led-on: #00ff55;
+            --led-loop: #ff2255;
+            --accent: #00ff55;
+            --secondary-color: #2255ff;
+            --midi-active: #ffaa00;
+        }
+
+        body {
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .main-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-header h1 {
+            color: var(--accent);
+            font-size: 28px;
+            margin: 0;
+            text-shadow: 0 0 15px var(--accent);
+            letter-spacing: 3px;
+            font-weight: 900;
+        }
+        .main-header span {
+            color: #555;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .lp-chassis {
+            background: var(--chassis);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            display: grid;
+            grid-template-columns: repeat(8, 45px) 50px;
+            grid-template-rows: 50px repeat(8, 45px);
+            gap: 6px;
+            border: 4px solid #000;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pad {
+            background: var(--pad-empty);
+            border-radius: 3px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+            transition: background 0.1s, box-shadow 0.1s, transform 0.05s;
+        }
+
+        .pad.ripple-effect { background: rgba(0, 255, 85, 0.4) !important; box-shadow: 0 0 15px var(--accent) !important; transform: scale(0.95); }
+        .pad.wave-effect { animation: wavePulse 0.3s ease-out; }
+        .pad.spiral-effect { animation: spiralPulse 0.5s ease-out; }
+        .pad.cross-effect { animation: crossPulse 0.4s ease-out; }
+        .pad.diamond-effect { animation: diamondPulse 0.4s ease-out; }
+        .pad.random-effect { animation: randomPulse 0.3s ease-out; }
+        .pad.cascade-effect { animation: cascadePulse 0.6s ease-out; }
+        .pad.neon-effect { animation: neonPulse 0.4s ease-out; }
+        .pad.pulse-effect { animation: pulseEffect 0.5s ease-out; }
+        .pad.radial-effect { animation: radialPulse 0.6s ease-out; }
+        .pad.bounce-effect { animation: bouncePulse 0.4s ease-out; }
+        .pad.gradient-effect { animation: gradientPulse 0.8s ease-out; background: linear-gradient(90deg, var(--color1, #00ff55), var(--color2, #ff2255), var(--color3, #2255ff)) !important; background-size: 300% 100% !important; }
+        .pad.chaos-effect { animation: chaosPulse 0.5s ease-out; }
+        .pad.matrix-effect { animation: matrixPulse 0.7s ease-out; }
+        .pad.snake-effect { animation: snakeWave 0.8s ease-out; }
+        .pad.star-effect { animation: starPulse 0.6s ease-out; }
+        .pad.fire-effect { animation: firePulse 0.7s ease-out; }
+        .pad.rainbow-effect { animation: rainbowPulse 1s ease-out; }
+        .pad.sparkle-effect { animation: sparklePulse 0.5s ease-out; }
+        .pad.swirl-effect { animation: swirlPulse 0.9s ease-out; }
+        .pad.orbit-effect { animation: orbitPulse 1s ease-out; }
+        .pad.heart-effect { animation: heartPulse 0.8s ease-out; }
+        .pad.wind-effect { animation: windPulse 0.6s ease-out; }
+        .pad.geometric-effect { animation: geometricPulse 0.7s ease-out; }
+        .pad.zigzag-effect { animation: zigzagPulse 0.5s ease-out; }
+        .pad.lightning-effect { animation: lightningPulse 0.4s ease-out; }
+
+        @keyframes wavePulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.7; } 100% { transform: scale(0.95); opacity: 0.9; } }
+        @keyframes spiralPulse { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(0.8) rotate(180deg); } 100% { transform: scale(0.95) rotate(360deg); } }
+        @keyframes crossPulse { 0%, 100% { transform: scaleX(0.9) scaleY(0.9); } 50% { transform: scaleX(0.7) scaleY(1.1); } }
+        @keyframes diamondPulse { 0%, 100% { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); transform: scale(0.9); } 50% { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); transform: scale(0.7); } }
+        @keyframes randomPulse { 0% { transform: scale(1); } 25% { transform: scale(0.8) translateX(-2px); } 50% { transform: scale(0.9) translateY(2px); } 75% { transform: scale(0.85) translateX(2px); } 100% { transform: scale(0.95); } }
+        @keyframes cascadePulse { 0% { transform: translateY(-5px) scale(1); opacity: 0; } 50% { transform: translateY(0) scale(0.85); opacity: 1; } 100% { transform: translateY(5px) scale(0.95); opacity: 0.8; } }
+        @keyframes neonPulse { 0%, 100% { filter: brightness(1) drop-shadow(0 0 5px currentColor); transform: scale(0.9); } 50% { filter: brightness(2) drop-shadow(0 0 20px currentColor); transform: scale(1.1); } }
+        @keyframes pulseEffect { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes radialPulse { 0% { clip-path: circle(0% at 50% 50%); transform: scale(1); } 50% { clip-path: circle(50% at 50% 50%); transform: scale(0.8); } 100% { clip-path: circle(100% at 50% 50%); transform: scale(0.95); } }
+        @keyframes bouncePulse { 0%, 100% { transform: translateY(0) scale(0.9); } 50% { transform: translateY(-10px) scale(1.1); } }
+        @keyframes gradientPulse { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes chaosPulse { 0% { transform: scale(1) rotate(0deg); } 33% { transform: scale(0.7) rotate(120deg); } 66% { transform: scale(1.2) rotate(240deg); } 100% { transform: scale(0.9) rotate(360deg); } }
+        @keyframes matrixPulse { 0% { transform: translateY(0) scale(1); filter: blur(0px); } 50% { transform: translateY(5px) scale(0.8); filter: blur(2px); } 100% { transform: translateY(0) scale(0.95); filter: blur(0px); } }
+        @keyframes snakeWave { 0% { transform: translateX(-5px) scale(1); background: rgba(0, 255, 85, 0.3); } 25% { transform: translateX(5px) scale(0.9); background: rgba(255, 34, 85, 0.5); } 50% { transform: translateX(-3px) scale(1.1); background: rgba(34, 85, 255, 0.7); } 75% { transform: translateX(3px) scale(0.95); background: rgba(255, 170, 0, 0.6); } 100% { transform: translateX(0) scale(1); background: rgba(0, 255, 85, 0.3); } }
+        @keyframes starPulse { 0%, 100% { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); transform: scale(0.9); background: rgba(0, 255, 85, 0.4); } 50% { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); transform: scale(1.2); background: rgba(255, 34, 85, 0.6); } }
+        @keyframes firePulse { 0% { transform: scale(1); filter: hue-rotate(0deg) brightness(1.5); background: rgba(255, 100, 0, 0.6); } 50% { transform: scale(1.3); filter: hue-rotate(180deg) brightness(2.5); background: rgba(255, 200, 0, 0.8); } 100% { transform: scale(0.95); filter: hue-rotate(360deg) brightness(1.5); background: rgba(255, 50, 0, 0.4); } }
+        @keyframes rainbowPulse { 0% { filter: hue-rotate(0deg); transform: scale(0.9); background: rgba(255, 0, 0, 0.5); } 25% { filter: hue-rotate(90deg); background: rgba(255, 255, 0, 0.5); } 50% { filter: hue-rotate(180deg); transform: scale(1.1); background: rgba(0, 255, 0, 0.5); } 75% { filter: hue-rotate(270deg); background: rgba(0, 0, 255, 0.5); } 100% { filter: hue-rotate(360deg); transform: scale(0.95); background: rgba(255, 0, 255, 0.5); } }
+        @keyframes sparklePulse { 0% { opacity: 1; transform: scale(1); background: rgba(255, 255, 255, 0.8); box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); } 25% { opacity: 0.3; transform: scale(1.2); background: rgba(255, 255, 200, 0.4); box-shadow: 0 0 10px rgba(255, 255, 200, 0.4); } 50% { opacity: 1; transform: scale(0.8); background: rgba(255, 200, 255, 0.8); box-shadow: 0 0 30px rgba(255, 200, 255, 0.8); } 75% { opacity: 0.3; transform: scale(1.1); background: rgba(200, 255, 255, 0.4); box-shadow: 0 0 15px rgba(200, 255, 255, 0.4); } 100% { opacity: 1; transform: scale(0.95); background: rgba(255, 255, 255, 0.6); box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); } }
+        @keyframes swirlPulse { 0% { transform: scale(1) rotate(0deg); background: rgba(0, 200, 255, 0.4); border-radius: 50%; } 50% { transform: scale(1.2) rotate(180deg); background: rgba(255, 0, 200, 0.7); border-radius: 30% 70% 70% 30%; } 100% { transform: scale(0.95) rotate(360deg); background: rgba(0, 255, 200, 0.5); border-radius: 3px; } }
+        @keyframes orbitPulse { 0% { transform: translate(0, 0) scale(1); background: rgba(0, 255, 85, 0.5); } 33% { transform: translate(3px, -3px) scale(1.1); background: rgba(85, 0, 255, 0.6); } 66% { transform: translate(-3px, 3px) scale(0.9); background: rgba(255, 85, 0, 0.7); } 100% { transform: translate(0, 0) scale(0.95); background: rgba(0, 255, 85, 0.5); } }
+        @keyframes heartPulse { 0%, 100% { clip-path: polygon(50% 15%, 70% 0%, 85% 15%, 50% 50%, 15% 15%, 30% 0%); transform: scale(0.9); background: rgba(255, 0, 0, 0.6); } 50% { clip-path: polygon(50% 15%, 70% 0%, 85% 15%, 50% 50%, 15% 15%, 30% 0%); transform: scale(1.1); background: rgba(255, 100, 100, 0.8); } }
+        @keyframes windPulse { 0% { transform: translateX(0) skewX(0deg) scale(1); background: rgba(100, 200, 255, 0.4); } 50% { transform: translateX(10px) skewX(10deg) scale(0.9); background: rgba(150, 220, 255, 0.7); } 100% { transform: translateX(0) skewX(0deg) scale(0.95); background: rgba(100, 200, 255, 0.4); } }
+        @keyframes geometricPulse { 0%, 100% { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); transform: scale(0.9); background: rgba(0, 100, 255, 0.5); } 50% { clip-path: polygon(25% 0%, 100% 25%, 75% 100%, 0% 75%); transform: scale(1.1); background: rgba(255, 100, 0, 0.7); } }
+        @keyframes zigzagPulse { 0% { transform: translateX(0) translateY(0) scale(1); background: rgba(0, 255, 85, 0.5); } 25% { transform: translateX(3px) translateY(-3px) scale(0.9); background: rgba(255, 34, 85, 0.6); } 50% { transform: translateX(-3px) translateY(3px) scale(1.1); background: rgba(34, 85, 255, 0.7); } 75% { transform: translateX(3px) translateY(-3px) scale(0.9); background: rgba(255, 170, 0, 0.6); } 100% { transform: translateX(0) translateY(0) scale(0.95); background: rgba(0, 255, 85, 0.5); } }
+        @keyframes lightningPulse { 0%, 100% { opacity: 1; filter: brightness(1); transform: scale(1); background: rgba(255, 255, 255, 0.8); box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); } 50% { opacity: 0.8; filter: brightness(3); transform: scale(1.3); background: rgba(255, 255, 255, 1); box-shadow: 0 0 30px rgba(255, 255, 255, 1); } }
+
+        .round-btn {
+            background: var(--btn-circular);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            justify-self: center;
+            align-self: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .round-btn:hover { transform: scale(1.1); background: #555; }
+        .round-btn.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); color: black; }
+        .round-btn.midi-learn { background: var(--midi-active); box-shadow: 0 0 15px var(--midi-active); color: black; animation: midiBlink 0.5s infinite alternate; }
+        @keyframes midiBlink { from { opacity: 1; } to { opacity: 0.5; } }
+
+        .pad.active { background: var(--led-on); box-shadow: 0 0 20px var(--led-on); }
+        .pad.looping { background: var(--led-loop); box-shadow: 0 0 25px var(--led-loop); animation: pulse 1s infinite alternate; }
+        .pad.has-sample { border: 1px solid var(--accent); }
+        .pad.midi-in { box-shadow: 0 0 25px var(--midi-active) !important; border: 2px solid var(--midi-active) !important; }
+
+        @keyframes pulse { from { opacity: 1; } to { opacity: 0.6; } }
+
+        .control-panel {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            background: rgba(30, 30, 35, 0.98);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            width: 380px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            display: none;
+            z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #444;
+        }
+
+        .brand {
+            grid-column: 1 / 5;
+            color: #444;
+            font-size: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            padding-left: 5px;
+        }
+
+        select, button, input[type="file"], input[type="range"] {
+            background: #222; 
+            color: white; 
+            border: 1px solid #444;
+            padding: 8px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            width: 100%;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button:hover { background: #333; }
+
+        .pad-selector-grid {
+            display: grid; 
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px; 
+            background: #000; 
+            padding: 8px; 
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .pad-selector {
+            width: 22px; 
+            height: 22px; 
+            background: #333; 
+            border-radius: 2px; 
+            cursor: pointer;
+            border: 1px solid #555;
+            transition: all 0.2s;
+        }
+
+        .pad-selector:hover { transform: scale(1.1); }
+        .pad-selector.selected { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .pad-selector.has-sampler { background: #2255ff; border-color: #2255ff; }
+        .pad-selector.has-loop { background: var(--led-loop); border-color: var(--led-loop); }
+
+        .audio-info { 
+            font-size: 11px; 
+            color: #888; 
+            margin: 10px 0;
+            padding: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .section-title {
+            color: var(--accent);
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .type-selector { display: flex; gap: 10px; margin: 10px 0; }
+        .type-btn { flex: 1; padding: 8px; text-align: center; background: #222; border: 2px solid #555; border-radius: 4px; cursor: pointer; transition: all 0.3s; }
+        .type-btn:hover { background: #2a2a2a; }
+        .type-btn.selected { border-color: var(--accent); background: rgba(0, 255, 85, 0.1); color: var(--accent); }
+
+        .delete-btn { background: #552222; border: 1px solid #ff5555; color: #ffaaaa; }
+        .delete-btn:hover { background: #663333; }
+        .clear-all-btn { background: #552222; border: 1px solid #ff5555; color: #ffaaaa; }
+        .clear-all-btn:hover { background: #663333; }
+        .export-btn { background: #225522; border: 1px solid #55ff55; color: #aaffaa; }
+        .export-btn:hover { background: #336633; }
+
+        .color-picker { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+        .color-option { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+        .color-option:hover { transform: scale(1.2); }
+        .color-option.selected { border-color: white; box-shadow: 0 0 10px white; }
+
+        .effect-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+        .effect-btn { padding: 8px; text-align: center; background: #222; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 12px; transition: all 0.3s; }
+        .effect-btn:hover { background: #2a2a2a; transform: translateY(-2px); }
+        .effect-btn.selected { background: rgba(0, 255, 85, 0.2); border-color: var(--accent); color: var(--accent); }
+
+        .audio-control-group { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        .slider-container { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+        .slider-container label { min-width: 120px; font-size: 12px; color: #aaa; }
+        .slider-container input[type="range"] { flex: 1; margin: 0; }
+        .slider-value { min-width: 40px; text-align: right; font-size: 11px; color: #888; }
+
+        .tri-color-toggle { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        .tri-color-toggle label { font-size: 12px; color: #aaa; }
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 24px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: var(--accent); transition: .4s; border-radius: 50%; }
+        input:checked + .toggle-slider { background-color: rgba(0, 255, 85, 0.3); }
+        input:checked + .toggle-slider:before { transform: translateX(26px); }
+
+        .bpm-display { position: fixed; bottom: 70px; left: 20px; background: rgba(0,0,0,0.8); color: var(--accent); padding: 10px 20px; border-radius: 8px; font-size: 18px; font-weight: bold; border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(0,255,85,0.5); }
+        .bpm-display span { font-size: 14px; color: #888; display: block; }
+
+        .bpm-controls { display: flex; gap: 10px; margin: 10px 0; }
+        .bpm-btn { flex: 1; padding: 8px; text-align: center; background: #222; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .bpm-btn:hover { background: #2a2a2a; }
+
+        /* MIDI UI */
+        .midi-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        .midi-led {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #333;
+            box-shadow: inset 0 0 4px #000;
+            transition: all 0.2s;
+        }
+        .midi-led.connected {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+        .midi-led.error {
+            background: #ff2255;
+            box-shadow: 0 0 10px #ff2255;
+        }
+        .midi-device-list {
+            max-height: 100px;
+            overflow-y: auto;
+            background: #111;
+            border-radius: 5px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        .midi-device-item {
+            padding: 6px 8px;
+            font-size: 12px;
+            color: #aaa;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+        .midi-device-item:hover { background: #222; }
+        .midi-device-item.selected { background: rgba(0,255,85,0.15); color: var(--accent); }
+        .midi-device-item .midi-device-manufacturer { color: #666; font-size: 10px; margin-left: 5px; }
+
+        .midi-map-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+        .midi-map-row label {
+            min-width: 90px;
+            color: #aaa;
+        }
+        .midi-map-row .midi-map-value {
+            flex: 1;
+            background: #111;
+            padding: 5px 8px;
+            border-radius: 3px;
+            color: #888;
+            font-family: monospace;
+            font-size: 11px;
+        }
+        .midi-learn-btn {
+            padding: 5px 10px;
+            font-size: 11px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 3px;
+            cursor: pointer;
+            color: #ccc;
+            width: auto;
+            margin: 0;
+        }
+        .midi-learn-btn:hover { background: #444; }
+        .midi-learn-btn.active { background: var(--midi-active); color: black; border-color: var(--midi-active); }
+
+        .midi-activity {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 11px;
+            color: var(--midi-active);
+            font-family: monospace;
+            border: 1px solid var(--midi-active);
+            display: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-header">
+        <h1>RTBS CREW LOOPER</h1>
+        <span>SISTEMA DE PERFORMANCE BETA v1.0</span>
+    </div>
+
+    <div class="lp-chassis" id="launchpad">
+        <div class="brand">RTBS-01 PRO</div>
+        
+        <div class="cell round-btn" id="bpm-down" title="Bajar BPM">-BPM</div>
+        <div class="cell round-btn" id="bpm-up" title="Subir BPM">+BPM</div>
+        <div class="cell round-btn" id="pitch-down" title="Tono más grave">GRAVE</div>
+        <div class="cell round-btn" id="pitch-up" title="Tono más agudo">AGUDO</div>
+        <div class="cell round-btn" id="sync-all" title="Sincronizar todos los loops">SYNC</div>
+    </div>
+
+    <div class="bpm-display" id="bpmDisplay">
+        <span>BPM</span>
+        <div id="bpmValue">120</div>
+    </div>
+
+    <div class="midi-activity" id="midiActivity">MIDI: --</div>
+
+    <button id="control-btn" style="position:fixed; bottom:20px; right:20px; width:auto; padding: 10px 20px; background: var(--accent); color: black; font-weight: bold; border:none;">
+        ⚙️ PANEL DE CONTROL
+    </button>
+
+    <div class="control-panel" id="controlPanel">
+        <button id="closePanel" style="background:none; border:none; color:white; float:right; font-size:20px; cursor:pointer;">×</button>
+        <h3 style="color:var(--accent); margin-top: 0;">Ajustes de RTBS Crew</h3>
+
+        <!-- ============ SECCIÓN MIDI ============ -->
+        <div class="section-title">🎹 CONTROLADOR MIDI (LAUNCHPAD)</div>
+        <div class="midi-status">
+            <div class="midi-led" id="midiLed"></div>
+            <span id="midiStatusText">MIDI no inicializado</span>
+        </div>
+        <button id="midiInitBtn" style="background: #2255ff; border: 1px solid #5588ff; color: white; font-weight: bold;">
+            🔌 CONECTAR MIDI
+        </button>
+        <div id="midiDeviceList" class="midi-device-list">
+            <div class="midi-device-item" style="color:#555;">Ningún dispositivo detectado</div>
+        </div>
+        <div class="audio-info" id="midiInfo">
+            Conecta tu Launchpad y pulsa "CONECTAR MIDI". Los pads responderán a notas MIDI.
+        </div>
+
+        <div class="section-title">MAPEO MIDI (opcional)</div>
+        <div class="midi-map-row">
+            <label>BPM Down</label>
+            <div class="midi-map-value" id="map-bpm-down">CC 1</div>
+            <button class="midi-learn-btn" data-target="bpmDown">Learn</button>
+        </div>
+        <div class="midi-map-row">
+            <label>BPM Up</label>
+            <div class="midi-map-value" id="map-bpm-up">CC 2</div>
+            <button class="midi-learn-btn" data-target="bpmUp">Learn</button>
+        </div>
+        <div class="midi-map-row">
+            <label>Pitch Down</label>
+            <div class="midi-map-value" id="map-pitch-down">CC 3</div>
+            <button class="midi-learn-btn" data-target="pitchDown">Learn</button>
+        </div>
+        <div class="midi-map-row">
+            <label>Pitch Up</label>
+            <div class="midi-map-value" id="map-pitch-up">CC 4</div>
+            <button class="midi-learn-btn" data-target="pitchUp">Learn</button>
+        </div>
+        <div class="midi-map-row">
+            <label>Sync All</label>
+            <div class="midi-map-value" id="map-sync-all">CC 5</div>
+            <button class="midi-learn-btn" data-target="syncAll">Learn</button>
+        </div>
+        <div class="midi-map-row">
+            <label>Nota base pads</label>
+            <div class="midi-map-value" id="map-pad-base">36</div>
+            <button class="midi-learn-btn" data-target="padBase">Learn</button>
+        </div>
+        <button id="midiSaveMap" style="background: #225522; border: 1px solid #55ff55; color: #aaffaa; margin-top:5px;">💾 Guardar mapeo</button>
+
+        <!-- ============ RESTO DE SECCIONES ============ -->
+        <div class="section-title">CONTROL DE TEMPO</div>
+        <div class="bpm-controls">
+            <button class="bpm-btn" id="panel-bpm-down">- BPM</button>
+            <button class="bpm-btn" id="panel-bpm-up">+ BPM</button>
+            <button class="bpm-btn" id="panel-sync-all">SYNC ALL</button>
+        </div>
+        <div class="slider-container">
+            <label>Ajuste fino de BPM:</label>
+            <input type="range" id="bpmFineControl" min="40" max="240" value="120">
+            <span id="bpmFineValue" class="slider-value">120</span>
+        </div>
+
+        <div class="section-title">EFECTOS DE EXPANSIÓN (26 MODOS)</div>
+        <div class="effect-grid" id="effectSelector">
+            <div class="effect-btn" data-effect="ripple">🌊 Ripple</div>
+            <div class="effect-btn" data-effect="wave">🌊 Wave</div>
+            <div class="effect-btn" data-effect="spiral">🌀 Spiral</div>
+            <div class="effect-btn" data-effect="cross">➕ Cross</div>
+            <div class="effect-btn" data-effect="diamond">💎 Diamond</div>
+            <div class="effect-btn" data-effect="random">🎲 Random</div>
+            <div class="effect-btn" data-effect="cascade">💧 Cascade</div>
+            <div class="effect-btn" data-effect="neon">✨ Neon</div>
+            <div class="effect-btn" data-effect="pulse">💓 Pulse</div>
+            <div class="effect-btn" data-effect="radial">⚫ Radial</div>
+            <div class="effect-btn" data-effect="bounce">🏀 Bounce</div>
+            <div class="effect-btn" data-effect="chaos">🌀 Chaos</div>
+            <div class="effect-btn" data-effect="matrix">💻 Matrix</div>
+            <div class="effect-btn" data-effect="gradient">🌈 Gradient</div>
+            <div class="effect-btn" data-effect="circle">⭕ Circle</div>
+            <div class="effect-btn" data-effect="checker">♟️ Checker</div>
+            <div class="effect-btn" data-effect="snake">🐍 Snake</div>
+            <div class="effect-btn" data-effect="star">⭐ Star</div>
+            <div class="effect-btn" data-effect="fire">🔥 Fire</div>
+            <div class="effect-btn" data-effect="rainbow">🌈 Rainbow</div>
+            <div class="effect-btn" data-effect="sparkle">✨ Sparkle</div>
+            <div class="effect-btn" data-effect="swirl">🌪️ Swirl</div>
+            <div class="effect-btn" data-effect="orbit">🛰️ Orbit</div>
+            <div class="effect-btn" data-effect="heart">❤️ Heart</div>
+            <div class="effect-btn" data-effect="wind">💨 Wind</div>
+            <div class="effect-btn" data-effect="geometric">🔷 Geometric</div>
+            <div class="effect-btn" data-effect="zigzag">⚡ ZigZag</div>
+            <div class="effect-btn" data-effect="lightning">⚡ Lightning</div>
+        </div>
+
+        <div class="section-title">PERSONALIZACIÓN DE COLORES (3 COLORES)</div>
+        <div class="tri-color-toggle">
+            <label>Usar 3 colores simultáneos:</label>
+            <label class="toggle-switch">
+                <input type="checkbox" id="triColorToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="color-picker" id="colorSelector">
+            <div class="color-option" style="background:#00ff55;" data-color="#00ff55"></div>
+            <div class="color-option" style="background:#ff2255;" data-color="#ff2255"></div>
+            <div class="color-option" style="background:#2255ff;" data-color="#2255ff"></div>
+            <div class="color-option" style="background:#ffaa00;" data-color="#ffaa00"></div>
+            <div class="color-option" style="background:#aa00ff;" data-color="#aa00ff"></div>
+            <div class="color-option" style="background:#00ffff;" data-color="#00ffff"></div>
+            <div class="color-option" style="background:#ffff00;" data-color="#ffff00"></div>
+            <div class="color-option" style="background:#ff00ff;" data-color="#ff00ff"></div>
+            <div class="color-option" style="background:#55ff55;" data-color="#55ff55"></div>
+            <div class="color-option" style="background:#ff5555;" data-color="#ff5555"></div>
+            <div class="color-option" style="background:#5555ff;" data-color="#5555ff"></div>
+            <div class="color-option" style="background:#ffffff;" data-color="#ffffff"></div>
+            <div class="color-option" style="background:#ff5500;" data-color="#ff5500"></div>
+            <div class="color-option" style="background:#55ffff;" data-color="#55ffff"></div>
+            <div class="color-option" style="background:#ff55ff;" data-color="#ff55ff"></div>
+            <div class="color-option" style="background:#aaff55;" data-color="#aaff55"></div>
+        </div>
+        <div class="color-picker" id="colorSelector2" style="display:none;">
+            <div class="color-option" style="background:#aa55ff;" data-color="#aa55ff"></div>
+            <div class="color-option" style="background:#ffaa55;" data-color="#ffaa55"></div>
+            <div class="color-option" style="background:#55aaff;" data-color="#55aaff"></div>
+            <div class="color-option" style="background:#aaffaa;" data-color="#aaffaa"></div>
+            <div class="color-option" style="background:#ffaaff;" data-color="#ffaaff"></div>
+            <div class="color-option" style="background:#aaaaff;" data-color="#aaaaff"></div>
+            <div class="color-option" style="background:#ffaaaa;" data-color="#ffaaaa"></div>
+            <div class="color-option" style="background:#55aa55;" data-color="#55aa55"></div>
+            <div class="color-option" style="background:#aaffff;" data-color="#aaffff"></div>
+        </div>
+        <div class="color-picker" id="colorSelector3" style="display:none;">
+            <div class="color-option" style="background:#001155;" data-color="#001155"></div>
+            <div class="color-option" style="background:#115500;" data-color="#115500"></div>
+            <div class="color-option" style="background:#550011;" data-color="#550011"></div>
+            <div class="color-option" style="background:#005511;" data-color="#005511"></div>
+            <div class="color-option" style="background:#110055;" data-color="#110055"></div>
+            <div class="color-option" style="background:#551100;" data-color="#551100"></div>
+            <div class="color-option" style="background:#0055aa;" data-color="#0055aa"></div>
+            <div class="color-option" style="background:#aa5500;" data-color="#aa5500"></div>
+            <div class="color-option" style="background:#00aa55;" data-color="#00aa55"></div>
+        </div>
+        <div id="effectInfo" class="audio-info">Efecto: Ripple | Color: #00ff55</div>
+
+        <div class="section-title">EDICIÓN DE SONIDO</div>
+        <div class="audio-control-group">
+            <div class="slider-container">
+                <label>Ganancia Global:</label>
+                <input type="range" id="gainControl" min="0" max="200" value="100">
+                <span id="gainValue" class="slider-value">100%</span>
+            </div>
+            <div class="slider-container">
+                <label>Filtro Agudo/Grave:</label>
+                <input type="range" id="toneControl" min="0" max="200" value="100">
+                <span id="toneValue" class="slider-value">Neutro</span>
+            </div>
+            <div class="slider-container">
+                <label>Dinámica:</label>
+                <input type="range" id="dynamicControl" min="50" max="200" value="100">
+                <span id="dynamicValue" class="slider-value">Normal</span>
+            </div>
+            <div class="slider-container">
+                <label>Ruido de fondo:</label>
+                <input type="range" id="noiseControl" min="0" max="100" value="0">
+                <span id="noiseValue" class="slider-value">0%</span>
+            </div>
+            <div class="slider-container">
+                <label>Nitidez:</label>
+                <input type="range" id="sharpnessControl" min="0" max="200" value="100">
+                <span id="sharpnessValue" class="slider-value">Normal</span>
+            </div>
+            <div class="slider-container">
+                <label>Reverberación:</label>
+                <input type="range" id="reverbControl" min="0" max="100" value="0">
+                <span id="reverbValue" class="slider-value">0%</span>
+            </div>
+            <div class="slider-container">
+                <label>Eco:</label>
+                <input type="range" id="echoControl" min="0" max="100" value="0">
+                <span id="echoValue" class="slider-value">0%</span>
+            </div>
+            <div class="slider-container">
+                <label>Distorsión:</label>
+                <input type="range" id="distortionControl" min="0" max="100" value="0">
+                <span id="distortionValue" class="slider-value">0%</span>
+            </div>
+        </div>
+
+        <div class="section-title">CARGAR SONIDO (.mp3 / .wav)</div>
+        <input type="file" id="audioUpload" accept="audio/*">
+        <div id="audioInfo" class="audio-info">Selecciona un archivo de audio</div>
+
+        <div class="section-title">TIPO DE SONIDO</div>
+        <div class="type-selector">
+            <div class="type-btn" id="samplerBtn" data-type="sampler">🎵 SAMPLER</div>
+            <div class="type-btn" id="loopBtn" data-type="loop">🔄 LOOP</div>
+        </div>
+        <div id="typeInfo" class="audio-info">Selecciona Sampler (una vez) o Loop (continuo)</div>
+
+        <div class="section-title">SELECCIONAR PAD DESTINO</div>
+        <div class="pad-selector-grid" id="padSelector"></div>
+        <div id="selectedPadInfo" class="audio-info">Ningún pad seleccionado</div>
+        <button id="loadToSelectedPad" disabled>Cargar en Pad Seleccionado</button>
+
+        <div class="section-title">ELIMINAR SONIDO DE PAD</div>
+        <div class="pad-selector-grid" id="deletePadSelector"></div>
+        <div id="deletePadInfo" class="audio-info">Selecciona un pad para eliminar su sonido</div>
+        <button id="deletePadBtn" class="delete-btn" disabled>✖ Eliminar Sonido del Pad</button>
+
+        <button id="clearAllAudio" class="clear-all-btn" style="margin-top:15px;">🗑️ Borrar todos los sonidos</button>
+        <button id="exportConfig" class="export-btn">💾 Exportar Proyecto</button>
+    </div>
+
+    <script>
+        const lp = document.getElementById('launchpad');
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const loops = {};
+        const audioBuffers = {};
+        const audioTypes = {};
+        let selectedPadId = null;
+        let deletePadId = null;
+        let currentAudioFile = null;
+        let currentAudioType = 'sampler';
+
+        let currentEffect = 'ripple';
+        let currentColor = '#00ff55';
+        let currentColor2 = '#ff2255';
+        let currentColor3 = '#2255ff';
+        let useTriColors = false;
+        let effectParams = {
+            ripple: { maxDistance: 3, speed: 60 },
+            wave: { direction: 'outward', intensity: 1.5 },
+            spiral: { rotations: 1, speed: 0.5 },
+            cross: { arms: 4, thickness: 2 },
+            diamond: { size: 3, speed: 80 },
+            random: { chance: 0.7, intensity: 1.2 },
+            cascade: { direction: 'down', speed: 40 },
+            neon: { intensity: 2.5, glow: 20 },
+            pulse: { beats: 3, speed: 0.2 },
+            radial: { circles: 3, speed: 0.8 },
+            bounce: { height: 10, bounces: 2 },
+            gradient: { colors: 3, speed: 0.5 },
+            chaos: { randomness: 0.8, speed: 0.3 },
+            matrix: { rows: 8, speed: 0.4 },
+            circle: { radius: 3, smooth: true },
+            checker: { pattern: 'alternate', size: 2 },
+            snake: { length: 4, speed: 100 },
+            star: { points: 5, size: 2 },
+            fire: { intensity: 1.5, spread: 2 },
+            rainbow: { colors: 7, speed: 0.3 },
+            sparkle: { density: 0.4, speed: 0.2 },
+            swirl: { rotations: 2, speed: 0.6 },
+            orbit: { planets: 3, speed: 0.4 },
+            heart: { size: 2, beat: 0.8 },
+            wind: { strength: 1.2, direction: 'right' },
+            geometric: { shapes: 3, speed: 0.5 },
+            zigzag: { amplitude: 3, frequency: 2 },
+            lightning: { branches: 3, intensity: 2 }
+        };
+
+        let audioFilters = {
+            gain: 1.0,
+            tone: 1.0,
+            dynamic: 1.0,
+            noise: 0.0,
+            sharpness: 1.0,
+            reverb: 0.0,
+            echo: 0.0,
+            distortion: 0.0
+        };
+
+        let globalBPM = 120;
+        let pitchShift = 1.0;
+        let masterStartTime = 0;
+        let isPlaying = false;
+
+        // ============ MIDI ============
+        let midiAccess = null;
+        let midiOutput = null;
+        let midiInput = null;
+        let midiInputs = [];
+        let midiOutputs = [];
+        let midiConnected = false;
+        let midiLearnTarget = null;
+
+        // Mapeo por defecto (CCs típicos de Launchpad / genéricos)
+        let midiMap = {
+            bpmDown:  { type: 'cc', number: 1 },
+            bpmUp:    { type: 'cc', number: 2 },
+            pitchDown:{ type: 'cc', number: 3 },
+            pitchUp:  { type: 'cc', number: 4 },
+            syncAll:  { type: 'cc', number: 5 },
+            padBase:  36
+        };
+
+        // --- CREACIÓN DE LA REJILLA ---
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const pad = document.createElement('div');
+                pad.className = 'cell pad';
+                const padId = `p-${row}-${col}`;
+                pad.id = padId;
+                pad.dataset.row = row;
+                pad.dataset.col = col;
+                pad.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();
+                    triggerPad(padId, row, col);
+                    triggerExpansionEffect(row, col);
+                });
+                lp.appendChild(pad);
+            }
+            const rBtn = document.createElement('div');
+            rBtn.className = 'cell round-btn';
+            rBtn.innerHTML = '▶';
+            rBtn.style.fontSize = '10px';
+            lp.appendChild(rBtn);
+        }
+
+        // --- FUNCIONALIDAD DE LOS BOTONES REDONDOS HORIZONTALES ---
+        document.getElementById('bpm-down').addEventListener('click', () => {
+            if (globalBPM > 40) { globalBPM -= 5; updateBPMDisplay(); adjustAllLoopsTempo(); }
+        });
+        document.getElementById('bpm-up').addEventListener('click', () => {
+            if (globalBPM < 240) { globalBPM += 5; updateBPMDisplay(); adjustAllLoopsTempo(); }
+        });
+        document.getElementById('pitch-down').addEventListener('click', () => {
+            if (pitchShift > 0.5) { pitchShift -= 0.1; adjustAllLoopsPitch(); updatePitchButtons(); }
+        });
+        document.getElementById('pitch-up').addEventListener('click', () => {
+            if (pitchShift < 2.0) { pitchShift += 0.1; adjustAllLoopsPitch(); updatePitchButtons(); }
+        });
+        document.getElementById('sync-all').addEventListener('click', () => { syncAllLoops(); });
+
+        function updateBPMDisplay() {
+            document.getElementById('bpmValue').textContent = globalBPM;
+            document.getElementById('bpmFineValue').textContent = globalBPM;
+            document.getElementById('bpmFineControl').value = globalBPM;
+            if (globalBPM < 80) { document.getElementById('bpmDisplay').style.borderColor = '#2255ff'; document.getElementById('bpmDisplay').style.color = '#2255ff'; }
+            else if (globalBPM < 120) { document.getElementById('bpmDisplay').style.borderColor = '#00ff55'; document.getElementById('bpmDisplay').style.color = '#00ff55'; }
+            else if (globalBPM < 160) { document.getElementById('bpmDisplay').style.borderColor = '#ffaa00'; document.getElementById('bpmDisplay').style.color = '#ffaa00'; }
+            else { document.getElementById('bpmDisplay').style.borderColor = '#ff2255'; document.getElementById('bpmDisplay').style.color = '#ff2255'; }
+        }
+
+        function updatePitchButtons() {
+            const pitchDownBtn = document.getElementById('pitch-down');
+            const pitchUpBtn = document.getElementById('pitch-up');
+            if (pitchShift <= 0.5) { pitchDownBtn.style.opacity = '0.5'; pitchDownBtn.style.cursor = 'not-allowed'; }
+            else { pitchDownBtn.style.opacity = '1'; pitchDownBtn.style.cursor = 'pointer'; }
+            if (pitchShift >= 2.0) { pitchUpBtn.style.opacity = '0.5'; pitchUpBtn.style.cursor = 'not-allowed'; }
+            else { pitchUpBtn.style.opacity = '1'; pitchUpBtn.style.cursor = 'pointer'; }
+        }
+
+        function adjustAllLoopsTempo() {
+            Object.keys(loops).forEach(padId => {
+                if (loops[padId] && loops[padId].source) {
+                    const elapsedTime = audioCtx.currentTime - masterStartTime;
+                    const beatsElapsed = (elapsedTime * globalBPM) / 60;
+                    loops[padId].source.stop();
+                    setTimeout(() => {
+                        const source = audioCtx.createBufferSource();
+                        source.buffer = audioBuffers[padId].buffer;
+                        source.loop = true;
+                        source.playbackRate.value = globalBPM / 120;
+                        const nextBeat = Math.ceil(beatsElapsed);
+                        const nextBeatTime = masterStartTime + (nextBeat * 60 / globalBPM);
+                        source.start(nextBeatTime);
+                        loops[padId].source = source;
+                    }, 50);
+                }
+            });
+        }
+
+        function adjustAllLoopsPitch() {
+            Object.keys(loops).forEach(padId => {
+                if (loops[padId] && loops[padId].source) {
+                    loops[padId].source.detune.value = (pitchShift - 1) * 1200;
+                }
+            });
+        }
+
+        function syncAllLoops() {
+            Object.keys(loops).forEach(padId => {
+                if (loops[padId] && loops[padId].source) {
+                    try { loops[padId].source.stop(); } catch(e) {}
+                    delete loops[padId];
+                    const padElement = document.getElementById(padId);
+                    if (padElement) { padElement.classList.remove('looping'); }
+                }
+            });
+            masterStartTime = audioCtx.currentTime + 0.1;
+            isPlaying = false;
+            alert('✅ Todos los loops sincronizados. Presiona los pads para iniciarlos sincronizados.');
+        }
+
+        // --- FUNCIONES DE EFECTOS (mismas que el original) ---
+        function triggerExpansionEffect(originRow, originCol) {
+            switch(currentEffect) {
+                case 'ripple': rippleEffect(originRow, originCol); break;
+                case 'wave': waveEffect(originRow, originCol); break;
+                case 'spiral': spiralEffect(originRow, originCol); break;
+                case 'cross': crossEffect(originRow, originCol); break;
+                case 'diamond': diamondEffect(originRow, originCol); break;
+                case 'random': randomEffect(originRow, originCol); break;
+                case 'cascade': cascadeEffect(originRow, originCol); break;
+                case 'neon': neonEffect(originRow, originCol); break;
+                case 'pulse': pulseEffect(originRow, originCol); break;
+                case 'radial': radialEffect(originRow, originCol); break;
+                case 'bounce': bounceEffect(originRow, originCol); break;
+                case 'gradient': gradientEffect(originRow, originCol); break;
+                case 'chaos': chaosEffect(originRow, originCol); break;
+                case 'matrix': matrixEffect(originRow, originCol); break;
+                case 'circle': circleEffect(originRow, originCol); break;
+                case 'checker': checkerEffect(originRow, originCol); break;
+                case 'snake': snakeEffect(originRow, originCol); break;
+                case 'star': starEffect(originRow, originCol); break;
+                case 'fire': fireEffect(originRow, originCol); break;
+                case 'rainbow': rainbowEffect(originRow, originCol); break;
+                case 'sparkle': sparkleEffect(originRow, originCol); break;
+                case 'swirl': swirlEffect(originRow, originCol); break;
+                case 'orbit': orbitEffect(originRow, originCol); break;
+                case 'heart': heartEffect(originRow, originCol); break;
+                case 'wind': windEffect(originRow, originCol); break;
+                case 'geometric': geometricEffect(originRow, originCol); break;
+                case 'zigzag': zigzagEffect(originRow, originCol); break;
+                case 'lightning': lightningEffect(originRow, originCol); break;
+                default: rippleEffect(originRow, originCol);
+            }
+        }
+
+        function rippleEffect(originRow, originCol) {
+            const maxDistance = effectParams.ripple.maxDistance;
+            for (let d = 1; d <= maxDistance; d++) {
+                setTimeout(() => {
+                    for (let r = originRow - d; r <= originRow + d; r++) {
+                        for (let c = originCol - d; c <= originCol + d; c++) {
+                            if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
+                                const targetPad = document.getElementById(`p-${r}-${c}`);
+                                if (targetPad) applyEffectToPad(targetPad, 'ripple-effect', d);
+                            }
+                        }
+                    }
+                }, d * effectParams.ripple.speed);
+            }
+        }
+        function waveEffect(originRow, originCol) {
+            for (let d = 0; d < 4; d++) {
+                setTimeout(() => {
+                    [[0,d],[0,-d],[d,0],[-d,0]].forEach(([dr,dc]) => {
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'wave-effect', d);
+                    });
+                }, d * 80);
+            }
+        }
+        function spiralEffect(originRow, originCol) {
+            const steps = effectParams.spiral.rotations * 4;
+            for (let step = 0; step < steps; step++) {
+                setTimeout(() => {
+                    const radius = Math.floor(step / 4) + 1;
+                    const angle = (step % 4) * 90;
+                    const radians = angle * Math.PI / 180;
+                    const dr = Math.round(Math.sin(radians) * radius);
+                    const dc = Math.round(Math.cos(radians) * radius);
+                    const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                    if (targetPad) applyEffectToPad(targetPad, 'spiral-effect', step);
+                }, step * (effectParams.spiral.speed * 100));
+            }
+        }
+        function crossEffect(originRow, originCol) {
+            const arms = effectParams.cross.arms;
+            const thickness = effectParams.cross.thickness;
+            for (let distance = 0; distance < 4; distance++) {
+                setTimeout(() => {
+                    for (let arm = 0; arm < arms; arm++) {
+                        const angle = (arm * 90) % 360;
+                        const radians = angle * Math.PI / 180;
+                        for (let t = -thickness; t <= thickness; t++) {
+                            const dr = Math.round(Math.sin(radians) * distance + Math.cos(radians) * t);
+                            const dc = Math.round(Math.cos(radians) * distance + Math.sin(radians) * t);
+                            const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'cross-effect', distance);
+                        }
+                    }
+                }, distance * 70);
+            }
+        }
+        function diamondEffect(originRow, originCol) {
+            const size = effectParams.diamond.size;
+            for (let d = 0; d <= size; d++) {
+                setTimeout(() => {
+                    for (let i = 0; i <= d; i++) {
+                        [[originRow-d+i, originCol-i],[originRow+d-i, originCol-i],[originRow-d+i, originCol+i],[originRow+d-i, originCol+i]].forEach(([r,c]) => {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'diamond-effect', d);
+                        });
+                    }
+                }, d * effectParams.diamond.speed);
+            }
+        }
+        function randomEffect(originRow, originCol) {
+            for (let r = originRow - 3; r <= originRow + 3; r++) {
+                for (let c = originCol - 3; c <= originCol + 3; c++) {
+                    if (Math.random() < effectParams.random.chance) {
+                        setTimeout(() => {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'random-effect', Math.random());
+                        }, Math.random() * 300);
+                    }
+                }
+            }
+        }
+        function cascadeEffect(originRow, originCol) {
+            const direction = effectParams.cascade.direction;
+            const speed = effectParams.cascade.speed;
+            for (let offset = 0; offset < 8; offset++) {
+                setTimeout(() => {
+                    for (let i = -offset; i <= offset; i++) {
+                        let r, c;
+                        if (direction === 'down') { r = originRow + offset; c = originCol + i; }
+                        else if (direction === 'up') { r = originRow - offset; c = originCol + i; }
+                        else if (direction === 'right') { r = originRow + i; c = originCol + offset; }
+                        else { r = originRow + i; c = originCol - offset; }
+                        const targetPad = document.getElementById(`p-${r}-${c}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'cascade-effect', offset);
+                    }
+                }, offset * speed);
+            }
+        }
+        function neonEffect(originRow, originCol) {
+            for (let d = 0; d < 3; d++) {
+                setTimeout(() => {
+                    for (let r = originRow - d; r <= originRow + d; r++) {
+                        for (let c = originCol - d; c <= originCol + d; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'neon-effect', d);
+                        }
+                    }
+                }, d * 100);
+            }
+        }
+        function pulseEffect(originRow, originCol) {
+            const beats = effectParams.pulse.beats;
+            for (let beat = 0; beat < beats; beat++) {
+                setTimeout(() => {
+                    for (let r = originRow - 2; r <= originRow + 2; r++) {
+                        for (let c = originCol - 2; c <= originCol + 2; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad && Math.random() > 0.3) applyEffectToPad(targetPad, 'pulse-effect', beat);
+                        }
+                    }
+                }, beat * (effectParams.pulse.speed * 1000));
+            }
+        }
+        function radialEffect(originRow, originCol) {
+            const circles = effectParams.radial.circles;
+            for (let circle = 1; circle <= circles; circle++) {
+                setTimeout(() => {
+                    const steps = 16;
+                    for (let step = 0; step < steps; step++) {
+                        const angle = (step * 360) / steps;
+                        const radians = angle * Math.PI / 180;
+                        const dr = Math.round(Math.sin(radians) * circle);
+                        const dc = Math.round(Math.cos(radians) * circle);
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'radial-effect', circle);
+                    }
+                }, circle * (effectParams.radial.speed * 300));
+            }
+        }
+        function bounceEffect(originRow, originCol) {
+            const bounces = effectParams.bounce.bounces;
+            for (let bounce = 0; bounce < bounces; bounce++) {
+                setTimeout(() => {
+                    for (let r = originRow - 1; r <= originRow + 1; r++) {
+                        for (let c = originCol - 1; c <= originCol + 1; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'bounce-effect', bounce);
+                        }
+                    }
+                }, bounce * 150);
+            }
+        }
+        function gradientEffect(originRow, originCol) {
+            const colors = effectParams.gradient.colors;
+            for (let colorIdx = 0; colorIdx < colors; colorIdx++) {
+                setTimeout(() => {
+                    for (let r = originRow - colorIdx; r <= originRow + colorIdx; r++) {
+                        for (let c = originCol - colorIdx; c <= originCol + colorIdx; c++) {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'gradient-effect', colorIdx);
+                        }
+                    }
+                }, colorIdx * (effectParams.gradient.speed * 200));
+            }
+        }
+        function chaosEffect(originRow, originCol) {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const dr = Math.floor(Math.random() * 7) - 3;
+                    const dc = Math.floor(Math.random() * 7) - 3;
+                    const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                    if (targetPad && Math.random() < effectParams.chaos.randomness) applyEffectToPad(targetPad, 'chaos-effect', Math.random());
+                }, i * (effectParams.chaos.speed * 200));
+            }
+        }
+        function matrixEffect(originRow, originCol) {
+            const rows = effectParams.matrix.rows;
+            for (let row = 0; row < rows; row++) {
+                setTimeout(() => {
+                    for (let col = 0; col < 8; col++) {
+                        const targetPad = document.getElementById(`p-${row}-${col}`);
+                        if (targetPad && Math.random() > 0.5) applyEffectToPad(targetPad, 'matrix-effect', row);
+                    }
+                }, row * (effectParams.matrix.speed * 100));
+            }
+        }
+        function circleEffect(originRow, originCol) {
+            const radius = effectParams.circle.radius;
+            const steps = effectParams.circle.smooth ? 16 : 8;
+            for (let angle = 0; angle < 360; angle += 360/steps) {
+                const radians = angle * Math.PI / 180;
+                const dr = Math.round(Math.sin(radians) * radius);
+                const dc = Math.round(Math.cos(radians) * radius);
+                setTimeout(() => {
+                    const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                    if (targetPad) applyEffectToPad(targetPad, 'ripple-effect', angle);
+                }, angle * 5);
+            }
+        }
+        function checkerEffect(originRow, originCol) {
+            const pattern = effectParams.checker.pattern;
+            const size = effectParams.checker.size;
+            for (let dr = -size; dr <= size; dr++) {
+                for (let dc = -size; dc <= size; dc++) {
+                    if (pattern === 'alternate' && (dr + dc) % 2 === 0) continue;
+                    if (pattern === 'solid' && (dr + dc) % 2 !== 0) continue;
+                    setTimeout(() => {
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'wave-effect', Math.abs(dr) + Math.abs(dc));
+                    }, (Math.abs(dr) + Math.abs(dc)) * 50);
+                }
+            }
+        }
+        function snakeEffect(originRow, originCol) {
+            const length = effectParams.snake.length;
+            for (let i = 0; i < length; i++) {
+                setTimeout(() => {
+                    for (let j = 0; j <= i; j++) {
+                        const targetPad = document.getElementById(`p-${originRow}-${originCol+j}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'snake-effect', j);
+                    }
+                }, i * effectParams.snake.speed);
+            }
+        }
+        function starEffect(originRow, originCol) {
+            const points = effectParams.star.points;
+            const size = effectParams.star.size;
+            for (let point = 0; point < points; point++) {
+                setTimeout(() => {
+                    const angle = (point * 360) / points;
+                    const radians = angle * Math.PI / 180;
+                    for (let d = 1; d <= size; d++) {
+                        const dr = Math.round(Math.sin(radians) * d);
+                        const dc = Math.round(Math.cos(radians) * d);
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'star-effect', point);
+                    }
+                }, point * 100);
+            }
+        }
+        function fireEffect(originRow, originCol) {
+            const spread = effectParams.fire.spread;
+            for (let d = 0; d < 3; d++) {
+                setTimeout(() => {
+                    for (let r = originRow - d; r <= originRow; r++) {
+                        for (let c = originCol - spread + d; c <= originCol + spread - d; c++) {
+                            if (Math.random() < 0.7) {
+                                const targetPad = document.getElementById(`p-${r}-${c}`);
+                                if (targetPad) applyEffectToPad(targetPad, 'fire-effect', d);
+                            }
+                        }
+                    }
+                }, d * 150);
+            }
+        }
+        function rainbowEffect(originRow, originCol) {
+            const colors = effectParams.rainbow.colors;
+            for (let d = 0; d < colors; d++) {
+                setTimeout(() => {
+                    for (let r = originRow - d; r <= originRow + d; r++) {
+                        for (let c = originCol - d; c <= originCol + d; c++) {
+                            if (Math.abs(r - originRow) === d || Math.abs(c - originCol) === d) {
+                                const targetPad = document.getElementById(`p-${r}-${c}`);
+                                if (targetPad) applyEffectToPad(targetPad, 'rainbow-effect', d);
+                            }
+                        }
+                    }
+                }, d * (effectParams.rainbow.speed * 200));
+            }
+        }
+        function sparkleEffect(originRow, originCol) {
+            for (let r = originRow - 2; r <= originRow + 2; r++) {
+                for (let c = originCol - 2; c <= originCol + 2; c++) {
+                    if (Math.random() < effectParams.sparkle.density) {
+                        setTimeout(() => {
+                            const targetPad = document.getElementById(`p-${r}-${c}`);
+                            if (targetPad) applyEffectToPad(targetPad, 'sparkle-effect', Math.random());
+                        }, Math.random() * 400);
+                    }
+                }
+            }
+        }
+        function swirlEffect(originRow, originCol) {
+            const rotations = effectParams.swirl.rotations;
+            const steps = rotations * 8;
+            for (let step = 0; step < steps; step++) {
+                setTimeout(() => {
+                    const radius = Math.floor(step / 8) + 1;
+                    const angle = (step % 8) * 45;
+                    const radians = angle * Math.PI / 180;
+                    const dr = Math.round(Math.sin(radians) * radius);
+                    const dc = Math.round(Math.cos(radians) * radius);
+                    const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                    if (targetPad) applyEffectToPad(targetPad, 'swirl-effect', step);
+                }, step * (effectParams.swirl.speed * 100));
+            }
+        }
+        function orbitEffect(originRow, originCol) {
+            const planets = effectParams.orbit.planets;
+            for (let planet = 1; planet <= planets; planet++) {
+                setTimeout(() => {
+                    const steps = 12;
+                    for (let step = 0; step < steps; step++) {
+                        const angle = (step * 360) / steps;
+                        const radians = angle * Math.PI / 180;
+                        const dr = Math.round(Math.sin(radians) * planet);
+                        const dc = Math.round(Math.cos(radians) * planet);
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'orbit-effect', planet);
+                    }
+                }, planet * (effectParams.orbit.speed * 300));
+            }
+        }
+        function heartEffect(originRow, originCol) {
+            const heartPoints = [[0,0],[1,-1],[1,-2],[0,-3],[-1,-2],[-1,-1],[0,0],[1,1],[2,0],[2,-1],[1,-2],[0,-1],[-1,-2],[-2,-1],[-2,0],[-1,1]];
+            for (let beat = 0; beat < 2; beat++) {
+                setTimeout(() => {
+                    heartPoints.forEach(([dr, dc], index) => {
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'heart-effect', index);
+                    });
+                }, beat * (effectParams.heart.beat * 500));
+            }
+        }
+        function windEffect(originRow, originCol) {
+            const direction = effectParams.wind.direction;
+            for (let d = 0; d < 4; d++) {
+                setTimeout(() => {
+                    for (let i = -d; i <= d; i++) {
+                        let dr = 0, dc = 0;
+                        if (direction === 'right') { dr = i; dc = d; }
+                        else if (direction === 'left') { dr = i; dc = -d; }
+                        else if (direction === 'up') { dr = -d; dc = i; }
+                        else { dr = d; dc = i; }
+                        const targetPad = document.getElementById(`p-${originRow+dr}-${originCol+dc}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'wind-effect', d);
+                    }
+                }, d * 100);
+            }
+        }
+        function geometricEffect(originRow, originCol) {
+            const shapes = effectParams.geometric.shapes;
+            for (let shape = 0; shape < shapes; shape++) {
+                setTimeout(() => {
+                    const size = shape + 1;
+                    for (let i = -size; i <= size; i++) {
+                        const pads = [
+                            document.getElementById(`p-${originRow+i}-${originCol-size}`),
+                            document.getElementById(`p-${originRow+i}-${originCol+size}`),
+                            document.getElementById(`p-${originRow-size}-${originCol+i}`),
+                            document.getElementById(`p-${originRow+size}-${originCol+i}`)
+                        ];
+                        pads.forEach(p => { if (p) applyEffectToPad(p, 'geometric-effect', shape); });
+                    }
+                }, shape * (effectParams.geometric.speed * 200));
+            }
+        }
+        function zigzagEffect(originRow, originCol) {
+            const amplitude = effectParams.zigzag.amplitude;
+            const frequency = effectParams.zigzag.frequency;
+            for (let x = 0; x < 8; x++) {
+                setTimeout(() => {
+                    const y = Math.round(Math.sin(x * frequency) * amplitude);
+                    const targetPad = document.getElementById(`p-${originRow+y}-${originCol+x}`);
+                    if (targetPad) applyEffectToPad(targetPad, 'zigzag-effect', x);
+                }, x * 80);
+            }
+        }
+        function lightningEffect(originRow, originCol) {
+            const branches = effectParams.lightning.branches;
+            for (let branch = 0; branch < branches; branch++) {
+                setTimeout(() => {
+                    for (let d = 0; d < 4; d++) {
+                        const targetPad = document.getElementById(`p-${originRow+d}-${originCol}`);
+                        if (targetPad) applyEffectToPad(targetPad, 'lightning-effect', d);
+                    }
+                    for (let i = 1; i < 4; i += 2) {
+                        const p1 = document.getElementById(`p-${originRow+i}-${originCol+1}`);
+                        const p2 = document.getElementById(`p-${originRow+i}-${originCol-1}`);
+                        if (p1) applyEffectToPad(p1, 'lightning-effect', i);
+                        if (p2) applyEffectToPad(p2, 'lightning-effect', i);
+                    }
+                }, branch * 200);
+            }
+        }
+
+        function applyEffectToPad(padElement, effectClass, index) {
+            if (!padElement.classList.contains('looping')) {
+                padElement.classList.add(effectClass);
+                let effectColor;
+                if (useTriColors) {
+                    const colorIndex = index % 3;
+                    effectColor = colorIndex === 0 ? currentColor : colorIndex === 1 ? currentColor2 : currentColor3;
+                } else { effectColor = currentColor; }
+                padElement.style.setProperty('--accent', effectColor);
+                if (effectClass === 'gradient-effect' && useTriColors) {
+                    padElement.style.setProperty('--color1', currentColor);
+                    padElement.style.setProperty('--color2', currentColor2);
+                    padElement.style.setProperty('--color3', currentColor3);
+                }
+                if (!effectClass.includes('gradient') && !effectClass.includes('rainbow') && !effectClass.includes('fire') && !effectClass.includes('sparkle')) {
+                    const rgb = hexToRgb(effectColor);
+                    padElement.style.background = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.4)`;
+                    padElement.style.boxShadow = `0 0 15px ${effectColor}`;
+                }
+                setTimeout(() => {
+                    padElement.classList.remove(effectClass);
+                    padElement.style.background = '';
+                    padElement.style.boxShadow = '';
+                    padElement.style.removeProperty('--color1');
+                    padElement.style.removeProperty('--color2');
+                    padElement.style.removeProperty('--color3');
+                }, 300);
+            }
+        }
+
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? { r: parseInt(result[1],16), g: parseInt(result[2],16), b: parseInt(result[3],16) } : { r: 0, g: 255, b: 85 };
+        }
+
+        function setupEffectControls() {
+            document.querySelectorAll('#effectSelector .effect-btn').forEach(btn => {
+                btn.onclick = () => {
+                    currentEffect = btn.dataset.effect;
+                    document.querySelectorAll('#effectSelector .effect-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    updateEffectInfo();
+                };
+            });
+            document.querySelectorAll('#colorSelector .color-option').forEach(option => {
+                option.onclick = () => {
+                    currentColor = option.dataset.color;
+                    document.querySelectorAll('#colorSelector .color-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    updateEffectInfo();
+                    document.documentElement.style.setProperty('--accent', currentColor);
+                    document.documentElement.style.setProperty('--led-on', currentColor);
+                };
+            });
+            document.querySelectorAll('#colorSelector2 .color-option').forEach(option => {
+                option.onclick = () => {
+                    currentColor2 = option.dataset.color;
+                    document.querySelectorAll('#colorSelector2 .color-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    updateEffectInfo();
+                };
+            });
+            document.querySelectorAll('#colorSelector3 .color-option').forEach(option => {
+                option.onclick = () => {
+                    currentColor3 = option.dataset.color;
+                    document.querySelectorAll('#colorSelector3 .color-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    updateEffectInfo();
+                };
+            });
+            document.getElementById('triColorToggle').onchange = (e) => {
+                useTriColors = e.target.checked;
+                document.getElementById('colorSelector2').style.display = useTriColors ? 'flex' : 'none';
+                document.getElementById('colorSelector3').style.display = useTriColors ? 'flex' : 'none';
+                updateEffectInfo();
+            };
+            document.querySelector('#effectSelector .effect-btn').click();
+            document.querySelector('#colorSelector .color-option').click();
+            document.querySelector('#colorSelector2 .color-option:nth-child(1)').click();
+            document.querySelector('#colorSelector3 .color-option:nth-child(1)').click();
+        }
+
+        function updateEffectInfo() {
+            const effectName = document.querySelector('#effectSelector .effect-btn.selected').textContent;
+            if (useTriColors) {
+                document.getElementById('effectInfo').textContent = `Efecto: ${effectName} | Colores: ${currentColor} / ${currentColor2} / ${currentColor3}`;
+            } else {
+                document.getElementById('effectInfo').textContent = `Efecto: ${effectName} | Color: ${currentColor}`;
+            }
+        }
+
+        function setupBPMControls() {
+            document.getElementById('panel-bpm-down').onclick = () => { document.getElementById('bpm-down').click(); };
+            document.getElementById('panel-bpm-up').onclick = () => { document.getElementById('bpm-up').click(); };
+            document.getElementById('panel-sync-all').onclick = () => { syncAllLoops(); };
+            document.getElementById('bpmFineControl').oninput = (e) => {
+                globalBPM = parseInt(e.target.value);
+                document.getElementById('bpmValue').textContent = globalBPM;
+                document.getElementById('bpmFineValue').textContent = globalBPM;
+                updateBPMDisplay();
+                adjustAllLoopsTempo();
+            };
+        }
+
+        function setupAudioControls() {
+            document.getElementById('gainControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('gainValue').textContent = value + '%';
+                audioFilters.gain = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('toneControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                let label = value < 90 ? "Grave" : value > 110 ? "Agudo" : "Neutro";
+                document.getElementById('toneValue').textContent = label;
+                audioFilters.tone = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('dynamicControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                let label = value < 90 ? "Suave" : value > 110 ? "Fuerte" : "Normal";
+                document.getElementById('dynamicValue').textContent = label;
+                audioFilters.dynamic = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('noiseControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('noiseValue').textContent = value + '%';
+                audioFilters.noise = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('sharpnessControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                let label = value < 90 ? "Suave" : value > 110 ? "Nítido" : "Normal";
+                document.getElementById('sharpnessValue').textContent = label;
+                audioFilters.sharpness = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('reverbControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('reverbValue').textContent = value + '%';
+                audioFilters.reverb = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('echoControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('echoValue').textContent = value + '%';
+                audioFilters.echo = value / 100;
+                applyAudioFilters();
+            };
+            document.getElementById('distortionControl').oninput = (e) => {
+                const value = parseInt(e.target.value);
+                document.getElementById('distortionValue').textContent = value + '%';
+                audioFilters.distortion = value / 100;
+                applyAudioFilters();
+            };
+        }
+
+        function applyAudioFilters() {
+            Object.values(loops).forEach(loop => {
+                if (loop.source && loop.filterNodes) {
+                    if (loop.filterNodes.gain) loop.filterNodes.gain.gain.value = audioFilters.gain;
+                    if (loop.filterNodes.biquadFilter) {
+                        loop.filterNodes.biquadFilter.frequency.value = 1000 * audioFilters.tone;
+                    }
+                }
+            });
+        }
+
+        function generatePadSelectors() {
+            const loadGrid = document.getElementById('padSelector');
+            const deleteGrid = document.getElementById('deletePadSelector');
+            loadGrid.innerHTML = '';
+            deleteGrid.innerHTML = '';
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const padId = `p-${r}-${c}`;
+                    const loadSelector = document.createElement('div');
+                    loadSelector.className = 'pad-selector';
+                    if (audioBuffers[padId]) loadSelector.classList.add(audioTypes[padId] === 'loop' ? 'has-loop' : 'has-sampler');
+                    if (selectedPadId === padId) loadSelector.classList.add('selected');
+                    loadSelector.onclick = () => {
+                        selectedPadId = padId;
+                        document.getElementById('selectedPadInfo').textContent = `Pad seleccionado: ${padId} (Fila ${r+1}, Col ${c+1})`;
+                        if (audioBuffers[padId]) {
+                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
+                            document.getElementById('selectedPadInfo').textContent += ` - ${type} cargado`;
+                        }
+                        document.getElementById('loadToSelectedPad').disabled = !currentAudioFile;
+                        generatePadSelectors();
+                    };
+                    loadGrid.appendChild(loadSelector);
+                    const deleteSelector = document.createElement('div');
+                    deleteSelector.className = 'pad-selector';
+                    if (audioBuffers[padId]) deleteSelector.classList.add(audioTypes[padId] === 'loop' ? 'has-loop' : 'has-sampler');
+                    if (deletePadId === padId) deleteSelector.classList.add('selected');
+                    deleteSelector.onclick = () => {
+                        deletePadId = padId;
+                        if (audioBuffers[padId]) {
+                            const type = audioTypes[padId] === 'loop' ? 'LOOP' : 'SAMPLER';
+                            document.getElementById('deletePadInfo').textContent = `Pad seleccionado: ${padId} - ${type}`;
+                            document.getElementById('deletePadBtn').disabled = false;
+                        } else {
+                            document.getElementById('deletePadInfo').textContent = `Pad seleccionado: ${padId} - SIN SONIDO`;
+                            document.getElementById('deletePadBtn').disabled = true;
+                        }
+                        generatePadSelectors();
+                    };
+                    deleteGrid.appendChild(deleteSelector);
+                }
+            }
+        }
+
+        // --- LÓGICA DE AUDIO ---
+        async function triggerPad(id, r, c) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const element = document.getElementById(id);
+            if (!audioBuffers[id]) {
+                const osc = audioCtx.createOscillator();
+                osc.frequency.value = 150 + (c * 30);
+                const g = audioCtx.createGain();
+                osc.connect(g).connect(audioCtx.destination);
+                g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+                element.classList.add('active');
+                setTimeout(() => element.classList.remove('active'), 100);
+                return;
+            }
+            const type = audioTypes[id];
+            if (type === 'loop' && loops[id]) {
+                loops[id].source.stop();
+                delete loops[id];
+                element.classList.remove('looping');
+                return;
+            }
+            if (type === 'loop' && Object.keys(loops).length === 0) {
+                masterStartTime = audioCtx.currentTime + 0.1;
+                isPlaying = false;
+            }
+            const source = audioCtx.createBufferSource();
+            source.buffer = audioBuffers[id].buffer;
+            source.playbackRate.value = globalBPM / 120;
+            source.detune.value = (pitchShift - 1) * 1200;
+            const filterNodes = { gain: audioCtx.createGain(), biquadFilter: audioCtx.createBiquadFilter() };
+            filterNodes.gain.gain.value = audioFilters.gain;
+            filterNodes.biquadFilter.type = 'peaking';
+            filterNodes.biquadFilter.frequency.value = 1000 * audioFilters.tone;
+            filterNodes.biquadFilter.gain.value = (audioFilters.dynamic - 1) * 20;
+            source.connect(filterNodes.biquadFilter);
+            filterNodes.biquadFilter.connect(filterNodes.gain);
+            filterNodes.gain.connect(audioCtx.destination);
+            if (type === 'loop') {
+                source.loop = true;
+                let startTime;
+                if (!isPlaying) { startTime = masterStartTime; isPlaying = true; }
+                else {
+                    const elapsedTime = audioCtx.currentTime - masterStartTime;
+                    const beatsElapsed = (elapsedTime * globalBPM) / 60;
+                    const nextBeat = Math.ceil(beatsElapsed);
+                    startTime = masterStartTime + (nextBeat * 60 / globalBPM);
+                }
+                source.start(startTime);
+                loops[id] = { source, filterNodes };
+                element.classList.add('looping');
+                if (useTriColors) {
+                    const colors = [currentColor, currentColor2, currentColor3];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    element.style.setProperty('--led-loop', randomColor);
+                    element.style.boxShadow = `0 0 25px ${randomColor}`;
+                } else {
+                    element.style.setProperty('--led-loop', currentColor);
+                    element.style.boxShadow = `0 0 25px ${currentColor}`;
+                }
+            } else {
+                source.start();
+                source.stop(audioCtx.currentTime + source.buffer.duration);
+                element.classList.add('active');
+                if (useTriColors) {
+                    const colors = [currentColor, currentColor2, currentColor3];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    element.style.setProperty('--led-on', randomColor);
+                    element.style.boxShadow = `0 0 20px ${randomColor}`;
+                } else {
+                    element.style.setProperty('--led-on', currentColor);
+                    element.style.boxShadow = `0 0 20px ${currentColor}`;
+                }
+                setTimeout(() => { element.classList.remove('active'); element.style.boxShadow = ''; }, 200);
+            }
+        }
+
+        // --- INTERFAZ ---
+        document.getElementById('samplerBtn').onclick = () => {
+            currentAudioType = 'sampler';
+            document.getElementById('samplerBtn').classList.add('selected');
+            document.getElementById('loopBtn').classList.remove('selected');
+            document.getElementById('typeInfo').textContent = '🎵 SAMPLER seleccionado (se reproduce una vez)';
+        };
+        document.getElementById('loopBtn').onclick = () => {
+            currentAudioType = 'loop';
+            document.getElementById('loopBtn').classList.add('selected');
+            document.getElementById('samplerBtn').classList.remove('selected');
+            document.getElementById('typeInfo').textContent = '🔄 LOOP seleccionado (se reproduce continuamente)';
+        };
+        document.getElementById('audioUpload').onchange = (e) => {
+            currentAudioFile = e.target.files[0];
+            if (currentAudioFile) {
+                document.getElementById('audioInfo').textContent = `Archivo seleccionado: ${currentAudioFile.name}`;
+                if (selectedPadId) document.getElementById('loadToSelectedPad').disabled = false;
+            }
+        };
+        document.getElementById('loadToSelectedPad').onclick = async () => {
+            if (!currentAudioFile || !selectedPadId) { alert('Selecciona un archivo y un pad destino'); return; }
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const buffer = await audioCtx.decodeAudioData(e.target.result);
+                    audioBuffers[selectedPadId] = { buffer };
+                    audioTypes[selectedPadId] = currentAudioType;
+                    const padElement = document.getElementById(selectedPadId);
+                    padElement.classList.add('has-sample');
+                    generatePadSelectors();
+                    document.getElementById('audioUpload').value = '';
+                    currentAudioFile = null;
+                    selectedPadId = null;
+                    document.getElementById('loadToSelectedPad').disabled = true;
+                    document.getElementById('selectedPadInfo').textContent = '✅ Audio cargado exitosamente';
+                    document.getElementById('audioInfo').textContent = 'Selecciona un archivo de audio';
+                    alert(`✅ ${currentAudioType === 'loop' ? 'LOOP' : 'SAMPLER'} cargado correctamente`);
+                } catch (err) { alert('Error al cargar el archivo de audio: ' + err.message); }
+            };
+            reader.readAsArrayBuffer(currentAudioFile);
+        };
+        document.getElementById('deletePadBtn').onclick = () => {
+            if (!deletePadId || !audioBuffers[deletePadId]) { alert('Selecciona un pad con sonido para eliminar'); return; }
+            if (audioTypes[deletePadId] === 'loop' && loops[deletePadId]) {
+                loops[deletePadId].source.stop();
+                delete loops[deletePadId];
+            }
+            delete audioBuffers[deletePadId];
+            delete audioTypes[deletePadId];
+            const padElement = document.getElementById(deletePadId);
+            padElement.classList.remove('has-sample', 'looping', 'active');
+            generatePadSelectors();
+            deletePadId = null;
+            document.getElementById('deletePadBtn').disabled = true;
+            document.getElementById('deletePadInfo').textContent = '✅ Sonido eliminado. Selecciona otro pad si deseas eliminar más.';
+        };
+        document.getElementById('clearAllAudio').onclick = () => {
+            if(confirm('¿Estás seguro de querer borrar TODOS los sonidos de TODOS los pads?')) {
+                Object.keys(loops).forEach(k => { if (loops[k].source) loops[k].source.stop(); });
+                Object.keys(audioBuffers).forEach(k => delete audioBuffers[k]);
+                Object.keys(audioTypes).forEach(k => delete audioTypes[k]);
+                Object.keys(loops).forEach(k => delete loops[k]);
+                document.querySelectorAll('.pad').forEach(p => p.classList.remove('has-sample', 'looping', 'active'));
+                generatePadSelectors();
+                selectedPadId = null; deletePadId = null; currentAudioFile = null;
+                masterStartTime = 0; isPlaying = false;
+                document.getElementById('loadToSelectedPad').disabled = true;
+                document.getElementById('deletePadBtn').disabled = true;
+                document.getElementById('selectedPadInfo').textContent = 'Todos los sonidos eliminados';
+                document.getElementById('deletePadInfo').textContent = 'Selecciona un pad para eliminar su sonido';
+                document.getElementById('audioInfo').textContent = 'Selecciona un archivo de audio';
+                alert('✅ Todos los sonidos han sido eliminados');
+            }
+        };
+        document.getElementById('exportConfig').onclick = () => {
+            const projectData = {
+                name: "RTBS Crew Looper Project",
+                date: new Date().toISOString(),
+                version: "1.0",
+                audioFiles: Object.keys(audioBuffers).map(padId => ({
+                    padId, type: audioTypes[padId],
+                    fileName: audioBuffers[padId].buffer ? "audio_cargado" : "none",
+                    duration: audioBuffers[padId].buffer ? audioBuffers[padId].buffer.duration : 0
+                })),
+                settings: {
+                    bpm: globalBPM, pitch: pitchShift,
+                    gain: audioFilters.gain, tone: audioFilters.tone,
+                    dynamic: audioFilters.dynamic, noise: audioFilters.noise,
+                    sharpness: audioFilters.sharpness, reverb: audioFilters.reverb,
+                    echo: audioFilters.echo, distortion: audioFilters.distortion,
+                    effect: currentEffect, color: currentColor,
+                    color2: currentColor2, color3: currentColor3, triColors: useTriColors,
+                    midiMap: midiMap
+                }
+            };
+            const blob = new Blob([JSON.stringify(projectData, null, 2)], {type: 'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `rtbs-project-${new Date().getTime()}.json`;
+            a.click();
+            alert('✅ Proyecto exportado exitosamente');
+        };
+        document.getElementById('control-btn').onclick = () => {
+            document.getElementById('controlPanel').style.display = 'block';
+            generatePadSelectors();
+        };
+        document.getElementById('closePanel').onclick = () => {
+            document.getElementById('controlPanel').style.display = 'none';
+        };
+
+        // ============ MIDI IMPLEMENTATION ============
+        function midiNoteToPad(row, col) {
+            // Mapeo estándar Launchpad: fila inferior = notas más graves
+            // Nota base 36 (C2) para esquina inferior izquierda
+            // Fila 7 (abajo) = 36..43, fila 0 (arriba) = 92..99
+            const base = midiMap.padBase;
+            const note = base + (7 - row) * 8 + col;
+            return note;
+        }
+
+        function noteToPadRowCol(note) {
+            const base = midiMap.padBase;
+            const offset = note - base;
+            if (offset < 0 || offset > 63) return null;
+            const row = 7 - Math.floor(offset / 8);
+            const col = offset % 8;
+            return { row, col };
+        }
+
+        function handleMidiMessage(event) {
+            const data = event.data;
+            const status = data[0] & 0xf0;
+            const d1 = data[1];
+            const d2 = data[2];
+
+            // Mostrar actividad
+            showMidiActivity(data);
+
+            // MIDI Learn
+            if (midiLearnTarget) {
+                if (status === 0xB0) { // CC
+                    midiMap[midiLearnTarget] = { type: 'cc', number: d1 };
+                    updateMidiMapDisplay();
+                    cancelMidiLearn();
+                    return;
+                } else if (status === 0x90 && d2 > 0) { // Nota
+                    if (midiLearnTarget === 'padBase') {
+                        midiMap.padBase = d1;
+                    } else {
+                        midiMap[midiLearnTarget] = { type: 'note', number: d1 };
+                    }
+                    updateMidiMapDisplay();
+                    cancelMidiLearn();
+                    return;
+                }
+            }
+
+            // Notas (pads)
+            if (status === 0x90 && d2 > 0) {
+                // LED feedback: iluminar pad en el Launchpad
+                sendMidi([0x90, d1, 0x3F]); // verde medio
+                const padPos = noteToPadRowCol(d1);
+                if (padPos) {
+                    const padEl = document.getElementById(`p-${padPos.row}-${padPos.col}`);
+                    if (padEl) {
+                        padEl.classList.add('midi-in');
+                        setTimeout(() => padEl.classList.remove('midi-in'), 150);
+                    }
+                    triggerPad(`p-${padPos.row}-${padPos.col}`, padPos.row, padPos.col);
+                    triggerExpansionEffect(padPos.row, padPos.col);
+                }
+            }
+            if (status === 0x80 || (status === 0x90 && d2 === 0)) {
+                sendMidi([0x90, d1, 0x00]); // apagar LED
+            }
+
+            // CCs (botones)
+            if (status === 0xB0) {
+                const cc = midiMap;
+                if (cc.bpmDown.type === 'cc' && d1 === cc.bpmDown.number && d2 > 0) {
+                    document.getElementById('bpm-down').click();
+                    flashMidiBtn('bpm-down');
+                }
+                if (cc.bpmUp.type === 'cc' && d1 === cc.bpmUp.number && d2 > 0) {
+                    document.getElementById('bpm-up').click();
+                    flashMidiBtn('bpm-up');
+                }
+                if (cc.pitchDown.type === 'cc' && d1 === cc.pitchDown.number && d2 > 0) {
+                    document.getElementById('pitch-down').click();
+                    flashMidiBtn('pitch-down');
+                }
+                if (cc.pitchUp.type === 'cc' && d1 === cc.pitchUp.number && d2 > 0) {
+                    document.getElementById('pitch-up').click();
+                    flashMidiBtn('pitch-up');
+                }
+                if (cc.syncAll.type === 'cc' && d1 === cc.syncAll.number && d2 > 0) {
+                    document.getElementById('sync-all').click();
+                    flashMidiBtn('sync-all');
+                }
+            }
+        }
+
+        function flashMidiBtn(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('midi-learn');
+            setTimeout(() => el.classList.remove('midi-learn'), 200);
+        }
+
+        function showMidiActivity(data) {
+            const act = document.getElementById('midiActivity');
+            act.style.display = 'block';
+            act.textContent = `MIDI: ${data.map(b => b.toString(16).padStart(2,'0').toUpperCase()).join(' ')}`;
+            clearTimeout(act._timeout);
+            act._timeout = setTimeout(() => { act.style.display = 'none'; }, 800);
+        }
+
+        function sendMidi(data) {
+            if (midiOutput) {
+                try { midiOutput.send(data); } catch(e) {}
+            }
+        }
+
+        async function initMidi() {
+            const statusText = document.getElementById('midiStatusText');
+            const led = document.getElementById('midiLed');
+            if (!navigator.requestMIDIAccess) {
+                statusText.textContent = 'Web MIDI no soportado en este navegador';
+                led.classList.add('error');
+                document.getElementById('midiInfo').textContent = 'Usa Chrome, Edge u Opera para MIDI.';
+                return;
+            }
+            try {
+                midiAccess = await navigator.requestMIDIAccess({ sysex: false });
+                midiConnected = true;
+                led.classList.add('connected');
+                statusText.textContent = 'MIDI conectado';
+                document.getElementById('midiInfo').textContent = 'Selecciona tu Launchpad en la lista.';
+                refreshMidiDevices();
+                midiAccess.onstatechange = () => refreshMidiDevices();
+            } catch (err) {
+                statusText.textContent = 'Error al conectar MIDI: ' + err.message;
+                led.classList.add('error');
+            }
+        }
+
+        function refreshMidiDevices() {
+            const list = document.getElementById('midiDeviceList');
+            list.innerHTML = '';
+            midiInputs = [];
+            midiOutputs = [];
+            if (!midiAccess) return;
+
+            midiAccess.inputs.forEach(input => {
+                midiInputs.push(input);
+                const item = document.createElement('div');
+                item.className = 'midi-device-item';
+                item.innerHTML = `🎹 ${input.name} <span class="midi-device-manufacturer">${input.manufacturer || ''}</span>`;
+                item.onclick = () => selectMidiInput(input, item);
+                list.appendChild(item);
+            });
+
+            midiAccess.outputs.forEach(output => {
+                midiOutputs.push(output);
+            });
+
+            if (midiInputs.length === 0) {
+                list.innerHTML = '<div class="midi-device-item" style="color:#555;">Ningún dispositivo MIDI detectado</div>';
+            } else {
+                // Auto-seleccionar Launchpad si existe
+                const launchpad = midiInputs.find(i => i.name.toLowerCase().includes('launchpad'));
+                if (launchpad) {
+                    const item = list.querySelector(`.midi-device-item`);
+                    // Buscar el item correspondiente
+                    const items = list.querySelectorAll('.midi-device-item');
+                    items.forEach((el, idx) => {
+                        if (midiInputs[idx] === launchpad) selectMidiInput(launchpad, el);
+                    });
+                }
+            }
+        }
+
+        function selectMidiInput(input, itemEl) {
+            // Desconectar anterior
+            if (midiInput) { midiInput.onmidimessage = null; }
+            midiInput = input;
+            midiInput.onmidimessage = handleMidiMessage;
+
+            // Buscar output con nombre similar
+            const outputMatch = midiOutputs.find(o => o.name === input.name || o.name.includes('Launchpad'));
+            if (outputMatch) {
+                midiOutput = outputMatch;
+                // Enviar mensaje de reset / modo live si es Launchpad
+                try {
+                    // Launchpad MK2/Pro: modo programador
+                    midiOutput.send([0xF0, 0x00, 0x20, 0x29, 0x02, 0x0C, 0x0E, 0x01, 0xF7]);
+                } catch(e) {}
+            }
+
+            document.querySelectorAll('.midi-device-item').forEach(el => el.classList.remove('selected'));
+            if (itemEl) itemEl.classList.add('selected');
+            document.getElementById('midiInfo').textContent = `✅ Conectado a: ${input.name}`;
+            document.getElementById('midiStatusText').textContent = `Conectado: ${input.name}`;
+        }
+
+        function startMidiLearn(target) {
+            midiLearnTarget = target;
+            document.querySelectorAll('.midi-learn-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.midi-learn-btn[data-target="${target}"]`);
+            if (btn) btn.classList.add('active');
+            document.getElementById('midiInfo').textContent = `🎯 Mueve un control MIDI para mapear: ${target}`;
+        }
+
+        function cancelMidiLearn() {
+            midiLearnTarget = null;
+            document.querySelectorAll('.midi-learn-btn').forEach(b => b.classList.remove('active'));
+        }
+
+        function updateMidiMapDisplay() {
+            document.getElementById('map-bpm-down').textContent = midiMap.bpmDown.type === 'cc' ? `CC ${midiMap.bpmDown.number}` : `Nota ${midiMap.bpmDown.number}`;
+            document.getElementById('map-bpm-up').textContent = midiMap.bpmUp.type === 'cc' ? `CC ${midiMap.bpmUp.number}` : `Nota ${midiMap.bpmUp.number}`;
+            document.getElementById('map-pitch-down').textContent = midiMap.pitchDown.type === 'cc' ? `CC ${midiMap.pitchDown.number}` : `Nota ${midiMap.pitchDown.number}`;
+            document.getElementById('map-pitch-up').textContent = midiMap.pitchUp.type === 'cc' ? `CC ${midiMap.pitchUp.number}` : `Nota ${midiMap.pitchUp.number}`;
+            document.getElementById('map-sync-all').textContent = midiMap.syncAll.type === 'cc' ? `CC ${midiMap.syncAll.number}` : `Nota ${midiMap.syncAll.number}`;
+            document.getElementById('map-pad-base').textContent = midiMap.padBase;
+        }
+
+        function setupMidiUI() {
+            document.getElementById('midiInitBtn').onclick = initMidi;
+            document.querySelectorAll('.midi-learn-btn').forEach(btn => {
+                btn.onclick = () => startMidiLearn(btn.dataset.target);
+            });
+            document.getElementById('midiSaveMap').onclick = () => {
+                const data = JSON.stringify({ midiMap });
+                localStorage.setItem('rtbs-midi-map', data);
+                alert('✅ Mapeo MIDI guardado en el navegador');
+            };
+            // Cargar mapeo guardado
+            const saved = localStorage.getItem('rtbs-midi-map');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.midiMap) midiMap = parsed.midiMap;
+                } catch(e) {}
+            }
+            updateMidiMapDisplay();
+        }
+
+        // Inicializar
+        generatePadSelectors();
+        document.getElementById('samplerBtn').click();
+        setupEffectControls();
+        setupAudioControls();
+        setupBPMControls();
+        setupMidiUI();
+        updateBPMDisplay();
+        updatePitchButtons();
+
+    </script>
+</body>
+</html>
